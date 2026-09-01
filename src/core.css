@@ -250,6 +250,17 @@
   .rayl-36.rayl-serif{letter-spacing:-0.02em;}
 }
 
+/* SPACE UNDER A HEADING is half its own size, rounded to the spacing scale:
+   96 and 72 take 48, 48 and 36 take 24, 24 and 18 take 12. A flat gap cannot
+   work across a range this wide — 24 reads generous under a label and cramped
+   under a 72 headline, which is exactly how a page ends up looking uneven.
+
+   The container's own gap counts toward it, so this only tops up the shortfall
+   and never double-counts. */
+.rayl-96 + *,.rayl-72 + *{margin-top:max(0px, calc(48px - var(--rayl-gap, 12px)));}
+.rayl-48 + *,.rayl-36 + *{margin-top:max(0px, calc(24px - var(--rayl-gap, 12px)));}
+.rayl-24 + *,.rayl-18 + *{margin-top:max(0px, calc(12px - var(--rayl-gap, 12px)));}
+
 /* the serif, at the five sizes it is drawn for, one percent tighter throughout */
 .rayl-serif{font-family:var(--rayl-font-display);}
 .rayl-96.rayl-serif{letter-spacing:-0.05em;}
@@ -278,7 +289,7 @@
  * the surrounding gap is what makes a page feel like it is drifting apart.
  * ========================================================================== */
 
-.rayl-hero{display:flex;flex-direction:column;gap:24px;padding-block:0 24px;}
+.rayl-hero{--rayl-gap:24px;display:flex;flex-direction:column;gap:var(--rayl-gap);padding-block:0 24px;}
 
 /* a full-bleed run of colour, escaping whatever column it sits in */
 .rayl-band{margin-inline:calc(50% - 50vw);padding:48px calc(50vw - 50% + 24px);
@@ -333,8 +344,8 @@ body.rayl *,.rayl-page *{box-sizing:border-box;}
 .rayl-page.is-wide{max-width:960px;}
 
 .rayl-head{display:flex;justify-content:space-between;align-items:center;gap:24px;}
-.rayl-section{display:flex;flex-direction:column;gap:24px;}
-.rayl-stack{display:flex;flex-direction:column;gap:12px;}
+.rayl-section{--rayl-gap:24px;display:flex;flex-direction:column;gap:var(--rayl-gap);}
+.rayl-stack{--rayl-gap:12px;display:flex;flex-direction:column;gap:var(--rayl-gap);}
 .rayl-cluster{display:flex;flex-wrap:wrap;gap:6px;}
 .rayl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
 
@@ -343,8 +354,8 @@ body.rayl *,.rayl-page *{box-sizing:border-box;}
   text-transform:uppercase;opacity:.62;}
 .rayl-hint{opacity:.62;line-height:1.40;margin:0;max-width:62ch;}
 
-.rayl-card{background:var(--surface-idle);border-radius:var(--rayl-radius);padding:12px;
-  display:flex;flex-direction:column;gap:6px;}
+.rayl-card{--rayl-gap:6px;background:var(--surface-idle);border-radius:var(--rayl-radius);padding:12px;
+  display:flex;flex-direction:column;gap:var(--rayl-gap);}
 
 .rayl-mark{display:block;width:32px;height:auto;}
 .rayl-mark path{fill:var(--ink-primary);}

@@ -360,6 +360,30 @@ The layout classes carry this so it is not re-decided each time:
 `rayl-cluster` gaps 6, `rayl-stack` 12, `rayl-section` 24, `rayl-split` 48,
 `rayl-page` 72.
 
+### Space under a heading
+
+A flat gap cannot work across a range from 8 to 96. Twenty-four reads generous
+under a label and cramped under a 72 headline, and a page built on one number for
+everything looks uneven no matter how carefully the number was chosen.
+
+**The space under a heading is half its own size, rounded to the scale.**
+
+| heading | space under it |
+|---|---|
+| 96, 72 | 48 |
+| 48, 36 | 24 |
+| 24, 18 | 12 |
+
+The container's gap counts toward that, so it is a floor rather than an addition:
+a 36 heading in a 12 stack gets 12 more, a 72 headline in a 24 hero gets 24 more,
+and a container whose gap is already larger keeps its own. Nothing double-counts
+and nothing needs deciding at the call site — `rayl-96` through `rayl-18` carry
+it.
+
+The consequence worth knowing: **the gap after a headline is always larger than
+the gap after the paragraph beneath it.** That difference is the hierarchy. If
+every gap in a section is the same, the section has no shape.
+
 ### Two values outside the scale
 
 **36** is a page margin in the app screen and **8** is the corner radius on every
