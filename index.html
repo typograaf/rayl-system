@@ -156,6 +156,8 @@ The rules that matter most:
 - The palette is exactly fourteen colours: White #FFFFFF, Paper #FBFBF6, Off White #F7F7EF, Bone #EDEDDF, Dark Off-White #E2E2D3, Porcelain #CFCFC1, Mid Porcelain #C3C3B6, Dark Porcelain #ACACA0, Pale Concrete #89897F, Light Concrete #696961, Dark Concrete #55554E, Off-Black #373732, Soft Black #262623, Black #1C1C1A. Two gradients, both top to bottom: Porcelain #CFCFC1 to #F7F7EF, Concrete #696961 to #CFCFC1.
 - The ground is #F7F7EF and ink is #1C1C1A. Never #000000 — the palette has no pure black. Light mode only.
 - No UI state has its own colour. Hover is the palette colour nearest 5 L* away, pressed the one nearest 10 L*. Light grounds move down the ladder, dark fills move up. White hovers to Bone and presses to Dark Off-White; Black hovers to Soft Black and presses to Off-Black.
+- Icons are eighteen drawn 12x12 filled shapes, never stroked, always ink/primary: Bell, Bookmark, Broom, Cup, Document, Download, Folder, ID, Image, Minus, Organise, Pause, Play, Plus, Profile, Save, Stack, Upload. Never substitute one from a public icon set.
+- A slider is a label plus a track: trough 12 tall radius 2 in surface/idle, a 2px line in line/track, and a 24x12 handle in line/track with the current value printed inside the handle. The value rides the handle; there is no separate readout.
 - There is no green and no error or warning colour, and no loading, empty or error state. If you need one, ask.
 - Where the system does not cover something, tell me and ask. Do not invent it and do not substitute something that looks close.</pre>
       <button id="copy" type="button">Copy</button>

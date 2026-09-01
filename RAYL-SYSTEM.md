@@ -275,6 +275,27 @@ For a base not in this table, apply the rule. Do not invent a colour.
 | control / track | Dark Off-White `#E2E2D3` |
 | control / fill | Black `#1C1C1A` |
 
+### Sliders
+
+A slider is a row, not a widget dropped in: **label on the left, track filling the
+rest, 12 between them, centred on each other.**
+
+The track has three parts, and the third is the one people get wrong.
+
+| part | size | colour |
+|---|---|---|
+| trough | full width, 12 tall, radius 2 | `surface/idle` |
+| line | 2 tall, centred, inset by half a handle at each end | `line/track` |
+| handle | 24 wide, 12 tall, radius 3 | `line/track` |
+
+**The value rides inside the handle.** There is no separate number beside the
+track — the handle carries its own reading, in `ink/primary`. That is the detail
+that makes a Rayl slider look like a Rayl slider, and it is the first thing lost
+when someone rebuilds one from memory.
+
+The trough is 1.5 times the cap height, and the handle is twice as wide as it is
+tall. Hold those two ratios and the slider scales correctly to any text size.
+
 ### Ink flip
 
 Dark ink down to Pale Concrete; Off White ink from Light Concrete down. Every
@@ -295,12 +316,21 @@ Ask before animating anything.
 
 ## 7. Icons
 
-Icons are drawn on a single shared grid. The grid size and the stroke weight are
-NOT DECIDED here yet — ask for them before drawing or picking an icon.
+There are eighteen, and they are drawn, not licensed:
 
-Do not substitute an icon from a public icon set. They will not match the grid.
+Bell · Bookmark · Broom · Cup · Document · Download · Folder · ID · Image ·
+Minus · Organise · Pause · Play · Plus · Profile · Save · Stack · Upload
 
----
+**Every icon is a 12 x 12 frame holding one filled path.** Filled, never stroked
+— there is no line weight to match, which is why an icon lifted from a stroked
+public set never sits right beside these. If you need one that does not exist,
+ask; do not substitute.
+
+Colour is `ink/primary`, so an icon follows the mode along with the text it sits
+beside. Never paint an icon a fixed hex.
+
+At 12 they read as solid shapes rather than line drawings. Do not scale one below
+12, and if you scale up, scale the frame — the path is built for that box.
 
 ## 8. The Rayl look
 
