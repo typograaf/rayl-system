@@ -70,10 +70,10 @@
       <h2 class="rayl-24 rayl-serif">A rota you can read at a glance</h2>
       <p class="rayl-12 rayl-measure">Open shifts, confirmed shifts and the ones still
       waiting on an answer, in one view.</p>
-      <div class="rayl-cluster">
-        <button class="rayl-btn" aria-pressed="true">This week</button>
-        <button class="rayl-btn">Next week</button>
-        <button class="rayl-btn">Month</button>
+      <div class="rayl-seg is-tight">
+        <button class="rayl-seg-opt is-on" type="button">This week</button>
+        <button class="rayl-seg-opt" type="button">Next week</button>
+        <button class="rayl-seg-opt" type="button">Month</button>
       </div>
       <div class="rayl-row"><span class="rayl-label">Shifts open</span>
         <span class="rayl-slider" data-min="0" data-max="48" data-val="12" data-step="1"></span>
@@ -92,25 +92,26 @@
 
   <footer class="rayl-head">
     <span class="rayl-label">Rayl — Antwerpen</span>
-    <div class="rayl-cluster">
-      <button class="rayl-btn" data-mode="light">Light</button>
-      <button class="rayl-btn" data-mode="dark">Dark</button>
+    <div class="rayl-seg is-tight" id="theme">
+      <button class="rayl-seg-opt" type="button" data-mode="light">Light</button>
+      <button class="rayl-seg-opt" type="button" data-mode="dark">Dark</button>
     </div>
   </footer>
 
 </div>
 <script>
-  var root=document.documentElement;
-  function setMode(m){
-    root.dataset.theme=m;
-    document.querySelectorAll("[data-mode]").forEach(function(b){
-      b.setAttribute("aria-pressed", String(b.dataset.mode===m));
-    });
-  }
-  document.querySelectorAll("[data-mode]").forEach(function(b){
-    b.addEventListener("click",function(){ setMode(b.dataset.mode); });
+  /* The group owns the selection — this only says what a selection means.
+     The starting cell is set before rayl.js upgrades the group, so the page
+     opens on the right one instead of animating onto it. */
+  var root=document.documentElement, seg=document.getElementById("theme");
+  var mode=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+  root.dataset.theme=mode;
+  seg.querySelectorAll(".rayl-seg-opt").forEach(function(o){
+    o.classList.toggle("is-on", o.dataset.mode===mode);
   });
-  setMode(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  seg.addEventListener("rayl:change",function(e){
+    root.dataset.theme=e.detail.option.dataset.mode;
+  });
 </script>
 </body>
 </html>

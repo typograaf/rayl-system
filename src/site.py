@@ -103,9 +103,9 @@ HTML = f"""<!doctype html>
 
   <header class="rayl-head">
     {MARK}
-    <div class="rayl-cluster">
-      <button class="rayl-btn" data-mode="light">Light</button>
-      <button class="rayl-btn" data-mode="dark">Dark</button>
+    <div class="rayl-seg is-tight" id="theme">
+      <button class="rayl-seg-opt" type="button" data-mode="light">Light</button>
+      <button class="rayl-seg-opt" type="button" data-mode="dark">Dark</button>
     </div>
   </header>
 
@@ -208,17 +208,16 @@ HTML = f"""<!doctype html>
 
 </div>
 <script>
-  var root=document.documentElement;
-  function setMode(m){{
-    root.dataset.theme=m;
-    document.querySelectorAll("[data-mode]").forEach(function(b){{
-      b.setAttribute("aria-pressed", String(b.dataset.mode===m));
-    }});
-  }}
-  document.querySelectorAll("[data-mode]").forEach(function(b){{
-    b.addEventListener("click",function(){{ setMode(b.dataset.mode); }});
+  /* The group owns the selection — this only says what a selection means. */
+  var root=document.documentElement, seg=document.getElementById("theme");
+  var mode=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+  root.dataset.theme=mode;
+  seg.querySelectorAll(".rayl-seg-opt").forEach(function(o){{
+    o.classList.toggle("is-on", o.dataset.mode===mode);
   }});
-  setMode(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  seg.addEventListener("rayl:change",function(e){{
+    root.dataset.theme=e.detail.option.dataset.mode;
+  }});
   document.getElementById("copy").addEventListener("click",function(){{
     navigator.clipboard.writeText(document.getElementById("paste").textContent);
   }});

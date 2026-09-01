@@ -759,7 +759,14 @@ ground: `surface/active-hover`, then `surface/active-pressed`.
 **Layout.** Cells are half-width by default, so five of them fall two and three;
 `is-third` makes a cell one of three. `is-joined` on the group closes the gaps
 into a single bar and moves the radius onto the group, and `is-wide` inside one
-gives a cell — a name in front of a set of numbers — its larger share.
+gives a cell — a name in front of a set of numbers — its larger share. `is-tight`
+sizes the whole group to its own content instead of the row, which is what a
+header toggle or an option row inside running layout wants.
+
+**A row of `rayl-btn` with `aria-pressed` is not an option group.** It looks
+like one and behaves like a set of unrelated toggles: nothing turns the last one
+off, and the selection arrives without the circle. Wherever exactly one of a set
+is on, it is `rayl-seg`.
 
 **Keyboard.** The group is one tab stop, on whatever is currently on. Arrow keys
 in either axis move the selection and wrap; disabled cells are skipped. Focus

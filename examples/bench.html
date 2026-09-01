@@ -63,9 +63,9 @@
 
   <header class="rayl-head">
     <svg class="rayl-mark" viewBox="0 0 151 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M141.065 98.6391C135.909 98.6391 132.144 94.7512 132.144 89.7173C132.144 84.8061 135.909 81 141.065 81C146.099 81 149.905 84.7243 149.905 89.7173C149.905 94.7512 146.181 98.6391 141.065 98.6391ZM141.025 97.084C145.035 97.084 148.228 93.9326 148.228 89.7173C148.228 85.5428 144.994 82.4733 141.025 82.4733C137.055 82.4733 133.862 85.5428 133.862 89.7173C133.862 93.9326 136.973 97.084 141.025 97.084ZM137.873 94.4647V85.1335H141.638C143.767 85.1335 145.076 86.3204 145.076 88.0393C145.076 89.3898 144.299 90.3721 142.948 90.8223C144.135 91.8454 144.749 93.0732 145.076 94.4647H143.357C143.03 93.2778 142.621 92.091 141.065 91.0269H139.633V94.4647H137.873ZM139.633 89.5126H141.72C142.662 89.5126 143.316 88.8987 143.316 88.0393C143.316 87.2617 142.662 86.6887 141.802 86.6887H139.633V89.5126Z"/><path d="M34.5 81C53.5538 81 69 96.4462 69 115.5C69 134.554 53.5538 150 34.5 150C15.4462 150 4.12351e-06 134.554 0 115.5C0 96.4462 15.4462 81 34.5 81Z"/><path d="M81 98.249C81 82.6584 99.8496 74.8502 110.874 85.874L145.126 120.126C156.15 131.15 148.342 150 132.751 150H98.5C88.835 150 81 142.165 81 132.5V98.249Z"/><path d="M115.5 0C134.554 0 150 15.4462 150 34.5C150 53.5538 134.554 69 115.5 69H17.5C7.83502 69 0 61.165 0 51.5V17.5C0 7.83502 7.83502 0 17.5 0H115.5Z"/></svg>
-    <div class="rayl-cluster">
-      <button class="rayl-btn" data-mode="light">Light</button>
-      <button class="rayl-btn" data-mode="dark">Dark</button>
+    <div class="rayl-seg is-tight" id="theme">
+      <button class="rayl-seg-opt" type="button" data-mode="light">Light</button>
+      <button class="rayl-seg-opt" type="button" data-mode="dark">Dark</button>
     </div>
   </header>
 
@@ -191,17 +191,18 @@
 
 </div>
 <script>
-  var root = document.documentElement;
-  function setMode(m){
-    root.dataset.theme = m;
-    document.querySelectorAll("[data-mode]").forEach(function(b){
-      b.setAttribute("aria-pressed", String(b.dataset.mode === m));
-    });
-  }
-  document.querySelectorAll("[data-mode]").forEach(function(b){
-    b.addEventListener("click", function(){ setMode(b.dataset.mode); });
+  /* The group owns the selection — this only says what a selection means.
+     The starting cell is set before rayl.js upgrades the group, so the page
+     opens on the right one instead of animating onto it. */
+  var root=document.documentElement, seg=document.getElementById("theme");
+  var mode=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+  root.dataset.theme=mode;
+  seg.querySelectorAll(".rayl-seg-opt").forEach(function(o){
+    o.classList.toggle("is-on", o.dataset.mode===mode);
   });
-  setMode(matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  seg.addEventListener("rayl:change",function(e){
+    root.dataset.theme=e.detail.option.dataset.mode;
+  });
 </script>
 </body>
 </html>

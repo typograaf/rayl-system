@@ -218,6 +218,11 @@
 .rayl-seg-opt.is-third{flex:1 1 calc(33.333% - 8px);}
 .rayl-seg.is-joined .rayl-seg-opt{flex:5 1 0;border-radius:0;}
 .rayl-seg.is-joined .rayl-seg-opt.is-wide{flex:18 1 0;}
+/* In a header, a toolbar or a line of running layout, the group sizes to its
+   own content instead of filling the row. Still one group, still one on — only
+   the width rule changes. */
+.rayl-seg.is-tight{width:fit-content;max-width:100%;}
+.rayl-seg.is-tight .rayl-seg-opt{flex:0 0 auto;}
 .rayl-seg-opt:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
 .rayl-seg-opt:disabled{color:var(--ink-disabled);cursor:default;}
 /* ...so every cell declares the travel, and the label sits above the fill */
