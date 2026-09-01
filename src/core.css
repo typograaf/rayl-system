@@ -263,12 +263,25 @@
 /* ============================================================ the wide ==== *
  * A landing page is not a control panel. These are the shapes it needs that a
  * 520 column cannot make.
+ *
+ * SPACING. The gap between two things says how related they are, and it steps
+ * through the scale:
+ *
+ *      6   parts of one control      buttons in a cluster
+ *     12   lines of one block        a label and the line under it
+ *     24   blocks in a section       heading, body, actions
+ *     48   columns of a split, groups inside a band
+ *     72   sections of a page
+ *
+ * And a container pads one step below the gap it sits in — a band inside the
+ * page's 72 rhythm pads 48, a card inside a 12 rhythm pads 12. Padding equal to
+ * the surrounding gap is what makes a page feel like it is drifting apart.
  * ========================================================================== */
 
-.rayl-hero{display:flex;flex-direction:column;gap:24px;padding-block:24px 48px;}
+.rayl-hero{display:flex;flex-direction:column;gap:24px;padding-block:0 24px;}
 
 /* a full-bleed run of colour, escaping whatever column it sits in */
-.rayl-band{margin-inline:calc(50% - 50vw);padding:72px calc(50vw - 50% + 24px);
+.rayl-band{margin-inline:calc(50% - 50vw);padding:48px calc(50vw - 50% + 24px);
   background:var(--band,var(--surface-idle));
   display:flex;flex-direction:column;gap:48px;}
 .rayl-band.is-ink{--band:var(--ink-primary);color:var(--surface-ground);}
