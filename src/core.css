@@ -2,6 +2,8 @@
   src:url("HUB/assets/fonts/Azeret-TRIAL-Regular.woff2") format("woff2");}
 @font-face{font-family:"Azeret";font-weight:500;font-display:swap;
   src:url("HUB/assets/fonts/Azeret-TRIAL-Medium.woff2") format("woff2");}
+@font-face{font-family:"Concrette";font-weight:500;font-display:swap;
+  src:url("HUB/assets/fonts/ConcretteS-TRIAL-Medium.woff2") format("woff2");}
 
 :root{
   --rayl-white:#FFFFFF; --rayl-paper:#FBFBF6; --rayl-off-white:#F7F7EF;
@@ -27,6 +29,7 @@
   --ink-on-strong:var(--surface-ground);
 
   --rayl-font:"Azeret",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --rayl-font-display:"Concrette",Georgia,"Times New Roman",serif;
   --rayl-size:12px; --rayl-cap:8.376px; --rayl-radius:8px;
   --rayl-dur:280ms; --rayl-stagger:20ms;
   /* a roll is duration + (characters - 1) x stagger, which grows without limit.
@@ -72,7 +75,7 @@
 
 /* ------------------------------------------------------- button + the roll */
 .rayl-btn{
-  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;line-height:1.2;
   letter-spacing:0.02em;
   --rayl-btn-h:calc(var(--rayl-cap) + 24px);
   height:var(--rayl-btn-h);padding:0 12px;
@@ -205,6 +208,35 @@
   .rayl-g,.rayl-ch,.rayl-btn{transition-duration:1ms !important;transition-delay:0ms !important;}
 }
 
+/* ============================================================= the type === *
+ * Seven sizes. Leading opens as the size drops and tracking tightens as it
+ * grows — the two move against each other, which is what keeps a 96 headline
+ * and a 12 caption looking like one voice.
+ *
+ * Concrette, the serif, is set one percent tighter than Azeret at every size it
+ * appears at. It only goes down to 24; 18 and 12 are Azeret's alone.
+ * ========================================================================== */
+
+.rayl-96,.rayl-72,.rayl-48,.rayl-36,.rayl-24,.rayl-18,.rayl-12{
+  font-family:var(--rayl-font);font-weight:500;margin:0;text-wrap:balance;}
+.rayl-96{font-size:96px;line-height:1.10;letter-spacing:-0.04em;}
+.rayl-72{font-size:72px;line-height:1.10;letter-spacing:-0.03em;}
+.rayl-48{font-size:48px;line-height:1.10;letter-spacing:-0.02em;}
+.rayl-36{font-size:36px;line-height:1.10;letter-spacing:-0.01em;}
+.rayl-24{font-size:24px;line-height:1.15;letter-spacing:0;}
+.rayl-18{font-size:18px;line-height:1.30;letter-spacing:0.01em;}
+.rayl-12{font-size:12px;line-height:1.40;letter-spacing:0.02em;text-wrap:pretty;}
+
+/* the serif, at the five sizes it is drawn for, one percent tighter throughout */
+.rayl-serif{font-family:var(--rayl-font-display);}
+.rayl-96.rayl-serif{letter-spacing:-0.05em;}
+.rayl-72.rayl-serif{letter-spacing:-0.04em;}
+.rayl-48.rayl-serif{letter-spacing:-0.03em;}
+.rayl-36.rayl-serif{letter-spacing:-0.02em;}
+.rayl-24.rayl-serif{letter-spacing:-0.02em;}
+/* Concrette is not drawn below 24 — these two stay Azeret */
+.rayl-18.rayl-serif,.rayl-12.rayl-serif{font-family:var(--rayl-font);}
+
 /* ============================================================ the page ==== *
  * Without these a page gets Rayl controls on a default white ground with a
  * system font. The ground, the rhythm and the label style are as much the
@@ -217,7 +249,7 @@ body.rayl, .rayl-page{
   font-family:var(--rayl-font);
   font-size:var(--rayl-size);
   font-weight:500;
-  line-height:1.2;
+  line-height:1.40;
   letter-spacing:0.02em;
   -webkit-font-smoothing:antialiased;
 }
@@ -242,7 +274,7 @@ body.rayl *,.rayl-page *{box-sizing:border-box;}
 /* 8 uppercase, the only size in the system above or below 12 */
 .rayl-label{font-size:8px;font-weight:500;letter-spacing:0.08em;
   text-transform:uppercase;opacity:.62;}
-.rayl-hint{opacity:.62;line-height:1.5;margin:0;max-width:62ch;}
+.rayl-hint{opacity:.62;line-height:1.40;margin:0;max-width:62ch;}
 
 .rayl-card{background:var(--surface-idle);border-radius:var(--rayl-radius);padding:12px;
   display:flex;flex-direction:column;gap:6px;}

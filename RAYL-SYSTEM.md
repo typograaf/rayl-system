@@ -267,6 +267,46 @@ design says, and nothing will line up with anything built correctly.
 
 ### Sizes
 
+Seven, and no others.
+
+| size | leading | tracking, Azeret | tracking, Concrette |
+|---|---|---|---|
+| 96 | 110% | −4% | −5% |
+| 72 | 110% | −3% | −4% |
+| 48 | 110% | −2% | −3% |
+| 36 | 110% | −1% | −2% |
+| 24 | 115% | 0% | −2% |
+| 18 | 130% | +1% | — |
+| 12 | 140% | +2% | — |
+
+Plus **8**, uppercase at +8%, which is the section label and nothing else.
+
+**Leading opens as the size drops and tracking tightens as it grows.** The two
+move against each other, and that is what makes a 96 headline and a 12 caption
+read as one voice rather than two. Do not set a size without its own leading and
+tracking — they are one decision, not three.
+
+`.rayl-96` `.rayl-72` `.rayl-48` `.rayl-36` `.rayl-24` `.rayl-18` `.rayl-12`
+carry all three. `.rayl-label` is the 8.
+
+Note 12 running text sets at **140%**, not the tight line the controls use — a
+control's label sits in a fixed cap-height box where leading does not apply.
+
+### Two typefaces
+
+**Azeret** is the grotesque, and it covers everything: the interface, running
+text, and headlines if you want them set that way. It is the only face at 18 and
+12.
+
+**Concrette** is the serif, and it is drawn for display only — 24 and up. It sets
+one percent tighter than Azeret at every size it appears at. Add `.rayl-serif` to
+any size class from 24 upward; below that the class is ignored and the text stays
+Azeret, because Concrette has no business at caption size.
+
+Both are TRIAL cuts and both need licensing before anything public.
+
+
+
 Two sizes are established:
 
 - **8** — section labels
