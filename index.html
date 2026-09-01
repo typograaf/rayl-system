@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Rayl system</title>
+<style>
+@font-face {
+  font-family: "Azeret";
+  font-weight: 400;
+  font-display: block;
+  src: url("assets/fonts/Azeret-TRIAL-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Azeret";
+  font-weight: 500;
+  font-display: block;
+  src: url("assets/fonts/Azeret-TRIAL-Medium.woff2") format("woff2");
+}
+
+:root {
+  --ink: #1c1c1a;
+  --paper: #f0f0e5;
+  --sunk: #e8e8d8;
+  --font: "Azeret", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --cap: 0.698;
+}
+
+* { box-sizing: border-box; }
+
+html { background: var(--paper); }
+
+body {
+  margin: 0;
+  padding: 48px 24px 72px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Text is trimmed to its cap height, the way every Rayl file trims it. */
+body, body * {
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+
+main { max-width: 528px; margin: 0 auto; }
+
+/* Sections are 48 apart, the panel's own gap between groups. */
+section { margin-top: 48px; }
+
+.mark { display: block; width: 144px; height: auto; }
+.mark path { fill: var(--ink); }
+
+h1 { font: inherit; font-weight: 500; margin: 24px 0 0; }
+h2 {
+  font: inherit;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 12px;
+}
+p { margin: 0 0 12px; max-width: 60ch; }
+p:last-child { margin-bottom: 0; }
+a { color: inherit; }
+
+ul { margin: 0; padding-left: 12px; list-style: none; }
+li { margin-bottom: 6px; padding-left: 12px; position: relative; }
+li::before { content: "—"; position: absolute; left: -12px; }
+
+.note {
+  background: var(--sunk);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 0 0 12px;
+}
+
+.block {
+  position: relative;
+  background: var(--sunk);
+  border-radius: 8px;
+  padding: 24px;
+}
+pre {
+  margin: 0;
+  font: inherit;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+button {
+  font: inherit;
+  letter-spacing: inherit;
+  font-weight: 500;
+  color: var(--paper);
+  background: var(--ink);
+  border: 0;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  cursor: pointer;
+}
+button:disabled { opacity: 0.5; cursor: default; }
+
+dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 24px; }
+dt { font-weight: 500; }
+dd { margin: 0; }
+</style>
+</head>
+<body>
+<main>
+
+  <svg class="mark" viewBox="0 0 644 191" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rayl">
+    <path d="M34.5 81C53.5538 81 69 96.4462 69 115.5C69 134.554 53.5538 150 34.5 150C15.4462 150 4.12351e-06 134.554 0 115.5C0 96.4462 15.4462 81 34.5 81Z"/>
+    <path d="M81 98.248C81.0006 82.6577 99.8508 74.8508 110.875 85.875L145.125 120.125C156.149 131.149 148.342 149.999 132.752 150H98.5C88.835 150 81 142.165 81 132.5V98.248Z"/>
+    <path d="M115.5 0C134.554 0 150 15.4462 150 34.5C150 53.5538 134.554 69 115.5 69H17.5C7.83502 69 0 61.165 0 51.5V17.5C0 7.83502 7.83502 0 17.5 0H115.5Z"/>
+    <path d="M275.001 68.3555C294.073 68.3555 306.074 58.4982 306.074 43.0693C306.074 28.7119 295.788 19.7117 279.716 19.7117H241.358V68.3555H275.001ZM218.643 150V0.425614H279.93C310.574 0.425614 329.86 16.9259 329.86 43.0693C329.86 61.0697 318.502 75.6414 300.931 82.713C317.645 92.1417 326.86 108.213 326.86 129V150H303.502V146.571C303.502 132 303.502 121.285 300.502 112.714C296.859 102.428 288.93 94.4989 278.859 90.856C270.073 87.6416 259.144 87.6416 244.144 87.6416H241.358V150H218.643Z"/>
+    <path d="M401.531 95.9989C391.674 95.9989 384.602 95.9989 379.031 98.5704C372.602 101.57 368.316 107.999 368.316 115.499C368.316 126.642 377.745 134.785 391.674 134.785C410.317 134.785 424.032 119.999 424.032 98.999V95.9989H401.531ZM341.744 71.9985C343.673 45.8551 363.388 29.569 393.603 29.569C425.532 29.569 445.675 47.5694 445.675 76.2843V150H425.103L424.46 131.785C416.317 145.071 402.817 152.571 386.102 152.571C362.316 152.571 346.887 137.143 346.887 116.785C346.887 100.499 356.959 87.8559 372.602 82.9272C382.031 79.9272 392.745 79.9272 407.96 79.9272H424.032V76.2843C424.032 57.641 412.246 45.8551 393.603 45.8551C376.459 45.8551 365.102 55.9267 363.388 71.9985H341.744Z"/>
+    <path d="M509.595 120.642L520.524 91.2846L544.525 32.1405H567.025L513.453 160.929C504.238 182.358 493.095 190.715 472.523 190.715H453.666V173.143H471.452C480.881 173.143 488.166 168 492.024 158.786L498.238 143.571L452.38 32.1405H475.095L499.095 91.2846L509.595 120.642Z"/>
+    <path d="M578.255 0.425614H599.898V150H578.255V0.425614Z"/>
+    <path d="M627.781 150C618.629 150 611.948 143.1 611.948 134.167C611.948 125.451 618.629 118.697 627.781 118.697C636.714 118.697 643.469 125.306 643.469 134.167C643.469 143.1 636.859 150 627.781 150ZM627.708 147.24C634.826 147.24 640.491 141.648 640.491 134.167C640.491 126.759 634.753 121.311 627.708 121.311C620.663 121.311 614.998 126.759 614.998 134.167C614.998 141.648 620.518 147.24 627.708 147.24ZM622.116 142.592V126.032H628.798C632.574 126.032 634.898 128.139 634.898 131.189C634.898 133.586 633.518 135.329 631.122 136.128C633.228 137.944 634.317 140.122 634.898 142.592H631.848C631.267 140.486 630.541 138.379 627.781 136.491H625.239V142.592H622.116ZM625.239 133.804H628.943C630.613 133.804 631.775 132.714 631.775 131.189C631.775 129.809 630.613 128.792 629.088 128.792H625.239V133.804Z"/>
+  </svg>
+
+  <h1>The Rayl design system</h1>
+
+  <section>
+    <p>The rules for how anything Rayl looks. Hand this to an AI and whatever it
+    builds — a new tool, a change to the app, a reskin, a screensaver — comes out
+    looking like Rayl, including the parts nobody has designed yet.</p>
+    <p>You do not need to read any code to use it.</p>
+  </section>
+
+  <section>
+    <h2>How to use it</h2>
+    <p>Copy the block below and paste it at the top of your prompt, before
+    whatever you are asking for. That is the whole workflow.</p>
+    <div class="block">
+      <pre id="paste">Build this to the Rayl design system.
+
+Read https://typograaf.github.io/rayl-system/RAYL-SYSTEM.md first and follow it exactly. Read https://typograaf.github.io/rayl-system/AUDIT.md too if you need to know why something is the way it is.
+
+The rules that matter most:
+
+- The logo is a file, never something you draw. Icon: https://typograaf.github.io/rayl-system/assets/logo/Icon.svg  Lockup: https://typograaf.github.io/rayl-system/assets/logo/Lockup.svg  Use the lockup where there is room, the icon where there is not.
+- The typeface is Azeret: https://typograaf.github.io/rayl-system/assets/fonts/Azeret-TRIAL-Regular.woff2 and https://typograaf.github.io/rayl-system/assets/fonts/Azeret-TRIAL-Medium.woff2
+- Text is trimmed to its cap height, not its line box. In CSS that is text-box-trim: trim-both and text-box-edge: cap alphabetic. Skip this and every measurement will be wrong.
+- Spacing is 6, 12, 24, 48, 72 and nothing else.
+- Type is 8 for section labels and 12 for everything else, tracking 0.02em, line height 1.2.
+- Ink is #1C1C1A. Light mode only.
+- Where the system does not cover something, tell me and ask. Do not invent it and do not substitute something that looks close.</pre>
+      <button id="copy" type="button">Copy</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>The documents</h2>
+    <dl>
+      <dt><a href="RAYL-SYSTEM.md">RAYL-SYSTEM.md</a></dt>
+      <dd>The rules themselves.</dd>
+      <dt><a href="AUDIT.md">AUDIT.md</a></dt>
+      <dd>Everything found in the existing Rayl builds, and the questions still open.</dd>
+      <dt><a href="assets/logo/Lockup.svg">Lockup.svg</a></dt>
+      <dd>The mark and the word, side by side.</dd>
+      <dt><a href="assets/logo/Icon.svg">Icon.svg</a></dt>
+      <dd>The mark alone.</dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>Where this is up to</h2>
+    <p>The logo section is complete and measured off the real files. Colour, type
+    sizes above 12, component states, motion, icons and the card look are all
+    still open. They are written up as numbered questions in the audit.</p>
+    <p>Anything marked NOT DECIDED is a genuine gap. The document tells the AI to
+    stop and ask when it hits one rather than filling it in with something
+    plausible — a guess that looks fine is the thing that quietly becomes the new
+    standard.</p>
+  </section>
+
+  <section>
+    <h2>Two things this page is proving</h2>
+    <div class="note">
+      <p>This page is built to the system's own rules and no others, so its
+      limits are the system's limits.</p>
+      <p>It has no heading size, because no size above 12 has been agreed. It is
+      set at a line height of 1.2, which is right for a control and tight for a
+      paragraph. Both of those are answered by question 7 in the audit.</p>
+      <p>The background is #F0F0E5, chosen provisionally from the tool panel.
+      Question 2 settles it properly.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Fonts</h2>
+    <p>The Azeret files here are the TRIAL cuts. Fine for internal work. They have
+    to be swapped for licensed files before anything built with this goes
+    public.</p>
+  </section>
+
+</main>
+
+<script>
+  const button = document.getElementById("copy");
+  button.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(document.getElementById("paste").textContent);
+      button.textContent = "Copied";
+    } catch {
+      button.textContent = "Press cmd C";
+    }
+    setTimeout(() => { button.textContent = "Copy"; }, 2000);
+  });
+</script>
+</body>
+</html>
