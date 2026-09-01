@@ -26,34 +26,61 @@ Rayl is light mode only for now. Do not produce a dark variant unless asked.
 
 ---
 
-## 0. Use the file, do not rebuild it
+## 0. Start from a template, do not compose
 
-The button, the slider, the icons and every colour token are shipped as one
-file:
+Two working pages ship with the system:
+
+    templates/panel.html   a settings panel
+    templates/bench.html   every control, on five grounds
+
+**Change their content. Do not build a page from scratch.** Copying is what makes
+two pages identical rather than merely similar, and it is the same reason the
+components are shipped as code instead of described.
+
+Both pull in one file, which carries the tokens, the page ground and rhythm, the
+button, the slider and the icons:
 
     https://typograaf.github.io/rayl-system/rayl.js
 
-**Include it and write markup. Do not restyle these components and do not
-rebuild them from the descriptions below.** Everything in it is generated from
-the approved Figma frames and the shipped app, so two pages built this way are
-identical rather than merely similar.
+Put  on the body and write markup:
 
-    <button class="rayl-btn" data-label="Save">Save</button>
-    <button class="rayl-btn" data-label="Save" data-icon="Save">Save</button>
-    <span class="rayl-icon" data-icon="Bell"></span>
-    <div class="rayl-row"><span class="rayl-label">Count</span>
-      <span class="rayl-slider" data-label="Count"
-            data-min="1" data-max="33" data-val="12" data-step="1"></span></div>
+    <body class="rayl"><div class="rayl-page">
+      <section class="rayl-section">
+        <span class="rayl-label">Aspect ratio</span>
+        <div class="rayl-cluster">
+          <button class="rayl-btn">4:5</button>
+          <button class="rayl-btn" aria-pressed="true">5:4</button>
+          <button class="rayl-btn" data-icon="Save">Save</button>
+        </div>
+        <div class="rayl-row"><span class="rayl-label">Count</span>
+          <span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span>
+        </div>
+      </section>
+    </div></body>
 
-An active control takes `aria-pressed="true"`. Dark mode is
-`document.documentElement.dataset.theme = "dark"`; leave it unset to follow the
-viewer's own setting.
+Layout is part of the system, not a decision to make each time: ,
+, , , , ,
+, , .
 
-The rest of this document exists for everything the file does not cover, and so
-that a person can check what the file does. **It is a description of the
-components, not a recipe for them** — three rules in here were written from a
-description and were wrong until the code was read. Where the two disagree, the
-file wins.
+Dark mode is ; leave it unset to
+follow the viewer's own setting.
+
+The rest of this document exists for everything the file does not cover, and so a
+person can check what the file does. **It is a description of the components, not
+a recipe for them** — several rules in here were written from a description and
+were wrong until the code was read. Where the two disagree, the file wins.
+
+### Where the system is built
+
+Everything is generated from  by :
+
+    src/core.css       tokens, page, layout, components
+    src/components.js  the label roll, the odometer, the icons
+    src/slider.js      the track
+    src/icons.json     the eighteen icons
+    →  rayl.js, and dist/ copies of the templates with it inlined
+
+Edit . Never edit  — it is output.
 
 ## 1. The logo
 

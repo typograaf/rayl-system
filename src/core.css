@@ -1,0 +1,184 @@
+@font-face{font-family:"Azeret";font-weight:400;font-display:swap;
+  src:url("HUB/assets/fonts/Azeret-TRIAL-Regular.woff2") format("woff2");}
+@font-face{font-family:"Azeret";font-weight:500;font-display:swap;
+  src:url("HUB/assets/fonts/Azeret-TRIAL-Medium.woff2") format("woff2");}
+
+:root{
+  --rayl-white:#FFFFFF; --rayl-paper:#FBFBF6; --rayl-off-white:#F7F7EF;
+  --rayl-bone:#EDEDDF; --rayl-dark-off-white:#E2E2D3; --rayl-porcelain:#CFCFC1;
+  --rayl-mid-porcelain:#C3C3B6; --rayl-dark-porcelain:#ACACA0;
+  --rayl-pale-concrete:#89897F; --rayl-light-concrete:#696961;
+  --rayl-dark-concrete:#55554E; --rayl-off-black:#373732;
+  --rayl-soft-black:#262623; --rayl-black:#1C1C1A; --rayl-deep-black:#11110F;
+
+  --surface-ground:var(--rayl-white);
+  --surface-idle:var(--rayl-paper);
+  --surface-idle-hover:var(--rayl-off-white);
+  --surface-idle-pressed:var(--rayl-bone);
+  --surface-active:var(--rayl-bone);
+  --surface-active-hover:var(--rayl-dark-off-white);
+  --surface-active-pressed:var(--rayl-porcelain);
+  --ink-primary:var(--rayl-black);
+  --ink-on-active:var(--rayl-black);
+  --ink-disabled:var(--rayl-dark-porcelain);
+  --line-track:var(--rayl-dark-porcelain);
+
+  --rayl-font:"Azeret",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --rayl-size:12px; --rayl-cap:8.376px; --rayl-radius:8px;
+  --rayl-dur:280ms; --rayl-stagger:20ms;
+  --rayl-ease:cubic-bezier(0.65,0,0.35,1);
+  --rayl-dir:-1;
+  --rayl-press:0.96;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --surface-ground:var(--rayl-soft-black);
+  --surface-idle:var(--rayl-deep-black);
+  --surface-idle-hover:var(--rayl-black);
+  --surface-idle-pressed:var(--rayl-off-black);
+  --surface-active:var(--rayl-dark-concrete);
+  --surface-active-hover:var(--rayl-light-concrete);
+  --surface-active-pressed:var(--rayl-off-black);
+  --ink-primary:var(--rayl-white);
+  --ink-on-active:var(--rayl-white);
+  --ink-disabled:var(--rayl-light-concrete);
+  --line-track:var(--rayl-pale-concrete);
+} }
+:root[data-theme="dark"]{
+  --surface-ground:var(--rayl-soft-black);
+  --surface-idle:var(--rayl-deep-black);
+  --surface-idle-hover:var(--rayl-black);
+  --surface-idle-pressed:var(--rayl-off-black);
+  --surface-active:var(--rayl-dark-concrete);
+  --surface-active-hover:var(--rayl-light-concrete);
+  --surface-active-pressed:var(--rayl-off-black);
+  --ink-primary:var(--rayl-white);
+  --ink-on-active:var(--rayl-white);
+  --ink-disabled:var(--rayl-light-concrete);
+  --line-track:var(--rayl-pale-concrete);
+}
+
+/* ------------------------------------------------------- button + the roll */
+.rayl-btn{
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0.02em;
+  --rayl-btn-h:calc(var(--rayl-cap) + 24px);
+  height:var(--rayl-btn-h);padding:0 12px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:0;border-radius:var(--rayl-radius);
+  background:var(--surface-idle);color:var(--ink-primary);
+  cursor:pointer;overflow:hidden;              /* the clip is the button shape */
+  transform:scale(1);
+  /* out is slower than in, so it presses crisply and returns without snapping */
+  transition:background 120ms ease-out, transform 220ms var(--rayl-ease);
+}
+.rayl-btn:hover{background:var(--surface-idle-hover);}
+.rayl-btn:active:not(:disabled){
+  background:var(--surface-idle-pressed);
+  transform:scale(var(--rayl-press));
+  transition:background 120ms ease-out, transform 90ms var(--rayl-ease);
+}
+.rayl-btn[aria-pressed="true"]{background:var(--surface-active);color:var(--ink-on-active);}
+.rayl-btn[aria-pressed="true"]:hover{background:var(--surface-active-hover);}
+.rayl-btn[aria-pressed="true"]:active:not(:disabled){background:var(--surface-active-pressed);}
+.rayl-btn:disabled{color:var(--ink-disabled);cursor:default;background:var(--surface-idle);}
+.rayl-btn:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
+
+.rayl-roll{position:relative;display:flex;align-items:center;white-space:pre;
+  height:var(--rayl-cap);--rayl-travel:var(--rayl-btn-h);}
+.rayl-ch{position:relative;display:block;flex:0 0 auto;height:var(--rayl-cap);width:0;
+  transition:width var(--rayl-dur) var(--rayl-ease) calc(var(--i,0) * var(--rayl-stagger));}
+.rayl-g{position:absolute;top:0;left:0;height:var(--rayl-cap);line-height:var(--rayl-cap);
+  text-box-trim:none;will-change:transform;
+  transition:transform var(--rayl-dur) var(--rayl-ease) calc(var(--i,0) * var(--rayl-stagger));}
+@supports (text-box-trim: trim-both){
+  .rayl-g{height:auto;line-height:1;text-box-trim:trim-both;text-box-edge:cap alphabetic;}
+}
+.rayl-cur{transform:translateY(0);}
+.rayl-nxt{transform:translateY(calc(var(--rayl-travel) * var(--rayl-dir) * -1));}
+.rayl-ch.is-rolled .rayl-cur{transform:translateY(calc(var(--rayl-travel) * var(--rayl-dir)));}
+.rayl-ch.is-rolled .rayl-nxt{transform:translateY(0);}
+.rayl-roll.is-instant .rayl-g,.rayl-roll.is-instant .rayl-ch{transition:none;}
+
+/* --------------------------------------------------------------- the icons */
+.rayl-icon{display:inline-block;width:12px;height:12px;color:currentColor;}
+.rayl-icon svg{display:block;width:100%;height:100%;fill:currentColor;}
+.rayl-btn .rayl-icon{margin-right:6px;}
+
+/* -------------------------------------------------------------- the slider */
+.rayl-slider{display:inline-block;position:relative;height:24px;width:100%;min-width:90px;}
+.rayl-slider svg{display:block;width:100%;height:24px;fill:var(--surface-idle);
+  cursor:ew-resize;outline:none;touch-action:none;}
+/* a numeric readout is a reel, not a swap: each column is a strip of digits and
+   its position is a continuous function of the value, so it spins as fast as the
+   value changes and lands on a whole number when the value does */
+.rayl-reel{display:flex;align-items:center;justify-content:center;
+  font-variant-numeric:tabular-nums;}
+.rayl-col{position:relative;overflow:hidden;flex:0 0 auto;
+  height:var(--rayl-travel);
+  transition:width var(--rayl-dur) var(--rayl-ease);}
+.rayl-strip{display:block;will-change:transform;}
+.rayl-digit{display:flex;align-items:center;justify-content:center;
+  height:var(--rayl-travel);}
+/* the glyph is centred on its cap box, not its em box — an em box reserves
+   descender room that digits never use, which floats them above centre */
+.rayl-num{display:block;line-height:var(--rayl-travel);text-box-trim:none;}
+@supports (text-box-trim: trim-both){
+  .rayl-num{line-height:1;text-box-trim:trim-both;text-box-edge:cap alphabetic;}
+}
+
+.rayl-val{position:absolute;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;pointer-events:none;font-family:var(--rayl-font);
+  font-size:8px;font-weight:500;letter-spacing:0.02em;color:var(--ink-primary);
+  --rayl-cap:5.584px;--rayl-travel:12px;transform-origin:50% 50%;}
+.rayl-slider svg:focus-visible{outline:1px solid var(--ink-primary);outline-offset:3px;border-radius:2px;}
+.rayl-row{display:flex;align-items:center;gap:24px;font-family:var(--rayl-font);
+  font-size:var(--rayl-size);font-weight:500;letter-spacing:0.02em;color:var(--ink-primary);}
+.rayl-row > .rayl-label{flex:0 0 76px;}
+@media (prefers-reduced-motion:reduce){
+  .rayl-g,.rayl-ch,.rayl-btn{transition-duration:1ms !important;transition-delay:0ms !important;}
+}
+
+/* ============================================================ the page ==== *
+ * Without these a page gets Rayl controls on a default white ground with a
+ * system font. The ground, the rhythm and the label style are as much the
+ * system as the button is, so they ship with it.
+ * ========================================================================== */
+
+body.rayl, .rayl-page{
+  background:var(--surface-ground);
+  color:var(--ink-primary);
+  font-family:var(--rayl-font);
+  font-size:var(--rayl-size);
+  font-weight:500;
+  line-height:1.2;
+  letter-spacing:0.02em;
+  -webkit-font-smoothing:antialiased;
+}
+body.rayl{margin:0;padding:48px 24px 72px;}
+body.rayl *,.rayl-page *{box-sizing:border-box;}
+@supports (text-box-trim: trim-both){
+  body.rayl,body.rayl *,.rayl-page,.rayl-page *{
+    text-box-trim:trim-both;text-box-edge:cap alphabetic;}
+  .rayl-num,.rayl-g{text-box-edge:cap alphabetic;}
+}
+
+/* one column, sections 72 apart — the guideline board's own rhythm */
+.rayl-page{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:72px;}
+.rayl-page.is-wide{max-width:960px;}
+
+.rayl-head{display:flex;justify-content:space-between;align-items:center;gap:24px;}
+.rayl-section{display:flex;flex-direction:column;gap:24px;}
+.rayl-stack{display:flex;flex-direction:column;gap:12px;}
+.rayl-cluster{display:flex;flex-wrap:wrap;gap:6px;}
+.rayl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+
+/* 8 uppercase, the only size in the system above or below 12 */
+.rayl-label{font-size:8px;font-weight:500;letter-spacing:0.08em;
+  text-transform:uppercase;opacity:.62;}
+.rayl-hint{opacity:.62;line-height:1.5;margin:0;max-width:62ch;}
+
+.rayl-card{background:var(--surface-idle);border-radius:var(--rayl-radius);padding:12px;
+  display:flex;flex-direction:column;gap:6px;}
+
+.rayl-mark{display:block;width:32px;height:auto;}
+.rayl-mark path{fill:var(--ink-primary);}
