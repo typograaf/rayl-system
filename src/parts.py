@@ -1,9 +1,13 @@
-"""Shared data and renderers for the generated pages."""
+"""Shared data and renderers for the two generated documents.
+
+The bench and the dashboard are both built from this file, so a colour, a token
+or a size can only be wrong in one place. Neither is hand-edited.
+"""
 import pathlib, re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MARK = re.search(r'<svg class="rayl-mark".*?</svg>',
-                 (ROOT/"examples/panel.html").read_text(), re.S).group(0)
+                 (ROOT / "examples/panel.html").read_text(), re.S).group(0)
 
 PALETTE = [
  ("White","#FFFFFF",100.0),("Paper","#FBFBF6",98.5),("Off White","#F7F7EF",97.1),
@@ -38,7 +42,38 @@ SCALE = [
  (18,"130%","+1%","—","Schoonmaak Medewerker"),
  (12,"140%","+2%","—","Schoonmaak Medewerker")]
 
-def swatch(n,h,l):
+ICONS = ["Profile","Image","Document","Save","Bookmark","Folder","Minus","Pause",
+         "Play","Plus","Upload","Download","ID","Bell","Broom","Stack","Cup","Organise"]
+
+GROUNDS = [("White","Soft Black"),("Paper","Deep Black"),("Off White","Black"),
+           ("Bone","Off-Black"),("Dark Off-White","Dark Concrete")]
+
+SLIDERS = [("Count",1,33,12),("Tilt",0,90,62),("Peaks",1,12,4),
+           ("Wave",0,100,70),("Duration",1,20,5),("Frames",0,240,120)]
+
+
+# --------------------------------------------------------- the container ----
+# The board divides a document with rounded boxes on a coloured ground: a
+# chapter label sits on the ground, everything under it sits in a box.
+
+def chapter(name):
+    return f'  <h2 class="rayl-chapter">{name}</h2>\n'
+
+def container(*blocks):
+    return '  <div class="rayl-container">\n' + "".join(blocks) + '  </div>\n'
+
+def block(label, body):
+    """A named row inside a container. The label names the thing; it never
+    explains it — that is what RAYL-SYSTEM.md is for."""
+    return (f'    <div class="rayl-stack">\n'
+            f'      <span class="rayl-label">{label}</span>\n'
+            f'      {body}\n'
+            f'    </div>\n')
+
+
+# ------------------------------------------------------------ the pieces ----
+
+def swatch(n, h, l):
     """The ink flips where it flips everywhere else: below Pale Concrete."""
     ink = "#1C1C1A" if l >= 55 else "#F7F7EF"
     return (f'<div class="sw" style="background:{h};color:{ink}">'
@@ -46,27 +81,142 @@ def swatch(n,h,l):
             f'<span class="mono" style="opacity:.62">{h}</span>'
             f'<span class="mono" style="opacity:.62">L* {l}</span></div>')
 
-def token(n,lt,dk,job):
+def token(n, lt, dk, job):
     return (f'<tr><td><i class="chip" style="background:var(--{n.replace("/","-")})"></i></td>'
             f'<td class="mono">{n}</td><td class="dim">{lt}</td><td class="dim">{dk}</td>'
             f'<td class="dim">{job}</td></tr>')
 
-def specimen(size,lead,az,co,sample):
-    serif = "" if co=="—" else (
-        f'<p class="rayl-{size} rayl-serif">{sample}</p>')
-    extra = "" if co == "\u2014" else f" \u00b7 Concrette {co}"
-    note = f'<span class="rayl-12 dim">{size} \u00b7 {lead} \u00b7 Azeret {az}{extra}</span>'
-    return (f'<div class="spec"><div class="rayl-stack">{note}</div>'
+def specimen(size, lead, az, co, sample):
+    serif = "" if co == "—" else f'<p class="rayl-{size} rayl-serif">{sample}</p>'
+    extra = "" if co == "—" else f" · Concrette {co}"
+    return (f'<div class="spec">'
+            f'<span class="rayl-12 dim">{size} · {lead} · Azeret {az}{extra}</span>'
             f'<p class="rayl-{size}">{sample}</p>{serif}</div>')
 
+def ground_card(i, lt, dk):
+    return (f'<div class="rayl-card bg{i}">'
+            f'<span class="rayl-label"><span class="l">{lt}</span><span class="d">{dk}</span></span>'
+            f'<button class="rayl-btn">Idle</button>'
+            f'<button class="rayl-btn" aria-pressed="true">Active</button></div>')
 
-SPEC_CSS = """
+def bar(name, on):
+    cells = "".join('<button class="rayl-seg-opt%s" type="button">%d</button>'
+                    % (" is-on" if n == on else "", n) for n in (1, 2, 3))
+    return (f'<div class="rayl-seg is-joined">'
+            f'<span class="rayl-seg-name">{name}</span>{cells}</div>')
+
+
+# ---------------------------------------------------------- the sections ----
+
+def buttons_section():
+    return chapter("Buttons") + container(
+        block("On each ground",
+              '<div class="rayl-grid">' +
+              "".join(ground_card(i, lt, dk) for i, (lt, dk) in enumerate(GROUNDS, 1)) +
+              '</div>'),
+        block("Reveal",
+              '<div class="rayl-cluster">' + "".join(
+                  f'<button class="rayl-ibtn" data-icon="{i}">{t}</button>' for i, t in
+                  (("Save","Save"),("Download","Export"),("Plus","Add a plate"),
+                   ("Broom","Reset positions"))) + '</div>'),
+        block("Icon",
+              '<div class="rayl-cluster">' + "".join(
+                  f'<button class="rayl-btn" data-icon="{n}" title="{n}" aria-label="{n}"></button>'
+                  for n in ICONS) + '</div>'),
+    )
+
+def groups_section():
+    opts = ('<button class="rayl-seg-opt is-on" type="button">4:5</button>'
+            '<button class="rayl-seg-opt" type="button">5:4</button>' +
+            "".join(f'<button class="rayl-seg-opt is-third" type="button">{r}</button>'
+                    for r in ("1:1", "16:9", "9:16")))
+    return chapter("Option groups") + container(
+        block("Aspect ratio", f'<div class="rayl-seg">{opts}</div>'),
+        block("Joined", "".join(bar(n, o) for n, o in
+                                (("Bisque", 2), ("Sheen", 1), ("Chalk", 3)))),
+    )
+
+def sliders_section():
+    rows = "".join(
+        f'<div class="rayl-row"><span class="rayl-label">{n}</span>'
+        f'<span class="rayl-slider" data-min="{lo}" data-max="{hi}" data-val="{v}" data-step="1"></span></div>'
+        for n, lo, hi, v in SLIDERS)
+    return chapter("Sliders") + container(f'    <div class="rayl-stack">{rows}</div>\n')
+
+def type_section():
+    return chapter("Type") + container(
+        "".join(specimen(*s) for s in SCALE),
+        block("8 · uppercase · +8%", '<span class="rayl-label">Aspect ratio</span>'),
+    )
+
+def colour_section():
+    return chapter("Colour") + container(
+        block("The palette — fifteen steps on one hue",
+              '<div class="rayl-grid">' + "".join(swatch(*p) for p in PALETTE) + '</div>'),
+        block("Gradients",
+              '<div class="rayl-split">'
+              '<div class="grad" style="background:var(--rayl-porcelain-gradient);color:#1C1C1A">'
+              '<span>Porcelain</span>'
+              '<span class="mono" style="opacity:.62">#CFCFC1 → #F7F7EF, 180°</span></div>'
+              '<div class="grad" style="background:var(--rayl-concrete-gradient);color:#F7F7EF">'
+              '<span>Concrete</span>'
+              '<span class="mono" style="opacity:.62">#696961 → #CFCFC1, 180°</span></div>'
+              '</div>'),
+    )
+
+def ui_colour_section():
+    return chapter("UI colour") + container(
+        '    <div class="scroll"><table>\n'
+        '      <thead><tr><th></th><th>Token</th><th>Light</th><th>Dark</th><th>Job</th></tr></thead>\n'
+        '      <tbody>' + "".join(token(*t) for t in UI) + '</tbody>\n'
+        '    </table></div>\n')
+
+
+def head(title, script, extra_css=""):
+    return f'''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<script src="{script}"></script>
+<style>{DOC_CSS}{extra_css}</style>
+</head>
+<body class="rayl rayl-doc">
+<div class="rayl-doc-page">
+
+  <div class="rayl-container">
+    <header class="rayl-head">
+      {MARK}
+      <div class="rayl-seg is-tight" id="theme">
+        <button class="rayl-seg-opt" type="button" data-mode="light">Light</button>
+        <button class="rayl-seg-opt" type="button" data-mode="dark">Dark</button>
+      </div>
+    </header>
+  </div>
+'''
+
+THEME_JS = '''<script>
+  /* The group owns the selection — this only says what a selection means. */
+  var root=document.documentElement, seg=document.getElementById("theme");
+  var mode=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+  root.dataset.theme=mode;
+  seg.querySelectorAll(".rayl-seg-opt").forEach(function(o){
+    o.classList.toggle("is-on", o.dataset.mode===mode);
+  });
+  seg.addEventListener("rayl:change",function(e){
+    root.dataset.theme=e.detail.option.dataset.mode;
+  });
+</script>'''
+
+# The furniture these two documents own. Everything a page could need comes from
+# rayl.js; what is left here only exists to show the system to itself.
+DOC_CSS = """
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
   /* A swatch IS the colour, with its name printed on it — the way the colour
      chapter in the Figma file draws one. No stroke round it and no box behind
-     it: the grid's gaps are the edges. White merges with a white page, which is
-     true and not a problem to solve. */
+     it: the grid's gaps are the edges. */
   .sw{border-radius:8px;padding:12px;min-height:96px;
     display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
     font-size:12px;line-height:1.4;letter-spacing:0.02em;}
@@ -80,63 +230,30 @@ SPEC_CSS = """
     padding-bottom:6px;}
   .chip{display:block;width:24px;height:24px;border-radius:4px;}
   .scroll{overflow-x:auto;}
-  .spec{display:flex;flex-direction:column;gap:12px;padding-bottom:48px;}
+  .spec{display:flex;flex-direction:column;gap:12px;}
+  .spec + .spec{margin-top:24px;}
+  /* the five grounds a control can land on, per mode — bench furniture */
+  .rayl-card{background:var(--rayl-card-bg,var(--surface-idle));}
+  .bg1{--rayl-card-bg:var(--rayl-white);}
+  .bg2{--rayl-card-bg:var(--rayl-paper);}
+  .bg3{--rayl-card-bg:var(--rayl-off-white);}
+  .bg4{--rayl-card-bg:var(--rayl-bone);}
+  .bg5{--rayl-card-bg:var(--rayl-dark-off-white);}
+  .d{display:none;}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+    .l{display:none;} .d{display:inline;}
+    .bg1{--rayl-card-bg:var(--rayl-soft-black);}
+    .bg2{--rayl-card-bg:var(--rayl-deep-black);}
+    .bg3{--rayl-card-bg:var(--rayl-black);}
+    .bg4{--rayl-card-bg:var(--rayl-off-black);}
+    .bg5{--rayl-card-bg:var(--rayl-dark-concrete);}
+  } }
+  :root[data-theme="dark"]{
+    .l{display:none;} .d{display:inline;}
+    .bg1{--rayl-card-bg:var(--rayl-soft-black);}
+    .bg2{--rayl-card-bg:var(--rayl-deep-black);}
+    .bg3{--rayl-card-bg:var(--rayl-black);}
+    .bg4{--rayl-card-bg:var(--rayl-off-black);}
+    .bg5{--rayl-card-bg:var(--rayl-dark-concrete);}
+  }
 """
-
-def type_section():
-    return f'''  <section class="rayl-section">
-    <span class="rayl-label">Typefaces</span>
-    <div class="rayl-split is-lead">
-      <p class="rayl-12 rayl-measure"><strong>Azeret is the workhorse.</strong> Interface,
-      running text, captions and labels — and headlines and titles perfectly well too. If
-      you are unsure which face to use, it is Azeret. It is the only face at 18 and 12.</p>
-      <p class="rayl-12 rayl-measure"><strong>Concrette is titles and subheads only.</strong>
-      A serif drawn for display, so it starts at 24. Never body copy, never a caption,
-      never a control. Below 24 the serif class is ignored on purpose.</p>
-    </div>
-    <p class="rayl-12 rayl-measure dim">Leading opens as the size drops and tracking
-    tightens as it grows. The two move against each other, and that is what makes a 96
-    headline and a 12 caption read as one voice. A size, its leading and its tracking are
-    one decision — the classes carry all three.</p>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">The scale — seven sizes, and 8 for labels</span>
-    {"".join(specimen(*s) for s in SCALE)}
-    <div class="rayl-stack">
-      <span class="rayl-12 dim">8 · uppercase · +8% — the section label, and nothing else</span>
-      <span class="rayl-label">Aspect ratio</span>
-    </div>
-  </section>'''
-
-def colour_sections():
-    return f'''  <section class="rayl-section">
-    <span class="rayl-label">Main colours — the brand palette</span>
-    <p class="rayl-12 rayl-measure dim">Fifteen steps on one hue: every one sits between
-    106.5° and 106.9°. Chroma follows a single arc, rising out of white, peaking at Dark
-    Off-White and falling to black without ever reversing. A new colour belongs to this
-    palette only if it sits on that arc.</p>
-    <div class="rayl-grid">{"".join(swatch(*p) for p in PALETTE)}</div>
-    <div class="rayl-split">
-      <div class="grad" style="background:var(--rayl-porcelain-gradient);color:#1C1C1A">
-        <span>Porcelain Gradient</span>
-        <span class="mono" style="opacity:.62">#CFCFC1 → #F7F7EF, 180°</span>
-      </div>
-      <div class="grad" style="background:var(--rayl-concrete-gradient);color:#F7F7EF">
-        <span>Concrete Gradient</span>
-        <span class="mono" style="opacity:.62">#696961 → #CFCFC1, 180°</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">UI colours — what the interface actually names</span>
-    <p class="rayl-12 rayl-measure dim">Nothing in an interface names a colour from the
-    palette above. It names a job, and the job resolves to a different step in each mode.
-    Change one of these and it changes everywhere at once — that is the whole point of
-    them. The swatches follow the mode you are in.</p>
-    <div class="scroll"><table>
-      <thead><tr><th></th><th>Token</th><th>Light</th><th>Dark</th><th>Job</th></tr></thead>
-      <tbody>{"".join(token(*t) for t in UI)}</tbody>
-    </table></div>
-  </section>'''

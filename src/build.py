@@ -88,6 +88,11 @@ window.Rayl={init:init, icons:Object.keys(ICONS)};
 (ROOT / "rayl.js").write_text(header + body)
 print("rayl.js", len(header + body), "bytes")
 
+# The two documents are generated from src/parts.py and must exist before the
+# artifact build reads them.
+import subprocess, sys
+subprocess.run([sys.executable, str(SRC/"site.py")], check=True, cwd=str(SRC))
+
 # ---------------------------------------------------------------------------
 # The artifact build: Claude's CSP allows scripts only from a few CDNs and
 # fonts only from Google's host, so the hosted rayl.js and the woff2 files are
@@ -122,7 +127,3 @@ for name in ("bench", "panel", "landing"):
     (DIST / f"{name}.html").write_text(out)
     print(f"dist/{name}.html", len(out), "bytes")
 
-# the dashboard and the bench are generated too, so they never drift from the data
-import subprocess, sys
-subprocess.run([sys.executable, str(SRC/"site.py")], check=True)
-print("index.html regenerated")

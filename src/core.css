@@ -24,6 +24,9 @@
      is painted in, so the press would read as a selection and the circle would
      then open Bone on Bone. One rung further out. */
   --rayl-seg-press:var(--rayl-dark-off-white);
+  --rayl-doc-ground:var(--rayl-off-white);
+  --rayl-doc-container:var(--rayl-white);
+  --rayl-doc-chapter:var(--rayl-dark-concrete);
   --ink-primary:var(--rayl-black);
   --ink-on-active:var(--rayl-black);
   --ink-disabled:var(--rayl-dark-porcelain);
@@ -56,6 +59,9 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  --rayl-doc-ground:var(--rayl-deep-black);
+  --rayl-doc-container:var(--rayl-soft-black);
+  --rayl-doc-chapter:var(--rayl-pale-concrete);
   --ink-primary:var(--rayl-white);
   --ink-on-active:var(--rayl-white);
   --ink-disabled:var(--rayl-light-concrete);
@@ -74,6 +80,9 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  --rayl-doc-ground:var(--rayl-deep-black);
+  --rayl-doc-container:var(--rayl-soft-black);
+  --rayl-doc-chapter:var(--rayl-pale-concrete);
   --ink-primary:var(--rayl-white);
   --ink-on-active:var(--rayl-white);
   --ink-disabled:var(--rayl-light-concrete);
@@ -304,6 +313,40 @@
   .rayl-g,.rayl-ch,.rayl-btn{transition-duration:1ms !important;transition-delay:0ms !important;}
 }
 
+/* ========================================================== the container ===
+ * How the guidelines board divides a document, measured at 966:99.
+ *
+ * The board is the ground — Off White, 12 of padding, blocks stacked 12 apart.
+ * A chapter is an 8 label sitting ON that ground: 24 of padding, no fill, so it
+ * reads as a heading over the boxes rather than a box of its own. Everything
+ * else lives inside a container: White, radius 24, 48 of padding.
+ *
+ * Radius is not one number. The board's own rounding demo runs 4, 12, 24 and 48
+ * as the box grows, so a control is 8 and a container is 24. Nothing draws a
+ * line: the change of ground is the edge, the same as everywhere else.
+ *
+ * This is documentation furniture. An app panel still uses rayl-page.
+ * ========================================================================== */
+
+body.rayl.rayl-doc{background:var(--rayl-doc-ground);padding:0;}
+.rayl-doc-page{max-width:960px;margin:0 auto;padding:12px;
+  display:flex;flex-direction:column;gap:12px;}
+.rayl-chapter{padding:24px;margin:0;
+  font-family:var(--rayl-font);font-size:8px;font-weight:500;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--rayl-doc-chapter);}
+.rayl-container{
+  --rayl-gap:24px;
+  background:var(--rayl-doc-container);border-radius:24px;padding:48px;
+  display:flex;flex-direction:column;gap:var(--rayl-gap);
+}
+/* the board's two-column block: a 500 side column against a 1504 main one */
+.rayl-doc-split{display:grid;grid-template-columns:500fr 1504fr;gap:12px;
+  align-items:start;}
+@media (max-width:720px){
+  .rayl-container{padding:24px;}
+  .rayl-doc-split{grid-template-columns:1fr;}
+}
 /* ============================================================= the type === *
  * Seven sizes. Leading opens as the size drops and tracking tightens as it
  * grows — the two move against each other, which is what keeps a 96 headline

@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
+<meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
 <title>Rayl System</title>
 <script src="rayl.js"></script>
 <style>
@@ -11,8 +11,7 @@
   .dim{opacity:.62;}
   /* A swatch IS the colour, with its name printed on it — the way the colour
      chapter in the Figma file draws one. No stroke round it and no box behind
-     it: the grid's gaps are the edges. White merges with a white page, which is
-     true and not a problem to solve. */
+     it: the grid's gaps are the edges. */
   .sw{border-radius:8px;padding:12px;min-height:96px;
     display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
     font-size:12px;line-height:1.4;letter-spacing:0.02em;}
@@ -26,7 +25,32 @@
     padding-bottom:6px;}
   .chip{display:block;width:24px;height:24px;border-radius:4px;}
   .scroll{overflow-x:auto;}
-  .spec{display:flex;flex-direction:column;gap:12px;padding-bottom:48px;}
+  .spec{display:flex;flex-direction:column;gap:12px;}
+  .spec + .spec{margin-top:24px;}
+  /* the five grounds a control can land on, per mode — bench furniture */
+  .rayl-card{background:var(--rayl-card-bg,var(--surface-idle));}
+  .bg1{--rayl-card-bg:var(--rayl-white);}
+  .bg2{--rayl-card-bg:var(--rayl-paper);}
+  .bg3{--rayl-card-bg:var(--rayl-off-white);}
+  .bg4{--rayl-card-bg:var(--rayl-bone);}
+  .bg5{--rayl-card-bg:var(--rayl-dark-off-white);}
+  .d{display:none;}
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+    .l{display:none;} .d{display:inline;}
+    .bg1{--rayl-card-bg:var(--rayl-soft-black);}
+    .bg2{--rayl-card-bg:var(--rayl-deep-black);}
+    .bg3{--rayl-card-bg:var(--rayl-black);}
+    .bg4{--rayl-card-bg:var(--rayl-off-black);}
+    .bg5{--rayl-card-bg:var(--rayl-dark-concrete);}
+  } }
+  :root[data-theme="dark"]{
+    .l{display:none;} .d{display:inline;}
+    .bg1{--rayl-card-bg:var(--rayl-soft-black);}
+    .bg2{--rayl-card-bg:var(--rayl-deep-black);}
+    .bg3{--rayl-card-bg:var(--rayl-black);}
+    .bg4{--rayl-card-bg:var(--rayl-off-black);}
+    .bg5{--rayl-card-bg:var(--rayl-dark-concrete);}
+  }
 
   pre{margin:0;font:inherit;font-size:12px;line-height:1.5;white-space:pre-wrap;
     word-break:break-word;}
@@ -34,27 +58,25 @@
     display:flex;flex-direction:column;gap:12px;align-items:flex-start;}
 </style>
 </head>
-<body class="rayl">
-<div class="rayl-page is-wide">
+<body class="rayl rayl-doc">
+<div class="rayl-doc-page">
 
-  <header class="rayl-head">
-    <svg class="rayl-mark" viewBox="0 0 151 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M141.065 98.6391C135.909 98.6391 132.144 94.7512 132.144 89.7173C132.144 84.8061 135.909 81 141.065 81C146.099 81 149.905 84.7243 149.905 89.7173C149.905 94.7512 146.181 98.6391 141.065 98.6391ZM141.025 97.084C145.035 97.084 148.228 93.9326 148.228 89.7173C148.228 85.5428 144.994 82.4733 141.025 82.4733C137.055 82.4733 133.862 85.5428 133.862 89.7173C133.862 93.9326 136.973 97.084 141.025 97.084ZM137.873 94.4647V85.1335H141.638C143.767 85.1335 145.076 86.3204 145.076 88.0393C145.076 89.3898 144.299 90.3721 142.948 90.8223C144.135 91.8454 144.749 93.0732 145.076 94.4647H143.357C143.03 93.2778 142.621 92.091 141.065 91.0269H139.633V94.4647H137.873ZM139.633 89.5126H141.72C142.662 89.5126 143.316 88.8987 143.316 88.0393C143.316 87.2617 142.662 86.6887 141.802 86.6887H139.633V89.5126Z"/><path d="M34.5 81C53.5538 81 69 96.4462 69 115.5C69 134.554 53.5538 150 34.5 150C15.4462 150 4.12351e-06 134.554 0 115.5C0 96.4462 15.4462 81 34.5 81Z"/><path d="M81 98.249C81 82.6584 99.8496 74.8502 110.874 85.874L145.126 120.126C156.15 131.15 148.342 150 132.751 150H98.5C88.835 150 81 142.165 81 132.5V98.249Z"/><path d="M115.5 0C134.554 0 150 15.4462 150 34.5C150 53.5538 134.554 69 115.5 69H17.5C7.83502 69 0 61.165 0 51.5V17.5C0 7.83502 7.83502 0 17.5 0H115.5Z"/></svg>
-    <div class="rayl-seg is-tight" id="theme">
-      <button class="rayl-seg-opt" type="button" data-mode="light">Light</button>
-      <button class="rayl-seg-opt" type="button" data-mode="dark">Dark</button>
-    </div>
-  </header>
-
-  <section class="rayl-hero">
+  <div class="rayl-container">
+    <header class="rayl-head">
+      <svg class="rayl-mark" viewBox="0 0 151 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M141.065 98.6391C135.909 98.6391 132.144 94.7512 132.144 89.7173C132.144 84.8061 135.909 81 141.065 81C146.099 81 149.905 84.7243 149.905 89.7173C149.905 94.7512 146.181 98.6391 141.065 98.6391ZM141.025 97.084C145.035 97.084 148.228 93.9326 148.228 89.7173C148.228 85.5428 144.994 82.4733 141.025 82.4733C137.055 82.4733 133.862 85.5428 133.862 89.7173C133.862 93.9326 136.973 97.084 141.025 97.084ZM137.873 94.4647V85.1335H141.638C143.767 85.1335 145.076 86.3204 145.076 88.0393C145.076 89.3898 144.299 90.3721 142.948 90.8223C144.135 91.8454 144.749 93.0732 145.076 94.4647H143.357C143.03 93.2778 142.621 92.091 141.065 91.0269H139.633V94.4647H137.873ZM139.633 89.5126H141.72C142.662 89.5126 143.316 88.8987 143.316 88.0393C143.316 87.2617 142.662 86.6887 141.802 86.6887H139.633V89.5126Z"/><path d="M34.5 81C53.5538 81 69 96.4462 69 115.5C69 134.554 53.5538 150 34.5 150C15.4462 150 4.12351e-06 134.554 0 115.5C0 96.4462 15.4462 81 34.5 81Z"/><path d="M81 98.249C81 82.6584 99.8496 74.8502 110.874 85.874L145.126 120.126C156.15 131.15 148.342 150 132.751 150H98.5C88.835 150 81 142.165 81 132.5V98.249Z"/><path d="M115.5 0C134.554 0 150 15.4462 150 34.5C150 53.5538 134.554 69 115.5 69H17.5C7.83502 69 0 61.165 0 51.5V17.5C0 7.83502 7.83502 0 17.5 0H115.5Z"/></svg>
+      <div class="rayl-seg is-tight" id="theme">
+        <button class="rayl-seg-opt" type="button" data-mode="light">Light</button>
+        <button class="rayl-seg-opt" type="button" data-mode="dark">Dark</button>
+      </div>
+    </header>
+  </div>
+  <div class="rayl-container">
     <span class="rayl-label">The Rayl design system</span>
     <h1 class="rayl-48">Hand this to an AI and what it builds comes out looking like Rayl.</h1>
-    <p class="rayl-18 rayl-measure">Including the parts nobody has designed yet. You do
-    not need to read any code to use it — copy the block below and paste it above
-    whatever you are asking for.</p>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">Paste this at the top of your prompt</span>
+    <p class="rayl-18 rayl-measure">Including the parts nobody has designed yet. You do not need to read any code to use it — copy the block below and paste it above whatever you are asking for.</p>
+  </div>
+  <h2 class="rayl-chapter">Paste this at the top of your prompt</h2>
+  <div class="rayl-container">
     <div class="paste">
       <pre id="paste">Build this to the Rayl design system.
 
@@ -89,6 +111,8 @@ Never draw a line around anything — no borders on cards, swatches, tables or s
 
 Layout comes from the system, so do not invent spacing. Panel: rayl-page, rayl-section, rayl-stack, rayl-cluster, rayl-grid, rayl-head, rayl-card, rayl-label, rayl-hint. Wide: rayl-page is-wide, rayl-hero, rayl-band (is-ink), rayl-split (is-lead, is-three, is-centred), rayl-measure, rayl-media.
 
+For a document rather than an app — a guideline, a reference, an overview — use rayl-doc on the body, rayl-doc-page inside it, then alternate rayl-chapter (an 8 label on the ground) with rayl-container (a white box, radius 24, 48 of padding) 12 apart. Label the thing and show it; do not write paragraphs explaining it.
+
 Build the structure the brief needs. These examples show the parts composed — read them if you are unsure how things go together, but do not clone one and change the words:
 
   https://typograaf.github.io/rayl-system/examples/landing.html
@@ -111,88 +135,46 @@ For anything the templates and the file do not cover, read https://typograaf.git
 - Where the system does not cover something, tell me and ask. Do not invent it.</pre>
       <button class="rayl-ibtn" data-icon="Document" id="copy">Copy</button>
     </div>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">Typefaces</span>
-    <div class="rayl-split is-lead">
-      <p class="rayl-12 rayl-measure"><strong>Azeret is the workhorse.</strong> It sets
-      the interface, running text, captions and labels, and it sets headlines and titles
-      perfectly well too. If you are unsure which face to use, it is Azeret. It is the
-      only face at 18 and 12.</p>
-      <p class="rayl-12 rayl-measure"><strong>Concrette is for titles and subheads, and
-      nothing else.</strong> A serif drawn for display, so it starts at 24. Never body
-      copy, never a caption, never a control. Below 24 the serif class is ignored on
-      purpose.</p>
-    </div>
-    <p class="rayl-12 rayl-measure dim">Leading opens as the size drops and tracking
-    tightens as it grows. The two move against each other, and that is what makes a 96
-    headline and a 12 caption read as one voice. A size, its leading and its tracking are
-    one decision — the classes carry all three.</p>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">The scale — seven sizes, and 8 for labels</span>
-    <div class="spec"><div class="rayl-stack"><span class="rayl-12 dim">96 · 110% · Azeret −4% · Concrette −5%</span></div><p class="rayl-96">Schoonmaak</p><p class="rayl-96 rayl-serif">Schoonmaak</p></div><div class="spec"><div class="rayl-stack"><span class="rayl-12 dim">72 · 110% · Azeret −3% · Concrette −4%</span></div><p class="rayl-72">Schoonmaak</p><p class="rayl-72 rayl-serif">Schoonmaak</p></div><div class="spec"><div class="rayl-stack"><span class="rayl-12 dim">48 · 110% · Azeret −2% · Concrette −3%</span></div><p class="rayl-48">Schoonmaak Medewerker</p><p class="rayl-48 rayl-serif">Schoonmaak Medewerker</p></div><div class="spec"><div class="rayl-stack"><span class="rayl-12 dim">36 · 110% · Azeret −1% · Concrette −2%</span></div><p class="rayl-36">Schoonmaak Medewerker</p><p class="rayl-36 rayl-serif">Schoonmaak Medewerker</p></div><div class="spec"><div class="rayl-stack"><span class="rayl-12 dim">24 · 115% · Azeret 0% · Concrette −2%</span></div><p class="rayl-24">Schoonmaak Medewerker</p><p class="rayl-24 rayl-serif">Schoonmaak Medewerker</p></div><div class="spec"><div class="rayl-stack"><span class="rayl-12 dim">18 · 130% · Azeret +1%</span></div><p class="rayl-18">Schoonmaak Medewerker</p></div><div class="spec"><div class="rayl-stack"><span class="rayl-12 dim">12 · 140% · Azeret +2%</span></div><p class="rayl-12">Schoonmaak Medewerker</p></div>
-    <div class="rayl-stack">
-      <span class="rayl-12 dim">8 · uppercase · +8% — the section label, and nothing else</span>
+  </div>
+  <h2 class="rayl-chapter">Type</h2>
+  <div class="rayl-container">
+<div class="spec"><span class="rayl-12 dim">96 · 110% · Azeret −4% · Concrette −5%</span><p class="rayl-96">Schoonmaak</p><p class="rayl-96 rayl-serif">Schoonmaak</p></div><div class="spec"><span class="rayl-12 dim">72 · 110% · Azeret −3% · Concrette −4%</span><p class="rayl-72">Schoonmaak</p><p class="rayl-72 rayl-serif">Schoonmaak</p></div><div class="spec"><span class="rayl-12 dim">48 · 110% · Azeret −2% · Concrette −3%</span><p class="rayl-48">Schoonmaak Medewerker</p><p class="rayl-48 rayl-serif">Schoonmaak Medewerker</p></div><div class="spec"><span class="rayl-12 dim">36 · 110% · Azeret −1% · Concrette −2%</span><p class="rayl-36">Schoonmaak Medewerker</p><p class="rayl-36 rayl-serif">Schoonmaak Medewerker</p></div><div class="spec"><span class="rayl-12 dim">24 · 115% · Azeret 0% · Concrette −2%</span><p class="rayl-24">Schoonmaak Medewerker</p><p class="rayl-24 rayl-serif">Schoonmaak Medewerker</p></div><div class="spec"><span class="rayl-12 dim">18 · 130% · Azeret +1%</span><p class="rayl-18">Schoonmaak Medewerker</p></div><div class="spec"><span class="rayl-12 dim">12 · 140% · Azeret +2%</span><p class="rayl-12">Schoonmaak Medewerker</p></div>    <div class="rayl-stack">
+      <span class="rayl-label">8 · uppercase · +8%</span>
       <span class="rayl-label">Aspect ratio</span>
     </div>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">Main colours — the brand palette</span>
-    <p class="rayl-12 rayl-measure dim">Fifteen steps on one hue: every one sits between
-    106.5° and 106.9°. Chroma follows a single arc, rising out of white, peaking at Dark
-    Off-White and falling to black without ever reversing. A new colour belongs to this
-    palette only if it sits on that arc.</p>
-    <div class="rayl-grid"><div class="sw" style="background:#FFFFFF;color:#1C1C1A"><span>White</span><span class="mono" style="opacity:.62">#FFFFFF</span><span class="mono" style="opacity:.62">L* 100.0</span></div><div class="sw" style="background:#FBFBF6;color:#1C1C1A"><span>Paper</span><span class="mono" style="opacity:.62">#FBFBF6</span><span class="mono" style="opacity:.62">L* 98.5</span></div><div class="sw" style="background:#F7F7EF;color:#1C1C1A"><span>Off White</span><span class="mono" style="opacity:.62">#F7F7EF</span><span class="mono" style="opacity:.62">L* 97.1</span></div><div class="sw" style="background:#EDEDDF;color:#1C1C1A"><span>Bone</span><span class="mono" style="opacity:.62">#EDEDDF</span><span class="mono" style="opacity:.62">L* 93.3</span></div><div class="sw" style="background:#E2E2D3;color:#1C1C1A"><span>Dark Off-White</span><span class="mono" style="opacity:.62">#E2E2D3</span><span class="mono" style="opacity:.62">L* 89.5</span></div><div class="sw" style="background:#CFCFC1;color:#1C1C1A"><span>Porcelain</span><span class="mono" style="opacity:.62">#CFCFC1</span><span class="mono" style="opacity:.62">L* 82.8</span></div><div class="sw" style="background:#C3C3B6;color:#1C1C1A"><span>Mid Porcelain</span><span class="mono" style="opacity:.62">#C3C3B6</span><span class="mono" style="opacity:.62">L* 78.5</span></div><div class="sw" style="background:#ACACA0;color:#1C1C1A"><span>Dark Porcelain</span><span class="mono" style="opacity:.62">#ACACA0</span><span class="mono" style="opacity:.62">L* 70.1</span></div><div class="sw" style="background:#89897F;color:#1C1C1A"><span>Pale Concrete</span><span class="mono" style="opacity:.62">#89897F</span><span class="mono" style="opacity:.62">L* 56.9</span></div><div class="sw" style="background:#696961;color:#F7F7EF"><span>Light Concrete</span><span class="mono" style="opacity:.62">#696961</span><span class="mono" style="opacity:.62">L* 44.2</span></div><div class="sw" style="background:#55554E;color:#F7F7EF"><span>Dark Concrete</span><span class="mono" style="opacity:.62">#55554E</span><span class="mono" style="opacity:.62">L* 35.9</span></div><div class="sw" style="background:#373732;color:#F7F7EF"><span>Off-Black</span><span class="mono" style="opacity:.62">#373732</span><span class="mono" style="opacity:.62">L* 22.9</span></div><div class="sw" style="background:#262623;color:#F7F7EF"><span>Soft Black</span><span class="mono" style="opacity:.62">#262623</span><span class="mono" style="opacity:.62">L* 15.2</span></div><div class="sw" style="background:#1C1C1A;color:#F7F7EF"><span>Black</span><span class="mono" style="opacity:.62">#1C1C1A</span><span class="mono" style="opacity:.62">L* 10.2</span></div><div class="sw" style="background:#11110F;color:#F7F7EF"><span>Deep Black</span><span class="mono" style="opacity:.62">#11110F</span><span class="mono" style="opacity:.62">L* 5.0</span></div></div>
-    <div class="rayl-split">
-      <div class="grad" style="background:var(--rayl-porcelain-gradient);color:#1C1C1A">
-        <span>Porcelain Gradient</span>
-        <span class="mono" style="opacity:.62">#CFCFC1 → #F7F7EF, 180°</span>
-      </div>
-      <div class="grad" style="background:var(--rayl-concrete-gradient);color:#F7F7EF">
-        <span>Concrete Gradient</span>
-        <span class="mono" style="opacity:.62">#696961 → #CFCFC1, 180°</span>
-      </div>
+  </div>
+  <h2 class="rayl-chapter">Colour</h2>
+  <div class="rayl-container">
+    <div class="rayl-stack">
+      <span class="rayl-label">The palette — fifteen steps on one hue</span>
+      <div class="rayl-grid"><div class="sw" style="background:#FFFFFF;color:#1C1C1A"><span>White</span><span class="mono" style="opacity:.62">#FFFFFF</span><span class="mono" style="opacity:.62">L* 100.0</span></div><div class="sw" style="background:#FBFBF6;color:#1C1C1A"><span>Paper</span><span class="mono" style="opacity:.62">#FBFBF6</span><span class="mono" style="opacity:.62">L* 98.5</span></div><div class="sw" style="background:#F7F7EF;color:#1C1C1A"><span>Off White</span><span class="mono" style="opacity:.62">#F7F7EF</span><span class="mono" style="opacity:.62">L* 97.1</span></div><div class="sw" style="background:#EDEDDF;color:#1C1C1A"><span>Bone</span><span class="mono" style="opacity:.62">#EDEDDF</span><span class="mono" style="opacity:.62">L* 93.3</span></div><div class="sw" style="background:#E2E2D3;color:#1C1C1A"><span>Dark Off-White</span><span class="mono" style="opacity:.62">#E2E2D3</span><span class="mono" style="opacity:.62">L* 89.5</span></div><div class="sw" style="background:#CFCFC1;color:#1C1C1A"><span>Porcelain</span><span class="mono" style="opacity:.62">#CFCFC1</span><span class="mono" style="opacity:.62">L* 82.8</span></div><div class="sw" style="background:#C3C3B6;color:#1C1C1A"><span>Mid Porcelain</span><span class="mono" style="opacity:.62">#C3C3B6</span><span class="mono" style="opacity:.62">L* 78.5</span></div><div class="sw" style="background:#ACACA0;color:#1C1C1A"><span>Dark Porcelain</span><span class="mono" style="opacity:.62">#ACACA0</span><span class="mono" style="opacity:.62">L* 70.1</span></div><div class="sw" style="background:#89897F;color:#1C1C1A"><span>Pale Concrete</span><span class="mono" style="opacity:.62">#89897F</span><span class="mono" style="opacity:.62">L* 56.9</span></div><div class="sw" style="background:#696961;color:#F7F7EF"><span>Light Concrete</span><span class="mono" style="opacity:.62">#696961</span><span class="mono" style="opacity:.62">L* 44.2</span></div><div class="sw" style="background:#55554E;color:#F7F7EF"><span>Dark Concrete</span><span class="mono" style="opacity:.62">#55554E</span><span class="mono" style="opacity:.62">L* 35.9</span></div><div class="sw" style="background:#373732;color:#F7F7EF"><span>Off-Black</span><span class="mono" style="opacity:.62">#373732</span><span class="mono" style="opacity:.62">L* 22.9</span></div><div class="sw" style="background:#262623;color:#F7F7EF"><span>Soft Black</span><span class="mono" style="opacity:.62">#262623</span><span class="mono" style="opacity:.62">L* 15.2</span></div><div class="sw" style="background:#1C1C1A;color:#F7F7EF"><span>Black</span><span class="mono" style="opacity:.62">#1C1C1A</span><span class="mono" style="opacity:.62">L* 10.2</span></div><div class="sw" style="background:#11110F;color:#F7F7EF"><span>Deep Black</span><span class="mono" style="opacity:.62">#11110F</span><span class="mono" style="opacity:.62">L* 5.0</span></div></div>
     </div>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">UI colours — what the interface actually names</span>
-    <p class="rayl-12 rayl-measure dim">Nothing in an interface names a colour from the
-    palette above. It names a job, and the job resolves to a different step in each mode.
-    Change one of these and it changes everywhere at once — that is the whole point of
-    them. The swatches follow the mode you are in.</p>
+    <div class="rayl-stack">
+      <span class="rayl-label">Gradients</span>
+      <div class="rayl-split"><div class="grad" style="background:var(--rayl-porcelain-gradient);color:#1C1C1A"><span>Porcelain</span><span class="mono" style="opacity:.62">#CFCFC1 → #F7F7EF, 180°</span></div><div class="grad" style="background:var(--rayl-concrete-gradient);color:#F7F7EF"><span>Concrete</span><span class="mono" style="opacity:.62">#696961 → #CFCFC1, 180°</span></div></div>
+    </div>
+  </div>
+  <h2 class="rayl-chapter">UI colour</h2>
+  <div class="rayl-container">
     <div class="scroll"><table>
       <thead><tr><th></th><th>Token</th><th>Light</th><th>Dark</th><th>Job</th></tr></thead>
       <tbody><tr><td><i class="chip" style="background:var(--surface-ground)"></i></td><td class="mono">surface/ground</td><td class="dim">White</td><td class="dim">Soft Black</td><td class="dim">The panel or page itself</td></tr><tr><td><i class="chip" style="background:var(--surface-idle)"></i></td><td class="mono">surface/idle</td><td class="dim">Paper</td><td class="dim">Deep Black</td><td class="dim">A control at rest</td></tr><tr><td><i class="chip" style="background:var(--surface-idle-hover)"></i></td><td class="mono">surface/idle-hover</td><td class="dim">Off White</td><td class="dim">Black</td><td class="dim">Rest control, pointer over it</td></tr><tr><td><i class="chip" style="background:var(--surface-idle-pressed)"></i></td><td class="mono">surface/idle-pressed</td><td class="dim">Bone</td><td class="dim">Off-Black</td><td class="dim">Rest control, being pressed</td></tr><tr><td><i class="chip" style="background:var(--surface-active)"></i></td><td class="mono">surface/active</td><td class="dim">Bone</td><td class="dim">Dark Concrete</td><td class="dim">A control that is on</td></tr><tr><td><i class="chip" style="background:var(--surface-active-hover)"></i></td><td class="mono">surface/active-hover</td><td class="dim">Dark Off-White</td><td class="dim">Light Concrete</td><td class="dim">On control, pointer over it</td></tr><tr><td><i class="chip" style="background:var(--surface-active-pressed)"></i></td><td class="mono">surface/active-pressed</td><td class="dim">Porcelain</td><td class="dim">Off-Black</td><td class="dim">On control, being pressed</td></tr><tr><td><i class="chip" style="background:var(--ink-primary)"></i></td><td class="mono">ink/primary</td><td class="dim">Black</td><td class="dim">White</td><td class="dim">All text and icons</td></tr><tr><td><i class="chip" style="background:var(--ink-on-active)"></i></td><td class="mono">ink/on-active</td><td class="dim">Black</td><td class="dim">White</td><td class="dim">Text on an active control</td></tr><tr><td><i class="chip" style="background:var(--ink-disabled)"></i></td><td class="mono">ink/disabled</td><td class="dim">Dark Porcelain</td><td class="dim">Light Concrete</td><td class="dim">Unavailable text</td></tr><tr><td><i class="chip" style="background:var(--line-track)"></i></td><td class="mono">line/track</td><td class="dim">Dark Porcelain</td><td class="dim">Pale Concrete</td><td class="dim">Slider rails and small marks</td></tr><tr><td><i class="chip" style="background:var(--fill-strong)"></i></td><td class="mono">fill/strong</td><td class="dim">Black</td><td class="dim">White</td><td class="dim">A high-emphasis button</td></tr><tr><td><i class="chip" style="background:var(--fill-strong-hover)"></i></td><td class="mono">fill/strong-hover</td><td class="dim">Soft Black</td><td class="dim">Off White</td><td class="dim">…with the pointer over it</td></tr><tr><td><i class="chip" style="background:var(--ink-on-strong)"></i></td><td class="mono">ink/on-strong</td><td class="dim">White</td><td class="dim">Soft Black</td><td class="dim">Text on one</td></tr></tbody>
     </table></div>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">Examples — read these, do not clone them</span>
-    <p class="rayl-12 rayl-measure dim">They show the parts composed. Build the
-    structure your brief needs — cloning one gives you a page shaped like somebody
-    else's problem.</p>
-    <div class="rayl-cluster">
-      <a class="rayl-btn" href="examples/landing.html">A page</a>
-      <a class="rayl-btn" href="examples/panel.html">A panel</a>
-      <a class="rayl-btn" href="examples/bench.html">The bench</a>
+  </div>
+  <h2 class="rayl-chapter">Where everything is</h2>
+  <div class="rayl-container">
+    <div class="rayl-stack">
+      <span class="rayl-label">Examples — read these, do not clone them</span>
+      <div class="rayl-cluster"><a class="rayl-btn" href="examples/landing.html">A page</a><a class="rayl-btn" href="examples/panel.html">A panel</a><a class="rayl-btn" href="examples/bench.html">The bench</a></div>
     </div>
-    <span class="rayl-label">The documents</span>
-    <div class="rayl-cluster">
-      <a class="rayl-btn" href="RAYL-SYSTEM.md">The rules</a>
-      <a class="rayl-btn" href="AUDIT.md">The audit</a>
-      <a class="rayl-btn" href="rayl.js">rayl.js</a>
-      <a class="rayl-btn" href="assets/logo/Lockup.svg">Lockup</a>
+    <div class="rayl-stack">
+      <span class="rayl-label">The documents</span>
+      <div class="rayl-cluster"><a class="rayl-btn" href="RAYL-SYSTEM.md">The rules</a><a class="rayl-btn" href="AUDIT.md">The audit</a><a class="rayl-btn" href="rayl.js">rayl.js</a><a class="rayl-btn" href="assets/logo/Lockup.svg">Lockup</a></div>
     </div>
-  </section>
-
-  <footer class="rayl-head">
+  </div>
+  <div class="rayl-container">
     <span class="rayl-label">Azeret and Concrette are TRIAL cuts — licence them before anything public</span>
-  </footer>
+  </div>
 
 </div>
 <script>
@@ -206,6 +188,8 @@ For anything the templates and the file do not cover, read https://typograaf.git
   seg.addEventListener("rayl:change",function(e){
     root.dataset.theme=e.detail.option.dataset.mode;
   });
+</script>
+<script>
   document.getElementById("copy").addEventListener("click",function(){
     navigator.clipboard.writeText(document.getElementById("paste").textContent);
   });

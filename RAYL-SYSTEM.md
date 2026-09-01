@@ -413,6 +413,36 @@ The consequence worth knowing: **the gap after a heading is always larger than
 the gap after the paragraph beneath it.** That difference is the hierarchy. If
 every gap in a section is the same, the section has no shape.
 
+### Dividing a document
+
+A document is not a panel. The guidelines board divides itself with rounded
+containers on a coloured ground, and anything explaining the system — this repo's
+bench and dashboard included — is built the same way. Measured at `966:99`:
+
+| part | what |
+|---|---|
+| the ground | Off White, 12 of padding, blocks stacked **12** apart |
+| a chapter | an **8** label on the ground itself: 24 of padding, no fill |
+| a container | White, radius **24**, **48** of padding |
+| a split block | a **500** side column against a **1504** main one, 12 apart |
+
+The chapter label sits on the ground rather than inside a box, which is what
+makes it read as a heading over the containers instead of another container.
+Nothing is outlined; the change of ground is the edge, the same as everywhere
+else in the system.
+
+```html
+<body class="rayl rayl-doc"><div class="rayl-doc-page">
+  <h2 class="rayl-chapter">Buttons</h2>
+  <div class="rayl-container"> ... </div>
+</div></body>
+```
+
+**A document is an overview, not an essay.** A label names the thing and the
+thing follows. Explanation lives here, in this file — a bench that explains
+itself stops being scannable, and the explanation goes stale where nobody is
+looking at it.
+
 ### No strokes
 
 **Rayl has no border vocabulary.** Nothing in the system draws a line around
@@ -443,9 +473,11 @@ control. Both are in heavy use and neither is on the scale. Until that is settle
 do not introduce either into new work and do not "fix" them where they already
 are.
 
-Corner radius: **8** on controls and cards, **4** at the small scale the Figma
-mock uses, and **half the height** on anything meant to read as fully round. The
-scale as a whole is still open.
+Corner radius grows with the box, and the board's own rounding demo gives the
+ladder: **4**, **12**, **24**, **48**. In practice a control is **8**, a
+container is **24**, and anything meant to read as fully round takes **half its
+height**. The 8 sits between the board's 4 and 12 because it is measured off the
+approved UI rather than the demo; where the two disagree, the UI wins.
 
 ### Established figures
 
