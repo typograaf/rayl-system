@@ -26,6 +26,9 @@
   --line-track:var(--rayl-dark-porcelain);
   --fill-strong:var(--ink-primary);
   --fill-strong-hover:var(--rayl-soft-black);
+  --rayl-porcelain-gradient:linear-gradient(180deg,var(--rayl-porcelain) 0.349%,var(--rayl-off-white));
+  --rayl-concrete-gradient:linear-gradient(180deg,var(--rayl-light-concrete) 0.349%,var(--rayl-porcelain));
+  --media-ground:var(--rayl-porcelain-gradient);
   --ink-on-strong:var(--surface-ground);
 
   --rayl-font:"Azeret",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
@@ -55,6 +58,7 @@
   --fill-strong:var(--ink-primary);
   --fill-strong-hover:var(--rayl-off-white);
   --ink-on-strong:var(--surface-ground);
+  --media-ground:var(--rayl-concrete-gradient);
 } }
 :root[data-theme="dark"]{
   --surface-ground:var(--rayl-soft-black);
@@ -71,6 +75,7 @@
   --fill-strong:var(--ink-primary);
   --fill-strong-hover:var(--rayl-off-white);
   --ink-on-strong:var(--surface-ground);
+  --media-ground:var(--rayl-concrete-gradient);
 }
 
 /* ------------------------------------------------------- button + the roll */
@@ -220,13 +225,30 @@
 
 .rayl-96,.rayl-72,.rayl-48,.rayl-36,.rayl-24,.rayl-18,.rayl-12{
   font-family:var(--rayl-font);font-weight:500;margin:0;text-wrap:balance;}
-.rayl-96{font-size:96px;line-height:1.10;letter-spacing:-0.04em;}
-.rayl-72{font-size:72px;line-height:1.10;letter-spacing:-0.03em;}
-.rayl-48{font-size:48px;line-height:1.10;letter-spacing:-0.02em;}
-.rayl-36{font-size:36px;line-height:1.10;letter-spacing:-0.01em;}
-.rayl-24{font-size:24px;line-height:1.15;letter-spacing:0;}
+.rayl-96{font-size:96px;line-height:1.10;letter-spacing:-0.04em;max-width:14ch;}
+.rayl-72{font-size:72px;line-height:1.10;letter-spacing:-0.03em;max-width:16ch;}
+.rayl-48{font-size:48px;line-height:1.10;letter-spacing:-0.02em;max-width:20ch;}
+.rayl-36{font-size:36px;line-height:1.10;letter-spacing:-0.01em;max-width:24ch;}
+.rayl-24{font-size:24px;line-height:1.15;letter-spacing:0;max-width:32ch;}
 .rayl-18{font-size:18px;line-height:1.30;letter-spacing:0.01em;}
 .rayl-12{font-size:12px;line-height:1.40;letter-spacing:0.02em;text-wrap:pretty;}
+
+/* A headline's measure is set in ch on the headline itself. `ch` resolves
+   against the element's own font-size, so putting it on a container that
+   inherits 12 gives a column a few words wide — which is exactly the fault it
+   looks like. */
+
+/* Narrow viewports step DOWN the scale rather than off it: every size here is
+   another size from the same seven, with that size's own leading and tracking. */
+@media (max-width:760px){
+  .rayl-96{font-size:48px;letter-spacing:-0.02em;max-width:20ch;}
+  .rayl-72{font-size:36px;letter-spacing:-0.01em;max-width:24ch;}
+  .rayl-48{font-size:36px;letter-spacing:-0.01em;max-width:24ch;}
+  .rayl-36{font-size:24px;line-height:1.15;letter-spacing:0;max-width:32ch;}
+  .rayl-96.rayl-serif{letter-spacing:-0.03em;}
+  .rayl-72.rayl-serif,.rayl-48.rayl-serif{letter-spacing:-0.02em;}
+  .rayl-36.rayl-serif{letter-spacing:-0.02em;}
+}
 
 /* the serif, at the five sizes it is drawn for, one percent tighter throughout */
 .rayl-serif{font-family:var(--rayl-font-display);}
@@ -243,9 +265,7 @@
  * 520 column cannot make.
  * ========================================================================== */
 
-.rayl-hero{display:flex;flex-direction:column;gap:24px;
-  padding-block:72px;max-width:24ch;}
-.rayl-hero.is-full{max-width:none;}
+.rayl-hero{display:flex;flex-direction:column;gap:24px;padding-block:24px 48px;}
 
 /* a full-bleed run of colour, escaping whatever column it sits in */
 .rayl-band{margin-inline:calc(50% - 50vw);padding:72px calc(50vw - 50% + 24px);
@@ -257,13 +277,15 @@
 @media (min-width:760px){
   .rayl-split{grid-template-columns:1fr 1fr;align-items:start;}
   .rayl-split.is-lead{grid-template-columns:3fr 2fr;}
+  .rayl-split.is-three{grid-template-columns:repeat(3,1fr);}
 }
+.rayl-split.is-centred{align-items:center;}
 
 /* running text stops at a readable measure whatever the column does */
 .rayl-measure{max-width:62ch;}
 
 .rayl-media{position:relative;overflow:hidden;border-radius:var(--rayl-radius);
-  background:var(--surface-idle);aspect-ratio:4 / 5;}
+  background:var(--media-ground);aspect-ratio:4 / 5;}
 .rayl-media.is-wide{aspect-ratio:16 / 9;}
 .rayl-media.is-square{aspect-ratio:1;}
 .rayl-media > img,.rayl-media > canvas,.rayl-media > video{
@@ -285,7 +307,7 @@ body.rayl, .rayl-page{
   letter-spacing:0.02em;
   -webkit-font-smoothing:antialiased;
 }
-body.rayl{margin:0;padding:48px 24px 72px;}
+body.rayl{margin:0;padding:48px 24px 72px;overflow-x:clip;}
 body.rayl *,.rayl-page *{box-sizing:border-box;}
 @supports (text-box-trim: trim-both){
   body.rayl,body.rayl *,.rayl-page,.rayl-page *{
