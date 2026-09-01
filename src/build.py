@@ -91,15 +91,20 @@ import base64
 DIST = ROOT / "dist"
 DIST.mkdir(exist_ok=True)
 rayl = (ROOT / "rayl.js").read_text()
-fonts = {
-    400: ROOT / "assets/fonts/Azeret-TRIAL-Regular.woff2",
-    500: ROOT / "assets/fonts/Azeret-TRIAL-Medium.woff2",
-}
+# every face the system uses, or the one that is missing falls back in silence
+fonts = [
+    ("Azeret",    400, ROOT / "assets/fonts/Azeret-TRIAL-Regular.woff2"),
+    ("Azeret",    500, ROOT / "assets/fonts/Azeret-TRIAL-Medium.woff2"),
+    ("Concrette", 500, ROOT / "assets/fonts/ConcretteS-TRIAL-Medium.woff2"),
+]
+missing = [str(p) for _, _, p in fonts if not p.exists()]
+if missing:
+    raise SystemExit("missing font files: " + ", ".join(missing))
 face = "\n".join(
-    '@font-face{font-family:"Azeret";font-weight:%d;font-display:swap;'
+    '@font-face{font-family:"%s";font-weight:%d;font-display:swap;'
     'src:url(data:font/woff2;base64,%s) format("woff2");}'
-    % (w, base64.b64encode(p.read_bytes()).decode())
-    for w, p in fonts.items()
+    % (fam, w, base64.b64encode(p.read_bytes()).decode())
+    for fam, w, p in fonts
 )
 for name in ("bench", "panel", "landing"):
     src = (ROOT / "templates" / f"{name}.html").read_text()
