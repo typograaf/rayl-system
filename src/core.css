@@ -22,6 +22,9 @@
   --ink-on-active:var(--rayl-black);
   --ink-disabled:var(--rayl-dark-porcelain);
   --line-track:var(--rayl-dark-porcelain);
+  --fill-strong:var(--ink-primary);
+  --fill-strong-hover:var(--rayl-soft-black);
+  --ink-on-strong:var(--surface-ground);
 
   --rayl-font:"Azeret",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
   --rayl-size:12px; --rayl-cap:8.376px; --rayl-radius:8px;
@@ -42,6 +45,9 @@
   --ink-on-active:var(--rayl-white);
   --ink-disabled:var(--rayl-light-concrete);
   --line-track:var(--rayl-pale-concrete);
+  --fill-strong:var(--ink-primary);
+  --fill-strong-hover:var(--rayl-off-white);
+  --ink-on-strong:var(--surface-ground);
 } }
 :root[data-theme="dark"]{
   --surface-ground:var(--rayl-soft-black);
@@ -55,6 +61,9 @@
   --ink-on-active:var(--rayl-white);
   --ink-disabled:var(--rayl-light-concrete);
   --line-track:var(--rayl-pale-concrete);
+  --fill-strong:var(--ink-primary);
+  --fill-strong-hover:var(--rayl-off-white);
+  --ink-on-strong:var(--surface-ground);
 }
 
 /* ------------------------------------------------------- button + the roll */
@@ -98,6 +107,60 @@
 .rayl-ch.is-rolled .rayl-cur{transform:translateY(calc(var(--rayl-travel) * var(--rayl-dir)));}
 .rayl-ch.is-rolled .rayl-nxt{transform:translateY(0);}
 .rayl-roll.is-instant .rayl-g,.rayl-roll.is-instant .rayl-ch{transition:none;}
+
+/* ------------------------------------------------------- the reveal button */
+/* A label pill with a circle hiding behind its right end. On hover the pill
+   contracts by exactly the circle plus the gap, its right corners go fully
+   round, and the circle is revealed by an iris — a circular clip opening from
+   the centre. The circle never moves and never scales, so the icon stays at 12
+   and is uncovered rather than grown. The icon rides up from one height below
+   as it appears. */
+.rayl-ibtn{
+  --h:calc(var(--rayl-cap) + 24px);      /* 32.376, the height of any button */
+  --round:calc(var(--h) / 2);            /* fully round, double the 8 */
+  --gap:6px;
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0.02em;
+  position:relative;display:block;width:var(--w,126px);height:var(--h);
+  padding:0;border:0;background:none;cursor:pointer;color:var(--ink-on-strong);
+  transform:scale(1);
+  transition:transform 220ms var(--rayl-ease);
+}
+.rayl-ibtn:active:not(:disabled){
+  transform:scale(var(--rayl-press));
+  transition:transform 90ms var(--rayl-ease);
+}
+.rayl-ibtn:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
+.rayl-ibtn .rayl-roll{--rayl-travel:var(--h);}
+.rayl-ibtn-body{
+  position:absolute;left:0;top:0;z-index:1;width:var(--w);height:var(--h);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--fill-strong);border-radius:var(--rayl-radius);
+  overflow:hidden;                       /* the clip is the body's own outline */
+  transition:width var(--rayl-dur) var(--rayl-ease),
+             border-radius var(--rayl-dur) var(--rayl-ease),
+             background var(--rayl-dur) var(--rayl-ease);
+}
+.rayl-ibtn-dot{
+  position:absolute;right:0;top:0;z-index:0;width:var(--h);height:var(--h);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--fill-strong);border-radius:50%;
+  overflow:hidden;                       /* the circle is the clip for the icon */
+  clip-path:circle(0% at 50% 50%);
+  transition:background var(--rayl-dur) var(--rayl-ease),
+             clip-path var(--rayl-dur) var(--rayl-ease);
+}
+.rayl-ibtn-icon{display:block;width:12px;height:12px;
+  transform:translateY(var(--h));        /* waiting one height below */
+  transition:transform var(--rayl-dur) var(--rayl-ease);}
+.rayl-ibtn-icon svg{display:block;width:100%;height:100%;fill:currentColor;}
+.rayl-ibtn:hover .rayl-ibtn-body,.rayl-ibtn.is-open .rayl-ibtn-body{
+  width:calc(var(--w) - var(--h) - var(--gap));
+  border-radius:var(--rayl-radius) var(--round) var(--round) var(--rayl-radius);
+  background:var(--fill-strong-hover);}
+.rayl-ibtn:hover .rayl-ibtn-dot,.rayl-ibtn.is-open .rayl-ibtn-dot{
+  background:var(--fill-strong-hover);clip-path:circle(50% at 50% 50%);}
+.rayl-ibtn:hover .rayl-ibtn-icon,.rayl-ibtn.is-open .rayl-ibtn-icon{transform:translateY(0);}
 
 /* --------------------------------------------------------------- the icons */
 .rayl-icon{display:inline-block;width:12px;height:12px;color:currentColor;}

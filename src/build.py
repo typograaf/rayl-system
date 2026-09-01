@@ -64,6 +64,7 @@ if(!document.getElementById("rayl-style")){
 function init(root){
   root=root||document;
   [].forEach.call(root.querySelectorAll(".rayl-btn"),upgradeButton);
+  [].forEach.call(root.querySelectorAll(".rayl-ibtn"),upgradeIconButton);
   [].forEach.call(root.querySelectorAll(".rayl-icon[data-icon]"),upgradeIcon);
   [].forEach.call(root.querySelectorAll(".rayl-slider"),function(s){
     if(!s.__rayl){ s.__rayl=true; mountSlider(s); }

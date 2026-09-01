@@ -181,6 +181,50 @@ function upgradeButton(btn){
   return r;
 }
 
+
+/* The reveal button: a label pill with a circle behind its right end.
+   Its width is the label plus its own padding, the gap and the circle — measured
+   from the roll's character boxes, so it fits the text rather than guessing. */
+function upgradeIconButton(btn){
+  if (btn.__rayl) return btn.__rayl;
+  var body = document.createElement("span");
+  body.className = "rayl-ibtn-body";
+  var host = document.createElement("span");
+  host.dataset.label = btn.dataset.label || btn.textContent.trim();
+  body.appendChild(host);
+
+  var dot = document.createElement("span");
+  dot.className = "rayl-ibtn-dot";
+  var icon = document.createElement("span");
+  icon.className = "rayl-ibtn-icon";
+  var d = ICONS[btn.dataset.icon];
+  if (d) icon.innerHTML = '<svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">'+d+'</svg>';
+  dot.appendChild(icon);
+
+  btn.textContent = "";
+  btn.appendChild(body);
+  btn.appendChild(dot);
+
+  var r = new Roll(host);
+  btn.__rayl = r;
+
+  function size(){
+    var w = 0;
+    for (var i=0;i<r.chars.length;i++) w += parseFloat(r.chars[i].box.style.width) || 0;
+    var h = parseFloat(getComputedStyle(btn).height) || 32.376;
+    btn.style.setProperty("--w", (w + 24 + 6 + h) + "px");
+  }
+  size();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){
+    advCache = Object.create(null); r.render(r.showing); size();
+  });
+
+  if (btn.disabled) return r;
+  btn.addEventListener("pointerenter", function(){ r.turn(); });
+  btn.addEventListener("focus", function(){ r.turn(); });
+  return r;
+}
+
 /* ------------------------------------------------------------- the icons */
 function makeIcon(name){
   var span = document.createElement("span");
