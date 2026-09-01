@@ -29,6 +29,10 @@
   --rayl-font:"Azeret",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
   --rayl-size:12px; --rayl-cap:8.376px; --rayl-radius:8px;
   --rayl-dur:280ms; --rayl-stagger:20ms;
+  /* a roll is duration + (characters - 1) x stagger, which grows without limit.
+     Past this the stagger compresses so a long label lands with the button
+     rather than long after it. */
+  --rayl-roll-max:400ms;
   --rayl-ease:cubic-bezier(0.65,0,0.35,1);
   --rayl-dir:-1;
   --rayl-press:0.96;

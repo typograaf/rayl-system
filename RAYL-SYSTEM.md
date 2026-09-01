@@ -342,6 +342,60 @@ For a base not in this table, apply the rule. Do not invent a colour.
 | control / track | Dark Off-White `#E2E2D3` |
 | control / fill | Black `#1C1C1A` |
 
+### The label roll
+
+A button's label changes character by character rather than all at once: each
+character has a current glyph and a next one stacked above it, and the pair
+travels **upward through the button's own height** — 32.376, which is the cap
+height plus its 24 of padding.
+
+| setting | value |
+|---|---|
+| a character's travel | 280ms |
+| one character to the next | 20ms |
+| easing | `cubic-bezier(0.65,0,0.35,1)` — in and out |
+| order | random, reshuffled on every roll |
+| direction | upward |
+| the clip | the button's own shape |
+
+**The whole roll finishes in 400ms whatever the label says.** A roll takes
+`duration + (characters - 1) x stagger`, which grows without limit — a nineteen
+character label at a flat 20ms apart runs 640ms, more than twice the button's own
+280ms, and the text is still arriving long after the shape has settled. So the
+stagger holds at 20ms while it fits and compresses beyond that: four characters
+land in 340ms, eleven in 400ms, twenty-six in 400ms. Short labels keep the full
+stagger; long ones simply arrive together.
+
+Only characters that actually change roll. A button hovering rolls its whole
+label — that is the effect — but a label going from one word to a similar one
+moves only what differs. `turn()` forces every character; `to()` moves what
+changed.
+
+**A number is not a label.** A readout being dragged uses the reel in the next
+section, never this.
+
+### The counter reel
+
+A number that changes continuously — a slider's value, a live count — is a reel,
+not a roll. Each decimal place is a strip of digits whose position is a
+continuous function of the value, so it spins as fast as the value changes and
+lands on a whole number when the value does. Nothing is skipped and nothing
+queues.
+
+It is an odometer, not ten loose reels: **the units column follows the value
+exactly, and every column above it holds still until the one below is about to
+wrap**, then carries across the last tenth. Without that carry the higher digits
+sit permanently between two numerals and cannot be read while moving.
+
+Digits are set `tabular-nums` so every column is one width, and a column with
+nothing in it yet collapses to zero width — 5 reads as `5`, not `005`.
+
+### The press
+
+Every button sinks to **0.96** while held: 90ms down, 220ms back. The two
+directions are deliberately unequal — matched timing reads as a wobble, a quick
+press and a slower release reads as a button.
+
 ### Sliders
 
 **A Rayl slider is one shape.** A rounded nub carries the value and a 2px rail

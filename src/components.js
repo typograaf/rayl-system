@@ -98,7 +98,13 @@ Roll.prototype.to = function(next, force){
   this.busy = true;
   var cs = getComputedStyle(document.documentElement);
   var ms = parseFloat(cs.getPropertyValue("--rayl-dur")) || 280;
-  var st = parseFloat(cs.getPropertyValue("--rayl-stagger")) || 20;
+  var base = parseFloat(cs.getPropertyValue("--rayl-stagger")) || 20;
+  var cap = parseFloat(cs.getPropertyValue("--rayl-roll-max")) || 400;
+  /* short labels keep the full stagger; longer ones compress so that every
+     label, whatever its length, finishes at about the same moment */
+  var n = moving.length;
+  var st = n > 1 ? Math.min(base, Math.max(0, (cap - ms) / (n - 1))) : 0;
+  this.host.style.setProperty("--rayl-stagger", st + "ms");
   this._t = setTimeout(function(){
     self.settle();
     var p = self.pending; self.pending = null;
