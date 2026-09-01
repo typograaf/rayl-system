@@ -146,8 +146,9 @@ dd { margin: 0; }
 
 Start from a template and change the content. Do not compose a page from scratch — copying is what keeps two pages identical rather than merely similar.
 
-  https://typograaf.github.io/rayl-system/templates/panel.html   a settings panel
-  https://typograaf.github.io/rayl-system/templates/bench.html   every control, on five grounds
+  https://typograaf.github.io/rayl-system/templates/landing.html  a marketing page
+  https://typograaf.github.io/rayl-system/templates/panel.html    a settings panel
+  https://typograaf.github.io/rayl-system/templates/bench.html    every control, on five grounds
 
 Both are plain HTML. They pull in one file, which carries the colour tokens, the page ground and rhythm, the button, the slider and the icons:
 
@@ -179,7 +180,9 @@ For anything the templates and the file do not cover, read https://typograaf.git
 
 - Colour comes only from the tokens. Never a raw hex.
 - Spacing is 6, 12, 24, 48, 72 and nothing else.
-- Type is 8 for labels and 12 for everything else, trimmed to its cap height.
+- Type is seven sizes: 96, 72, 48, 36, 24, 18, 12, plus 8 for labels. Use rayl-96 ... rayl-12 and rayl-label — each carries its own leading and tracking, which are not separate decisions.
+- Azeret is the workhorse and sets everything including headlines. Concrette is a serif for titles and subheads only, 24 and up: add rayl-serif. Never below 24, never for running text.
+- Wide layouts: rayl-hero, rayl-band, rayl-split, rayl-measure, rayl-media. Put is-wide on rayl-page for a 960 column.
 - The logo is a file, never something you draw: https://typograaf.github.io/rayl-system/assets/logo/Lockup.svg
 - Where the system does not cover something, tell me and ask. Do not invent it.</pre>
       <button id="copy" type="button">Copy</button>

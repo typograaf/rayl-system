@@ -101,7 +101,7 @@ face = "\n".join(
     % (w, base64.b64encode(p.read_bytes()).decode())
     for w, p in fonts.items()
 )
-for name in ("bench", "panel"):
+for name in ("bench", "panel", "landing"):
     src = (ROOT / "templates" / f"{name}.html").read_text()
     out = src.replace(
         '<script src="https://typograaf.github.io/rayl-system/rayl.js"></script>',

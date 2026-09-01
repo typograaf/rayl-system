@@ -30,8 +30,9 @@ Rayl is light mode only for now. Do not produce a dark variant unless asked.
 
 Two working pages ship with the system:
 
-    templates/panel.html   a settings panel
-    templates/bench.html   every control, on five grounds
+    templates/landing.html  a marketing page
+    templates/panel.html    a settings panel
+    templates/bench.html    every control, on five grounds
 
 **Change their content. Do not build a page from scratch.** Copying is what makes
 two pages identical rather than merely similar, and it is the same reason the
@@ -59,9 +60,12 @@ Put `class="rayl"` on the body and write markup:
       </section>
     </div></body>
 
-**Layout is part of the system, not a decision to make each time:** `rayl-page`,
-`rayl-section`, `rayl-stack`, `rayl-cluster`, `rayl-grid`, `rayl-head`,
-`rayl-card`, `rayl-label`, `rayl-hint`. Use those rather than inventing spacing —
+**Layout is part of the system, not a decision to make each time.** For a panel:
+`rayl-page`, `rayl-section`, `rayl-stack`, `rayl-cluster`, `rayl-grid`,
+`rayl-head`, `rayl-card`, `rayl-label`, `rayl-hint`. For a page that has to
+breathe: `rayl-page is-wide`, `rayl-hero`, `rayl-band` (and `is-ink` for a run of
+full-bleed ink), `rayl-split` (and `is-lead` for 3:2), `rayl-measure`,
+`rayl-media`. Use those rather than inventing spacing —
 they carry the 6/12/24/48/72 rhythm and the 8px label so you do not have to.
 
 A button's label is its own text; `data-label` is only needed when the label
@@ -294,27 +298,23 @@ control's label sits in a fixed cap-height box where leading does not apply.
 
 ### Two typefaces
 
-**Azeret** is the grotesque, and it covers everything: the interface, running
-text, and headlines if you want them set that way. It is the only face at 18 and
-12.
+**Azeret is the workhorse.** It sets the interface, running text, captions and
+labels, and it sets headlines and titles perfectly well too. If you are unsure
+which face to use, it is Azeret. It is the only face at 18 and 12.
 
-**Concrette** is the serif, and it is drawn for display only — 24 and up. It sets
-one percent tighter than Azeret at every size it appears at. Add `.rayl-serif` to
-any size class from 24 upward; below that the class is ignored and the text stays
-Azeret, because Concrette has no business at caption size.
+**Concrette is for titles and subheads, and nothing else.** It is a serif drawn
+for display, so it starts at 24 and goes up. Never body copy, never a caption,
+never a control. Using it below 24 or for running text is the way to make a page
+stop looking like Rayl.
+
+So a headline may be either — that is a real choice each time, not a default.
+Everything under it is Azeret.
+
+Concrette sets one percent tighter than Azeret at every size they share. Add
+`.rayl-serif` to a size class from 24 upward; below that the class is ignored on
+purpose and the text stays Azeret.
 
 Both are TRIAL cuts and both need licensing before anything public.
-
-
-
-Two sizes are established:
-
-- **8** — section labels
-- **12** — everything else: body, rows, buttons, controls
-
-Tracking at 12 is `0.02em`. Line height is `1.2`.
-
-Anything larger than 12 is NOT DECIDED. If you need a headline size, ask.
 
 ### Weights
 
