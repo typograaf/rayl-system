@@ -89,22 +89,33 @@ carries fine detail that will fill in when small.
 
 ## 2. Colour
 
-The palette is seven flat colours and two gradients. They live in the Rayl Figma
+The palette is ten flat colours and two gradients. They live in the Rayl Figma
 file as styles under a `V2/` prefix, and those styles are the authority.
 
 The names are materials, not greys, and that is deliberate. The palette is drawn
 from the professional catering world — the look of porcelain and concrete, rigid
 materials given fluid, organic movement.
 
-| name | hex | RGB | CMYK |
-|---|---|---|---|
-| White | `#FFFFFF` | 255 255 255 | 0 0 0 0 |
-| Off White | `#F7F7F2` | 247 247 242 | 0 0 2 3 |
-| Dark Off-White | `#E2E2D3` | 226 226 211 | 0 0 7 11 |
-| Porcelain | `#CFCFC4` | 207 207 196 | 0 0 5 19 |
-| Light Concrete | `#696963` | 105 105 99 | 0 0 6 59 |
-| Dark Concrete | `#55554E` | 85 85 78 | 0 0 8 67 |
-| Black | `#1C1C1A` | 28 28 26 | 0 0 7 89 |
+| name | hex | RGB | CMYK | L* |
+|---|---|---|---|---|
+| White | `#FFFFFF` | 255 255 255 | 0 0 0 0 | 100.0 |
+| Off White | `#F7F7F2` | 247 247 242 | 0 0 2 3 | 97.1 |
+| Dark Off-White | `#E2E2D3` | 226 226 211 | 0 0 7 11 | 89.5 |
+| Porcelain | `#CFCFC4` | 207 207 196 | 0 0 5 19 | 82.8 |
+| Dark Porcelain | `#ACACA2` | 172 172 162 | 0 0 6 33 | 70.1 |
+| Pale Concrete | `#898982` | 137 137 130 | 0 0 5 46 | 56.9 |
+| Light Concrete | `#696963` | 105 105 99 | 0 0 6 59 | 44.2 |
+| Dark Concrete | `#55554E` | 85 85 78 | 0 0 8 67 | 35.9 |
+| Off-Black | `#373733` | 55 55 51 | 0 0 7 78 | 22.9 |
+| Black | `#1C1C1A` | 28 28 26 | 0 0 7 89 | 10.2 |
+
+Three of these — Dark Porcelain, Pale Concrete and Off-Black — were added on
+2026-09-01 to fill two holes in the ladder. They are drawn on the palette's own
+hue (109.7) with chroma interpolated from their neighbours, so they belong to the
+set rather than merely sitting near it.
+
+Read down the L* column: the steps are 2.9, 7.6, 6.7, 12.7, 13.2, 12.7, 8.3,
+13.0, 12.7. Before they were added the two biggest were 38.6 and 25.7.
 
 **Gradients.** Both run top to bottom with the first stop at 0.349%.
 
@@ -141,10 +152,15 @@ the file is right and the code is wrong:
 Three things are genuinely missing rather than merely unwritten. Ask rather than
 filling them in:
 
-- **A mid-tone.** There is nothing at all between Porcelain and Light Concrete —
-  a gap of 38 in lightness. That is exactly where control borders, disabled text
-  and hover states live, which is why UI work keeps reaching for a colour that
-  does not exist.
+- **White is the only colour off the system.** Every other colour sits between
+  hue 109.4 and 110.0. White is achromatic, so in a warm palette it reads cold.
+  It also cannot carry the hue: at maximum lightness there is no room for any
+  chroma at all. Keeping it pure is defensible — it is the true white, and Off
+  White already does the warm job — but it is a deliberate exception, not a
+  member.
+- **Dark Off-White is more saturated than both its neighbours.** Its chroma is
+  7.8 where Off White is 2.5 and Porcelain 5.8; the curve would put it near 4.2.
+  It is the one colour that looks slightly more yellow-green than the set.
 - **The green.** The palette's own rationale promises "subtle touches of an
   organic green", but no green is in it. One exists in the app build
   (`#D8DEB9`), unaccounted for.
