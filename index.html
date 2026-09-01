@@ -157,8 +157,9 @@ The rules that matter most:
 - The ground is #F7F7EF and ink is #1C1C1A. Never #000000 — the palette has no pure black. Light mode only.
 - No UI state has its own colour. Hover is the palette colour nearest 5 L* away, pressed the one nearest 10 L*. Light grounds move down the ladder, dark fills move up. White hovers to Bone and presses to Dark Off-White; Black hovers to Soft Black and presses to Off-Black.
 - Icons are eighteen drawn 12x12 filled shapes, never stroked, always ink/primary: Bell, Bookmark, Broom, Cup, Document, Download, Folder, ID, Image, Minus, Organise, Pause, Play, Plus, Profile, Save, Stack, Upload. Never substitute one from a public icon set.
-- A slider is ONE filleted shape filled surface/idle, with the value on top in ink/primary at 8px. It is a groove in the panel, never ink drawn on it. Row 12 tall, line 2 pill-capped, box corner 3, fillet 2, box padding 12 either side, 27 clearance at both ends. The box grows with its number and the pointer carries its centre.
-- The slider track fills the width of its row but its geometry never scales: draw the path at real pixel width. Stretching a fixed-width track skews the fillets and breaks the drag.
+- A slider is ONE generated path filled surface/idle with the value on it in ink/primary at 8px: a rounded nub with a 2px rail running out of it through a concave fillet. Row 12, nub corner 3, nub width = its number plus even padding and never under 24, rail at y5-7 with radius-1 caps a pixel in from each edge, fillet radius 2 using the cubic offsets 1.10457, 0.8954.
+- The nub reaches both ends. Each rail is drawn only if there is room for it, so a nub at an end closes on its own corner — never leave a stub of rail beyond it, and never inset the travel.
+- The slider track fills its row but its geometry never scales: draw the path at real pixel width.
 - There is no green and no error or warning colour, and no loading, empty or error state. If you need one, ask.
 - Where the system does not cover something, tell me and ask. Do not invent it and do not substitute something that looks close.</pre>
       <button id="copy" type="button">Copy</button>

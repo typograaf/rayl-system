@@ -6,6 +6,13 @@ a reskin, a screensaver — and by any person who wants to know what the rules a
 
 ## How to use this
 
+**Where the truth lives.** When two sources disagree, this is the order: the
+approved Figma frames first, then `rayl-stack` — the shipped app — then this
+document, then anything else. `rayl-ui`, `rayl-wheel` and the other repos are
+studies; they contain earlier and different versions of the same controls and are
+not the system. Three rules in this document were written from a study and had to
+be corrected.
+
 Follow every rule here exactly. Where a value is given, use that value; do not
 round it, do not pick something near it, do not substitute a colour that looks
 similar.
@@ -277,45 +284,44 @@ For a base not in this table, apply the rule. Do not invent a colour.
 
 ### Sliders
 
-**A Rayl slider is one shape, not a track with a knob on it.** A hairline swells
-into a rounded box carrying the value, and where the box meets the line the join
-is *filleted* — a small concave arc, so the line grows into the box instead of
-butting against it. Those four fillets are the whole character of the control.
+**A Rayl slider is one shape.** A rounded nub carries the value and a 2px rail
+runs *out* of it — not butted against it, out of it, through a concave fillet on
+each side. That fillet is the whole character of the control, and it is the one
+thing a rail-plus-a-box in CSS cannot do, because the join is a curve belonging
+to neither piece. The path has to be generated.
 
 **Colour: the shape is `surface/idle`, the number sits on it in `ink/primary`.**
-The slider is a groove in the panel, not a mark drawn on it. On light it is barely
-there; on dark it reads as a recess cut below the ground. Do not invert this — a
-slider drawn in ink with the number knocked out is a different control.
+The slider is a groove in the panel, not a mark drawn on it. Do not invert it.
 
-Geometry, in absolute pixels at a 12 tall row:
+**The nub reaches both ends, and there is never a stub of rail beyond it.** Each
+rail is drawn only if there is room for one — when the nub arrives at an end,
+that side closes on its own corner. This is the detail everyone gets wrong: an
+inset that keeps the nub clear of the ends leaves a dead tail of rail sticking
+out, and the control stops looking like it can reach its own maximum.
 
 | measure | value |
 |---|---|
-| row height, set by the box | 12 |
-| line weight | 2, capped as a pill |
-| box corner | 3 |
-| box padding, each side of the number | 12 |
-| clearance the box never crosses at either end | 27 |
-| fillet radius | 2 |
+| row height | 12 |
+| nub corner | 3 |
+| nub width | its number plus even padding, never under 24 |
+| rail | 2 tall through the middle, at y 5 to 7 |
+| rail end cap | radius 1, one pixel in from each edge |
+| fillet | radius 2 |
+| fillet cubic | offsets `1.10457, 0.8954` from the nub's corner |
 | value text | 8 |
 
-The fillet is not a free choice: it is tangent to the line on one side and the
-box's straight edge on the other, so it can only be `(height - line) / 2 - corner`.
+The fillet cubic is hand-fitted in the design, not derived. Copy it; do not
+recompute it.
 
-**The track fills the width of its row, and its geometry never scales with it.**
-Draw the path at real pixel width — corners, fillets and the box stay 3, 2 and 12
-however wide the row is. Stretching a fixed-width track to fit is the one way to
-get this control visibly wrong: the fillets skew and the box stops landing under
-the cursor.
+**The track fills the width of its row and its geometry never scales.** Draw the
+path at real pixel width — the nub, corners and fillets stay 24, 3 and 2 however
+wide the row gets. Stretching a fixed-width track skews the fillets and stops the
+nub landing under the cursor.
 
-Three behaviours belong to the control as much as the shape does:
-
-- **The box grows with its number.** Width is the text width plus 12 either side,
-  so a three-digit value makes a wider box. It is not a fixed knob.
-- **The pointer carries the box's centre**, so the number stays under the cursor
-  while dragging rather than sliding out from under it.
-- **The travel is deliberately short**, which is why arrow keys do the fine work —
-  one step per press, ten with shift.
+Two behaviours belong to the control as much as the shape does: the **nub grows
+with its number**, so 8 and 2400 are both centred in it; and the **pointer carries
+the nub's centre**, so the value stays under the cursor while dragging. The travel
+is short, so arrow keys do the fine work — one step, ten with shift.
 
 ### Ink flip
 
