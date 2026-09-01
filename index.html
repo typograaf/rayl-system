@@ -161,6 +161,7 @@ The rules that matter most:
 - The nub reaches both ends. Each rail is drawn only if there is room for it, so a nub at an end closes on its own corner — never leave a stub of rail beyond it, and never inset the travel.
 - The slider track fills its row but its geometry never scales: draw the path at real pixel width.
 - Text that changes rolls: it turns over in place, one character at a time, upward, clipped to the component's own shape. 280ms a character, 20ms apart, random order, cubic-bezier(0.65, 0, 0.35, 1). A character travels exactly the height of whatever clips it — the button's height (32.376 at size 12) inside a button, the line box (14.4) in a line of text. Hover rolls a label into itself, press rolls it into the next word, disabled never rolls. Nothing else in the system moves.
+- A button may carry an icon hidden at rest. On hover it divides: the body gives up 6 plus one circle of width, its right corners go to half the button's height (16.188), and a circle of the button's height opens in the space with a circular clip from circle(0%) to circle(50%), a 12 icon rolling up inside it. The total width never changes. Both surfaces move Black to Soft Black together.
 - There is no green and no error or warning colour, and no loading, empty or error state. If you need one, ask.
 - Where the system does not cover something, tell me and ask. Do not invent it and do not substitute something that looks close.</pre>
       <button id="copy" type="button">Copy</button>

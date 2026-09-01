@@ -418,6 +418,65 @@ read as a material that can turn rather than as a message that has arrived.
 A disabled control stays still because the movement means something happened,
 and nothing did.
 
+### The icon button
+
+A button may carry an icon that is not shown at rest. On hover the button
+**divides**: the body gives up the gap plus one circle of width, its right
+corners go fully round, and a circle of exactly the button's height takes the
+space it vacated, with a 12 icon inside it.
+
+Measured off `Rayl / 1101:9741`. That frame is drawn at half scale, and every
+value in it doubles onto a number the system already has — which is the check
+that it belongs.
+
+| measure | frame | real |
+|---|---|---|
+| height | 16 | **32.376** — `cap + 24` |
+| type, Medium | 6 | **12** |
+| padding | 6 | **12** |
+| radius, idle | 4 | **8** |
+| radius, right on hover | 8 | **16.188** |
+| gap | 3 | **6** |
+| circle | 16 | **32.376** |
+| icon | 6 | **12** |
+
+**The footprint never changes.** In the frame, idle is 63 wide and hover is
+44 + 3 + 16, which is also 63. The body gives up exactly the gap plus the
+circle. The button does not grow into the layout, it divides — which is what
+lets one sit in a fixed row without pushing anything.
+
+**The right corners go to half the height, not to double the radius.** At this
+height, 8 doubled and half of 32.376 are the same number, so the two rules are
+indistinguishable here and only one of them survives a taller button. Half the
+height is the rule.
+
+**The circle arrives as an iris.** It is full size and in place the whole time;
+a circular clip opens on it from its own centre, `circle(0%)` to `circle(50%)`.
+It is never scaled and never moves, so the icon inside stays at 12 throughout
+and is revealed rather than grown.
+
+Three other readings were built and rejected. The circle merely uncovered by the
+shrinking body, and the circle sliding out from behind it, both leave nothing
+happening at the moment the gap opens. Scaling it up from a point puts the icon
+through sizes it was not drawn for, and section 7 says an icon is built for its
+box and is not scaled below 12.
+
+**Both surfaces carry the same fill and move together**, Black to Soft Black, on
+the same duration and curve as everything else.
+
+**The icon rolls up inside the circle**, travelling **32.376** — the circle's
+height, because the circle is what clips it. That is the travel rule applied to
+something that is not text. Nothing new had to be decided to animate it.
+
+**There are two clips, not one.** The body clips its label; the circle clips its
+icon; each element travels whichever one contains it. Getting this wrong fails
+silently rather than loudly — the label simply appears twice, once in place and
+once sitting below the button.
+
+One value in the frame is off this document: the label is White `#FFFFFF` where
+section 5 tabulates ink / inverse as Off White `#F7F7EF`. NOT DECIDED — ask
+before using either.
+
 ### Reference implementation
 
 Copy this. It is the version the numbers above were chosen on.
@@ -458,6 +517,45 @@ Copy this. It is the version the numbers above were chosen on.
 .is-instant .g, .is-instant .ch { transition: none; }
 ```
 
+The icon button, on top of that. `--w` is the label's measured width plus 24 of
+padding, plus the gap, plus the circle.
+
+```css
+.ibtn { --h: calc(var(--cap) + 24px);      /* 32.376 */
+        --round: calc(var(--h) / 2);       /* 16.188 — half the height */
+        --gap: 6px;
+        position: relative; width: var(--w); height: var(--h); }
+
+.ibtn-body { position: absolute; left: 0; top: 0; z-index: 1;
+             width: var(--w); height: var(--h);
+             display: flex; align-items: center; justify-content: center;
+             background: #1C1C1A; border-radius: 8px;
+             overflow: hidden;             /* clips the label */
+             transition: width var(--dur) var(--ease),
+                         border-radius var(--dur) var(--ease),
+                         background var(--dur) var(--ease); }
+.ibtn-body .roll { --travel: var(--h); }
+
+.ibtn-dot { position: absolute; right: 0; top: 0; z-index: 0;
+            width: var(--h); height: var(--h);
+            display: flex; align-items: center; justify-content: center;
+            background: #1C1C1A; border-radius: 50%;
+            overflow: hidden;              /* clips the icon */
+            clip-path: circle(0% at 50% 50%);
+            transition: background var(--dur) var(--ease),
+                        clip-path var(--dur) var(--ease); }
+
+.ibtn-icon { width: 12px; height: 12px; transform: translateY(var(--h));
+             transition: transform var(--dur) var(--ease); }
+
+.ibtn:hover .ibtn-body { width: calc(var(--w) - var(--h) - var(--gap));
+                         border-radius: 8px var(--round) var(--round) 8px;
+                         background: #262623; }
+.ibtn:hover .ibtn-dot  { background: #262623;
+                         clip-path: circle(50% at 50% 50%); }
+.ibtn:hover .ibtn-icon { transform: translateY(0); }
+```
+
 The JavaScript does four things and no more:
 
 1. Split the label into `.ch` boxes, each holding `.g-nxt` above `.g-cur`.
@@ -474,9 +572,10 @@ as rolling into a new word, with the same string on both sides.
 
 ### Still not decided
 
-Nothing else in the system moves. There is no page transition, no panel or sheet
-movement, no loading movement, no hover movement on cards, and nothing at all on
-the gradients — those are flat art and stay flat.
+Nothing else in the system moves. The icon button is not a second movement — it
+is the roll plus a clip opening, on the same numbers. There is no page
+transition, no panel or sheet movement, no loading movement, no hover movement
+on cards, and nothing at all on the gradients: those are flat art and stay flat.
 
 Ask before adding a second movement. The value of having one is that it is one.
 
