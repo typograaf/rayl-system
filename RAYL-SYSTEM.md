@@ -278,25 +278,35 @@ For a base not in this table, apply the rule. Do not invent a colour.
 ### Sliders
 
 **A Rayl slider is one shape, not a track with a knob on it.** A hairline swells
-into a rounded box that carries the value, and where the box meets the line the
-join is *filleted* — a small concave arc, so the line grows into the box instead
-of butting against it. Those four fillets are the whole character of the control.
-Draw it as a single path in `ink/primary`; the number is knocked out of it in
-`surface/ground`.
+into a rounded box carrying the value, and where the box meets the line the join
+is *filleted* — a small concave arc, so the line grows into the box instead of
+butting against it. Those four fillets are the whole character of the control.
+
+**Colour: the shape is `surface/idle`, the number sits on it in `ink/primary`.**
+The slider is a groove in the panel, not a mark drawn on it. On light it is barely
+there; on dark it reads as a recess cut below the ground. Do not invert this — a
+slider drawn in ink with the number knocked out is a different control.
+
+Geometry, in absolute pixels at a 12 tall row:
 
 | measure | value |
 |---|---|
-| track, end to end | 130 |
 | row height, set by the box | 12 |
 | line weight | 2, capped as a pill |
 | box corner | 3 |
 | box padding, each side of the number | 12 |
 | clearance the box never crosses at either end | 27 |
 | fillet radius | 2 |
+| value text | 8 |
 
 The fillet is not a free choice: it is tangent to the line on one side and the
 box's straight edge on the other, so it can only be `(height - line) / 2 - corner`.
-Any deeper and it eats into the corner arc.
+
+**The track fills the width of its row, and its geometry never scales with it.**
+Draw the path at real pixel width — corners, fillets and the box stay 3, 2 and 12
+however wide the row is. Stretching a fixed-width track to fit is the one way to
+get this control visibly wrong: the fillets skew and the box stops landing under
+the cursor.
 
 Three behaviours belong to the control as much as the shape does:
 
@@ -306,9 +316,6 @@ Three behaviours belong to the control as much as the shape does:
   while dragging rather than sliding out from under it.
 - **The travel is deliberately short**, which is why arrow keys do the fine work —
   one step per press, ten with shift.
-
-The value sets in 8, not 12 — it is the one place in the system that uses a third
-size, because it has to fit inside a 12 tall box.
 
 ### Ink flip
 
