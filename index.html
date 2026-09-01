@@ -58,7 +58,7 @@
     <div class="paste">
       <pre id="paste">Build this to the Rayl design system.
 
-Include one file. It carries the colour tokens, the type scale, the page ground and rhythm, the layout primitives, the button, the slider and the icons:
+Include one file. It carries the colour tokens, the type scale, the page ground and rhythm, the layout primitives, the button, the option group, the slider and the icons:
 
 &lt;script src=&quot;https://typograaf.github.io/rayl-system/rayl.js&quot;&gt;&lt;/script&gt;
 
@@ -71,6 +71,11 @@ Put class=&quot;rayl&quot; on the body and write markup. Never restyle these and
       &lt;button class=&quot;rayl-btn&quot;&gt;4:5&lt;/button&gt;
       &lt;button class=&quot;rayl-btn&quot; aria-pressed=&quot;true&quot;&gt;5:4&lt;/button&gt;
       &lt;button class=&quot;rayl-btn&quot; data-icon=&quot;Save&quot;&gt;Save&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;rayl-seg&quot;&gt;
+      &lt;button class=&quot;rayl-seg-opt is-on&quot;&gt;4:5&lt;/button&gt;
+      &lt;button class=&quot;rayl-seg-opt&quot;&gt;5:4&lt;/button&gt;
+      &lt;button class=&quot;rayl-seg-opt is-third&quot;&gt;1:1&lt;/button&gt;
     &lt;/div&gt;
     &lt;div class=&quot;rayl-row&quot;&gt;&lt;span class=&quot;rayl-label&quot;&gt;Count&lt;/span&gt;
       &lt;span class=&quot;rayl-slider&quot; data-min=&quot;1&quot; data-max=&quot;33&quot; data-val=&quot;12&quot; data-step=&quot;1&quot;&gt;&lt;/span&gt;&lt;/div&gt;
@@ -90,7 +95,7 @@ Build the structure the brief needs. These examples show the parts composed — 
   https://typograaf.github.io/rayl-system/examples/panel.html
   https://typograaf.github.io/rayl-system/examples/bench.html
 
-An active control takes aria-pressed=&quot;true&quot;. Dark mode is document.documentElement.dataset.theme = &quot;dark&quot;; leave it unset to follow the viewer&#x27;s own setting.
+An active control takes aria-pressed=&quot;true&quot;. Where exactly one of a set is on, use rayl-seg with rayl-seg-opt cells and put is-on on the one that is — the group owns the selection, so never wire that up yourself. Cells are half-width; is-third makes three to a row, is-joined on the group closes it into one bar. Dark mode is document.documentElement.dataset.theme = &quot;dark&quot;; leave it unset to follow the viewer&#x27;s own setting.
 
 Icons: Bell, Bookmark, Broom, Cup, Document, Download, Folder, ID, Image, Minus, Organise, Pause, Play, Plus, Profile, Save, Stack, Upload.
 

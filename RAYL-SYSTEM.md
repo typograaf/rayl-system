@@ -720,6 +720,64 @@ One value in the frame is off this document: the label is White `#FFFFFF` where
 section 5 tabulates ink / inverse as Off White `#F7F7EF`. NOT DECIDED — ask
 before using either.
 
+### The option group
+
+A row of cells where exactly one is on, and selection moves between them: aspect
+ratio, a numbered set, a mode. It is not a row of buttons that happen to sit next
+to each other — the group owns the selection, so turning one on turns the last
+one off.
+
+**Two beats, and in each one a surface and its type move at the same instant.**
+
+| | ground | label |
+|---|---|---|
+| hover | steps one rung, `surface/idle` to `surface/idle-hover` | turns over |
+| click | a circle opens from the centre of the cell | turns over again |
+
+The hover does not try to be a small preview of the click. It is its own
+complete moment, which is what stops the pair reading as two unrelated effects.
+Nothing appears on hover — no mark, no dot — so nothing can land in the wrong
+place when the pointer moves on.
+
+**The circle is the selection.** One element, filled `surface/active`, clipped
+from `circle(0)` to `circle(70.71%)`. 70.71% is exactly half the diagonal of a
+square, so the circle finishes covering any cell it is given however wide it is.
+One clip on one fill: no second element, no new colour, no second duration.
+
+**Hover takes the rung above the one section 5 would give it.** The ladder says
+a control at rest hovers to `surface/idle-hover` and presses to
+`surface/idle-pressed`. In light, `surface/idle-pressed` is Bone — which is also
+what selection is painted in, so a press would flash as a selection and the
+circle would then open Bone on Bone. Both states step one further out. In dark
+there is no such collision, and the token that is right there is
+`surface/idle-pressed` — so the press is the one value in the system that is
+declared per theme, as `--rayl-seg-press`.
+
+**A selected cell still hovers and presses**, but on its fill rather than its
+ground: `surface/active-hover`, then `surface/active-pressed`.
+
+**Layout.** Cells are half-width by default, so five of them fall two and three;
+`is-third` makes a cell one of three. `is-joined` on the group closes the gaps
+into a single bar and moves the radius onto the group, and `is-wide` inside one
+gives a cell — a name in front of a set of numbers — its larger share.
+
+**Keyboard.** The group is one tab stop, on whatever is currently on. Arrow keys
+in either axis move the selection and wrap; disabled cells are skipped. Focus
+alone does not turn a label — the arrow key selects in the same beat, and two
+turns fired back to back read as a stutter. The turn belongs to the selection.
+
+Selecting fires `rayl:change` on the group, carrying `value` and `index`.
+
+```html
+<div class="rayl-seg">
+  <button class="rayl-seg-opt is-on">4:5</button>
+  <button class="rayl-seg-opt">5:4</button>
+  <button class="rayl-seg-opt is-third">1:1</button>
+  <button class="rayl-seg-opt is-third">16:9</button>
+  <button class="rayl-seg-opt is-third">9:16</button>
+</div>
+```
+
 ### Reference implementation
 
 Copy this. It is the version the numbers above were chosen on.

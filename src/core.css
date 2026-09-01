@@ -20,6 +20,11 @@
   --surface-active:var(--rayl-bone);
   --surface-active-hover:var(--rayl-dark-off-white);
   --surface-active-pressed:var(--rayl-porcelain);
+  /* An unselected cell of an option group, being pressed. Not
+     surface/idle-pressed: in light that is Bone, which is also what selection
+     is painted in, so the press would read as a selection and the circle would
+     then open Bone on Bone. One rung further out. */
+  --rayl-seg-press:var(--rayl-dark-off-white);
   --ink-primary:var(--rayl-black);
   --ink-on-active:var(--rayl-black);
   --ink-disabled:var(--rayl-dark-porcelain);
@@ -51,6 +56,7 @@
   --surface-active:var(--rayl-dark-concrete);
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
+  --rayl-seg-press:var(--rayl-off-black);
   --ink-primary:var(--rayl-white);
   --ink-on-active:var(--rayl-white);
   --ink-disabled:var(--rayl-light-concrete);
@@ -68,6 +74,7 @@
   --surface-active:var(--rayl-dark-concrete);
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
+  --rayl-seg-press:var(--rayl-off-black);
   --ink-primary:var(--rayl-white);
   --ink-on-active:var(--rayl-white);
   --ink-disabled:var(--rayl-light-concrete);
@@ -173,6 +180,65 @@
 .rayl-ibtn:hover .rayl-ibtn-dot,.rayl-ibtn.is-open .rayl-ibtn-dot{
   background:var(--fill-strong-hover);clip-path:circle(50% at 50% 50%);}
 .rayl-ibtn:hover .rayl-ibtn-icon,.rayl-ibtn.is-open .rayl-ibtn-icon{transform:translateY(0);}
+
+/* --------------------------------------------------------- the option group */
+/* A row of cells where exactly one is on, and selection moves between them.
+   Two beats, and in each one a surface and its type move at the same instant.
+
+   HOVER — the ground steps one rung and the label turns over. Nothing appears,
+   so nothing can land in the wrong place.
+   CLICK — a circle opens from the centre of the cell and the label turns over a
+   second time.
+
+   The hover is not a small preview of the click; it is its own complete moment,
+   which is what stops the pair reading as two unrelated effects.
+
+   Hover takes the rung ABOVE the one section 5 would give it. surface/idle-pressed
+   is Bone, which is also what selection is painted in, so hovering there would
+   read as selected and hide the transition under itself. On any control where
+   selection owns a nearby rung, hover and press each step one further out. */
+.rayl-seg{
+  --seg-h:calc(var(--rayl-cap) + 24px);   /* 32.376, the height of any button */
+  position:relative;display:flex;flex-wrap:wrap;gap:12px;
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0.02em;line-height:1.2;
+}
+.rayl-seg.is-joined{gap:0;border-radius:var(--rayl-radius);overflow:hidden;}
+.rayl-seg-opt{
+  position:relative;flex:1 1 calc(50% - 6px);min-width:0;
+  height:var(--seg-h);
+  display:flex;align-items:center;justify-content:center;
+  font:inherit;letter-spacing:inherit;
+  border:0;padding:0 12px;cursor:pointer;
+  background:var(--surface-idle);color:var(--ink-primary);
+  border-radius:var(--rayl-radius);
+  overflow:hidden;                    /* every cell clips its own contents... */
+  transition:background var(--rayl-dur) var(--rayl-ease);
+}
+.rayl-seg-opt.is-third{flex:1 1 calc(33.333% - 8px);}
+.rayl-seg.is-joined .rayl-seg-opt{flex:5 1 0;border-radius:0;}
+.rayl-seg.is-joined .rayl-seg-opt.is-wide{flex:18 1 0;}
+.rayl-seg-opt:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
+.rayl-seg-opt:disabled{color:var(--ink-disabled);cursor:default;}
+/* ...so every cell declares the travel, and the label sits above the fill */
+.rayl-seg-opt .rayl-roll{position:relative;z-index:2;--rayl-travel:var(--seg-h);}
+
+/* The fill IS the selection: one circle, clipped from nothing to the whole
+   cell. 70.71% is exactly half the diagonal, so it finishes covering any cell
+   it is given, however wide. One clip on one element — no second element, no
+   new colour, no second duration. */
+.rayl-seg-fill{
+  position:absolute;inset:0;z-index:1;
+  background:var(--surface-active);
+  clip-path:circle(0px at 50% 50%);
+  transition:background var(--rayl-dur) var(--rayl-ease),
+             clip-path var(--rayl-dur) var(--rayl-ease);
+}
+.rayl-seg-opt.is-on .rayl-seg-fill{clip-path:circle(70.71% at 50% 50%);}
+.rayl-seg-opt:enabled:not(.is-on):hover{background:var(--surface-idle-hover);}
+.rayl-seg-opt:enabled:not(.is-on):active{background:var(--rayl-seg-press);}
+.rayl-seg-opt.is-on:hover .rayl-seg-fill{background:var(--surface-active-hover);}
+.rayl-seg-opt.is-on:active .rayl-seg-fill{background:var(--surface-active-pressed);}
 
 /* --------------------------------------------------------------- the icons */
 .rayl-icon{display:inline-block;width:12px;height:12px;color:currentColor;}

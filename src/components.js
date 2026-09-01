@@ -231,6 +231,77 @@ function upgradeIconButton(btn){
   return r;
 }
 
+/* -------------------------------------------------------- the option group */
+/* A row of cells where exactly one is on. Hover turns that cell's label; the
+   click turns it a second time and opens the circle. A turn asked for while one
+   is still running queues rather than being dropped — that is Roll's own
+   behaviour, so nothing extra is needed here.
+
+   No turn on focus: an arrow key moves focus and selects in the same beat, and
+   two turns fired back to back read as a stutter. The turn belongs to the
+   selection, not to the focus ring. */
+function upgradeSeg(seg){
+  if (seg.__rayl) return seg.__rayl;
+  seg.__rayl = true;
+  var opts = [].slice.call(seg.querySelectorAll(".rayl-seg-opt"));
+  seg.setAttribute("role", "radiogroup");
+
+  opts.forEach(function(o){
+    var fill = document.createElement("span");
+    fill.className = "rayl-seg-fill";
+    var host = document.createElement("span");
+    host.dataset.label = o.dataset.label || o.textContent.trim();
+    o.textContent = "";
+    o.appendChild(fill);
+    o.appendChild(host);
+    o.__roll = new Roll(host);
+    o.setAttribute("role", "radio");
+    o.setAttribute("aria-checked", o.classList.contains("is-on") ? "true" : "false");
+    o.tabIndex = -1;
+  });
+  /* one tab stop for the whole group: the selected cell, or the first that can
+     take it, so the group is never unreachable from the keyboard */
+  var on = seg.querySelector(".rayl-seg-opt.is-on:enabled") ||
+           seg.querySelector(".rayl-seg-opt:enabled");
+  if (on) on.tabIndex = 0;
+
+  function select(next){
+    var prev = seg.querySelector(".rayl-seg-opt.is-on");
+    if (!next || next === prev || next.disabled) return;
+    if (prev){
+      prev.classList.remove("is-on");
+      prev.setAttribute("aria-checked", "false");
+      prev.tabIndex = -1;
+    }
+    next.classList.add("is-on");
+    next.setAttribute("aria-checked", "true");
+    next.tabIndex = 0;
+    next.__roll.turn();
+    seg.dispatchEvent(new CustomEvent("rayl:change", {bubbles:true, detail:{
+      value: next.__roll.text, index: opts.indexOf(next), option: next}}));
+  }
+  seg.select = select;
+
+  opts.forEach(function(o){
+    if (o.disabled) return;
+    o.addEventListener("pointerenter", function(){ o.__roll.turn(); });
+    o.addEventListener("click", function(){ select(o); });
+    o.addEventListener("keydown", function(e){
+      var d = (e.key === "ArrowRight" || e.key === "ArrowDown") ?  1
+            : (e.key === "ArrowLeft"  || e.key === "ArrowUp")   ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      var i = opts.indexOf(o);
+      for (var n = 0; n < opts.length; n++){
+        i = (i + d + opts.length) % opts.length;
+        if (!opts[i].disabled){ select(opts[i]); opts[i].focus(); return; }
+      }
+    });
+  });
+  return seg;
+}
+
+
 /* ------------------------------------------------------------- the icons */
 function makeIcon(name){
   var span = document.createElement("span");

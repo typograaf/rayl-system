@@ -97,7 +97,10 @@ function mountSlider(host){
     val.style.width=rnd(w/s)+"px";
     val.style.height=H+"px";
     val.style.left=rnd(x+w/2)+"px";
-    val.style.top=rnd(cy+dy)+"px";
+    /* the readout is a sibling of the svg, not a child of it: the svg is 24
+       tall and centred on a 12 box, so its own centre line sits (VB-H)/2
+       above the host's. Without that term the number rides six low. */
+    val.style.top=rnd(cy+dy-(VB-H)/2)+"px";
     val.style.transform="translate(-50%,-50%) scale("+rnd(s)+")";
     reel.set(shown);                     /* continuous: it spins with the drag */
     svg.setAttribute("aria-valuenow",readout());

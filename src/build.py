@@ -31,6 +31,10 @@ header = f'''/*! Rayl — the design system as code.
  *        <button class="rayl-btn">4:5</button>            aria-pressed for on
  *        <button class="rayl-btn" data-icon="Save">Save</button>
  *      </div>
+ *      <div class="rayl-seg">                             one of these is on
+ *        <button class="rayl-seg-opt is-on">4:5</button>
+ *        <button class="rayl-seg-opt">5:4</button>
+ *      </div>
  *      <div class="rayl-row"><span class="rayl-label">Count</span>
  *        <span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span>
  *      </div>
@@ -65,6 +69,7 @@ function init(root){
   root=root||document;
   [].forEach.call(root.querySelectorAll(".rayl-btn"),upgradeButton);
   [].forEach.call(root.querySelectorAll(".rayl-ibtn"),upgradeIconButton);
+  [].forEach.call(root.querySelectorAll(".rayl-seg"),upgradeSeg);
   [].forEach.call(root.querySelectorAll(".rayl-icon[data-icon]"),upgradeIcon);
   [].forEach.call(root.querySelectorAll(".rayl-slider"),function(s){
     if(!s.__rayl){ s.__rayl=true; mountSlider(s); }
