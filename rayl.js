@@ -125,6 +125,18 @@ var TOKENS = `
 .rayl-slider{display:inline-block;position:relative;height:24px;width:100%;min-width:90px;}
 .rayl-slider svg{display:block;width:100%;height:24px;fill:var(--surface-idle);
   cursor:ew-resize;outline:none;touch-action:none;}
+/* a numeric readout is a reel, not a swap: each column is a strip of digits and
+   its position is a continuous function of the value, so it spins as fast as the
+   value changes and lands on a whole number when the value does */
+.rayl-reel{display:flex;align-items:center;justify-content:center;
+  font-variant-numeric:tabular-nums;}
+.rayl-col{position:relative;overflow:hidden;flex:0 0 auto;
+  height:var(--rayl-travel);
+  transition:width var(--rayl-dur) var(--rayl-ease);}
+.rayl-strip{display:block;will-change:transform;}
+.rayl-digit{display:block;height:var(--rayl-travel);line-height:var(--rayl-travel);
+  text-align:center;text-box-trim:none;}
+
 .rayl-val{position:absolute;display:flex;align-items:center;justify-content:center;
   overflow:hidden;pointer-events:none;font-family:var(--rayl-font);
   font-size:8px;font-weight:500;letter-spacing:0.02em;color:var(--ink-primary);
@@ -255,6 +267,55 @@ Roll.prototype.to = function(next, force){
 };
 Roll.prototype.turn = function(){ this.to(this.showing, true); };
 
+
+/* ------------------------------------------------------------- the counter */
+/* One column per decimal place. The units column follows the value exactly, so
+   dragging spins it; every column above it holds still until the one below is
+   about to wrap, then carries over quickly — an odometer, so the number stays
+   readable at speed instead of sitting between two digits. */
+function Reel(host, max){
+  this.host = host;
+  host.classList.add("rayl-reel");
+  host.textContent = "";
+  this.places = String(Math.max(1, Math.round(max))).length;
+  var cs = getComputedStyle(host);
+  var font = cs.fontStyle+" "+cs.fontWeight+" "+cs.fontSize+"/"+cs.fontSize+" "+cs.fontFamily;
+  this.w = advance("0", font);
+  this.cols = [];
+  for (var p = this.places - 1; p >= 0; p--){
+    var col = document.createElement("span");
+    col.className = "rayl-col";
+    col.style.width = this.w + "px";
+    var strip = document.createElement("span");
+    strip.className = "rayl-strip";
+    for (var d = 0; d <= 10; d++){          /* 0..9 then 0 again, so 9 wraps up */
+      var cell = document.createElement("span");
+      cell.className = "rayl-digit";
+      cell.textContent = String(d % 10);
+      strip.appendChild(cell);
+    }
+    col.appendChild(strip);
+    host.appendChild(col);
+    this.cols.push({ el: col, strip: strip, place: p });
+  }
+}
+Reel.prototype.set = function(v){
+  var cell = parseFloat(getComputedStyle(this.host).getPropertyValue("--rayl-travel")) || 12;
+  v = Math.max(0, v);
+  for (var i = 0; i < this.cols.length; i++){
+    var c = this.cols[i];
+    var unit = Math.pow(10, c.place);
+    var raw = v / unit;
+    var whole = Math.floor(raw);
+    var frac = raw - whole;
+    /* the units column runs free; the rest only move as the one below wraps */
+    var pos = (whole % 10) + (c.place === 0 ? frac : (frac > 0.9 ? (frac - 0.9) / 0.1 : 0));
+    c.strip.style.transform = "translateY(" + (-pos * cell) + "px)";
+    var needed = c.place === 0 || v >= unit;
+    c.el.style.width = (needed ? this.w : 0) + "px";
+  }
+};
+
 function upgradeButton(btn){
   if (btn.__rayl) return btn.__rayl;
   var host = document.createElement("span");
@@ -370,13 +431,12 @@ function mountSlider(host){
 
   const snap=v=>clamp(Math.round((v-min)/step)*step+min,min,max);
   const readout=()=>String(snap(shown));
-  /* the readout is a real element riding the nub, so it can use the same roll
-     the buttons use — SVG text cannot do a per-character transform like that */
+  /* the readout is a real element riding the nub — SVG text cannot carry a
+     per-digit reel, and a number being dragged wants a reel, not a swap */
   const val=document.createElement("span");
   val.className="rayl-val";
-  val.dataset.label=String(snap(shown));
   host.append(val);
-  const roll=new Roll(val);
+  const reel=new Reel(val,max);
   function nubWidth(s){
     return Math.max(MIN_NUB*s, Math.ceil(textWidth(readout(),8*s))+PAD*s);
   }
@@ -390,16 +450,15 @@ function mountSlider(host){
     const room=leanRoom(s), dy=clamp(pullY,-room,room);
     box={x:x,w:w,top:cy+dy-nh/2,bot:cy+dy+nh/2};
     path.setAttribute("d",trackPath(W,x,w,cy,nh,r,dy));
-    /* the box is laid out unscaled and then scaled whole, so the roll's own
+    /* the box is laid out unscaled and then scaled whole, so the reel's own
        measurements never change underneath it */
     val.style.width=rnd(w/s)+"px";
     val.style.height=H+"px";
     val.style.left=rnd(x+w/2)+"px";
     val.style.top=rnd(cy+dy)+"px";
     val.style.transform="translate(-50%,-50%) scale("+rnd(s)+")";
-    const text=readout();
-    if(text!==roll.showing) roll.to(text);
-    svg.setAttribute("aria-valuenow",text);
+    reel.set(shown);                     /* continuous: it spins with the drag */
+    svg.setAttribute("aria-valuenow",readout());
   }
   function read(a,now){
     const p=a.dur<=0?1:clamp((now-a.t0)/a.dur,0,1);
