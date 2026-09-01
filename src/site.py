@@ -180,11 +180,14 @@ HTML = f"""<!doctype html>
   </section>
 
   <section class="rayl-section">
-    <span class="rayl-label">Templates — start from one of these</span>
+    <span class="rayl-label">Examples — read these, do not clone them</span>
+    <p class="rayl-12 rayl-measure dim">They show the parts composed. Build the
+    structure your brief needs — cloning one gives you a page shaped like somebody
+    else's problem.</p>
     <div class="rayl-cluster">
-      <a class="rayl-btn" href="examples/landing.html">Landing page</a>
-      <a class="rayl-btn" href="examples/panel.html">Settings panel</a>
-      <a class="rayl-btn" href="examples/bench.html">Control bench</a>
+      <a class="rayl-btn" href="examples/landing.html">A page</a>
+      <a class="rayl-btn" href="examples/panel.html">A panel</a>
+      <a class="rayl-btn" href="examples/bench.html">The bench</a>
     </div>
     <span class="rayl-label">The documents</span>
     <div class="rayl-cluster">

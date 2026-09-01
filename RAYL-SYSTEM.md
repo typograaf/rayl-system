@@ -364,25 +364,35 @@ The layout classes carry this so it is not re-decided each time:
 
 A flat gap cannot work across a range from 8 to 96. Twenty-four reads generous
 under a label and cramped under a 72 headline, and a page built on one number for
-everything looks uneven no matter how carefully the number was chosen.
-
-**The space under a heading is half its own size, rounded to the scale.**
+everything looks uneven however carefully that number was chosen.
 
 | heading | space under it |
 |---|---|
-| 96, 72 | 48 |
-| 48, 36 | 24 |
-| 24, 18 | 12 |
+| 96 | 72 |
+| 72, 48 | 48 |
+| 36, 24 | 24 |
+| 18 | 12 |
 
-The container's gap counts toward that, so it is a floor rather than an addition:
-a 36 heading in a 12 stack gets 12 more, a 72 headline in a 24 hero gets 24 more,
-and a container whose gap is already larger keeps its own. Nothing double-counts
-and nothing needs deciding at the call site — `rayl-96` through `rayl-18` carry
-it.
+**This is a designed mapping, not a formula.** Half the size was tried first and
+is visibly too tight at the bottom: it gives a 24 heading only 12, and the
+heading lands on its own body copy. Ratios that look right at 72 are wrong at 24,
+which is why the table is the rule.
 
-The consequence worth knowing: **the gap after a headline is always larger than
+The container's gap counts toward it, so it is a floor rather than an addition —
+a 36 heading in a 12 stack gets 12 more, and a container already wider keeps its
+own. `rayl-96` through `rayl-18` carry it, so nobody adds a margin at the call
+site.
+
+The consequence worth knowing: **the gap after a heading is always larger than
 the gap after the paragraph beneath it.** That difference is the hierarchy. If
 every gap in a section is the same, the section has no shape.
+
+### Pictures follow the column beside them
+
+A media block in a split takes the height of the row rather than imposing one.
+A fixed aspect ratio makes the section as tall as the picture wants, not as tall
+as the content needs, and the text column ends up floating in a void beside it.
+`rayl-media` in a `rayl-split` stretches; on its own it keeps its ratio.
 
 ### Two values outside the scale
 

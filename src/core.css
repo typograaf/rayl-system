@@ -250,16 +250,21 @@
   .rayl-36.rayl-serif{letter-spacing:-0.02em;}
 }
 
-/* SPACE UNDER A HEADING is half its own size, rounded to the spacing scale:
-   96 and 72 take 48, 48 and 36 take 24, 24 and 18 take 12. A flat gap cannot
-   work across a range this wide — 24 reads generous under a label and cramped
-   under a 72 headline, which is exactly how a page ends up looking uneven.
+/* SPACE UNDER A HEADING. A flat gap cannot work across a range from 8 to 96 —
+   24 reads generous under a label and cramped under a 72 headline. This is a
+   designed mapping rather than a formula: half the size was tried first and is
+   visibly too tight at the small end, where a 24 heading landed on its own body
+   copy.
 
-   The container's own gap counts toward it, so this only tops up the shortfall
-   and never double-counts. */
-.rayl-96 + *,.rayl-72 + *{margin-top:max(0px, calc(48px - var(--rayl-gap, 12px)));}
-.rayl-48 + *,.rayl-36 + *{margin-top:max(0px, calc(24px - var(--rayl-gap, 12px)));}
-.rayl-24 + *,.rayl-18 + *{margin-top:max(0px, calc(12px - var(--rayl-gap, 12px)));}
+        96 -> 72     48 -> 48     24 -> 24
+        72 -> 48     36 -> 24     18 -> 12
+
+   The container's own gap counts toward it, so this tops up the shortfall and
+   never double-counts. */
+.rayl-96 + *{margin-top:max(0px, calc(72px - var(--rayl-gap, 12px)));}
+.rayl-72 + *,.rayl-48 + *{margin-top:max(0px, calc(48px - var(--rayl-gap, 12px)));}
+.rayl-36 + *,.rayl-24 + *{margin-top:max(0px, calc(24px - var(--rayl-gap, 12px)));}
+.rayl-18 + *{margin-top:max(0px, calc(12px - var(--rayl-gap, 12px)));}
 
 /* the serif, at the five sizes it is drawn for, one percent tighter throughout */
 .rayl-serif{font-family:var(--rayl-font-display);}
@@ -289,7 +294,7 @@
  * the surrounding gap is what makes a page feel like it is drifting apart.
  * ========================================================================== */
 
-.rayl-hero{--rayl-gap:24px;display:flex;flex-direction:column;gap:var(--rayl-gap);padding-block:0 24px;}
+.rayl-hero{--rayl-gap:24px;display:flex;flex-direction:column;gap:var(--rayl-gap);}
 
 /* a full-bleed run of colour, escaping whatever column it sits in */
 .rayl-band{margin-inline:calc(50% - 50vw);padding:48px calc(50vw - 50% + 24px);
@@ -312,6 +317,9 @@
   background:var(--media-ground);aspect-ratio:4 / 5;}
 .rayl-media.is-wide{aspect-ratio:16 / 9;}
 .rayl-media.is-square{aspect-ratio:1;}
+/* beside a text column the media takes the row's height — a fixed ratio makes
+   the section as tall as the picture wants rather than as tall as it needs */
+.rayl-split > .rayl-media{align-self:stretch;aspect-ratio:auto;min-height:320px;}
 .rayl-media > img,.rayl-media > canvas,.rayl-media > video{
   display:block;width:100%;height:100%;object-fit:cover;}
 

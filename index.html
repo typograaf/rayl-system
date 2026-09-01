@@ -74,7 +74,7 @@ Put class=&quot;rayl&quot; on the body and write markup. Never restyle these and
   &lt;/section&gt;
 &lt;/div&gt;&lt;/body&gt;
 
-Space under a heading is half its own size, on the scale: 96 and 72 take 48, 48 and 36 take 24, 24 and 18 take 12. The size classes carry this, so do not add margins to headings. A gap says how related two things are: 6 within a control, 12 within a block, 24 between blocks, 48 between columns, 72 between sections. A container pads one step below the gap it sits in.
+Space under a heading: 96 takes 72, 72 and 48 take 48, 36 and 24 take 24, 18 takes 12. The size classes carry this, so do not add margins to headings. A gap says how related two things are: 6 within a control, 12 within a block, 24 between blocks, 48 between columns, 72 between sections. A container pads one step below the gap it sits in.
 
 Layout comes from the system, so do not invent spacing. Panel: rayl-page, rayl-section, rayl-stack, rayl-cluster, rayl-grid, rayl-head, rayl-card, rayl-label, rayl-hint. Wide: rayl-page is-wide, rayl-hero, rayl-band (is-ink), rayl-split (is-lead, is-three, is-centred), rayl-measure, rayl-media.
 
@@ -162,11 +162,14 @@ For anything the templates and the file do not cover, read https://typograaf.git
   </section>
 
   <section class="rayl-section">
-    <span class="rayl-label">Templates — start from one of these</span>
+    <span class="rayl-label">Examples — read these, do not clone them</span>
+    <p class="rayl-12 rayl-measure dim">They show the parts composed. Build the
+    structure your brief needs — cloning one gives you a page shaped like somebody
+    else's problem.</p>
     <div class="rayl-cluster">
-      <a class="rayl-btn" href="examples/landing.html">Landing page</a>
-      <a class="rayl-btn" href="examples/panel.html">Settings panel</a>
-      <a class="rayl-btn" href="examples/bench.html">Control bench</a>
+      <a class="rayl-btn" href="examples/landing.html">A page</a>
+      <a class="rayl-btn" href="examples/panel.html">A panel</a>
+      <a class="rayl-btn" href="examples/bench.html">The bench</a>
     </div>
     <span class="rayl-label">The documents</span>
     <div class="rayl-cluster">
