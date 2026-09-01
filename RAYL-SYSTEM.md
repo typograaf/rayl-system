@@ -89,19 +89,71 @@ carries fine detail that will fill in when small.
 
 ## 2. Colour
 
-NOT DECIDED — and this is the largest open gap in the system.
+The palette is seven flat colours and two gradients. They live in the Rayl Figma
+file as styles under a `V2/` prefix, and those styles are the authority.
 
-The only colour that is certain is the brand black, `#1C1C1A`, because it is
-what the logo files are drawn in.
+The names are materials, not greys, and that is deliberate. The palette is drawn
+from the professional catering world — the look of porcelain and concrete, rigid
+materials given fluid, organic movement.
 
-Three different blacks and three different off-whites are currently in use across
-existing Rayl builds and they do not agree with each other. Until that is
-resolved, **use `#1C1C1A` for ink and ask which background to use.** Do not pick
-one of the candidates yourself.
+| name | hex | RGB | CMYK |
+|---|---|---|---|
+| White | `#FFFFFF` | 255 255 255 | 0 0 0 0 |
+| Off White | `#F7F7F2` | 247 247 242 | 0 0 2 3 |
+| Dark Off-White | `#E2E2D3` | 226 226 211 | 0 0 7 11 |
+| Porcelain | `#CFCFC4` | 207 207 196 | 0 0 5 19 |
+| Light Concrete | `#696963` | 105 105 99 | 0 0 6 59 |
+| Dark Concrete | `#55554E` | 85 85 78 | 0 0 8 67 |
+| Black | `#1C1C1A` | 28 28 26 | 0 0 7 89 |
 
-See `AUDIT.md` for the full list and the questions outstanding.
+The CMYK figures are straight conversions, not values from a print profile. Do
+not send them to a printer without checking them.
 
----
+**Gradients.** Both run top to bottom with the first stop at 0.349%.
+
+- **Porcelain Gradient** — `#CFCFC4` to `#F7F7F2`
+- **Concrete Gradient** — `#696963` to `#CFCFC4`
+
+Note the swatch in the file labels the second one "Paper Gradient" while its
+style is named "Concrete Gradient". Use the style name.
+
+### Ink and ground
+
+Ink is `#1C1C1A`. Never `#000000` — the palette has no pure black and the logo
+is not drawn in one.
+
+The ground is `#F7F7F2` on light. `#FFFFFF` is in the palette but is a distinct
+colour from the page, used for cards and panels that need to lift off it.
+
+### What existing builds get wrong
+
+Every Rayl build in code has drifted from these values. If you are working in one,
+the file is right and the code is wrong:
+
+| build | uses | should be |
+|---|---|---|
+| rayl-ui paper | `#F0F0E5` | `#F7F7F2` |
+| rayl-ui sunk | `#E8E8D8` | `#E2E2D3` |
+| rayl-ui ink | `#000000` | `#1C1C1A` |
+| rayl-screen porcelain | `#CECEC5` | `#CFCFC4` |
+| rayl-screen black | `#3F3F3B` | `#55554E` |
+| rayl-screen grey dark | `#696963` | correct |
+
+### What the palette does not yet cover
+
+Three things are genuinely missing rather than merely unwritten. Ask rather than
+filling them in:
+
+- **A mid-tone.** There is nothing at all between Porcelain and Light Concrete —
+  a gap of 38 in lightness. That is exactly where control borders, disabled text
+  and hover states live, which is why UI work keeps reaching for a colour that
+  does not exist.
+- **The green.** The palette's own rationale promises "subtle touches of an
+  organic green", but no green is in it. One exists in the app build
+  (`#D8DEB9`), unaccounted for.
+- **Semantic colours.** Nothing means error, warning or success. Because the
+  whole palette sits on a single hue, any of these is the first hue break in the
+  brand — a real decision, not a detail.
 
 ## 3. Typography
 

@@ -45,43 +45,50 @@ retype in Azeret Mono and hope.
 
 ---
 
-## 2. The colour problem
+## 2. Colour — RESOLVED from the Figma file
 
-Three different blacks are in use and none of them agree.
+The Figma guidelines board carries a COLOURS chapter (node 966:639) whose values
+live as named styles under a `V2/` prefix. That is the authority, and it settles
+questions 1 to 4.
 
-| colour | where it is used |
+| style | hex |
 |---|---|
-| `#1C1C1A` | both logo files. The only value that comes from the brand itself. |
-| `#000000` | the rayl-ui panel — ink and text |
-| `#3F3F3B` | the rayl-screen app — its "black" |
+| V2/White | `#FFFFFF` |
+| V2/Off White | `#F7F7F2` |
+| V2/Dark Off-White | `#E2E2D3` |
+| V2/Porcelain | `#CFCFC4` |
+| V2/Light Concrete | `#696963` |
+| V2/Dark Concrete | `#55554E` |
+| V2/Black | `#1C1C1A` |
+| V2/Porcelain Gradient | `#CFCFC4` to `#F7F7F2`, 180 degrees |
+| V2/Concrete Gradient | `#696963` to `#CFCFC4`, 180 degrees |
 
-And three near-identical off-whites:
+Every value in every code build had drifted from these except one. See the
+guideline document for the correction table.
 
-| colour | where |
-|---|---|
-| `#F0F0E5` | rayl-ui panel background |
-| `#EAEAE5` | rayl-screen text colour |
-| `#F0F0EA` | one stray use in rayl-screen |
+**The swatches in the file are painted correctly but their specs are empty.**
+Every one reads `RGB 000 000 000`, `CMYK 000 000 000 000`, `HEX #000000`. The
+chapter was laid out and never filled in.
 
-Plus, from rayl-screen only, with no stated role: `#E8E8D8` (a sunk/inset
-surface), `#CECEC5`, `#D8DEB9` (a green), `#D1D5BC`, `#81817B`, `#696963`.
+### What is still open on colour
 
-> **Q1. Which black is the brand black?** The logo files say `#1C1C1A`. If that
-> is right, both existing builds are wrong and should be corrected.
+> **Q1. Is there a green in the brand palette?** The chapter's own text promises
+> "subtle touches of an organic green" and no green swatch exists. The app build
+> uses `#D8DEB9`, which is the same hue family as everything else with the
+> chroma raised. Is it in the system or is it that one screen's invention?
 >
-> **Q2. What is the one page background for light mode?** `#F0F0E5` and
-> `#EAEAE5` are close enough that nobody will notice the difference and far
-> enough apart that they will never match.
+> **Q2. Is a mid-tone needed?** Nothing sits between Porcelain (L* 82.8) and
+> Light Concrete (L* 44.2) — a gap of 38. Control borders, disabled text and
+> hover states all live in that gap and currently have nowhere to come from.
 >
-> **Q3. What is `#D8DEB9` for?** It is the only colour in the whole system that
-> is not a grey. Is it an accent, a status colour, or specific to that one app
-> screen?
+> **Q3. How many semantic colours, if any?** Every colour in the palette is one
+> hue. Anything that means stop is the first hue break in the brand. Error is
+> the only one that cannot be done another way; success, warning and info might
+> be better served by a grey chip and a clear sentence.
 >
-> **Q4. What are the greys for?** `#CECEC5`, `#81817B` and `#696963` need names
-> and jobs — border, muted text, disabled, and so on — or an AI will pick one at
-> random each time it needs a grey.
-
----
+> **Q4. Should the CMYK be a real profile conversion?** The values now in the
+> guideline are straight arithmetic, which is fine on screen and not fine at a
+> printer.
 
 ## 3. The spacing problem
 
@@ -109,7 +116,15 @@ screen; 8 is the radius on every button in the panel.
 
 ## 4. Type
 
-What exists: Azeret, weights 400 and 500 in the panel, 400/500/600 in the app.
+**Lead from the Figma file:** the guidelines board sets its own text in
+**Azeret VF-TRIAL**, a *variable* font, at `"ital" 0, "MONO" 0` — proportional,
+not monospaced. Every build in code carries static cuts instead. Its three text
+styles are named `Guidelines/Chapter 12pt`, `Guidelines/Body 18pt` and
+`Guidelines/Body 10pt`, so they describe the guideline document itself rather
+than the product UI. The TYPOGRAPHY chapter (node 966:219, 106 text nodes) has
+not been read yet and is where the product answers live.
+
+What exists in code: Azeret, weights 400 and 500 in the panel, 400/500/600 in the app.
 Two sizes only — 8 for section labels, 12 for everything else. Tracking of 0.24
 at 12px, which is 0.02em. Line height 1.2.
 
@@ -153,8 +168,25 @@ invent them on the spot:
 
 ## 6. Still needed
 
-- **Figma frame 966-99, exported as SVG.** It is the only source of truth that
-  has not been read yet. An SVG export carries exact positions, exact colours
-  and exact type sizes with no guessing, and needs no Figma login. Drop it in
-  the Brain Assets folder.
-- Answers to Q1 through Q9.
+- **The TYPOGRAPHY chapter** (node 966:219) and **ICONOGRAPHY chapter**
+  (966:507 onward) read out of the Figma file. Between them they should settle
+  the size ladder, the weights, the tracking and the icon grid.
+- Answers to the four colour questions above, and to Q5 to Q9 below on spacing
+  and type.
+
+## 7. The board's chapters
+
+For navigation — the guidelines board is node 966:99, 2040 x 37175, and its
+frames are all named "Frame N", which is why it is hard to move around.
+
+| chapter | header node | content |
+|---|---|---|
+| Tone of voice | 966:131 | 966:133, 966:174 |
+| Typography | 966:217 | 966:219, 966:485 |
+| Iconography | 966:504 | 966:507, 966:554, 966:581, 966:608 |
+| Colours | 966:637 | 966:639 |
+| Array system | 966:778 | 968:1219, 968:2034 |
+| Array applications | 966:1809 | 966:1811 |
+| UI principles | 966:1854 | 966:1856, 966:1967, 966:2069, 966:2174, 966:2208 |
+| Merchandise applications | 966:2731 | 966:2733, 966:2759, 966:2788, 966:2881 |
+| Car concept | 966:2976 | 966:2978 |

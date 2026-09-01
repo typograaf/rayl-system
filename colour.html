@@ -1,12 +1,8 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
+<html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>Rayl colour — proposal</title>
+<meta name="robots" content="noindex, nofollow"><title>Rayl colour</title>
 <style>
-
 @font-face {
   font-family: "Azeret";
   font-weight: 400;
@@ -114,346 +110,126 @@ dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 6px 
 dt { font-weight: 500; }
 dd { margin: 0; }
 
-main { max-width: 720px; }
-h3 { font: inherit; font-weight: 500; margin: 24px 0 6px; }
+main { max-width: 760px; }
 table { width: 100%; border-collapse: collapse; }
-td { padding: 6px 12px 6px 0; vertical-align: middle; border-bottom: 1px solid #CECEC5; }
+td { padding: 6px 12px 6px 0; vertical-align: middle; border-bottom: 1px solid #CFCFC4; }
 tr:last-child td { border-bottom: 0; }
-.chip { display: block; width: 24px; height: 24px; border-radius: 8px; box-shadow: inset 0 0 0 1px rgba(28,28,26,.12); }
-.mono { white-space: nowrap; }
-.dim { color: #696963; }
-.tag { color: #696963; }
-.ramp { display: flex; border-radius: 8px; overflow: hidden; margin-bottom: 12px; }
-.ramp div { height: 48px; flex: 1; }
-.demo { background: #F0F0E5; border-radius: 8px; padding: 24px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-.btn { background: #1C1C1A; color: #F0F0E5; border-radius: 8px; padding: 12px; font-weight: 500; }
-.btn.quiet { background: #E8E8D8; color: #1C1C1A; }
-.btn.off { background: #E8E8D8; color: #9C9C94; }
-.track { flex: 1 1 120px; height: 24px; border-radius: 8px; background: #E8E8D8; position: relative; min-width: 120px; }
-.track i { position: absolute; inset: 0 40% 0 0; background: #1C1C1A; border-radius: 8px; }
-.pill { border-radius: 8px; padding: 6px 12px; }
-</style>
-</head>
-<body>
-<main>
+.chip { display:block; width:24px; height:24px; border-radius:8px; box-shadow: inset 0 0 0 1px rgba(28,28,26,.15); }
+.mono { white-space: nowrap; } .dim { color:#696963; }
+.grad { display:flex; gap:12px; }
+.grad div { flex:1; height:96px; border-radius:12px; padding:12px; }
+.ramp { display:flex; border-radius:8px; overflow:hidden; margin-bottom:12px; box-shadow: inset 0 0 0 1px rgba(28,28,26,.15); }
+.ramp div { height:48px; flex:1; }
+.gap { flex: 2.2 !important; background: repeating-linear-gradient(45deg,#E2E2D3,#E2E2D3 6px,#CFCFC4 6px,#CFCFC4 12px); }
+</style></head><body><main>
 
-<h2>Rayl / proposal</h2>
-<h1>Colour</h1>
+<h2>Rayl</h2><h1>Colour</h1>
 
 <section>
-<p>Nothing on this page is decided. It is a proposal built from what the existing
-Rayl files already contain, so that the decision is a yes, a no, or a correction
-rather than a blank page.</p>
+<p>Seven flat colours and two gradients. They live in the Figma file as styles
+under a <span class="mono">V2/</span> prefix, and those styles are the authority
+— not this page and not any build.</p>
+<p>The names are materials rather than greys, and that is the point. The palette
+is drawn from the professional catering world: the look of porcelain and
+concrete, rigid materials given fluid, organic movement.</p>
 </section>
 
 <section>
-<h2>What the existing colours turned out to be</h2>
-<p>Every colour in Rayl sits on one hue. All ten values measured between 109.5
-and 115.6 — the greys at 109.7 with almost no chroma, the green at 115 with the
-chroma turned up. The greys and the green are the same colour at different
-intensities.</p>
-<p>They are also unevenly spread. Six values crowd between L* 82 and 95, then
-there is nothing at all until L* 54. That hole is where borders, disabled states
-and secondary fills live, which is why UI work keeps needing a colour that does
-not exist.</p>
+<h2>The palette</h2>
+<table><tr><td><span class="chip" style="background:#FFFFFF"></span></td>
+<td class="mono">White</td><td class="mono">#FFFFFF</td><td class="mono dim">255 255 255</td>
+<td class="mono dim">0 0 0 0</td><td class="dim">L* 100.0</td></tr>
+<tr><td><span class="chip" style="background:#F7F7F2"></span></td>
+<td class="mono">Off White</td><td class="mono">#F7F7F2</td><td class="mono dim">247 247 242</td>
+<td class="mono dim">0 0 2 3</td><td class="dim">L* 97.1</td></tr>
+<tr><td><span class="chip" style="background:#E2E2D3"></span></td>
+<td class="mono">Dark Off-White</td><td class="mono">#E2E2D3</td><td class="mono dim">226 226 211</td>
+<td class="mono dim">0 0 7 11</td><td class="dim">L* 89.5</td></tr>
+<tr><td><span class="chip" style="background:#CFCFC4"></span></td>
+<td class="mono">Porcelain</td><td class="mono">#CFCFC4</td><td class="mono dim">207 207 196</td>
+<td class="mono dim">0 0 5 19</td><td class="dim">L* 82.8</td></tr>
+<tr><td><span class="chip" style="background:#696963"></span></td>
+<td class="mono">Light Concrete</td><td class="mono">#696963</td><td class="mono dim">105 105 099</td>
+<td class="mono dim">0 0 6 59</td><td class="dim">L* 44.2</td></tr>
+<tr><td><span class="chip" style="background:#55554E"></span></td>
+<td class="mono">Dark Concrete</td><td class="mono">#55554E</td><td class="mono dim">085 085 078</td>
+<td class="mono dim">0 0 8 67</td><td class="dim">L* 35.9</td></tr>
+<tr><td><span class="chip" style="background:#1C1C1A"></span></td>
+<td class="mono">Black</td><td class="mono">#1C1C1A</td><td class="mono dim">028 028 026</td>
+<td class="mono dim">0 0 7 89</td><td class="dim">L* 10.2</td></tr></table>
+<p class="dim" style="margin-top:12px">CMYK figures are straight conversions, not
+values from a print profile. Do not send them to a printer without checking.</p>
 </section>
 
 <section>
-<h2>Proposed ramp — one hue, twelve steps</h2>
-<div class="ramp"><div style="background:#F0F0E5"></div><div style="background:#E8E8D8"></div><div style="background:#D9D9CF"></div><div style="background:#CECEC5"></div><div style="background:#B6B6AE"></div><div style="background:#9C9C94"></div><div style="background:#81817B"></div><div style="background:#696963"></div><div style="background:#50504C"></div><div style="background:#3F3F3B"></div><div style="background:#2C2C2A"></div><div style="background:#1C1C1A"></div></div>
-<p>Denser at the light end, because that is where the interface lives. Every step
-an existing build already uses is pinned to that build's exact value, so nothing
-you have shipped has to change. The five marked new fill the hole.</p>
-<table>
-<tr>
-      <td><span class="chip" style="background:#F0F0E5"></span></td>
-      <td class="mono">grey-00</td>
-      <td class="mono">#F0F0E5</td>
-      <td class="dim">L* 95.0</td>
-      <td class="dim">rayl-ui paper</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#E8E8D8"></span></td>
-      <td class="mono">grey-01</td>
-      <td class="mono">#E8E8D8</td>
-      <td class="dim">L* 91.5</td>
-      <td class="dim">rayl-ui sunk</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#D9D9CF"></span></td>
-      <td class="mono">grey-02</td>
-      <td class="mono">#D9D9CF</td>
-      <td class="dim">L* 86.5</td>
-      <td class="dim">fills a hole <span class="tag">new</span></td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#CECEC5"></span></td>
-      <td class="mono">grey-03</td>
-      <td class="mono">#CECEC5</td>
-      <td class="dim">L* 82.5</td>
-      <td class="dim">rayl-screen porcelain</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#B6B6AE"></span></td>
-      <td class="mono">grey-04</td>
-      <td class="mono">#B6B6AE</td>
-      <td class="dim">L* 74.0</td>
-      <td class="dim">fills a hole <span class="tag">new</span></td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#9C9C94"></span></td>
-      <td class="mono">grey-05</td>
-      <td class="mono">#9C9C94</td>
-      <td class="dim">L* 64.0</td>
-      <td class="dim">fills a hole <span class="tag">new</span></td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#81817B"></span></td>
-      <td class="mono">grey-06</td>
-      <td class="mono">#81817B</td>
-      <td class="dim">L* 54.0</td>
-      <td class="dim">rayl-screen grey</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#696963"></span></td>
-      <td class="mono">grey-07</td>
-      <td class="mono">#696963</td>
-      <td class="dim">L* 44.0</td>
-      <td class="dim">rayl-screen grey dark</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#50504C"></span></td>
-      <td class="mono">grey-08</td>
-      <td class="mono">#50504C</td>
-      <td class="dim">L* 34.0</td>
-      <td class="dim">fills a hole <span class="tag">new</span></td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#3F3F3B"></span></td>
-      <td class="mono">grey-09</td>
-      <td class="mono">#3F3F3B</td>
-      <td class="dim">L* 26.5</td>
-      <td class="dim">rayl-screen black</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#2C2C2A"></span></td>
-      <td class="mono">grey-10</td>
-      <td class="mono">#2C2C2A</td>
-      <td class="dim">L* 18.0</td>
-      <td class="dim">fills a hole <span class="tag">new</span></td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#1C1C1A"></span></td>
-      <td class="mono">grey-11</td>
-      <td class="mono">#1C1C1A</td>
-      <td class="dim">L* 10.2</td>
-      <td class="dim">the logo black</td>
-    </tr>
-</table>
-</section>
-
-<section>
-<h2>Proposed roles</h2>
-<p>The point of roles is that nothing ever picks a hex again. It asks for
-<span class="mono">ink / secondary</span> and gets one. When a role is missing,
-that is a question for you, not a gap to fill with a guess.</p>
-<h3>Surfaces</h3>
-<table>
-<tr>
-      <td><span class="chip" style="background:#F0F0E5"></span></td>
-      <td class="mono">surface / page</td>
-      <td class="mono dim">grey-00</td>
-      <td>The ground everything sits on.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#F0F0E5"></span></td>
-      <td class="mono">surface / raised</td>
-      <td class="mono dim">grey-00</td>
-      <td>Panel column, card. Same as the page today — is it meant to be?</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#E8E8D8"></span></td>
-      <td class="mono">surface / sunk</td>
-      <td class="mono dim">grey-01</td>
-      <td>Slider track, input well.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#1C1C1A"></span></td>
-      <td class="mono">surface / overlay</td>
-      <td class="mono dim">grey-11</td>
-      <td>Scrim behind a modal, at reduced opacity.</td>
-    </tr>
-</table>
-<h3>Ink</h3>
-<table>
-<tr>
-      <td><span class="chip" style="background:#1C1C1A"></span></td>
-      <td class="mono">ink / primary</td>
-      <td class="mono dim">grey-11</td>
-      <td>Body, labels, the logo.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#696963"></span></td>
-      <td class="mono">ink / secondary</td>
-      <td class="mono dim">grey-07</td>
-      <td>Captions, units, the quieter half of a row.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#9C9C94"></span></td>
-      <td class="mono">ink / disabled</td>
-      <td class="mono dim">grey-05</td>
-      <td>NEW — nothing in any build covers this.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#F0F0E5"></span></td>
-      <td class="mono">ink / inverse</td>
-      <td class="mono dim">grey-00</td>
-      <td>A label sitting on a dark fill.</td>
-    </tr>
-</table>
-<h3>Lines</h3>
-<table>
-<tr>
-      <td><span class="chip" style="background:#CECEC5"></span></td>
-      <td class="mono">line / hairline</td>
-      <td class="mono dim">grey-03</td>
-      <td>Dividers. The 2px rules in the app screen.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#B6B6AE"></span></td>
-      <td class="mono">line / control</td>
-      <td class="mono dim">grey-04</td>
-      <td>NEW — the edge of an input or a button.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#1C1C1A"></span></td>
-      <td class="mono">line / focus</td>
-      <td class="mono dim">grey-11</td>
-      <td>NEW — keyboard focus. Needs to be visible on every surface.</td>
-    </tr>
-</table>
-<h3>Action</h3>
-<table>
-<tr>
-      <td><span class="chip" style="background:#1C1C1A"></span></td>
-      <td class="mono">action / fill</td>
-      <td class="mono dim">grey-11</td>
-      <td>A primary button.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#3F3F3B"></span></td>
-      <td class="mono">action / fill hover</td>
-      <td class="mono dim">grey-09</td>
-      <td>NEW</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#2C2C2A"></span></td>
-      <td class="mono">action / fill press</td>
-      <td class="mono dim">grey-10</td>
-      <td>NEW</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#E8E8D8"></span></td>
-      <td class="mono">action / quiet</td>
-      <td class="mono dim">grey-01</td>
-      <td>A secondary button.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#1C1C1A"></span></td>
-      <td class="mono">state / selected</td>
-      <td class="mono dim">grey-11</td>
-      <td>Tab on, toggle on.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#E8E8D8"></span></td>
-      <td class="mono">control / track</td>
-      <td class="mono dim">grey-01</td>
-      <td>The unfilled part of a slider.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#1C1C1A"></span></td>
-      <td class="mono">control / fill</td>
-      <td class="mono dim">grey-11</td>
-      <td>The filled part.</td>
-    </tr>
-</table>
-</section>
-
-<section>
-<h2>Semantic colours — the real decision</h2>
-<p>Because the whole palette is one hue, a warning or an error is the first hue
-break in the brand. There is no way around that: nothing made of this hue can
-mean stop.</p>
-<p>These are drawn at the same lightness and chroma as your existing green, so
-they sit in the same world rather than arriving as web colours. Each has a
-surface for backgrounds and an ink for text on it.</p>
-<table>
-<tr>
-      <td><span class="chip" style="background:#D8DEB9"></span></td>
-      <td><span class="chip" style="background:#606742"></span></td>
-      <td class="mono">success</td>
-      <td class="mono dim">#D8DEB9 / #606742</td>
-      <td>This is your existing green, unchanged. It already sits on the brand hue.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#F2D6B7"></span></td>
-      <td><span class="chip" style="background:#785F40"></span></td>
-      <td class="mono">warning</td>
-      <td class="mono dim">#F2D6B7 / #785F40</td>
-      <td>NEW HUE — the palette has never carried an amber.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#FFCFCA"></span></td>
-      <td><span class="chip" style="background:#875753"></span></td>
-      <td class="mono">error</td>
-      <td class="mono dim">#FFCFCA / #875753</td>
-      <td>NEW HUE — the palette has never carried a red.</td>
-    </tr>
-<tr>
-      <td><span class="chip" style="background:#BBDFFD"></span></td>
-      <td><span class="chip" style="background:#3D6886"></span></td>
-      <td class="mono">info</td>
-      <td class="mono dim">#BBDFFD / #3D6886</td>
-      <td>NEW HUE — and the furthest from the brand. Do you even need it?</td>
-    </tr>
-</table>
-<div class="note" style="margin-top:12px">
-<p>Worth deciding deliberately: a system this restrained may be better served by
-<em>one</em> semantic hue rather than four. Error is unavoidable. Success you
-already have. Warning and info may be doing work that a plain grey and a clear
-sentence could do instead.</p>
+<h2>Gradients</h2>
+<p>Both run top to bottom, first stop at 0.349%.</p>
+<div class="grad">
+<div style="background:linear-gradient(180deg,#CFCFC4 .349%,#F7F7F2);color:#1c1c1a">Porcelain Gradient<br><span class="dim mono">#CFCFC4 to #F7F7F2</span></div>
+<div style="background:linear-gradient(180deg,#696963 .349%,#CFCFC4);color:#F7F7F2">Concrete Gradient<br><span class="mono">#696963 to #CFCFC4</span></div>
 </div>
+<p class="dim" style="margin-top:12px">The swatch in the file labels the second
+one "Paper Gradient" while its style is named "Concrete Gradient". Use the style
+name.</p>
 </section>
 
 <section>
-<h2>In use</h2>
-<p>The proposal rendered as actual controls, so it can be judged rather than read.</p>
-<div class="demo">
-  <span class="btn">Primary</span>
-  <span class="btn quiet">Secondary</span>
-  <span class="btn off">Disabled</span>
-  <span class="track"><i></i></span>
+<h2>Every build in code has drifted</h2>
+<p>One value in six is right. Where they disagree, the file wins.</p>
+<table><tr><td><span class="chip" style="background:#F0F0E5"></span></td>
+<td><span class="chip" style="background:#F7F7F2"></span></td><td class="mono">rayl-ui paper</td>
+<td class="mono dim">#F0F0E5</td><td class="mono">#F7F7F2</td></tr>
+<tr><td><span class="chip" style="background:#E8E8D8"></span></td>
+<td><span class="chip" style="background:#E2E2D3"></span></td><td class="mono">rayl-ui sunk</td>
+<td class="mono dim">#E8E8D8</td><td class="mono">#E2E2D3</td></tr>
+<tr><td><span class="chip" style="background:#000000"></span></td>
+<td><span class="chip" style="background:#1C1C1A"></span></td><td class="mono">rayl-ui ink</td>
+<td class="mono dim">#000000</td><td class="mono">#1C1C1A</td></tr>
+<tr><td><span class="chip" style="background:#CECEC5"></span></td>
+<td><span class="chip" style="background:#CFCFC4"></span></td><td class="mono">rayl-screen porcelain</td>
+<td class="mono dim">#CECEC5</td><td class="mono">#CFCFC4</td></tr>
+<tr><td><span class="chip" style="background:#3F3F3B"></span></td>
+<td><span class="chip" style="background:#55554E"></span></td><td class="mono">rayl-screen black</td>
+<td class="mono dim">#3F3F3B</td><td class="mono">#55554E</td></tr>
+<tr><td><span class="chip" style="background:#696963"></span></td>
+<td><span class="chip" style="background:#696963"></span></td><td class="mono">rayl-screen grey dark</td>
+<td class="mono dim">#696963</td><td class="mono">correct</td></tr></table>
+</section>
+
+<section>
+<h2>The hole</h2>
+<div class="ramp">
+<div style="background:#FFFFFF"></div><div style="background:#F7F7F2"></div>
+<div style="background:#E2E2D3"></div><div style="background:#CFCFC4"></div>
+<div class="gap"></div>
+<div style="background:#696963"></div><div style="background:#55554E"></div>
+<div style="background:#1C1C1A"></div>
 </div>
-<div class="demo" style="margin-top:12px">
-  <span class="pill" style="background:#D8DEB9;color:#606742">Saved</span>
-  <span class="pill" style="background:#F2D6B7;color:#785F40">Expiring</span>
-  <span class="pill" style="background:#FFCFCA;color:#875753">Failed</span>
-  <span class="pill" style="background:#BBDFFD;color:#3D6886">Info</span>
-</div>
+<p>Laid out by lightness, the palette is four colours crowded into the top fifth,
+then nothing at all for 38 points of lightness, then three at the bottom. The
+hatched band is empty.</p>
+<p>That band is where control borders, disabled text and hover states live. It is
+why UI work keeps reaching for a colour that does not exist, and why every build
+invented its own.</p>
 </section>
 
 <section>
 <h2>What to rule on</h2>
 <ul>
-<li>Is the ramp right, and are the five new steps the right values?</li>
-<li>Should surface / page and surface / raised be the same colour? They are today.</li>
-<li>How many semantic hues — four, two, or one?</li>
-<li>Is the green success, or is it a brand accent that happens to be green?</li>
+<li><strong>Is there a green?</strong> The chapter's own text promises "subtle
+touches of an organic green" and no green swatch exists. The app build uses
+<span class="mono">#D8DEB9</span> — same hue as everything else with the chroma
+raised. In the system, or that screen's invention?</li>
+<li><strong>Do we fill the hole?</strong> One or two mid-tones would end the
+guessing. They would be new brand colours, so it is your call, not a build's.</li>
+<li><strong>How many semantic colours?</strong> Every colour here is one hue, so
+anything meaning stop is the first hue break in the brand. Error is the only one
+that cannot be done another way — success, warning and info may be better served
+by a grey chip and a clear sentence.</li>
+<li><strong>Should the CMYK be a profile conversion?</strong> What is written now
+is arithmetic. Fine on screen, not fine at a printer.</li>
 </ul>
-<p>Once these are answered they go into <a href="RAYL-SYSTEM.md">RAYL-SYSTEM.md</a>
-and stop being NOT DECIDED. <a href="./">Back to the system</a>.</p>
+<p><a href="./">Back to the system</a> · <a href="RAYL-SYSTEM.md">RAYL-SYSTEM.md</a> · <a href="AUDIT.md">AUDIT.md</a></p>
 </section>
 
-</main>
-</body>
-</html>
+</main></body></html>
