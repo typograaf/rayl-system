@@ -66,9 +66,11 @@ questions 1 to 4.
 Every value in every code build had drifted from these except one. See the
 guideline document for the correction table.
 
-**The swatches in the file are painted correctly but their specs are empty.**
-Every one reads `RGB 000 000 000`, `CMYK 000 000 000 000`, `HEX #000000`. The
-chapter was laid out and never filled in.
+**The specs were blank and are now filled in.** Every swatch read
+`RGB 000 000 000`, `CMYK 000 000 000 000`, `HEX #000000` — laid out and never
+completed. On 2026-09-01 all nine were written with their real values, taken
+from each swatch's own fill, plus a fourth `L*` row that makes the gap in the
+palette visible at a glance. The gradient cards carry both stops.
 
 ### What is still open on colour
 
