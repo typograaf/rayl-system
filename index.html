@@ -155,7 +155,8 @@ The rules that matter most:
 - Type is 8 for section labels and 12 for everything else, tracking 0.02em, line height 1.2.
 - The palette is exactly ten colours: White #FFFFFF, Off White #F7F7F2, Dark Off-White #E2E2D3, Porcelain #CFCFC4, Dark Porcelain #ACACA2, Pale Concrete #898982, Light Concrete #696963, Dark Concrete #55554E, Off-Black #373733, Black #1C1C1A. Two gradients, both top to bottom: Porcelain #CFCFC4 to #F7F7F2, Concrete #696963 to #CFCFC4.
 - The ground is #F7F7F2 and ink is #1C1C1A. Never #000000 — the palette has no pure black. Light mode only.
-- There is no green and no error or warning colour. If you need one, ask.
+- Interactive states are a move along the lightness ladder, not a new colour: hover moves 5 L*, pressed moves 10 L*. Light grounds darken, dark fills lighten. Derive states this way for anything not listed.
+- There is no green and no error or warning colour, and no loading, empty or error state. If you need one, ask.
 - Where the system does not cover something, tell me and ask. Do not invent it and do not substitute something that looks close.</pre>
       <button id="copy" type="button">Copy</button>
     </div>

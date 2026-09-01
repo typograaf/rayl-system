@@ -232,19 +232,58 @@ Established layout figures worth knowing:
 
 ---
 
-## 5. Components
+## 5. Interactive states
 
-NOT DECIDED, and the gap is wide enough to matter.
+**The rule, which matters more than the table.** A state is a move along the
+palette's own lightness ladder, taking whatever chroma the curve gives at that
+lightness. Hover moves **5 L\***, pressed moves **10 L\***. Light grounds darken;
+dark fills lighten, because they have nowhere darker to go.
 
-Rayl has a panel, sliders, toggles, tabs, cards, and a calendar rail — but every
-one of them exists in exactly one state. There is no hover, pressed, disabled,
-focus, error, loading or empty state anywhere in the system.
+Follow the rule and a state colour is automatically a member of the palette. It
+also means you can derive a state for an element that is not in this document —
+which is the whole point.
 
-If you are asked to build something that needs a state that is not defined, build
-the default state and say plainly which states you could not do. Do not invent
-them.
+| base | rest | hover | pressed |
+|---|---|---|---|
+| White | `#FFFFFF` | `#F1F1E5` | `#E3E3D4` |
+| Off White | `#F7F7EF` | `#E9E9DB` | `#DBDBCC` |
+| Dark Off-White | `#E2E2D3` | `#D4D4C6` | `#C6C6B8` |
+| Porcelain | `#CFCFC1` | `#C1C1B4` | `#B3B4A7` |
+| Black | `#1C1C1A` | `#262623` | `#31312D` |
 
----
+White is the exception, as it is everywhere: because it carries no chroma at all,
+its hover gains warmth as well as depth. That is correct rather than a fault — a
+white card hovering joins the palette instead of just dimming.
+
+### States that need no new colour
+
+These come off the ramp. Do not invent a colour for them.
+
+| role | colour |
+|---|---|
+| ink / rest | Black `#1C1C1A` |
+| ink / secondary | Light Concrete `#696961` |
+| ink / disabled | Dark Porcelain `#ACACA0` |
+| ink / inverse, on dark fills | Off White `#F7F7EF` |
+| fill / disabled | Dark Off-White `#E2E2D3` |
+| fill / selected | Black `#1C1C1A`, ink Off White |
+| line / rest | Dark Porcelain `#ACACA0` |
+| line / hover | Pale Concrete `#89897F` |
+| line / focus | Black `#1C1C1A`, Off White on dark grounds |
+| control / track | Dark Off-White `#E2E2D3` |
+| control / fill | Black `#1C1C1A` |
+
+### Contrast
+
+Every ground above carries its ink at 8.1:1 or better, the weakest being Black
+ink on Porcelain pressed. Nothing here needs checking before use.
+
+Ink flips from Black to Off White between Pale Concrete and Light Concrete. That
+is the boundary — above it dark ink, below it light.
+
+### Still not covered
+
+Loading, empty and error states. Ask rather than inventing them.
 
 ## 6. Motion
 
