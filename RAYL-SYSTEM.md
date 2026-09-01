@@ -387,6 +387,22 @@ The consequence worth knowing: **the gap after a heading is always larger than
 the gap after the paragraph beneath it.** That difference is the hierarchy. If
 every gap in a section is the same, the section has no shape.
 
+### No strokes
+
+**Rayl has no border vocabulary.** Nothing in the system draws a line around
+anything: not a card, not a swatch, not a table row, not a specimen. Look at the
+panel — every boundary in it is made by a change of ground, never by an outline.
+
+So when something needs to be distinguishable, **change what is behind it**. A
+white swatch is made visible by the ground it sits on, not by a hairline drawn
+round it. A table's rows are separated by their padding, not by rules. Reaching
+for a 1px line is the quickest way to make a Rayl page stop looking like one, and
+it is the first thing that creeps in when someone is solving a legibility problem
+in a hurry.
+
+The one exception is the **focus ring**, which is not decoration — it is how
+somebody navigating by keyboard knows where they are.
+
 ### Pictures follow the column beside them
 
 A media block in a split takes the height of the row rather than imposing one.

@@ -61,21 +61,22 @@ def specimen(size,lead,az,co,sample):
 CSS = """
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
-  .sw{display:flex;flex-direction:column;gap:6px;}
-  .sw i{display:block;height:48px;border-radius:8px;
-    box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink-primary) 14%,transparent);}
+  /* No strokes anywhere. A white swatch is made visible by the ground it sits
+     on, not by a line drawn round it — the system has no border vocabulary and
+     inventing one is how a page stops looking like Rayl. */
+  .swatches{background:var(--rayl-mid-porcelain);border-radius:8px;padding:24px;}
+  .sw{display:flex;flex-direction:column;gap:6px;color:var(--rayl-black);}
+  .sw i{display:block;height:48px;border-radius:8px;}
   .grad{display:block;height:48px;border-radius:8px;}
   table{width:100%;border-collapse:collapse;}
-  td,th{text-align:left;padding:6px 12px 6px 0;
-    border-bottom:1px solid var(--surface-active);vertical-align:middle;font-size:12px;
-    line-height:1.4;letter-spacing:0.02em;}
-  th{font-size:8px;letter-spacing:0.08em;text-transform:uppercase;opacity:.62;}
-  tr:last-child td{border-bottom:0;}
-  .chip{display:block;width:24px;height:24px;border-radius:4px;
-    box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink-primary) 14%,transparent);}
+  td,th{text-align:left;padding:12px 24px 12px 0;vertical-align:middle;
+    font-size:12px;line-height:1.4;letter-spacing:0.02em;}
+  th{font-size:8px;letter-spacing:0.08em;text-transform:uppercase;opacity:.62;
+    padding-bottom:6px;}
+  .chip{display:block;width:24px;height:24px;border-radius:4px;}
   .scroll{overflow-x:auto;}
-  .spec{display:flex;flex-direction:column;gap:12px;
-    padding-bottom:24px;border-bottom:1px solid var(--surface-active);}
+  .spec{display:flex;flex-direction:column;gap:12px;padding-bottom:48px;}
+
   pre{margin:0;font:inherit;font-size:12px;line-height:1.5;white-space:pre-wrap;
     word-break:break-word;}
   .paste{background:var(--surface-idle);border-radius:8px;padding:24px;
@@ -152,7 +153,7 @@ HTML = f"""<!doctype html>
     106.5° and 106.9°. Chroma follows a single arc, rising out of white, peaking at Dark
     Off-White and falling to black without ever reversing. A new colour belongs to this
     palette only if it sits on that arc.</p>
-    <div class="rayl-grid">{"".join(swatch(*p) for p in PALETTE)}</div>
+    <div class="swatches"><div class="rayl-grid">{"".join(swatch(*p) for p in PALETTE)}</div></div>
     <div class="rayl-split">
       <div class="rayl-stack">
         <span class="grad" style="background:var(--rayl-porcelain-gradient)"></span>
