@@ -94,6 +94,23 @@ import subprocess, sys
 subprocess.run([sys.executable, str(SRC/"site.py")], check=True, cwd=str(SRC))
 
 # ---------------------------------------------------------------------------
+# GitHub Pages serves rayl.js with max-age=600, so for ten minutes after a push
+# anyone with the page already open keeps the old file — and a change to the
+# stylesheet then shows up as a document with no styling at all rather than as
+# an obvious error. The documents carry the build's own hash so their copy is
+# never the stale one. What people paste into a prompt stays the bare URL: they
+# want to pick up changes on their own, and ten minutes is nothing there.
+import hashlib, re
+VER = hashlib.sha1((ROOT/"rayl.js").read_bytes()).hexdigest()[:8]
+SCRIPT = re.compile(r'(<script src="[^"]*?rayl\.js)(\?v=[0-9a-f]+)?(")')
+for f in [ROOT/"index.html"] + sorted((ROOT/"examples").glob("*.html")):
+    t = f.read_text()
+    stamped = SCRIPT.sub(lambda m: m.group(1) + "?v=" + VER + m.group(3), t)
+    if stamped != t:
+        f.write_text(stamped)
+print("stamped rayl.js?v=" + VER)
+
+# ---------------------------------------------------------------------------
 # The artifact build: Claude's CSP allows scripts only from a few CDNs and
 # fonts only from Google's host, so the hosted rayl.js and the woff2 files are
 # both inlined. Same bytes, just carried rather than fetched.
@@ -118,10 +135,8 @@ face = "\n".join(
 )
 for name in ("bench", "panel", "landing"):
     src = (ROOT / "examples" / f"{name}.html").read_text()
-    out = src.replace(
-        '<script src="https://typograaf.github.io/rayl-system/rayl.js"></script>',
-        "<script>\n" + rayl + "\n</script>",
-    )
+    out = SCRIPT.sub("<script", src, count=1).replace(
+        "<script></script>", "<script>\n" + rayl + "\n</script>", 1)
     # the inlined faces must come after rayl.js injects its own, so they win
     out = out.replace("</body>", "<style>\n" + face + "\n</style>\n</body>")
     (DIST / f"{name}.html").write_text(out)
