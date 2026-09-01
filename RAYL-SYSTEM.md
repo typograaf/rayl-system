@@ -327,21 +327,49 @@ NOT DECIDED — ask which to use rather than picking.
 
 The scale is **6, 12, 24, 48, 72**. Use these numbers and no others.
 
-Two values outside the scale are in heavy use in existing builds and are awaiting
-a ruling: **36** as a page margin, and **8** as a corner radius. Until that is
-settled, do not introduce either into new work, and do not "fix" them where they
-already exist.
+### What each one means
 
-Corner radius as a whole is NOT DECIDED. The one established value is 8 on
-buttons in the existing panel.
+A gap is not a taste decision. **It says how related two things are**, and the
+scale is the vocabulary for saying it:
 
-Established layout figures worth knowing:
+| gap | between |
+|---|---|
+| **6** | parts of one control — buttons in a cluster, a stepper's digits |
+| **12** | lines of one block — a label and the line under it |
+| **24** | blocks in a section — a heading, its body, its actions |
+| **48** | columns of a split, groups inside a band |
+| **72** | sections of a page |
 
-- The tool panel is a **300** wide column with **48** of padding and **48**
-  between its groups.
-- The app screen's content column is **330**.
+**A container pads one step below the gap it sits in.** A band inside the page's
+72 rhythm pads 48. A card inside a 12 rhythm pads 12. Padding equal to the gap
+around it is what makes a page feel like it is coming apart — the inside and the
+outside stop being distinguishable.
 
----
+The layout classes carry this so it is not re-decided each time:
+`rayl-cluster` gaps 6, `rayl-stack` 12, `rayl-section` 24, `rayl-split` 48,
+`rayl-page` 72.
+
+### Two values outside the scale
+
+**36** is a page margin in the app screen and **8** is the corner radius on every
+control. Both are in heavy use and neither is on the scale. Until that is settled,
+do not introduce either into new work and do not "fix" them where they already
+are.
+
+Corner radius: **8** on controls and cards, **4** at the small scale the Figma
+mock uses, and **half the height** on anything meant to read as fully round. The
+scale as a whole is still open.
+
+### Established figures
+
+- The tool panel is a **300** column with **48** of padding and **48** between
+  its groups.
+- A reading column stops at **62 characters** — `rayl-measure`.
+- A headline's measure is set in `ch` **on the headline itself**, never on a
+  container: `ch` resolves against the element's own font-size, so a measure on a
+  wrapper that inherits 12 gives a column a few words wide.
+- Narrow viewports **step down the scale, never off it**: 96 becomes 48, 72 and
+  48 become 36, 36 becomes 24 — each with that size's own leading and tracking.
 
 ## 5. Interactive states
 
