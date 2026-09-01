@@ -1,5 +1,4 @@
-@font-face{font-family:"Azeret";font-weight:400;font-display:swap;
-  src:url("HUB/assets/fonts/Azeret-TRIAL-Regular.woff2") format("woff2");}
+/* 500 is the only weight in the system, so it is the only face that ships. */
 @font-face{font-family:"Azeret";font-weight:500;font-display:swap;
   src:url("HUB/assets/fonts/Azeret-TRIAL-Medium.woff2") format("woff2");}
 @font-face{font-family:"Concrette";font-weight:500;font-display:swap;
@@ -416,6 +415,9 @@ body.rayl, .rayl-page{
 }
 body.rayl{margin:0;padding:48px 24px 72px;overflow-x:clip;}
 body.rayl *,.rayl-page *{box-sizing:border-box;}
+/* One weight means no bold. Left alone, a 700 request against a single-weight
+   family makes the browser smear the outline into a fake one. */
+body.rayl strong,body.rayl b,.rayl-page strong,.rayl-page b{font-weight:inherit;}
 @supports (text-box-trim: trim-both){
   body.rayl,body.rayl *,.rayl-page,.rayl-page *{
     text-box-trim:trim-both;text-box-edge:cap alphabetic;}

@@ -138,7 +138,10 @@ That is deliberate optical correction. Do not correct it.
 
 - The wordmark's capital height equals the icon's height.
 - The gap between the icon and the word is **69** — one body, the same as the
-  bar's height.
+  bar's height. The guidelines board states this as one third of the total
+  lockup height, which would be 64. The file is the artwork you place and you
+  never rebuild the lockup, so 69 stands; the difference is a note, not a
+  decision to make.
 - The registered symbol sits on the baseline, **12** after the l.
 - The full lockup is 644 x 191. The extra height below the baseline is the y's
   descender.
@@ -148,15 +151,29 @@ That is deliberate optical correction. Do not correct it.
 The logo is `#1C1C1A`. See section 2 — this is currently the only colour in the
 system that comes from the brand itself rather than from a build.
 
-Place the logo in `#1C1C1A` on a light background. A light logo on a dark
-background is NOT DECIDED — ask.
+Place the logo in `#1C1C1A` on a light background and in White `#FFFFFF` on a
+dark one — the same as text. The logo takes `ink/primary`, so it flips wherever
+the type flips and needs no rule of its own.
 
-### Clear space and minimum size
+### Clear space
 
-NOT DECIDED. A proposal, not yet approved: clear space of 12 units at whatever
-size the mark is drawn, which is the mark's own internal gap and works out at 8%
-of its height. Minimum size needs a real answer because the registered symbol
-carries fine detail that will fill in when small.
+From the guidelines board, verbatim:
+
+> When using this icon independently, ensure there is a clear space equal to half
+> the height and width of the logo around it.
+
+> When creating the lockup, make sure the cap height matches that of the icon.
+> The spacing should be one-third of the total lockup height, and maintain a
+> clear area equal to the logo's height.
+
+So the **icon alone gets half its own height on every side** — 75 at the mark's
+drawn size of 150 — and the **lockup gets its own full height on every side**.
+Both scale with the logo rather than with the page, so there is nothing to
+recompute when it is placed larger or smaller.
+
+### Minimum size
+
+There is none.
 
 ### Never
 
@@ -236,7 +253,11 @@ the file is right and the code is wrong:
 ### What the palette does not yet cover
 
 Three things are genuinely missing rather than merely unwritten. Ask rather than
-filling them in:
+filling them in.
+
+**There is no green.** The chapter's own prose promises "subtle touches of an
+organic green" and the app build carries a `#D8DEB9`; neither is the brand. The
+palette is the fifteen below and nothing else.
 
 - **White is the only colour off the system.** Every other colour sits between
   hue 109.4 and 110.0. White is achromatic, so in a warm palette it reads cold.
@@ -247,12 +268,11 @@ filling them in:
 - **Dark Off-White is more saturated than both its neighbours.** Its chroma is
   7.8 where Off White is 2.5 and Porcelain 5.8; the curve would put it near 4.2.
   It is the one colour that looks slightly more yellow-green than the set.
-- **The green.** The palette's own rationale promises "subtle touches of an
-  organic green", but no green is in it. One exists in the app build
-  (`#D8DEB9`), unaccounted for.
 - **Semantic colours.** Nothing means error, warning or success. Because the
   whole palette sits on a single hue, any of these is the first hue break in the
-  brand — a real decision, not a detail.
+  brand — a real decision, not a detail. Martijn is adding them. Until they
+  arrive, do not invent one and do not draft a palette colour in to stand for a
+  state.
 
 ## 3. Typography
 
@@ -329,8 +349,14 @@ Both are TRIAL cuts and both need licensing before anything public.
 
 ### Weights
 
-400, 500 and 600 all appear in existing builds with no stated division of labour.
-NOT DECIDED — ask which to use rather than picking.
+**500, everywhere.** One weight for the whole system — headlines, running text,
+captions, labels and controls alike. 400 and 600 appear in older builds and are
+not part of Rayl; only the Medium face ships.
+
+So there is no bold. `strong` and `b` inherit 500 rather than resolving to 700,
+because a 700 request against a single-weight family makes the browser
+synthesise one by smearing the outline, which is a drawn weight that Displaay
+never drew. Emphasis comes from what the sentence says, or from a size.
 
 ---
 

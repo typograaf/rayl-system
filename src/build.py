@@ -96,9 +96,9 @@ import base64
 DIST = ROOT / "dist"
 DIST.mkdir(exist_ok=True)
 rayl = (ROOT / "rayl.js").read_text()
-# every face the system uses, or the one that is missing falls back in silence
+# every face the system uses — 500 is the only weight, so there are two of them
+# and a missing one would fall back in silence
 fonts = [
-    ("Azeret",    400, ROOT / "assets/fonts/Azeret-TRIAL-Regular.woff2"),
     ("Azeret",    500, ROOT / "assets/fonts/Azeret-TRIAL-Medium.woff2"),
     ("Concrette", 500, ROOT / "assets/fonts/ConcretteS-TRIAL-Medium.woff2"),
 ]

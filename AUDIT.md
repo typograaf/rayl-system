@@ -74,10 +74,9 @@ palette visible at a glance. The gradient cards carry both stops.
 
 ### What is still open on colour
 
-> **Q1. Is there a green in the brand palette?** The chapter's own text promises
-> "subtle touches of an organic green" and no green swatch exists. The app build
-> uses `#D8DEB9`, which is the same hue family as everything else with the
-> chroma raised. Is it in the system or is it that one screen's invention?
+> **Q1. Is there a green in the brand palette?** ANSWERED — no. The prose
+> promises one and the app build carries `#D8DEB9`; neither is the brand. The
+> palette is the fifteen and nothing else.
 >
 > **Q2. Is a mid-tone needed?** Nothing sits between Porcelain (L* 82.8) and
 > Light Concrete (L* 44.2) — a gap of 38. Control borders, disabled text and
@@ -86,7 +85,8 @@ palette visible at a glance. The gradient cards carry both stops.
 > **Q3. How many semantic colours, if any?** Every colour in the palette is one
 > hue. Anything that means stop is the first hue break in the brand. Error is
 > the only one that cannot be done another way; success, warning and info might
-> be better served by a grey chip and a clear sentence.
+> be better served by a grey chip and a clear sentence. Martijn is adding these
+> — still open, but not open to invention.
 >
 > **Q4. Should the CMYK be a real profile conversion?** The values now in the
 > guideline are straight arithmetic, which is fine on screen and not fine at a
@@ -144,8 +144,8 @@ will be about four pixels out on every label.
 > **Q8. Is 0.02em tracking global, or does it loosen at small sizes and tighten
 > at large ones?**
 >
-> **Q9. Which weights are in the system?** 400/500/600 all appear. If all three
-> are in, each needs a job.
+> **Q9. Which weights are in the system?** ANSWERED — 500, and only 500. The
+> 400 and 600 in older builds are not Rayl, and only the Medium face ships.
 
 ---
 
