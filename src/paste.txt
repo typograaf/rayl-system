@@ -1,12 +1,6 @@
 Build this to the Rayl design system.
 
-Start from a template and change the content. Do not compose a page from scratch — copying is what keeps two pages identical rather than merely similar.
-
-  https://typograaf.github.io/rayl-system/templates/landing.html  a marketing page
-  https://typograaf.github.io/rayl-system/templates/panel.html    a settings panel
-  https://typograaf.github.io/rayl-system/templates/bench.html    every control, on five grounds
-
-Both are plain HTML. They pull in one file, which carries the colour tokens, the page ground and rhythm, the button, the slider and the icons:
+Include one file. It carries the colour tokens, the type scale, the page ground and rhythm, the layout primitives, the button, the slider and the icons:
 
 <script src="https://typograaf.github.io/rayl-system/rayl.js"></script>
 
@@ -26,7 +20,13 @@ Put class="rayl" on the body and write markup. Never restyle these and never reb
   </section>
 </div></body>
 
-Layout comes from the system too: rayl-page, rayl-section, rayl-stack, rayl-cluster, rayl-grid, rayl-head, rayl-card, rayl-label, rayl-hint. Use those rather than inventing spacing.
+Layout comes from the system, so do not invent spacing. Panel: rayl-page, rayl-section, rayl-stack, rayl-cluster, rayl-grid, rayl-head, rayl-card, rayl-label, rayl-hint. Wide: rayl-page is-wide, rayl-hero, rayl-band (is-ink), rayl-split (is-lead, is-three, is-centred), rayl-measure, rayl-media.
+
+Build the structure the brief needs. These examples show the parts composed — read them if you are unsure how things go together, but do not clone one and change the words:
+
+  https://typograaf.github.io/rayl-system/examples/landing.html
+  https://typograaf.github.io/rayl-system/examples/panel.html
+  https://typograaf.github.io/rayl-system/examples/bench.html
 
 An active control takes aria-pressed="true". Dark mode is document.documentElement.dataset.theme = "dark"; leave it unset to follow the viewer's own setting.
 

@@ -107,7 +107,7 @@ face = "\n".join(
     for fam, w, p in fonts
 )
 for name in ("bench", "panel", "landing"):
-    src = (ROOT / "templates" / f"{name}.html").read_text()
+    src = (ROOT / "examples" / f"{name}.html").read_text()
     out = src.replace(
         '<script src="https://typograaf.github.io/rayl-system/rayl.js"></script>',
         "<script>\n" + rayl + "\n</script>",

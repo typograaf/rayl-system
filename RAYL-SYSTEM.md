@@ -26,20 +26,10 @@ Rayl is light mode only for now. Do not produce a dark variant unless asked.
 
 ---
 
-## 0. Start from a template, do not compose
+## 0. Build with the parts
 
-Two working pages ship with the system:
-
-    templates/landing.html  a marketing page
-    templates/panel.html    a settings panel
-    templates/bench.html    every control, on five grounds
-
-**Change their content. Do not build a page from scratch.** Copying is what makes
-two pages identical rather than merely similar, and it is the same reason the
-components ship as code instead of as a description.
-
-Both pull in one file, which carries the tokens, the page ground and rhythm, the
-button, the slider and the icons:
+One file carries the colour tokens, the type scale, the page ground and rhythm,
+the layout primitives, the button, the slider and the icons:
 
     https://typograaf.github.io/rayl-system/rayl.js
 
@@ -56,37 +46,58 @@ Put `class="rayl"` on the body and write markup:
         <div class="rayl-row"><span class="rayl-label">Count</span>
           <span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span>
         </div>
-        <p class="rayl-hint">A quiet line of explanation.</p>
       </section>
     </div></body>
 
-**Layout is part of the system, not a decision to make each time.** For a panel:
-`rayl-page`, `rayl-section`, `rayl-stack`, `rayl-cluster`, `rayl-grid`,
-`rayl-head`, `rayl-card`, `rayl-label`, `rayl-hint`. For a page that has to
-breathe: `rayl-page is-wide`, `rayl-hero`, `rayl-band` (and `is-ink` for a run of
-full-bleed ink), `rayl-split` (and `is-lead` for 3:2), `rayl-measure`,
-`rayl-media`. Use those rather than inventing spacing —
-they carry the 6/12/24/48/72 rhythm and the 8px label so you do not have to.
+**Components ship as code because behaviour cannot be described reliably.** Do
+not restyle them and do not rebuild them from the descriptions further down —
+several of those descriptions were wrong until the code was read.
+
+**Layout ships as primitives for the same reason.** For a panel: `rayl-page`,
+`rayl-section`, `rayl-stack`, `rayl-cluster`, `rayl-grid`, `rayl-head`,
+`rayl-card`, `rayl-label`, `rayl-hint`. For a page that has to breathe:
+`rayl-page is-wide`, `rayl-hero`, `rayl-band` (`is-ink` for full-bleed ink),
+`rayl-split` (`is-lead` for 3:2, `is-three` for three across, `is-centred`),
+`rayl-measure`, `rayl-media`. They carry the spacing hierarchy in section 4, so
+it is not re-decided every time.
+
+**Pages do not ship.** A page's structure should come from what the page is for,
+and there is no arrangement of sections that is right for every brief.
+
+### The examples are evidence, not stencils
+
+    examples/landing.html   the wide primitives, composed
+    examples/panel.html     the panel primitives, composed
+    examples/bench.html     every control, the scale and both colour sets
+
+They exist to show that the parts go together and to be read when you are unsure
+how. **Do not clone one and change the words** — you would inherit a structure
+that was built for a different problem, and the result would be a page shaped
+like a rostering pitch no matter what it is actually about.
+
+Consistency comes from the tokens, the type scale, the spacing hierarchy and the
+components. It does not come from every page having the same skeleton.
 
 A button's label is its own text; `data-label` is only needed when the label
-should differ from it. An active control takes `aria-pressed="true"`. Dark mode is
-`document.documentElement.dataset.theme = "dark"`; leave it unset to follow the
-viewer's own setting.
+should differ from it. An active control takes `aria-pressed="true"`. Dark mode
+is `document.documentElement.dataset.theme = "dark"`; leave it unset to follow
+the viewer's own setting.
 
 The rest of this document exists for everything the file does not cover, and so a
-person can check what the file does. **It is a description of the components, not
-a recipe for them** — several rules in here were written from a description and
-were wrong until the code was read. Where the two disagree, the file wins.
+person can check what the file does. Where the two disagree, **the file wins** —
+and above both, the approved Figma frames.
 
 ### Where the system is built
 
 Everything is generated from `src/` by `python3 src/build.py`:
 
-    src/core.css       tokens, page, layout, components
+    src/core.css       tokens, type, page, layout, components
     src/components.js  the label roll, the odometer reel, the icons
     src/slider.js      the track
     src/icons.json     the eighteen icons
-    ->  rayl.js, and dist/ copies of the templates with it inlined
+    src/parts.py       the palette, the UI tokens and the scale, once
+    src/site.py        the dashboard
+    ->  rayl.js, index.html, and dist/ copies of the examples with it inlined
 
 Edit `src/`. Never edit `rayl.js` — it is output, and it will be overwritten.
 

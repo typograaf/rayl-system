@@ -3,7 +3,7 @@ import html, pathlib, re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MARK = re.search(r'<svg class="rayl-mark".*?</svg>',
-                 (ROOT/"templates/bench.html").read_text(), re.S).group(0)
+                 (ROOT/"examples/bench.html").read_text(), re.S).group(0)
 PASTE = html.escape((ROOT/"src/paste.txt").read_text())
 
 PALETTE = [
@@ -182,9 +182,9 @@ HTML = f"""<!doctype html>
   <section class="rayl-section">
     <span class="rayl-label">Templates — start from one of these</span>
     <div class="rayl-cluster">
-      <a class="rayl-btn" href="templates/landing.html">Landing page</a>
-      <a class="rayl-btn" href="templates/panel.html">Settings panel</a>
-      <a class="rayl-btn" href="templates/bench.html">Control bench</a>
+      <a class="rayl-btn" href="examples/landing.html">Landing page</a>
+      <a class="rayl-btn" href="examples/panel.html">Settings panel</a>
+      <a class="rayl-btn" href="examples/bench.html">Control bench</a>
     </div>
     <span class="rayl-label">The documents</span>
     <div class="rayl-cluster">

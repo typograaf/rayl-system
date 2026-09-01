@@ -3,7 +3,7 @@ import pathlib, re
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MARK = re.search(r'<svg class="rayl-mark".*?</svg>',
-                 (ROOT/"templates/panel.html").read_text(), re.S).group(0)
+                 (ROOT/"examples/panel.html").read_text(), re.S).group(0)
 
 PALETTE = [
  ("White","#FFFFFF",100.0),("Paper","#FBFBF6",98.5),("Off White","#F7F7EF",97.1),
