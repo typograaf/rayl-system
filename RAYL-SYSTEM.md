@@ -106,9 +106,6 @@ materials given fluid, organic movement.
 | Dark Concrete | `#55554E` | 85 85 78 | 0 0 8 67 |
 | Black | `#1C1C1A` | 28 28 26 | 0 0 7 89 |
 
-The CMYK figures are straight conversions, not values from a print profile. Do
-not send them to a printer without checking them.
-
 **Gradients.** Both run top to bottom with the first stop at 0.349%.
 
 - **Porcelain Gradient** — `#CFCFC4` to `#F7F7F2`
