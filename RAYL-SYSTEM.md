@@ -26,6 +26,35 @@ Rayl is light mode only for now. Do not produce a dark variant unless asked.
 
 ---
 
+## 0. Use the file, do not rebuild it
+
+The button, the slider, the icons and every colour token are shipped as one
+file:
+
+    https://typograaf.github.io/rayl-system/rayl.js
+
+**Include it and write markup. Do not restyle these components and do not
+rebuild them from the descriptions below.** Everything in it is generated from
+the approved Figma frames and the shipped app, so two pages built this way are
+identical rather than merely similar.
+
+    <button class="rayl-btn" data-label="Save">Save</button>
+    <button class="rayl-btn" data-label="Save" data-icon="Save">Save</button>
+    <span class="rayl-icon" data-icon="Bell"></span>
+    <div class="rayl-row"><span class="rayl-label">Count</span>
+      <span class="rayl-slider" data-label="Count"
+            data-min="1" data-max="33" data-val="12" data-step="1"></span></div>
+
+An active control takes `aria-pressed="true"`. Dark mode is
+`document.documentElement.dataset.theme = "dark"`; leave it unset to follow the
+viewer's own setting.
+
+The rest of this document exists for everything the file does not cover, and so
+that a person can check what the file does. **It is a description of the
+components, not a recipe for them** — three rules in here were written from a
+description and were wrong until the code was read. Where the two disagree, the
+file wins.
+
 ## 1. The logo
 
 There are two files and you must use them as they are. Never redraw the mark,
