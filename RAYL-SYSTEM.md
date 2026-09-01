@@ -784,8 +784,7 @@ ground: `surface/active-hover`, then `surface/active-pressed`.
 
 **Layout.** Cells are half-width by default, so five of them fall two and three;
 `is-third` makes a cell one of three. `is-joined` on the group closes the gaps
-into a single bar and moves the radius onto the group, and `is-wide` inside one
-gives a cell — a name in front of a set of numbers — its larger share. `is-tight`
+into a single bar and moves the radius onto the group. `is-tight`
 sizes the whole group to its own content instead of the row, which is what a
 header toggle or an option row inside running layout wants.
 
@@ -799,7 +798,25 @@ in either axis move the selection and wrap; disabled cells are skipped. Focus
 alone does not turn a label — the arrow key selects in the same beat, and two
 turns fired back to back read as a stutter. The turn belongs to the selection.
 
+**A joined bar usually opens with a name.** Bisque, Sheen and Chalk in the
+approved panel each label a row of 1 / 2 / 3. That first cell is a
+`rayl-seg-name`, not an option: full `ink/primary`, the group's own ground, and
+no hover, focus or selection. Greying it would say it is unavailable, which is
+the opposite of what it is — the only cell in the bar that is not a choice.
+
+Measured at `1083:8907`: the name cell is 72 against a number cell's 20, which
+is the same 18:5 the group already uses, so nothing new had to be decided.
+
 Selecting fires `rayl:change` on the group, carrying `value` and `index`.
+
+```html
+<div class="rayl-seg is-joined">
+  <span class="rayl-seg-name">Bisque</span>
+  <button class="rayl-seg-opt">1</button>
+  <button class="rayl-seg-opt is-on">2</button>
+  <button class="rayl-seg-opt">3</button>
+</div>
+```
 
 ```html
 <div class="rayl-seg">

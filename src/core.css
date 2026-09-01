@@ -215,8 +215,25 @@
   transition:background var(--rayl-dur) var(--rayl-ease);
 }
 .rayl-seg-opt.is-third{flex:1 1 calc(33.333% - 8px);}
-.rayl-seg.is-joined .rayl-seg-opt{flex:5 1 0;border-radius:0;}
-.rayl-seg.is-joined .rayl-seg-opt.is-wide{flex:18 1 0;}
+.rayl-seg.is-joined .rayl-seg-opt,
+.rayl-seg.is-joined .rayl-seg-name{flex:5 1 0;border-radius:0;}
+.rayl-seg.is-joined .rayl-seg-name{flex:18 1 0;}
+
+/* The leading cell of a joined bar is a NAME, not an option — Bisque, Sheen and
+   Chalk in the approved panel. It carries the set's name in full ink, shares the
+   group's ground, and cannot be selected, hovered or focused. Greying it would
+   say it is unavailable, which is the opposite of what it is: the only cell in
+   the bar that is not a choice.
+   Measured at 1083:8907 — 72 against a number cell's 20, which is the 18:5 the
+   group already uses. */
+.rayl-seg-name{
+  flex:18 1 0;min-width:0;
+  height:var(--seg-h);
+  display:flex;align-items:center;justify-content:center;
+  padding:0 12px;
+  background:var(--surface-idle);color:var(--ink-primary);
+  border-radius:var(--rayl-radius);
+}
 /* In a header, a toolbar or a line of running layout, the group sizes to its
    own content instead of filling the row. Still one group, still one on — only
    the width rule changes. */
