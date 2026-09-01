@@ -55,6 +55,7 @@ var TOKENS = `
   --rayl-dur:280ms; --rayl-stagger:20ms;
   --rayl-ease:cubic-bezier(0.65,0,0.35,1);
   --rayl-dir:-1;
+  --rayl-press:0.96;
 }
 @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
   --surface-ground:var(--rayl-soft-black);
@@ -93,13 +94,19 @@ var TOKENS = `
   border:0;border-radius:var(--rayl-radius);
   background:var(--surface-idle);color:var(--ink-primary);
   cursor:pointer;overflow:hidden;              /* the clip is the button shape */
-  transition:background 120ms ease-out;
+  transform:scale(1);
+  /* out is slower than in, so it presses crisply and returns without snapping */
+  transition:background 120ms ease-out, transform 220ms var(--rayl-ease);
 }
 .rayl-btn:hover{background:var(--surface-idle-hover);}
-.rayl-btn:active{background:var(--surface-idle-pressed);}
+.rayl-btn:active:not(:disabled){
+  background:var(--surface-idle-pressed);
+  transform:scale(var(--rayl-press));
+  transition:background 120ms ease-out, transform 90ms var(--rayl-ease);
+}
 .rayl-btn[aria-pressed="true"]{background:var(--surface-active);color:var(--ink-on-active);}
 .rayl-btn[aria-pressed="true"]:hover{background:var(--surface-active-hover);}
-.rayl-btn[aria-pressed="true"]:active{background:var(--surface-active-pressed);}
+.rayl-btn[aria-pressed="true"]:active:not(:disabled){background:var(--surface-active-pressed);}
 .rayl-btn:disabled{color:var(--ink-disabled);cursor:default;background:var(--surface-idle);}
 .rayl-btn:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
 
