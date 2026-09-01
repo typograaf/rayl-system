@@ -112,8 +112,8 @@ var TOKENS = `
   transition:transform var(--rayl-dur) var(--rayl-ease) calc(var(--i,0) * var(--rayl-stagger));}
 .rayl-cur{transform:translateY(0);}
 .rayl-nxt{transform:translateY(calc(var(--rayl-travel) * var(--rayl-dir) * -1));}
-.rayl-roll.is-rolled .rayl-cur{transform:translateY(calc(var(--rayl-travel) * var(--rayl-dir)));}
-.rayl-roll.is-rolled .rayl-nxt{transform:translateY(0);}
+.rayl-ch.is-rolled .rayl-cur{transform:translateY(calc(var(--rayl-travel) * var(--rayl-dir)));}
+.rayl-ch.is-rolled .rayl-nxt{transform:translateY(0);}
 .rayl-roll.is-instant .rayl-g,.rayl-roll.is-instant .rayl-ch{transition:none;}
 
 /* --------------------------------------------------------------- the icons */
@@ -171,7 +171,7 @@ function Roll(host){
   this.text = host.dataset.label || host.textContent || "";
   this.swap = host.dataset.swap || this.text;
   this.showing = this.text;
-  this.chars = []; this.busy = false;
+  this.chars = []; this.busy = false; this.pending = null;
   host.textContent = "";
   var cs = getComputedStyle(host);
   this.font = cs.fontStyle+" "+cs.fontWeight+" "+cs.fontSize+"/"+cs.fontSize+" "+cs.fontFamily;
@@ -187,7 +187,7 @@ Roll.prototype.grow = function(n){
     this.chars.push({box:box, cur:cur, nxt:nxt});
   }
 };
-Roll.prototype.render = function(text){
+Roll.prototype.render = function(text){        /* no animation, straight to it */
   this.grow(text.length);
   for (var i=0;i<this.chars.length;i++){
     var c = this.chars[i], g = i < text.length ? text.charAt(i) : "";
@@ -195,49 +195,63 @@ Roll.prototype.render = function(text){
     c.box.style.width = (g ? advance(g, this.font) : 0) + "px";
   }
   this.showing = text;
-  this.reorder();
-};
-/* random order — each run shuffles again, so no two rolls read the same */
-Roll.prototype.reorder = function(){
-  var n = this.chars.length, idx = this.chars.map(function(_,i){ return i; });
-  for (var k=n-1;k>0;k--){ var j = Math.floor(Math.random()*(k+1)); var t=idx[k]; idx[k]=idx[j]; idx[j]=t; }
-  for (var i=0;i<n;i++) this.chars[i].box.style.setProperty("--i", idx[i]);
 };
 Roll.prototype.instant = function(fn){
   this.host.classList.add("is-instant"); fn();
   void this.host.offsetWidth;
   this.host.classList.remove("is-instant");
 };
-/* land wherever the roll had got to, without a transition */
 Roll.prototype.settle = function(){
   var self = this;
   clearTimeout(this._t);
   this.instant(function(){
-    for (var i=0;i<self.chars.length;i++) self.chars[i].cur.textContent = self.chars[i].nxt.textContent;
-    self.host.classList.remove("is-rolled");
+    for (var i=0;i<self.chars.length;i++){
+      var c = self.chars[i];
+      c.cur.textContent = c.nxt.textContent;
+      c.box.classList.remove("is-rolled");
+    }
   });
   this.busy = false;
 };
+/* `force` rolls every character even when the text has not changed — that is
+   what a button does on hover. Without it only the characters that actually
+   differ move, which is what a counter wants: 12 to 13 rolls one digit.
+   A change arriving mid-roll is remembered, not applied: interrupting looked
+   like the value simply swapping, which is worse than arriving a beat late. */
 Roll.prototype.to = function(next, force){
-  if (this.busy) this.settle();          /* a new value interrupts the old roll */
-  if (next === this.showing && !force) return;
   var self = this;
+  if (this.busy){ this.pending = {t:next, f:force}; return; }
+  if (!force && next === this.showing) return;
   if (reduced){ this.render(next); return; }
   this.grow(Math.max(next.length, this.showing.length));
-  this.reorder();
+  var moving = [];
   for (var i=0;i<this.chars.length;i++){
-    var c = this.chars[i], g = i < next.length ? next.charAt(i) : "";
+    var c = this.chars[i];
+    var g = i < next.length ? next.charAt(i) : "";
+    var was = c.cur.textContent;
     c.nxt.textContent = g;
     c.box.style.width = (g ? advance(g, this.font) : 0) + "px";
+    if (force || g !== was) moving.push(c);
+  }
+  this.showing = next;
+  if (!moving.length) return;
+  var idx = moving.map(function(_,i){ return i; });
+  for (var k=idx.length-1;k>0;k--){
+    var j = Math.floor(Math.random()*(k+1)); var t=idx[k]; idx[k]=idx[j]; idx[j]=t;
+  }
+  for (var m=0;m<moving.length;m++){
+    moving[m].box.style.setProperty("--i", idx[m]);
+    moving[m].box.classList.add("is-rolled");
   }
   this.busy = true;
-  this.host.classList.add("is-rolled");
-  var ms = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--rayl-dur")) || 280;
-  var st = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--rayl-stagger")) || 20;
-  clearTimeout(this._t);
-  this.showing = next;
-  this._t = setTimeout(function(){ self.settle(); },
-    ms + (this.chars.length - 1) * st + 40);
+  var cs = getComputedStyle(document.documentElement);
+  var ms = parseFloat(cs.getPropertyValue("--rayl-dur")) || 280;
+  var st = parseFloat(cs.getPropertyValue("--rayl-stagger")) || 20;
+  this._t = setTimeout(function(){
+    self.settle();
+    var p = self.pending; self.pending = null;
+    if (p) self.to(p.t, p.f);
+  }, ms + (moving.length - 1) * st + 40);
 };
 Roll.prototype.turn = function(){ this.to(this.showing, true); };
 
