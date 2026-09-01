@@ -35,15 +35,19 @@
   }
 
 
+
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
-  /* No strokes anywhere. A white swatch is made visible by the ground it sits
-     on, not by a line drawn round it — the system has no border vocabulary and
-     inventing one is how a page stops looking like Rayl. */
-  .swatches{background:var(--rayl-mid-porcelain);border-radius:8px;padding:24px;}
-  .sw{display:flex;flex-direction:column;gap:6px;color:var(--rayl-black);}
-  .sw i{display:block;height:48px;border-radius:8px;}
-  .grad{display:block;height:48px;border-radius:8px;}
+  /* A swatch IS the colour, with its name printed on it — the way the colour
+     chapter in the Figma file draws one. No stroke round it and no box behind
+     it: the grid's gaps are the edges. White merges with a white page, which is
+     true and not a problem to solve. */
+  .sw{border-radius:8px;padding:12px;min-height:96px;
+    display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
+    font-size:12px;line-height:1.4;letter-spacing:0.02em;}
+  .grad{border-radius:8px;padding:12px;min-height:96px;
+    display:flex;flex-direction:column;gap:6px;
+    font-size:12px;line-height:1.4;letter-spacing:0.02em;}
   table{width:100%;border-collapse:collapse;}
   td,th{text-align:left;padding:12px 24px 12px 0;vertical-align:middle;
     font-size:12px;line-height:1.4;letter-spacing:0.02em;}
@@ -132,17 +136,15 @@
     106.5° and 106.9°. Chroma follows a single arc, rising out of white, peaking at Dark
     Off-White and falling to black without ever reversing. A new colour belongs to this
     palette only if it sits on that arc.</p>
-    <div class="swatches"><div class="rayl-grid"><div class="sw"><i style="background:#FFFFFF"></i><span class="rayl-12">White</span><span class="rayl-12 dim mono">#FFFFFF</span><span class="rayl-12 dim mono">L* 100.0</span></div><div class="sw"><i style="background:#FBFBF6"></i><span class="rayl-12">Paper</span><span class="rayl-12 dim mono">#FBFBF6</span><span class="rayl-12 dim mono">L* 98.5</span></div><div class="sw"><i style="background:#F7F7EF"></i><span class="rayl-12">Off White</span><span class="rayl-12 dim mono">#F7F7EF</span><span class="rayl-12 dim mono">L* 97.1</span></div><div class="sw"><i style="background:#EDEDDF"></i><span class="rayl-12">Bone</span><span class="rayl-12 dim mono">#EDEDDF</span><span class="rayl-12 dim mono">L* 93.3</span></div><div class="sw"><i style="background:#E2E2D3"></i><span class="rayl-12">Dark Off-White</span><span class="rayl-12 dim mono">#E2E2D3</span><span class="rayl-12 dim mono">L* 89.5</span></div><div class="sw"><i style="background:#CFCFC1"></i><span class="rayl-12">Porcelain</span><span class="rayl-12 dim mono">#CFCFC1</span><span class="rayl-12 dim mono">L* 82.8</span></div><div class="sw"><i style="background:#C3C3B6"></i><span class="rayl-12">Mid Porcelain</span><span class="rayl-12 dim mono">#C3C3B6</span><span class="rayl-12 dim mono">L* 78.5</span></div><div class="sw"><i style="background:#ACACA0"></i><span class="rayl-12">Dark Porcelain</span><span class="rayl-12 dim mono">#ACACA0</span><span class="rayl-12 dim mono">L* 70.1</span></div><div class="sw"><i style="background:#89897F"></i><span class="rayl-12">Pale Concrete</span><span class="rayl-12 dim mono">#89897F</span><span class="rayl-12 dim mono">L* 56.9</span></div><div class="sw"><i style="background:#696961"></i><span class="rayl-12">Light Concrete</span><span class="rayl-12 dim mono">#696961</span><span class="rayl-12 dim mono">L* 44.2</span></div><div class="sw"><i style="background:#55554E"></i><span class="rayl-12">Dark Concrete</span><span class="rayl-12 dim mono">#55554E</span><span class="rayl-12 dim mono">L* 35.9</span></div><div class="sw"><i style="background:#373732"></i><span class="rayl-12">Off-Black</span><span class="rayl-12 dim mono">#373732</span><span class="rayl-12 dim mono">L* 22.9</span></div><div class="sw"><i style="background:#262623"></i><span class="rayl-12">Soft Black</span><span class="rayl-12 dim mono">#262623</span><span class="rayl-12 dim mono">L* 15.2</span></div><div class="sw"><i style="background:#1C1C1A"></i><span class="rayl-12">Black</span><span class="rayl-12 dim mono">#1C1C1A</span><span class="rayl-12 dim mono">L* 10.2</span></div><div class="sw"><i style="background:#11110F"></i><span class="rayl-12">Deep Black</span><span class="rayl-12 dim mono">#11110F</span><span class="rayl-12 dim mono">L* 5.0</span></div></div></div>
+    <div class="rayl-grid"><div class="sw" style="background:#FFFFFF;color:#1C1C1A"><span>White</span><span class="mono" style="opacity:.62">#FFFFFF</span><span class="mono" style="opacity:.62">L* 100.0</span></div><div class="sw" style="background:#FBFBF6;color:#1C1C1A"><span>Paper</span><span class="mono" style="opacity:.62">#FBFBF6</span><span class="mono" style="opacity:.62">L* 98.5</span></div><div class="sw" style="background:#F7F7EF;color:#1C1C1A"><span>Off White</span><span class="mono" style="opacity:.62">#F7F7EF</span><span class="mono" style="opacity:.62">L* 97.1</span></div><div class="sw" style="background:#EDEDDF;color:#1C1C1A"><span>Bone</span><span class="mono" style="opacity:.62">#EDEDDF</span><span class="mono" style="opacity:.62">L* 93.3</span></div><div class="sw" style="background:#E2E2D3;color:#1C1C1A"><span>Dark Off-White</span><span class="mono" style="opacity:.62">#E2E2D3</span><span class="mono" style="opacity:.62">L* 89.5</span></div><div class="sw" style="background:#CFCFC1;color:#1C1C1A"><span>Porcelain</span><span class="mono" style="opacity:.62">#CFCFC1</span><span class="mono" style="opacity:.62">L* 82.8</span></div><div class="sw" style="background:#C3C3B6;color:#1C1C1A"><span>Mid Porcelain</span><span class="mono" style="opacity:.62">#C3C3B6</span><span class="mono" style="opacity:.62">L* 78.5</span></div><div class="sw" style="background:#ACACA0;color:#1C1C1A"><span>Dark Porcelain</span><span class="mono" style="opacity:.62">#ACACA0</span><span class="mono" style="opacity:.62">L* 70.1</span></div><div class="sw" style="background:#89897F;color:#1C1C1A"><span>Pale Concrete</span><span class="mono" style="opacity:.62">#89897F</span><span class="mono" style="opacity:.62">L* 56.9</span></div><div class="sw" style="background:#696961;color:#F7F7EF"><span>Light Concrete</span><span class="mono" style="opacity:.62">#696961</span><span class="mono" style="opacity:.62">L* 44.2</span></div><div class="sw" style="background:#55554E;color:#F7F7EF"><span>Dark Concrete</span><span class="mono" style="opacity:.62">#55554E</span><span class="mono" style="opacity:.62">L* 35.9</span></div><div class="sw" style="background:#373732;color:#F7F7EF"><span>Off-Black</span><span class="mono" style="opacity:.62">#373732</span><span class="mono" style="opacity:.62">L* 22.9</span></div><div class="sw" style="background:#262623;color:#F7F7EF"><span>Soft Black</span><span class="mono" style="opacity:.62">#262623</span><span class="mono" style="opacity:.62">L* 15.2</span></div><div class="sw" style="background:#1C1C1A;color:#F7F7EF"><span>Black</span><span class="mono" style="opacity:.62">#1C1C1A</span><span class="mono" style="opacity:.62">L* 10.2</span></div><div class="sw" style="background:#11110F;color:#F7F7EF"><span>Deep Black</span><span class="mono" style="opacity:.62">#11110F</span><span class="mono" style="opacity:.62">L* 5.0</span></div></div>
     <div class="rayl-split">
-      <div class="rayl-stack">
-        <span class="grad" style="background:var(--rayl-porcelain-gradient)"></span>
-        <span class="rayl-12">Porcelain Gradient</span>
-        <span class="rayl-12 dim mono">#CFCFC1 → #F7F7EF, 180°</span>
+      <div class="grad" style="background:var(--rayl-porcelain-gradient);color:#1C1C1A">
+        <span>Porcelain Gradient</span>
+        <span class="mono" style="opacity:.62">#CFCFC1 → #F7F7EF, 180°</span>
       </div>
-      <div class="rayl-stack">
-        <span class="grad" style="background:var(--rayl-concrete-gradient)"></span>
-        <span class="rayl-12">Concrete Gradient</span>
-        <span class="rayl-12 dim mono">#696961 → #CFCFC1, 180°</span>
+      <div class="grad" style="background:var(--rayl-concrete-gradient);color:#F7F7EF">
+        <span>Concrete Gradient</span>
+        <span class="mono" style="opacity:.62">#696961 → #CFCFC1, 180°</span>
       </div>
     </div>
   </section>

@@ -39,10 +39,12 @@ SCALE = [
  (12,"140%","+2%","—","Schoonmaak Medewerker")]
 
 def swatch(n,h,l):
-    return (f'<div class="sw"><i style="background:{h}"></i>'
-            f'<span class="rayl-12">{n}</span>'
-            f'<span class="rayl-12 dim mono">{h}</span>'
-            f'<span class="rayl-12 dim mono">L* {l}</span></div>')
+    """The ink flips where it flips everywhere else: below Pale Concrete."""
+    ink = "#1C1C1A" if l >= 55 else "#F7F7EF"
+    return (f'<div class="sw" style="background:{h};color:{ink}">'
+            f'<span>{n}</span>'
+            f'<span class="mono" style="opacity:.62">{h}</span>'
+            f'<span class="mono" style="opacity:.62">L* {l}</span></div>')
 
 def token(n,lt,dk,job):
     return (f'<tr><td><i class="chip" style="background:var(--{n.replace("/","-")})"></i></td>'
@@ -61,13 +63,16 @@ def specimen(size,lead,az,co,sample):
 SPEC_CSS = """
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
-  /* No strokes anywhere. A white swatch is made visible by the ground it sits
-     on, not by a line drawn round it — the system has no border vocabulary and
-     inventing one is how a page stops looking like Rayl. */
-  .swatches{background:var(--rayl-mid-porcelain);border-radius:8px;padding:24px;}
-  .sw{display:flex;flex-direction:column;gap:6px;color:var(--rayl-black);}
-  .sw i{display:block;height:48px;border-radius:8px;}
-  .grad{display:block;height:48px;border-radius:8px;}
+  /* A swatch IS the colour, with its name printed on it — the way the colour
+     chapter in the Figma file draws one. No stroke round it and no box behind
+     it: the grid's gaps are the edges. White merges with a white page, which is
+     true and not a problem to solve. */
+  .sw{border-radius:8px;padding:12px;min-height:96px;
+    display:flex;flex-direction:column;justify-content:flex-end;gap:6px;
+    font-size:12px;line-height:1.4;letter-spacing:0.02em;}
+  .grad{border-radius:8px;padding:12px;min-height:96px;
+    display:flex;flex-direction:column;gap:6px;
+    font-size:12px;line-height:1.4;letter-spacing:0.02em;}
   table{width:100%;border-collapse:collapse;}
   td,th{text-align:left;padding:12px 24px 12px 0;vertical-align:middle;
     font-size:12px;line-height:1.4;letter-spacing:0.02em;}
@@ -111,17 +116,15 @@ def colour_sections():
     106.5° and 106.9°. Chroma follows a single arc, rising out of white, peaking at Dark
     Off-White and falling to black without ever reversing. A new colour belongs to this
     palette only if it sits on that arc.</p>
-    <div class="swatches"><div class="rayl-grid">{"".join(swatch(*p) for p in PALETTE)}</div></div>
+    <div class="rayl-grid">{"".join(swatch(*p) for p in PALETTE)}</div>
     <div class="rayl-split">
-      <div class="rayl-stack">
-        <span class="grad" style="background:var(--rayl-porcelain-gradient)"></span>
-        <span class="rayl-12">Porcelain Gradient</span>
-        <span class="rayl-12 dim mono">#CFCFC1 → #F7F7EF, 180°</span>
+      <div class="grad" style="background:var(--rayl-porcelain-gradient);color:#1C1C1A">
+        <span>Porcelain Gradient</span>
+        <span class="mono" style="opacity:.62">#CFCFC1 → #F7F7EF, 180°</span>
       </div>
-      <div class="rayl-stack">
-        <span class="grad" style="background:var(--rayl-concrete-gradient)"></span>
-        <span class="rayl-12">Concrete Gradient</span>
-        <span class="rayl-12 dim mono">#696961 → #CFCFC1, 180°</span>
+      <div class="grad" style="background:var(--rayl-concrete-gradient);color:#F7F7EF">
+        <span>Concrete Gradient</span>
+        <span class="mono" style="opacity:.62">#696961 → #CFCFC1, 180°</span>
       </div>
     </div>
   </section>
