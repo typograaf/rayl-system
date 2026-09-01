@@ -277,24 +277,38 @@ For a base not in this table, apply the rule. Do not invent a colour.
 
 ### Sliders
 
-A slider is a row, not a widget dropped in: **label on the left, track filling the
-rest, 12 between them, centred on each other.**
+**A Rayl slider is one shape, not a track with a knob on it.** A hairline swells
+into a rounded box that carries the value, and where the box meets the line the
+join is *filleted* — a small concave arc, so the line grows into the box instead
+of butting against it. Those four fillets are the whole character of the control.
+Draw it as a single path in `ink/primary`; the number is knocked out of it in
+`surface/ground`.
 
-The track has three parts, and the third is the one people get wrong.
+| measure | value |
+|---|---|
+| track, end to end | 130 |
+| row height, set by the box | 12 |
+| line weight | 2, capped as a pill |
+| box corner | 3 |
+| box padding, each side of the number | 12 |
+| clearance the box never crosses at either end | 27 |
+| fillet radius | 2 |
 
-| part | size | colour |
-|---|---|---|
-| trough | full width, 12 tall, radius 2 | `surface/idle` |
-| line | 2 tall, centred, inset by half a handle at each end | `line/track` |
-| handle | 24 wide, 12 tall, radius 3 | `line/track` |
+The fillet is not a free choice: it is tangent to the line on one side and the
+box's straight edge on the other, so it can only be `(height - line) / 2 - corner`.
+Any deeper and it eats into the corner arc.
 
-**The value rides inside the handle.** There is no separate number beside the
-track — the handle carries its own reading, in `ink/primary`. That is the detail
-that makes a Rayl slider look like a Rayl slider, and it is the first thing lost
-when someone rebuilds one from memory.
+Three behaviours belong to the control as much as the shape does:
 
-The trough is 1.5 times the cap height, and the handle is twice as wide as it is
-tall. Hold those two ratios and the slider scales correctly to any text size.
+- **The box grows with its number.** Width is the text width plus 12 either side,
+  so a three-digit value makes a wider box. It is not a fixed knob.
+- **The pointer carries the box's centre**, so the number stays under the cursor
+  while dragging rather than sliding out from under it.
+- **The travel is deliberately short**, which is why arrow keys do the fine work —
+  one step per press, ten with shift.
+
+The value sets in 8, not 12 — it is the one place in the system that uses a third
+size, because it has to fit inside a 12 tall box.
 
 ### Ink flip
 
