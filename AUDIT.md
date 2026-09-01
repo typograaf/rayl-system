@@ -156,8 +156,10 @@ invent them on the spot:
 
 - **Component states.** Hover, pressed, disabled, focus, error, loading, empty.
   Every component in every build is drawn in exactly one state.
-- **Motion.** Three builds have their own easing file and none of them share a
-  name or a number. No durations are stated anywhere.
+- ~~**Motion.**~~ Settled. Three builds each had their own easing file and none
+  of them shared a name or a number. There is now one movement — the roll — with
+  one duration, one stagger, one curve and a travel derived from the clip.
+  Section 6 of the system document carries it, with a reference implementation.
 - **Icons.** Confirmed to be on one grid — but the grid size and the stroke
   weight still have to be written down. The rayl-wheel notes already record two
   icons reading badly at small size, which is what a missing icon rule looks

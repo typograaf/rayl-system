@@ -334,10 +334,151 @@ Loading, empty and error states. Ask rather than inventing them.
 
 ## 6. Motion
 
-NOT DECIDED. No durations and no easing curves have been agreed. Three existing
-builds each carry their own and none of them match.
+**There is one movement in the system and this is it. Text never fades, never
+crossfades and never slides sideways. It rolls.** A label turns over in place,
+one character at a time, and the component's own shape is the mask.
 
-Ask before animating anything.
+It belongs to two things and to nothing else yet:
+
+- a **button** whose label changes
+- a **line of text** whose value changes
+
+Everything about the movement is the same in both cases except how far a
+character travels, and that is not a number you pick — see below.
+
+### The mechanic
+
+Each character sits in its own box holding two glyphs, the incoming one stacked
+directly above the outgoing one. Both travel **upward** together: the outgoing
+glyph leaves through the top edge as the incoming one arrives from beneath.
+
+The characters do not move together. Each starts on its own beat, and the order
+is **random, reshuffled on every roll**, so the same label never turns over the
+same way twice. A left-to-right wipe is the obvious version of this and it is not
+the one. Random is what stops the movement reading as a progress bar.
+
+### The numbers
+
+| | |
+|---|---|
+| duration | **280ms** a character |
+| stagger | **20ms** between characters |
+| order | **random**, reshuffled every roll |
+| direction | **upward** |
+| curve | **in and out** — `cubic-bezier(0.65, 0, 0.35, 1)` |
+
+Total is `280 + (characters - 1) x 20`. A four-character label finishes in
+340ms, a nineteen-character one in 640ms. Do not cap or scale the duration to
+make long labels finish sooner; a long label taking longer is the point.
+
+### The travel is the clip, not a value
+
+This is the detail everyone gets wrong, and it is the reason a roll built by eye
+looks broken.
+
+A glyph does not move by "about a line". It moves by **exactly the height of
+whatever is clipping it**, because it has to clear that edge completely.
+
+| clip | travel | at size 12 |
+|---|---|---|
+| a button | the button's own height, `cap + 24` | **32.376** |
+| a line of text | the line box, `size x 1.2` | **14.4** |
+
+Both are derived from the type size and neither is a fixed pixel value. Anything
+shorter leaves half a character stranded inside the shape at the end of the roll.
+
+**The clip is the component's own outline, corner radius included** — `overflow:
+hidden` on the button itself, not on a box inside it. A character leaving a
+button disappears behind its rounded corner, which is what ties the movement to
+the shape rather than to the text.
+
+### The width turns with the glyph
+
+Azeret is proportional. A box turning from `y` into `e` changes width, and that
+width moves on **the same duration, the same delay and the same curve** as the
+turn it belongs to. Skip it and the whole label jumps at the end of the roll.
+
+Splitting a label into per-character boxes also drops kerning. At 12 with 0.02em
+tracking that is invisible, which is the only reason this is allowed. Above 12 it
+would not be — and no size above 12 has been agreed anyway, see section 3.
+
+### When it rolls
+
+| trigger | what happens |
+|---|---|
+| hover | the label rolls over into itself — the same word on the far side |
+| press | the label rolls into the next word: Copy into Copied |
+| a value changing | a line rolls into its new value with no interaction at all |
+| disabled | never rolls |
+| `prefers-reduced-motion` | the text changes without turning; no fade substitute |
+
+Rolling over into itself on hover is not decoration. It is what makes the button
+read as a material that can turn rather than as a message that has arrived.
+
+A disabled control stays still because the movement means something happened,
+and nothing did.
+
+### Reference implementation
+
+Copy this. It is the version the numbers above were chosen on.
+
+```css
+:root {
+  --size: 12px;
+  --cap: calc(var(--size) * 0.698);   /* 8.376 — Azeret cap height */
+  --row: calc(var(--size) * 1.2);     /* 14.4 — the line box */
+  --dur: 280ms;
+  --stagger: 20ms;
+  --ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* the clip decides the travel */
+.roll { --travel: var(--row); position: relative; display: flex;
+        align-items: center; height: var(--cap); white-space: pre; }
+.roll-row { height: var(--row); overflow: hidden;
+            margin-block: calc((var(--cap) - var(--row)) / 2); }
+
+.btn { --btn-h: calc(var(--cap) + 24px);
+       height: var(--btn-h); padding: 0 12px; border-radius: 8px;
+       display: inline-flex; align-items: center; justify-content: center;
+       overflow: hidden; }              /* the mask is the button */
+.btn .roll { --travel: var(--btn-h); }
+
+.ch { position: relative; display: block; flex: 0 0 auto;
+      height: var(--cap); width: 0;
+      transition: width var(--dur) var(--ease) calc(var(--i) * var(--stagger)); }
+.g  { position: absolute; top: 0; left: 0;
+      height: var(--cap); line-height: var(--cap); text-box-trim: none;
+      transition: transform var(--dur) var(--ease) calc(var(--i) * var(--stagger)); }
+
+.g-cur { transform: translateY(0); }
+.g-nxt { transform: translateY(var(--travel)); }        /* waiting below */
+.is-rolled .g-cur { transform: translateY(calc(var(--travel) * -1)); }
+.is-rolled .g-nxt { transform: translateY(0); }
+.is-instant .g, .is-instant .ch { transition: none; }
+```
+
+The JavaScript does four things and no more:
+
+1. Split the label into `.ch` boxes, each holding `.g-nxt` above `.g-cur`.
+2. Measure every glyph's advance with a hidden span in the same font and
+   tracking, and set each box's width from it. Do this after
+   `document.fonts.ready` or every width will be the fallback face's.
+3. Shuffle the indices, write them to `--i`, put the new text in `.g-nxt`, set
+   each box's width to its new glyph, add `.is-rolled`.
+4. After `280 + (characters - 1) x 20`, add `.is-instant`, copy `.g-nxt` into
+   `.g-cur`, remove `.is-rolled`, force a reflow, remove `.is-instant`.
+
+Step 4 is what makes hover work: rolling over into itself is the same code path
+as rolling into a new word, with the same string on both sides.
+
+### Still not decided
+
+Nothing else in the system moves. There is no page transition, no panel or sheet
+movement, no loading movement, no hover movement on cards, and nothing at all on
+the gradients — those are flat art and stay flat.
+
+Ask before adding a second movement. The value of having one is that it is one.
 
 ---
 
