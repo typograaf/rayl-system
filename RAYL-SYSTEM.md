@@ -35,14 +35,14 @@ Two working pages ship with the system:
 
 **Change their content. Do not build a page from scratch.** Copying is what makes
 two pages identical rather than merely similar, and it is the same reason the
-components are shipped as code instead of described.
+components ship as code instead of as a description.
 
 Both pull in one file, which carries the tokens, the page ground and rhythm, the
 button, the slider and the icons:
 
     https://typograaf.github.io/rayl-system/rayl.js
 
-Put  on the body and write markup:
+Put `class="rayl"` on the body and write markup:
 
     <body class="rayl"><div class="rayl-page">
       <section class="rayl-section">
@@ -55,15 +55,19 @@ Put  on the body and write markup:
         <div class="rayl-row"><span class="rayl-label">Count</span>
           <span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span>
         </div>
+        <p class="rayl-hint">A quiet line of explanation.</p>
       </section>
     </div></body>
 
-Layout is part of the system, not a decision to make each time: ,
-, , , , ,
-, , .
+**Layout is part of the system, not a decision to make each time:** `rayl-page`,
+`rayl-section`, `rayl-stack`, `rayl-cluster`, `rayl-grid`, `rayl-head`,
+`rayl-card`, `rayl-label`, `rayl-hint`. Use those rather than inventing spacing —
+they carry the 6/12/24/48/72 rhythm and the 8px label so you do not have to.
 
-Dark mode is ; leave it unset to
-follow the viewer's own setting.
+A button's label is its own text; `data-label` is only needed when the label
+should differ from it. An active control takes `aria-pressed="true"`. Dark mode is
+`document.documentElement.dataset.theme = "dark"`; leave it unset to follow the
+viewer's own setting.
 
 The rest of this document exists for everything the file does not cover, and so a
 person can check what the file does. **It is a description of the components, not
@@ -72,15 +76,15 @@ were wrong until the code was read. Where the two disagree, the file wins.
 
 ### Where the system is built
 
-Everything is generated from  by :
+Everything is generated from `src/` by `python3 src/build.py`:
 
     src/core.css       tokens, page, layout, components
-    src/components.js  the label roll, the odometer, the icons
+    src/components.js  the label roll, the odometer reel, the icons
     src/slider.js      the track
     src/icons.json     the eighteen icons
-    →  rayl.js, and dist/ copies of the templates with it inlined
+    ->  rayl.js, and dist/ copies of the templates with it inlined
 
-Edit . Never edit  — it is output.
+Edit `src/`. Never edit `rayl.js` — it is output, and it will be overwritten.
 
 ## 1. The logo
 
