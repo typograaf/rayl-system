@@ -89,7 +89,7 @@ carries fine detail that will fill in when small.
 
 ## 2. Colour
 
-The palette is ten flat colours and two gradients. They live in the Rayl Figma
+The palette is fourteen flat colours and two gradients. They live in the Rayl Figma
 file as styles under a `V2/` prefix, and those styles are the authority.
 
 The names are materials, not greys, and that is deliberate. The palette is drawn
@@ -99,23 +99,27 @@ materials given fluid, organic movement.
 | name | hex | RGB | CMYK | L* |
 |---|---|---|---|---|
 | White | `#FFFFFF` | 255 255 255 | 0 0 0 0 | 100.0 |
-| Off White | `#F7F7F2` | 247 247 242 | 0 0 2 3 | 97.1 |
+| Paper | `#FBFBF6` | 251 251 246 | 0 0 2 2 | 98.5 |
+| Off White | `#F7F7EF` | 247 247 239 | 0 0 3 3 | 97.1 |
+| Bone | `#EDEDDF` | 237 237 223 | 0 0 6 7 | 93.3 |
 | Dark Off-White | `#E2E2D3` | 226 226 211 | 0 0 7 11 | 89.5 |
-| Porcelain | `#CFCFC4` | 207 207 196 | 0 0 5 19 | 82.8 |
-| Dark Porcelain | `#ACACA2` | 172 172 162 | 0 0 6 33 | 70.1 |
-| Pale Concrete | `#898982` | 137 137 130 | 0 0 5 46 | 56.9 |
-| Light Concrete | `#696963` | 105 105 99 | 0 0 6 59 | 44.2 |
+| Porcelain | `#CFCFC1` | 207 207 193 | 0 0 7 19 | 82.8 |
+| Mid Porcelain | `#C3C3B6` | 195 195 182 | 0 0 7 24 | 78.5 |
+| Dark Porcelain | `#ACACA0` | 172 172 160 | 0 0 7 33 | 70.1 |
+| Pale Concrete | `#89897F` | 137 137 127 | 0 0 7 46 | 56.9 |
+| Light Concrete | `#696961` | 105 105 97 | 0 0 8 59 | 44.2 |
 | Dark Concrete | `#55554E` | 85 85 78 | 0 0 8 67 | 35.9 |
-| Off-Black | `#373733` | 55 55 51 | 0 0 7 78 | 22.9 |
+| Off-Black | `#373732` | 55 55 50 | 0 0 9 78 | 22.9 |
+| Soft Black | `#262623` | 38 38 35 | 0 0 8 85 | 15.2 |
 | Black | `#1C1C1A` | 28 28 26 | 0 0 7 89 | 10.2 |
 
-Three of these — Dark Porcelain, Pale Concrete and Off-Black — were added on
-2026-09-01 to fill two holes in the ladder. They are drawn on the palette's own
-hue (109.7) with chroma interpolated from their neighbours, so they belong to the
-set rather than merely sitting near it.
+Every colour sits on one hue. In OKLCh they fall between 106.5 and 106.9 — a
+spread of less than half a degree. Only White is off it, because at maximum
+lightness there is no room for any chroma at all.
 
-Read down the L* column: the steps are 2.9, 7.6, 6.7, 12.7, 13.2, 12.7, 8.3,
-13.0, 12.7. Before they were added the two biggest were 38.6 and 25.7.
+Chroma follows a single arc: rising out of white, peaking at Dark Off-White,
+falling away to black, never reversing. A new colour belongs to this palette
+only if it sits on that arc.
 
 **Gradients.** Both run top to bottom with the first stop at 0.349%.
 
@@ -234,30 +238,28 @@ Established layout figures worth knowing:
 
 ## 5. Interactive states
 
-**The rule, which matters more than the table.** A state is a move along the
-palette's own lightness ladder, taking whatever chroma the curve gives at that
-lightness. Hover moves **5 L\***, pressed moves **10 L\***. Light grounds darken;
-dark fills lighten, because they have nowhere darker to go.
+**No state has its own colour.** Every hover and pressed value is a colour
+already in the palette. That is why the ladder has fourteen steps rather than
+ten — Paper, Bone, Mid Porcelain and Soft Black exist so that the states have
+somewhere to land.
 
-Follow the rule and a state colour is automatically a member of the palette. It
-also means you can derive a state for an element that is not in this document —
-which is the whole point.
+**The rule.** Hover is the palette colour nearest **5 L\*** away; pressed is the
+one nearest **10 L\***. Light grounds move down the ladder, dark fills move up,
+because they have nowhere darker to go.
 
 | base | rest | hover | pressed |
 |---|---|---|---|
-| White | `#FFFFFF` | `#F1F1E5` | `#E3E3D4` |
-| Off White | `#F7F7EF` | `#E9E9DB` | `#DBDBCC` |
-| Dark Off-White | `#E2E2D3` | `#D4D4C6` | `#C6C6B8` |
-| Porcelain | `#CFCFC1` | `#C1C1B4` | `#B3B4A7` |
-| Black | `#1C1C1A` | `#262623` | `#31312D` |
+| White | `#FFFFFF` | Bone `#EDEDDF` | Dark Off-White `#E2E2D3` |
+| Paper | `#FBFBF6` | Bone `#EDEDDF` | Dark Off-White `#E2E2D3` |
+| Off White | `#F7F7EF` | Bone `#EDEDDF` | Dark Off-White `#E2E2D3` |
+| Bone | `#EDEDDF` | Dark Off-White `#E2E2D3` | Porcelain `#CFCFC1` |
+| Dark Off-White | `#E2E2D3` | Porcelain `#CFCFC1` | Mid Porcelain `#C3C3B6` |
+| Porcelain | `#CFCFC1` | Mid Porcelain `#C3C3B6` | Dark Porcelain `#ACACA0` |
+| Black | `#1C1C1A` | Soft Black `#262623` | Off-Black `#373732` |
 
-White is the exception, as it is everywhere: because it carries no chroma at all,
-its hover gains warmth as well as depth. That is correct rather than a fault — a
-white card hovering joins the palette instead of just dimming.
+For a base not in this table, apply the rule. Do not invent a colour.
 
-### States that need no new colour
-
-These come off the ramp. Do not invent a colour for them.
+### States that need no new colour either
 
 | role | colour |
 |---|---|
@@ -273,13 +275,10 @@ These come off the ramp. Do not invent a colour for them.
 | control / track | Dark Off-White `#E2E2D3` |
 | control / fill | Black `#1C1C1A` |
 
-### Contrast
+### Ink flip
 
-Every ground above carries its ink at 8.1:1 or better, the weakest being Black
-ink on Porcelain pressed. Nothing here needs checking before use.
-
-Ink flips from Black to Off White between Pale Concrete and Light Concrete. That
-is the boundary — above it dark ink, below it light.
+Dark ink down to Pale Concrete; Off White ink from Light Concrete down. Every
+pairing in this document clears 8:1.
 
 ### Still not covered
 
