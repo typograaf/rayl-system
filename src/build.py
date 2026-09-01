@@ -111,3 +111,8 @@ for name in ("bench", "panel", "landing"):
     out = out.replace("</body>", "<style>\n" + face + "\n</style>\n</body>")
     (DIST / f"{name}.html").write_text(out)
     print(f"dist/{name}.html", len(out), "bytes")
+
+# the dashboard and the bench are generated too, so they never drift from the data
+import subprocess, sys
+subprocess.run([sys.executable, str(SRC/"site.py")], check=True)
+print("index.html regenerated")
