@@ -125,8 +125,10 @@ var TOKENS = `
 .rayl-slider{display:inline-block;position:relative;height:24px;width:100%;min-width:90px;}
 .rayl-slider svg{display:block;width:100%;height:24px;fill:var(--surface-idle);
   cursor:ew-resize;outline:none;touch-action:none;}
-.rayl-slider text{font-family:var(--rayl-font);font-weight:500;fill:var(--ink-primary);
-  pointer-events:none;letter-spacing:0.02em;}
+.rayl-val{position:absolute;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;pointer-events:none;font-family:var(--rayl-font);
+  font-size:8px;font-weight:500;letter-spacing:0.02em;color:var(--ink-primary);
+  --rayl-cap:5.584px;--rayl-travel:12px;transform-origin:50% 50%;}
 .rayl-slider svg:focus-visible{outline:1px solid var(--ink-primary);outline-offset:3px;border-radius:2px;}
 .rayl-row{display:flex;align-items:center;gap:24px;font-family:var(--rayl-font);
   font-size:var(--rayl-size);font-weight:500;letter-spacing:0.02em;color:var(--ink-primary);}
@@ -137,7 +139,6 @@ var TOKENS = `
 `;
 
 
-/* inject once */
 if(!document.getElementById("rayl-style")){
   var st=document.createElement("style");
   st.id="rayl-style";
@@ -207,8 +208,19 @@ Roll.prototype.instant = function(fn){
   void this.host.offsetWidth;
   this.host.classList.remove("is-instant");
 };
-Roll.prototype.to = function(next){
-  if (this.busy) return;
+/* land wherever the roll had got to, without a transition */
+Roll.prototype.settle = function(){
+  var self = this;
+  clearTimeout(this._t);
+  this.instant(function(){
+    for (var i=0;i<self.chars.length;i++) self.chars[i].cur.textContent = self.chars[i].nxt.textContent;
+    self.host.classList.remove("is-rolled");
+  });
+  this.busy = false;
+};
+Roll.prototype.to = function(next, force){
+  if (this.busy) this.settle();          /* a new value interrupts the old roll */
+  if (next === this.showing && !force) return;
   var self = this;
   if (reduced){ this.render(next); return; }
   this.grow(Math.max(next.length, this.showing.length));
@@ -223,15 +235,11 @@ Roll.prototype.to = function(next){
   var ms = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--rayl-dur")) || 280;
   var st = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--rayl-stagger")) || 20;
   clearTimeout(this._t);
-  this._t = setTimeout(function(){
-    self.instant(function(){
-      for (var i=0;i<self.chars.length;i++) self.chars[i].cur.textContent = self.chars[i].nxt.textContent;
-      self.host.classList.remove("is-rolled");
-    });
-    self.showing = next; self.busy = false;
-  }, ms + (this.chars.length - 1) * st + 40);
+  this.showing = next;
+  this._t = setTimeout(function(){ self.settle(); },
+    ms + (this.chars.length - 1) * st + 40);
 };
-Roll.prototype.turn = function(){ this.to(this.showing); };
+Roll.prototype.turn = function(){ this.to(this.showing, true); };
 
 function upgradeButton(btn){
   if (btn.__rayl) return btn.__rayl;
@@ -344,13 +352,17 @@ function mountSlider(host){
   svg.setAttribute("aria-valuemin",String(min));
   svg.setAttribute("aria-valuemax",String(max));
   const path=document.createElementNS(NS,"path");
-  const label=document.createElementNS(NS,"text");
-  label.setAttribute("text-anchor","middle");
-  label.setAttribute("dominant-baseline","central");
-  svg.append(path,label); host.append(svg);
+  svg.append(path); host.append(svg);
 
   const snap=v=>clamp(Math.round((v-min)/step)*step+min,min,max);
   const readout=()=>String(snap(shown));
+  /* the readout is a real element riding the nub, so it can use the same roll
+     the buttons use — SVG text cannot do a per-character transform like that */
+  const val=document.createElement("span");
+  val.className="rayl-val";
+  val.dataset.label=String(snap(shown));
+  host.append(val);
+  const roll=new Roll(val);
   function nubWidth(s){
     return Math.max(MIN_NUB*s, Math.ceil(textWidth(readout(),8*s))+PAD*s);
   }
@@ -364,11 +376,16 @@ function mountSlider(host){
     const room=leanRoom(s), dy=clamp(pullY,-room,room);
     box={x:x,w:w,top:cy+dy-nh/2,bot:cy+dy+nh/2};
     path.setAttribute("d",trackPath(W,x,w,cy,nh,r,dy));
-    label.setAttribute("x",String(rnd(x+w/2)));
-    label.setAttribute("y",String(rnd(cy+dy)));
-    label.setAttribute("font-size",String(rnd(8*s)));
-    label.textContent=readout();
-    svg.setAttribute("aria-valuenow",readout());
+    /* the box is laid out unscaled and then scaled whole, so the roll's own
+       measurements never change underneath it */
+    val.style.width=rnd(w/s)+"px";
+    val.style.height=H+"px";
+    val.style.left=rnd(x+w/2)+"px";
+    val.style.top=rnd(cy+dy)+"px";
+    val.style.transform="translate(-50%,-50%) scale("+rnd(s)+")";
+    const text=readout();
+    if(text!==roll.showing) roll.to(text);
+    svg.setAttribute("aria-valuenow",text);
   }
   function read(a,now){
     const p=a.dur<=0?1:clamp((now-a.t0)/a.dur,0,1);
