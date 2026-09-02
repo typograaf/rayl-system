@@ -96,8 +96,9 @@ def row(*frames):
     return ('      <div class="rayl-field-row">\n' +
             "".join("  " + f.lstrip() for f in frames) + '      </div>\n')
 
-def container(*blocks):
-    return '  <div class="rayl-container">\n' + "".join(blocks) + '  </div>\n'
+def container(*blocks, centred=False):
+    c = " is-centred" if centred else ""
+    return f'  <div class="rayl-container{c}">\n' + "".join(blocks) + '  </div>\n'
 
 
 # ------------------------------------------------------------ the pieces ----
@@ -319,21 +320,16 @@ def surfaces_section():
 
 
 def loading_section():
-    """The bench shows a part at the size it ships at, with nothing between the
-    label and the thing. A loader is the one part you have to watch, so it gets
-    a frame of its own with the phase named beside it."""
-    marks = ('<div class="rayl-grid">' + "".join(
-        f'<div class="rayl-stack rayl-gap-12">'
-        f'<span class="rayl-solve" data-size="{size}"{extra}></span>'
-        f'<span class="rayl-label">{name}</span></div>'
-        for name, size, extra in (("Running", 150, ""),
-                                  ("Still", 150, ' data-play="still"'),
-                                  ("At sixty", 60, ""))) + '</div>')
-    return chapter("Loading") + block(
-        rail("The mark solves itself",
-             "What Rayl shows while something is loading. Call solve() when the "
-             "thing has arrived and the wait ends on the mark."),
-        frame("At three sizes and stopped", marks, "is-tall"))
+    """One loader, middle of the section, nothing else.
+
+    It was three marks at 150, 150 and 60 with a label under each and a
+    paragraph beside them — a specimen sheet for a thing that has one state
+    worth looking at. A loader is not a part you compare variants of; it is a
+    part you recognise. Anything else on the row is something to read while
+    waiting, which is the opposite of what it is for."""
+    return chapter("Loading") + container(
+        '    <span class="rayl-solve" data-size="32" data-label="Loading"></span>\n',
+        centred=True)
 
 
 def type_section():
