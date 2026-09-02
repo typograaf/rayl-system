@@ -90,7 +90,10 @@
     strengths and on a curve. The reach is the piece's own, not the faces it happens
     to be showing, which is what keeps it from stepping when a face turns out of
     view — and it means a bar falls away on a turn of the top row just as a corner
-    does on a turn of the bottom one.</p>
+    does on a turn of the bottom one. The rounding and the floor are judged on the
+    face as the turn leaves it, before any of the falling away is applied, so the two
+    never compound; and the falloff is gentler than it was, because its job is to
+    stagger the sizes, not to open holes in the mark.</p>
   </section>
 
   <section class="rayl-section">
@@ -414,19 +417,19 @@ var LAP = 2, GAP = 12;
 var VARIANTS = [
   {key:"floor",  name:"Floor", floor:9,
    note:"Where we left it, for comparison. The two on their way out are the same size the whole way."},
-  {key:"fall1",  name:"Floor, falling", floor:9, fall:0.38,
+  {key:"fall1",  name:"Floor, falling", floor:9, fall:0.16,
    note:"The falloff: a piece is smaller the further it has been pushed past the square. The one nearest the edge is smallest, the one behind it follows, and nothing matches until everything is home."},
-  {key:"fall2",  name:"Floor, falling far", floor:9, fall:0.58,
-   note:"The same, further: down to two fifths of itself at the widest point of the swing."},
-  {key:"fall3",  name:"Floor, falling late", floor:9, fall:0.5, curve:2.2,
+  {key:"fall2",  name:"Floor, falling far", floor:9, fall:0.3,
+   note:"The same, further: down to seven tenths of itself at the widest point of the swing."},
+  {key:"fall3",  name:"Floor, falling late", floor:9, fall:0.3, curve:2.4,
    note:"The same, on a curve: it keeps its size while it is still over the square and loses it once it is properly out."},
   {key:"pebble", name:"Pebble", pebble:0.34,
    note:"Where we left it, for comparison. Thin faces round off, but again both at once."},
-  {key:"fall4",  name:"Pebble, falling", pebble:0.34, fall:0.38,
+  {key:"fall4",  name:"Pebble, falling", pebble:0.34, fall:0.16,
    note:"The falloff with the rounding: it shrinks as it travels out, and rounds off once the face itself has gone thin."},
-  {key:"fall5",  name:"Pebble, falling far", pebble:0.34, fall:0.58,
+  {key:"fall5",  name:"Pebble, falling far", pebble:0.34, fall:0.3,
    note:"The same, further."},
-  {key:"fall6",  name:"Pebble, falling late", pebble:0.34, fall:0.5, curve:2.2,
+  {key:"fall6",  name:"Pebble, falling late", pebble:0.34, fall:0.3, curve:2.4,
    note:"The same, on a curve."}
 ];
 
@@ -501,32 +504,12 @@ function project(st, spin, v){
      * the smaller it is. So the piece nearest the edge is always the smallest
      * one, the piece behind it is next, and the ones coming back in grow as
      * they arrive — nothing matches until everything is home.               */
-    if (v.fall && mine.length){
-      /* How far this piece reaches past the square, worked out from the piece
-         itself rather than from the faces that happen to be showing. A face
-         turning out of view is a step change; the piece's own reach is not, and
-         it is the same number whether one face is showing or two. That is the
-         difference between a falloff and a piece that pops when its partner
-         goes. It is nothing at all when the piece is home, because a shape at
-         rest reaches exactly to the edge of the square and no further. */
-      var row = across ? 0 : 1;
-      var wide = piece.long ? LONG/2 : SIDE/2;
-      var half = Math.abs(T[row*3])   * wide +
-                 Math.abs(T[row*3+1]) * SIDE/2 +
-                 Math.abs(T[row*3+2]) * SIDE/2;
-      var over = (Math.abs(across ? C[0] : C[1]) + half - 75) / 32;
-      if (over > 0){
-        if (over > 1) over = 1;
-        if (v.curve) over = Math.pow(over, v.curve);
-        /* Only the drawing shrinks. The tile under it is the ground each piece
-           carries to hide the back of the cube, and the tiles have to keep
-           meeting edge to edge — shrink those and they stop covering, and start
-           cutting notches out of whatever is behind them. */
-        var small = 1 - v.fall * over;
-        for (f=0;f<mine.length;f++){ mine[f].sx *= small; mine[f].sy *= small; }
-      }
-    }
-    /* ---------------------------------------- what is left of the thinnest -- */
+    /* ---------------------------------------- what is left of the thinnest -- *
+     * Both of these read the face as the turn leaves it, before any falling
+     * away is applied. Test them against a size the falloff has already taken
+     * down and the two compound: a piece at the edge is judged thin long before
+     * it is, so it rounds off early and drops early, and what is left has far
+     * too much room around it.                                              */
     if (v.pebble) for (f=0;f<mine.length;f++){
       var m = mine[f], flat = m.sx < m.sy;
       var thin = flat ? m.sx : m.sy;
@@ -542,6 +525,28 @@ function project(st, spin, v){
         if (k2.shape.w * k2.sx >= v.floor && k2.shape.h * k2.sy >= v.floor) keep.push(k2);
       }
       mine = keep;
+    }
+    /* ------------------------------------------------------- the falloff -- *
+     * Last, and only a multiplier. How far this piece reaches past the square,
+     * worked out from the piece itself rather than from the faces that happen
+     * to be showing — a face turning out of view is a step change, the piece's
+     * own reach is not. Nothing at all when the piece is home, because a shape
+     * at rest reaches exactly to the edge of the square and no further.     */
+    if (v.fall && mine.length){
+      var row = across ? 0 : 1;
+      var wide = piece.long ? LONG/2 : SIDE/2;
+      var half = Math.abs(T[row*3])   * wide +
+                 Math.abs(T[row*3+1]) * SIDE/2 +
+                 Math.abs(T[row*3+2]) * SIDE/2;
+      var over = (Math.abs(across ? C[0] : C[1]) + half - 75) / 32;
+      if (over > 0){
+        if (over > 1) over = 1;
+        if (v.curve) over = Math.pow(over, v.curve);
+        /* only the drawing: the tiles are the ground each piece carries to hide
+           the back of the cube, and they have to keep meeting edge to edge */
+        var small = 1 - v.fall * over;
+        for (f=0;f<mine.length;f++){ mine[f].sx *= small; mine[f].sy *= small; }
+      }
     }
     for (f=0;f<mine.length;f++) out.push(mine[f]);
   }
