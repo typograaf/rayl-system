@@ -231,6 +231,40 @@ function upgradeIconButton(btn){
   return r;
 }
 
+/* ---------------------------------------------------------- a line of text */
+/* The roll is not a button feature. Where the thing that changed is a value on
+   a line — an address, a count, a status — the same movement runs on the line
+   itself, clipped to the row. */
+function upgradeLine(el){
+  if (el.__rayl) return el.__rayl;
+  el.classList.add("is-line");
+  var r = new Roll(el);
+  el.__rayl = r;
+  return r;
+}
+
+/* A control hands a line its new value: data-rolls names the line's id. The
+   line goes back on its own after a beat, because a status is a moment and the
+   address underneath it is what the row is actually for. */
+function wireRolls(root){
+  [].forEach.call(root.querySelectorAll("[data-rolls]"), function(btn){
+    if (btn.__raylRolls) return;
+    btn.__raylRolls = true;
+    btn.addEventListener("click", function(){
+      var line = document.getElementById(btn.dataset.rolls);
+      var r = line && line.__rayl;
+      if (!r || r.busy) return;
+      var back = r.showing === r.text;
+      r.to(back ? r.swap : r.text);
+      if (back){
+        clearTimeout(r.__back);
+        r.__back = setTimeout(function(){ r.to(r.text); }, 2400);
+      }
+    });
+  });
+}
+
+
 /* -------------------------------------------------------- the option group */
 /* A row of cells where exactly one is on. Hover turns that cell's label; the
    click turns it a second time and opens the circle. A turn asked for while one

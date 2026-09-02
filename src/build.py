@@ -70,6 +70,8 @@ function init(root){
   [].forEach.call(root.querySelectorAll(".rayl-btn"),upgradeButton);
   [].forEach.call(root.querySelectorAll(".rayl-ibtn"),upgradeIconButton);
   [].forEach.call(root.querySelectorAll(".rayl-seg"),upgradeSeg);
+  [].forEach.call(root.querySelectorAll(".rayl-line"),upgradeLine);
+  wireRolls(root);
   [].forEach.call(root.querySelectorAll(".rayl-icon[data-icon]"),upgradeIcon);
   [].forEach.call(root.querySelectorAll(".rayl-slider"),function(s){
     if(!s.__rayl){ s.__rayl=true; mountSlider(s); }

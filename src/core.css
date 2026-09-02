@@ -138,6 +138,23 @@
 .rayl-ch.is-rolled .rayl-nxt{transform:translateY(0);}
 .rayl-roll.is-instant .rayl-g,.rayl-roll.is-instant .rayl-ch{transition:none;}
 
+/* The same movement where the thing that changed is not a button. Clipped to
+   the LINE BOX rather than to a shape, so the travel is the row — 14.4 at 12 —
+   and a descender is not cut in half on its way through. The negative margin
+   hands the taller clip back to the line, so a rolling line sits on the same
+   baseline as a still one and nothing around it shifts.
+
+   Everything here is in em, so a line rolls correctly at any size the scale
+   offers rather than only at 12. */
+.rayl-roll.is-line{
+  --rayl-cap:0.698em;                  /* Azeret's cap height */
+  --rayl-row:1.2em;                    /* the line box */
+  --rayl-travel:var(--rayl-row);
+  height:var(--rayl-row);
+  margin-block:calc((var(--rayl-cap) - var(--rayl-row)) / 2);
+  overflow:hidden;                     /* the row is its own clip */
+}
+
 /* ------------------------------------------------------- the reveal button */
 /* A label pill with a circle hiding behind its right end. On hover the pill
    contracts by exactly the circle plus the gap, its right corners go fully

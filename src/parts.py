@@ -136,6 +136,18 @@ def controls_section():
             "".join(f'<button class="rayl-seg-opt is-third" type="button">{r}</button>'
                     for r in ("1:1", "16:9", "9:16")))
     bars = "".join(bar(n, o) for n, o in (("Bisque", 2), ("Sheen", 1), ("Chalk", 3)))
+    lines = ('<div class="rayl-stack">'
+             '<div class="rayl-row"><span class="rayl-label">Email</span>'
+             '<span class="rayl-line" id="line-email" data-label="contact@rayl.com"'
+             ' data-swap="Copied to clipboard"></span></div>'
+             '<div class="rayl-row"><span class="rayl-label">Status</span>'
+             '<span class="rayl-line" id="line-status" data-label="Four shifts open"'
+             ' data-swap="All shifts filled"></span></div>'
+             '</div>'
+             '<div class="rayl-cluster">'
+             '<button class="rayl-btn" data-rolls="line-email" data-swap="Copied">Copy</button>'
+             '<button class="rayl-btn" data-rolls="line-status" data-swap="Undo">Fill them</button>'
+             '</div>')
     sliders = "".join(
         f'<div class="rayl-row"><span class="rayl-label">{n}</span>'
         f'<span class="rayl-slider" data-min="{lo}" data-max="{hi}" data-val="{v}" data-step="1"></span></div>'
@@ -146,6 +158,8 @@ def controls_section():
         + block(rail("Buttons"),
                 frame("On each ground", grounds, "is-tall"),
                 row(frame("Reveal", reveal), frame("Icon", icons)))
+        + block(rail("On a line"),
+                frame("The same movement where it is not a button", lines, "is-tall"))
         + block(rail("Option groups"),
                 frame("Aspect ratio", f'<div class="rayl-seg">{opts}</div>', "is-tall"),
                 frame("Joined", bars, "is-tall"))

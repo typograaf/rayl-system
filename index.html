@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl System</title>
-<script src="rayl.js?v=1a7b3caf"></script>
+<script src="rayl.js?v=8498d598"></script>
 <style>
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
@@ -119,6 +119,8 @@ Build the structure the brief needs. These examples show the parts composed — 
   https://typograaf.github.io/rayl-system/examples/landing.html
   https://typograaf.github.io/rayl-system/examples/panel.html
   https://typograaf.github.io/rayl-system/examples/bench.html
+
+A value on a line rolls the same way a button label does: rayl-line with data-label and data-swap, and data-rolls on the control that changes it. Use it whenever the thing that changed is not a button.
 
 An active control takes aria-pressed=&quot;true&quot;. Where exactly one of a set is on, use rayl-seg with rayl-seg-opt cells and put is-on on the one that is — the group owns the selection, so never wire that up yourself. Cells are half-width; is-third makes three to a row, is-joined on the group closes it into one bar and its first cell can be a rayl-seg-name carrying the set&#x27;s name in full ink, is-tight sizes it to its own content for a header or a line of running layout. Never build a one-of-many row out of rayl-btn and aria-pressed. Dark mode is document.documentElement.dataset.theme = &quot;dark&quot;; leave it unset to follow the viewer&#x27;s own setting.
 

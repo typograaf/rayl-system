@@ -741,6 +741,36 @@ read as a material that can turn rather than as a message that has arrived.
 A disabled control stays still because the movement means something happened,
 and nothing did.
 
+### The roll on a line
+
+**The roll is not a button feature.** Where the thing that changed is a value on
+a line — an address, a count, a status — the same movement runs on the line
+itself. Same 280ms, same curve, same random order.
+
+One thing changes: **the clip is the line box, not a shape.** A button clips its
+label to its own outline, so the travel is 32.376. A line has no outline, so it
+clips to its row and the travel is **14.4** — the line box at 12. A descender
+then survives the trip instead of being cut in half by a box that was drawn for
+something else.
+
+The row is taller than the cap it sits on, so the clip is pulled back by
+`(cap - row) / 2` on both edges. **A line that rolls must not move the line it
+sits in**, and without that term every rolling row would nudge its neighbours.
+
+```html
+<div class="rayl-row">
+  <span class="rayl-label">Email</span>
+  <span class="rayl-line" id="line-email"
+        data-label="contact@rayl.com" data-swap="Copied to clipboard"></span>
+</div>
+<button class="rayl-btn" data-rolls="line-email" data-swap="Copied">Copy</button>
+```
+
+`data-rolls` names the line a control hands its new value to. The line returns
+on its own after 2400ms, because a status is a moment and the address underneath
+it is what the row is actually for. To drive it from a value rather than a
+click, call `el.__rayl.to("the new text")`.
+
 ### The icon button
 
 A button may carry an icon that is not shown at rest. On hover the button
