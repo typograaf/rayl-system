@@ -79,21 +79,16 @@
     <span class="rayl-label">The mark in motion</span>
     <h1 class="rayl-72">Smaller the further out it has gone.</h1>
     <p class="rayl-18 rayl-measure">Of <a href="mark-options.html">the first ten</a>,
-    Floor and Pebble were the two worth keeping. What both were missing is that the
-    pieces on their way out held the same size as each other the whole way. So the
-    size now follows the position rather than the clock: a piece sitting over its own
-    cell is full size, and the further a turn has pushed it past the edge of the
-    square, the smaller it is. The piece nearest the edge is always the smallest one,
-    the piece behind it is next, and the ones coming back in grow as they arrive —
-    nothing is the same size as anything else until everything is home. Below,
-    Floor and Pebble as they were, then each of them with the falloff at two
-    strengths and on a curve. The reach is the piece's own, not the faces it happens
-    to be showing, which is what keeps it from stepping when a face turns out of
-    view — and it means a bar falls away on a turn of the top row just as a corner
-    does on a turn of the bottom one. The rounding and the floor are judged on the
-    face as the turn leaves it, before any of the falling away is applied, so the two
-    never compound; and the falloff is gentler than it was, because its job is to
-    stagger the sizes, not to open holes in the mark.</p>
+    Floor and Pebble were the two worth keeping. What both were missing is a falloff.
+    So there is now a field standing still in the square: full size over the middle,
+    smaller the further out a thing stands, nothing at all where a piece is at home.
+    Size depends on where a thing is and on nothing else. A piece moving out shrinks
+    as it goes and the piece behind it shrinks when it reaches the same place, which
+    is the stagger — it falls out of the spacing rather than being added to it.
+    Nothing moves any differently and nothing leaves any later: the gaps between the
+    pieces are the same as they ever were, whatever size the pieces have got to.
+    Below, Floor and Pebble as they were, then each of them in the field at two
+    strengths and on a curve.</p>
   </section>
 
   <section class="rayl-section">
@@ -410,19 +405,19 @@ var LAP = 2, GAP = 12;
 var VARIANTS = [
   {key:"floor",  name:"Floor", floor:9,
    note:"Where we left it, for comparison. The two on their way out are the same size the whole way."},
-  {key:"fall1",  name:"Floor, falling", floor:9, fall:0.16,
-   note:"The falloff: a piece is smaller the further it has been pushed past the square. The one nearest the edge is smallest, the one behind it follows, and nothing matches until everything is home."},
-  {key:"fall2",  name:"Floor, falling far", floor:9, fall:0.3,
-   note:"The same, further: down to seven tenths of itself at the widest point of the swing."},
-  {key:"fall3",  name:"Floor, falling late", floor:9, fall:0.3, curve:2.4,
-   note:"The same, on a curve: it keeps its size while it is still over the square and loses it once it is properly out."},
+  {key:"fall1",  name:"Floor, falling", floor:9, fall:0.22,
+   note:"In the field, gently. The piece furthest out is the smallest, the one behind it shrinks as it reaches the same place, and the spacing between them never changes."},
+  {key:"fall2",  name:"Floor, falling far", floor:9, fall:0.42,
+   note:"The same field, deeper: down to well under two thirds at the far edge."},
+  {key:"fall3",  name:"Floor, falling late", floor:9, fall:0.42, curve:2.2,
+   note:"The same field on a curve: full size while a piece is still over the square, and most of the falling off once it is properly out."},
   {key:"pebble", name:"Pebble", pebble:0.34,
    note:"Where we left it, for comparison. Thin faces round off, but again both at once."},
-  {key:"fall4",  name:"Pebble, falling", pebble:0.34, fall:0.16,
+  {key:"fall4",  name:"Pebble, falling", pebble:0.34, fall:0.22,
    note:"The falloff with the rounding: it shrinks as it travels out, and rounds off once the face itself has gone thin."},
-  {key:"fall5",  name:"Pebble, falling far", pebble:0.34, fall:0.3,
+  {key:"fall5",  name:"Pebble, falling far", pebble:0.34, fall:0.42,
    note:"The same, further."},
-  {key:"fall6",  name:"Pebble, falling late", pebble:0.34, fall:0.3, curve:2.4,
+  {key:"fall6",  name:"Pebble, falling late", pebble:0.34, fall:0.42, curve:2.2,
    note:"The same, on a curve."}
 ];
 
@@ -528,44 +523,34 @@ function project(st, spin, v){
      * own reach is not. Nothing at all when the piece is home, because a shape
      * at rest reaches exactly to the edge of the square and no further.     */
     if (v.fall && mine.length){
-      /* Size from position, and from two of them at once.
+      /* A field standing still in the square, not something done to a piece.
+       * Size depends on where a thing is and on nothing else: full size over
+       * the middle, smaller the further out it stands, nothing at all when it
+       * is home. A piece moving out shrinks as it goes, and the piece behind it
+       * shrinks when it reaches the same place — which is the stagger, and it
+       * comes out of the spacing rather than being added to it.
        *
-       * Across the square is what carries it: the further out, the smaller. On
-       * its own though it is symmetric, so the piece leaving at one edge and the
-       * piece arriving at the other stand the same distance from the middle and
-       * come out identical. That is the tie. Depth has no symmetry to it — a
-       * piece on its way out is going back as it goes sideways, a piece on its
-       * way in is coming forward — so a little of it, under a quarter, is
-       * enough to separate them without taking the reading away from across.
-       *
-       * Both are worked out from the piece itself rather than from the faces it
-       * happens to be showing, so a face turning out of view is not a step; and
-       * both are nothing at all when the piece is home, because at rest a shape
-       * reaches exactly to the edge of the square and to the front of it, and
-       * no further. */
+       * A piece is measured by its leading edge rather than its middle, or a
+       * bar — which sits on the centre line and stays there — would never
+       * register at all. The edge has to be where it actually is at this
+       * instant, turn included: a bar that has come round end-on is sixty-nine
+       * wide, not a hundred and fifty, and measuring it as the latter would
+       * land it shrunk at the end of a turn it had finished. */
       var wide = piece.long ? LONG/2 : SIDE/2;
-      var spans = [0,0,0], ax;
-      for (ax=0; ax<3; ax++)
-        spans[ax] = Math.abs(T[ax*3])   * wide +
+      var reach = [0,0], ax, k;
+      for (ax=0; ax<2; ax++)
+        reach[ax] = Math.abs(T[ax*3])   * wide +
                     Math.abs(T[ax*3+1]) * SIDE/2 +
                     Math.abs(T[ax*3+2]) * SIDE/2;
-      var out1 = (Math.abs(C[0]) + spans[0] - 75) / 32;   /* out to the sides */
-      var out2 = (Math.abs(C[1]) + spans[1] - 75) / 32;   /* out top or bottom */
-      var back = (75 - (C[2] + spans[2])) / 32;           /* and away from you */
-      var sideways = out1 > out2 ? out1 : out2;
-      if (sideways < 0) sideways = 0; else if (sideways > 1) sideways = 1;
-      if (back < 0) back = 0; else if (back > 1) back = 1;
-      /* Across is what you read as "further out", so it carries the size.
-         Depth is only here to break the mirror: without it the piece leaving at
-         one edge and the one arriving at the other come out identical. Give the
-         two equal weight and they cancel — a piece far out is near the front,
-         a piece near the middle is far back — and everything lands the same
-         size again, which is the tie coming back by another route. */
-      var over = sideways * 0.78 + back * 0.22;
+      var out1 = (Math.abs(C[0]) + reach[0] - 75) / 32;
+      var out2 = (Math.abs(C[1]) + reach[1] - 75) / 32;
+      var over = out1 > out2 ? out1 : out2;
       if (over > 0){
+        if (over > 1) over = 1;
         if (v.curve) over = Math.pow(over, v.curve);
         /* only the drawing: the tiles are the ground each piece carries to hide
-           the back of the cube, and they have to keep meeting edge to edge */
+           the back of the cube, and they have to keep meeting edge to edge.
+           The piece does not move either — the spacing is the spacing. */
         var small = 1 - v.fall * over;
         for (f=0;f<mine.length;f++){ mine[f].sx *= small; mine[f].sy *= small; }
       }
