@@ -467,8 +467,6 @@ function project(st, spin, v){
     var moving = mv && sits(st, i, mv.axis, mv.val) === 2;
     if (!moving && !atFront(st, i)) continue;
     var piece = HOME[i], M = ORI[st[i].o], c = st[i].c;
-    /* which way a turn carries a piece across the square */
-    var across = !mv || mv.axis !== 0;
     var R = moving ? spinAbout(mv.axis, base) : null;
     var T = moving ? mul(R, M) : M;
     var C = [c[0]*HALF, c[1]*HALF, c[2]*HALF];
@@ -530,14 +528,41 @@ function project(st, spin, v){
      * own reach is not. Nothing at all when the piece is home, because a shape
      * at rest reaches exactly to the edge of the square and no further.     */
     if (v.fall && mine.length){
-      var row = across ? 0 : 1;
+      /* Size from position, and from two of them at once.
+       *
+       * Across the square is what carries it: the further out, the smaller. On
+       * its own though it is symmetric, so the piece leaving at one edge and the
+       * piece arriving at the other stand the same distance from the middle and
+       * come out identical. That is the tie. Depth has no symmetry to it — a
+       * piece on its way out is going back as it goes sideways, a piece on its
+       * way in is coming forward — so a little of it, under a quarter, is
+       * enough to separate them without taking the reading away from across.
+       *
+       * Both are worked out from the piece itself rather than from the faces it
+       * happens to be showing, so a face turning out of view is not a step; and
+       * both are nothing at all when the piece is home, because at rest a shape
+       * reaches exactly to the edge of the square and to the front of it, and
+       * no further. */
       var wide = piece.long ? LONG/2 : SIDE/2;
-      var half = Math.abs(T[row*3])   * wide +
-                 Math.abs(T[row*3+1]) * SIDE/2 +
-                 Math.abs(T[row*3+2]) * SIDE/2;
-      var over = (Math.abs(across ? C[0] : C[1]) + half - 75) / 32;
+      var spans = [0,0,0], ax;
+      for (ax=0; ax<3; ax++)
+        spans[ax] = Math.abs(T[ax*3])   * wide +
+                    Math.abs(T[ax*3+1]) * SIDE/2 +
+                    Math.abs(T[ax*3+2]) * SIDE/2;
+      var out1 = (Math.abs(C[0]) + spans[0] - 75) / 32;   /* out to the sides */
+      var out2 = (Math.abs(C[1]) + spans[1] - 75) / 32;   /* out top or bottom */
+      var back = (75 - (C[2] + spans[2])) / 32;           /* and away from you */
+      var sideways = out1 > out2 ? out1 : out2;
+      if (sideways < 0) sideways = 0; else if (sideways > 1) sideways = 1;
+      if (back < 0) back = 0; else if (back > 1) back = 1;
+      /* Across is what you read as "further out", so it carries the size.
+         Depth is only here to break the mirror: without it the piece leaving at
+         one edge and the one arriving at the other come out identical. Give the
+         two equal weight and they cancel — a piece far out is near the front,
+         a piece near the middle is far back — and everything lands the same
+         size again, which is the tie coming back by another route. */
+      var over = sideways * 0.78 + back * 0.22;
       if (over > 0){
-        if (over > 1) over = 1;
         if (v.curve) over = Math.pow(over, v.curve);
         /* only the drawing: the tiles are the ground each piece carries to hide
            the back of the cube, and they have to keep meeting edge to edge */
