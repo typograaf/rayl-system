@@ -1,2 +1,6 @@
+# This site exists to be read by machines. Every document here is written to be
+# fetched by an AI building something to the Rayl design system, so nothing is
+# disallowed — a crawler blocked from RAYL-RULES.md is a build that invents its
+# own spacing scale instead.
 User-agent: *
-Disallow: /
+Allow: /

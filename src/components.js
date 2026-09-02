@@ -226,7 +226,15 @@ Reel.prototype.set = function(v){
   }
 };
 
-function upgradeButton(btn){
+/* WHEN a label rolls is the control's to choose, not a constant.
+     hover  the label turns as the pointer arrives — the default, and what makes
+            a button read as a material that can turn
+     press  it turns when the button is clicked, and not before. For a panel
+            where the pointer crosses a dozen controls on the way to one, a turn
+            on every crossing is noise; the colour is enough to say "this one".
+     none   never on its own. The host calls turn() when its own state says so —
+            an option group whose selection is decided elsewhere. */
+function upgradeButton(btn, opts){
   if (btn.__rayl) return btn.__rayl;
   var host = document.createElement("span");
   host.dataset.label = btn.dataset.label || btn.textContent.trim();
@@ -239,8 +247,13 @@ function upgradeButton(btn){
   var r = new Roll(host, btn);
   btn.__rayl = r;
   if (btn.disabled) return r;
-  btn.addEventListener("pointerenter", function(){ r.turn(); });
-  btn.addEventListener("focus", function(){ r.turn(); });
+  var when = (opts && opts.roll) || btn.dataset.roll || "hover";
+  if (when === "hover"){
+    btn.addEventListener("pointerenter", function(){ r.turn(); });
+    btn.addEventListener("focus", function(){ r.turn(); });
+  } else if (when === "press"){
+    btn.addEventListener("click", function(){ r.turn(); });
+  }
   if (btn.dataset.swap) btn.addEventListener("click", function(){
     if (r.busy) return;
     var back = r.showing === r.text;

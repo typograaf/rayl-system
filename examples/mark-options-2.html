@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Mark Options, Closer</title>
-<script src="https://typograaf.github.io/rayl-system/rayl.js?v=aa651b03"></script>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=efc7905b"></script>
 <style>
   /* ====================================================== the folding mark ==
    * The same puzzle as the other one, drawn without a third dimension. A turn
@@ -24,18 +24,18 @@
      wider than the mark or the free version climbs into its neighbour */
   .options{display:grid;grid-template-columns:repeat(auto-fit,minmax(216px,1fr));gap:12px;}
   .option{background:var(--surface-idle);border-radius:var(--rayl-radius);
-    padding:32px 32px 16px;display:flex;flex-direction:column;align-items:center;gap:16px;}
+    padding:36px 36px 24px;display:flex;flex-direction:column;align-items:center;gap:24px;}
   .option .mark2d{margin:0 auto;}
-  .option .caption{display:flex;flex-direction:column;gap:4px;align-items:center;
+  .option .caption{display:flex;flex-direction:column;gap:6px;align-items:center;
     text-align:center;}
-  .option .caption .rayl-12{opacity:.62;}
+  .option .caption p{opacity:.62;}
   .mark2d path{fill:var(--ink-primary);}
   /* the ground, carried by the piece: what hides the back of the cube */
   .mark2d .tile{fill:var(--surface-idle);}
 
   /* the system has a button for a link that is a destination; this is the
      other kind, a word in a sentence */
-  .rayl-page p a{color:inherit;text-decoration:underline;text-underline-offset:2px;
+  p a{color:inherit;text-decoration:underline;text-underline-offset:2px;
     text-decoration-thickness:1px;}
 
   /* the stage has to be bigger than the mark: a turning layer swings its far
@@ -46,12 +46,12 @@
   .band{background:var(--surface-idle);border-radius:var(--rayl-radius);
     display:flex;justify-content:center;padding:48px 24px;}
   .sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:72px;}
-  .size{display:flex;flex-direction:column;align-items:center;gap:20px;}
+  .size{display:flex;flex-direction:column;align-items:center;gap:24px;}
 
   /* the timing panel: page furniture, because the system has no text field */
   .field{font-family:var(--rayl-font);font-size:12px;font-weight:500;
     letter-spacing:0.02em;color:var(--ink-primary);background:var(--surface-idle);
-    border:0;border-radius:var(--rayl-radius);padding:9px 12px;line-height:1.2;}
+    border:0;border-radius:var(--rayl-radius);padding:12px;line-height:1.2;}
   .field:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
   .field.is-curve{width:100%;max-width:280px;}
   .field.is-ms{width:72px;}

@@ -93,13 +93,47 @@ window.Rayl={init:init, icons:Object.keys(ICONS), upgrade:{
 (ROOT / "rayl.js").write_text(header + body)
 print("rayl.js", len(header + body), "bytes")
 
-# The two documents are generated from src/parts.py and must exist before the
-# artifact build reads them.
-import subprocess, sys
-subprocess.run([sys.executable, str(SRC/"site.py")], check=True, cwd=str(SRC))
-# and the guideline's fact tables, which fails the build if the document states
-# a value the stylesheet does not hold
-subprocess.run([sys.executable, str(SRC/"doc.py")], check=True, cwd=str(SRC))
+# ---------------------------------------------------------------------------
+# Everything else that is generated, in the order it has to happen.
+import shutil, subprocess, sys
+
+
+def run(script):
+    """A generator that refuses should say why, not raise a traceback at
+    somebody who was only trying to build the thing."""
+    r = subprocess.run([sys.executable, str(SRC / script)], cwd=str(SRC))
+    if r.returncode:
+        raise SystemExit(f"\nbuild stopped in src/{script} — nothing was published.")
+
+
+# the block people paste, rendered from parts.py. It goes first because doc.py
+# refuses to build when what is on disk is not what paste.py renders.
+run("paste.py")
+
+# the values, for anything that cannot include this file
+run("tokens.py")
+
+# the checker, published at the root so it can be fetched on its own
+shutil.copy(SRC / "check.py", ROOT / "rayl-check.py")
+print("rayl-check.py", (ROOT / "rayl-check.py").stat().st_size, "bytes")
+
+# the two generated documents, which must exist before the artifact build reads
+# them
+run("site.py")
+
+# the fact tables and the open list — this is the one that fails the build when
+# a document states a value the stylesheet does not hold
+run("doc.py")
+
+# and finally the system is held to its own rules. Both example pages and both
+# generated documents go through the checker; a specimen that has to print a
+# hex waives that one check in the file itself and nothing else is waivable.
+pages = [str(ROOT / "index.html")] + sorted(str(p) for p in (ROOT / "examples").glob("*.html"))
+out = subprocess.run([sys.executable, str(ROOT / "rayl-check.py")] + pages,
+                     capture_output=True, text=True)
+print(out.stdout.strip())
+if out.returncode:
+    raise SystemExit("the system does not pass its own checker")
 
 # ---------------------------------------------------------------------------
 # GitHub Pages serves rayl.js with max-age=600, so for ten minutes after a push

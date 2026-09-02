@@ -199,7 +199,11 @@ def colour_section():
 
 
 def head(title, script, extra_css=""):
+    """The two generated documents SHOW the system rather than use it: a colour
+    chapter has to print the hexes it is naming. That is what the waiver is,
+    and it is the only one in the repo."""
     return f'''<!doctype html>
+<!-- rayl-check: allow hex -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -258,29 +262,31 @@ DOC_CSS = """
   .scroll{overflow-x:auto;}
   .spec{display:flex;flex-direction:column;gap:12px;}
   .spec + .spec{margin-top:24px;}
-  /* the five grounds a control can land on, per mode — bench furniture */
-  .rayl-card{background:var(--rayl-card-bg,var(--surface-idle));}
-  .bg1{--rayl-card-bg:var(--rayl-white);}
-  .bg2{--rayl-card-bg:var(--rayl-paper);}
-  .bg3{--rayl-card-bg:var(--rayl-off-white);}
-  .bg4{--rayl-card-bg:var(--rayl-bone);}
-  .bg5{--rayl-card-bg:var(--rayl-dark-off-white);}
+  /* The five grounds a control can land on, per mode — bench furniture. The
+     ground goes ON the card rather than into .rayl-card, because restyling a
+     shipped component is the one thing this system tells everybody not to do
+     and a bench that does it privately is not an argument. */
+  .bg1{background:var(--rayl-white);}
+  .bg2{background:var(--rayl-paper);}
+  .bg3{background:var(--rayl-off-white);}
+  .bg4{background:var(--rayl-bone);}
+  .bg5{background:var(--rayl-dark-off-white);}
   .d{display:none;}
   @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
     .l{display:none;} .d{display:inline;}
-    .bg1{--rayl-card-bg:var(--rayl-soft-black);}
-    .bg2{--rayl-card-bg:var(--rayl-deep-black);}
-    .bg3{--rayl-card-bg:var(--rayl-black);}
-    .bg4{--rayl-card-bg:var(--rayl-off-black);}
-    .bg5{--rayl-card-bg:var(--rayl-dark-concrete);}
+    .bg1{background:var(--rayl-soft-black);}
+    .bg2{background:var(--rayl-deep-black);}
+    .bg3{background:var(--rayl-black);}
+    .bg4{background:var(--rayl-off-black);}
+    .bg5{background:var(--rayl-dark-concrete);}
   } }
   :root[data-theme="dark"]{
     .l{display:none;} .d{display:inline;}
-    .bg1{--rayl-card-bg:var(--rayl-soft-black);}
-    .bg2{--rayl-card-bg:var(--rayl-deep-black);}
-    .bg3{--rayl-card-bg:var(--rayl-black);}
-    .bg4{--rayl-card-bg:var(--rayl-off-black);}
-    .bg5{--rayl-card-bg:var(--rayl-dark-concrete);}
+    .bg1{background:var(--rayl-soft-black);}
+    .bg2{background:var(--rayl-deep-black);}
+    .bg3{background:var(--rayl-black);}
+    .bg4{background:var(--rayl-off-black);}
+    .bg5{background:var(--rayl-dark-concrete);}
   }
 """
 
@@ -501,6 +507,15 @@ OPEN = [
  ("The reveal button's label", "OPEN",
   "White #FFFFFF on the approved frame, Off White in the ink table",
   "One value, two approved sources. Ask before using either."),
+
+ ("A colour change runs 120ms", "PROVISIONAL",
+  "the ground under a button moves at 120ms ease-out, not on the system's curve",
+  "Every documented movement is 280ms on cubic-bezier(0.65,0,0.35,1), and the "
+  "guideline says both surfaces move together on the same duration and curve. "
+  "The shipped controls do not: a hover's colour change is 120ms ease-out while "
+  "the label rolls at 280ms. It reads well and it is what ships, so it is "
+  "written down rather than quietly corrected — but it is a second easing in a "
+  "system whose whole argument is that there is one."),
 
  ("The fonts", "OPEN",
   "Azeret and Concrette here are TRIAL cuts",

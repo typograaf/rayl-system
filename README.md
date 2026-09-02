@@ -8,68 +8,64 @@ You do not need to read any code to use this.
 
 ## How to use it
 
-Paste the block below at the top of your prompt, before whatever you are asking
-for. That is the whole workflow.
+Go to **https://typograaf.github.io/rayl-system/**, press Copy, and paste the
+block at the top of your prompt, before whatever you are asking for. That is the
+whole workflow.
 
-> **Not live yet.** The links in the block below start working once this is
-> published. Until then it will not work as written.
-
----
-
-    Build this to the Rayl design system.
-
-    Read https://typograaf.github.io/rayl-system/RAYL-SYSTEM.md first and follow
-    it exactly. Read https://typograaf.github.io/rayl-system/AUDIT.md too if you
-    need to know why something is the way it is.
-
-    The rules that matter most:
-
-    - The logo is a file, never something you draw. Icon:
-      https://typograaf.github.io/rayl-system/assets/logo/Icon.svg
-      Lockup: https://typograaf.github.io/rayl-system/assets/logo/Lockup.svg
-      Use the lockup where there is room, the icon where there is not.
-    - The typeface is Azeret, from
-      https://typograaf.github.io/rayl-system/assets/fonts/
-    - Text is trimmed to its cap height, not its line box. In CSS that is
-      text-box-trim: trim-both and text-box-edge: cap alphabetic. Skip this and
-      every measurement will be wrong.
-    - Spacing is 6, 12, 24, 48, 72 and nothing else.
-    - Type is 8 for section labels and 12 for everything else, tracking 0.02em,
-      line height 1.2.
-    - Ink is #1C1C1A. Light mode only.
-    - Where the system does not cover something, tell me and ask. Do not invent
-      it and do not substitute something that looks close.
-
----
+The block is not written by hand and is not reproduced here. It is generated from
+`src/parts.py`, the same file the stylesheet's numbers are checked against, and
+the build refuses to finish when the two disagree. It used to be prose kept in
+step by hand; it drifted, and for weeks it handed people a spacing scale the
+system had stopped using. One copy, generated, is the fix.
 
 ## What is in here
 
 | file | what it is |
 |---|---|
-| `RAYL-SYSTEM.md` | the rules themselves |
-| `AUDIT.md` | everything found in the existing Rayl builds, and the questions still open |
-| `assets/logo/` | the icon and the lockup |
-| `assets/fonts/` | Azeret |
+| `RAYL-RULES.md` | the rules. Normative, and nothing else |
+| `RAYL-WHY.md` | why a rule is what it is: measurements, provenance, what was rejected |
+| `RAYL-OPEN.md` | everything still undecided. Generated |
+| `rayl.js` | the system as code — tokens, layout, every control |
+| `rayl-vars.css` | the values as custom properties, for anything that cannot include a script |
+| `rayl.tokens.json` | the same values as data |
+| `rayl-check.py` | reads a page and says where it leaves the system |
+| `examples/` | the parts composed. Evidence, not templates |
+| `eval/` | fixed briefs to run the system against |
+| `assets/` | the logo files and the two typefaces |
+
+`RAYL-SYSTEM.md` and `AUDIT.md` are stubs kept so that older links still land
+somewhere useful.
 
 ## Where this is up to
 
-The logo section is complete and measured off the real files. Colour, type sizes
-above 12, component states, motion, icons and the card look are all still open —
-they are listed as questions in `AUDIT.md`.
+The logo, colour, type, spacing, states, motion and icons are all settled and
+measured. What is not is in `RAYL-OPEN.md`, and the largest gaps are the
+enterable controls — text input, select, checkbox, modal — which are one design
+decision rather than four, and the layered-gradient treatment that makes
+something read as Rayl rather than as a competent light-mode app.
 
-Anything marked NOT DECIDED is a genuine gap. The document tells the AI to stop
-and ask when it hits one, rather than filling it in with something plausible.
-That is deliberate: a guess that looks fine is the thing that quietly becomes the
-new standard.
+Anything marked OPEN is a genuine gap. The documents tell an AI to stop and ask
+when it hits one, and to mark and list anything it had to invent when it cannot
+stop. That is deliberate: a guess that looks fine is the thing that quietly
+becomes the new standard.
 
-## Adding assets
+## Building
 
-Drop new files into the Rayl `Brain Assets` folder in Dropbox and they get copied
-in here and published. Dropbox is the place to put them; this repo is what makes
-them reachable by a URL, which is what an AI needs in order to use them rather
-than approximate them.
+    python3 src/build.py
+
+Everything is generated from `src/`. Never edit `rayl.js`, `rayl-vars.css`,
+`rayl.tokens.json`, `rayl-check.py`, `RAYL-OPEN.md`, `index.html`,
+`examples/bench.html`, `src/paste.txt` or `dist/` — they are output. In
+`RAYL-RULES.md` the prose is hand-written and every `<!-- generated: -->` block
+is not.
+
+The build fails rather than publishing a contradiction: every fact in the
+documents is asserted against `core.css` first, and both example pages are run
+through `rayl-check.py`.
 
 ## Fonts
 
-The Azeret files here are the TRIAL cuts. Fine for internal work. They have to be
-swapped for licensed files before anything built with this goes public.
+The Azeret and Concrette files here are the TRIAL cuts. Fine for internal work.
+They have to be swapped for licensed files before anything built with this goes
+public — and they are currently served from a public URL, which is worth fixing
+sooner than that.

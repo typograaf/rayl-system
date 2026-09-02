@@ -1,10 +1,11 @@
 <!doctype html>
+<!-- rayl-check: allow hex -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Control Bench</title>
-<script src="https://typograaf.github.io/rayl-system/rayl.js?v=aa651b03"></script>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=efc7905b"></script>
 <style>
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
@@ -26,29 +27,31 @@
   .scroll{overflow-x:auto;}
   .spec{display:flex;flex-direction:column;gap:12px;}
   .spec + .spec{margin-top:24px;}
-  /* the five grounds a control can land on, per mode — bench furniture */
-  .rayl-card{background:var(--rayl-card-bg,var(--surface-idle));}
-  .bg1{--rayl-card-bg:var(--rayl-white);}
-  .bg2{--rayl-card-bg:var(--rayl-paper);}
-  .bg3{--rayl-card-bg:var(--rayl-off-white);}
-  .bg4{--rayl-card-bg:var(--rayl-bone);}
-  .bg5{--rayl-card-bg:var(--rayl-dark-off-white);}
+  /* The five grounds a control can land on, per mode — bench furniture. The
+     ground goes ON the card rather than into .rayl-card, because restyling a
+     shipped component is the one thing this system tells everybody not to do
+     and a bench that does it privately is not an argument. */
+  .bg1{background:var(--rayl-white);}
+  .bg2{background:var(--rayl-paper);}
+  .bg3{background:var(--rayl-off-white);}
+  .bg4{background:var(--rayl-bone);}
+  .bg5{background:var(--rayl-dark-off-white);}
   .d{display:none;}
   @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
     .l{display:none;} .d{display:inline;}
-    .bg1{--rayl-card-bg:var(--rayl-soft-black);}
-    .bg2{--rayl-card-bg:var(--rayl-deep-black);}
-    .bg3{--rayl-card-bg:var(--rayl-black);}
-    .bg4{--rayl-card-bg:var(--rayl-off-black);}
-    .bg5{--rayl-card-bg:var(--rayl-dark-concrete);}
+    .bg1{background:var(--rayl-soft-black);}
+    .bg2{background:var(--rayl-deep-black);}
+    .bg3{background:var(--rayl-black);}
+    .bg4{background:var(--rayl-off-black);}
+    .bg5{background:var(--rayl-dark-concrete);}
   } }
   :root[data-theme="dark"]{
     .l{display:none;} .d{display:inline;}
-    .bg1{--rayl-card-bg:var(--rayl-soft-black);}
-    .bg2{--rayl-card-bg:var(--rayl-deep-black);}
-    .bg3{--rayl-card-bg:var(--rayl-black);}
-    .bg4{--rayl-card-bg:var(--rayl-off-black);}
-    .bg5{--rayl-card-bg:var(--rayl-dark-concrete);}
+    .bg1{background:var(--rayl-soft-black);}
+    .bg2{background:var(--rayl-deep-black);}
+    .bg3{background:var(--rayl-black);}
+    .bg4{background:var(--rayl-off-black);}
+    .bg5{background:var(--rayl-dark-concrete);}
   }
 </style>
 </head>

@@ -25,7 +25,7 @@
 
   /* the system has a button for a link that is a destination; this is the
      other kind, a word in a sentence */
-  .rayl-page p a{color:inherit;text-decoration:underline;text-underline-offset:2px;
+  p a{color:inherit;text-decoration:underline;text-underline-offset:2px;
     text-decoration-thickness:1px;}
 
   /* the stage has to be bigger than the mark: a turning layer swings its far
@@ -36,12 +36,12 @@
   .band{background:var(--surface-idle);border-radius:var(--rayl-radius);
     display:flex;justify-content:center;padding:48px 24px;}
   .sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:72px;}
-  .size{display:flex;flex-direction:column;align-items:center;gap:20px;}
+  .size{display:flex;flex-direction:column;align-items:center;gap:24px;}
 
   /* the timing panel: page furniture, because the system has no text field */
   .field{font-family:var(--rayl-font);font-size:12px;font-weight:500;
     letter-spacing:0.02em;color:var(--ink-primary);background:var(--surface-idle);
-    border:0;border-radius:var(--rayl-radius);padding:9px 12px;line-height:1.2;}
+    border:0;border-radius:var(--rayl-radius);padding:12px;line-height:1.2;}
   .field:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
   .field.is-curve{width:100%;max-width:280px;}
   .field.is-ms{width:72px;}
