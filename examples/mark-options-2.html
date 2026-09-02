@@ -403,23 +403,24 @@ function solve(st){
 var LAP = 2, GAP = 12;
 
 var VARIANTS = [
-  {key:"floor",  name:"Floor", floor:9,
-   note:"Where we left it, for comparison. The pieces stand where the turn puts them, so their spacing closes up and opens out as it goes round."},
   {key:"pebble", name:"Pebble", pebble:0.34,
-   note:"The other one worth keeping, and the same spacing as above."},
-  {key:"slide",  name:"Sliding", slide:true, fall:1,
-   note:"A cell apart the whole way and a cell along per quarter turn, with the size read off the position: full over the middle, gone by the edge. The far piece shrinks first, the one behind it as it reaches the same place."},
-  {key:"late",   name:"Sliding, late", slide:true, fall:1, curve:2,
-   note:"The same, holding its size while it is still over the square and losing it once it is properly out."},
-  {key:"early",  name:"Sliding, early", slide:true, fall:1, curve:0.6,
-   note:"The same, letting go sooner, so the difference between the pieces shows up earlier in the turn."},
-  {key:"sround", name:"Sliding, rounded", slide:true, fall:1, curve:1.4, pebble:0.34,
-   note:"Sliding, with the rounding on the faces that have gone thin."},
-  {key:"sfloor", name:"Sliding, floored", slide:true, fall:1, curve:1.4, floor:9,
-   note:"Sliding, with the floor under the faces that have gone thin."},
-  {key:"place",  name:"Falling in place", floor:9, fall:0.42,
-   note:"The last attempt, kept to compare: the size falls off the same way, but the pieces still stand where the turn puts them rather than a cell apart."}
+   note:"The reference, untouched. The shapes are right; the spacing closes up and opens out as the turn goes round, and nothing falls off toward the edge."},
+  {key:"ps",     name:"Pebble, sliding", pebble:0.34, slide:true, fall:1,
+   note:"The same shapes, with the two things fixed. A cell apart the whole way, and no piece drawn larger than the room it has left — so it is full size at home, smaller the further out it stands, and gone by the edge."},
+  {key:"psl",    name:"Pebble, sliding, late", pebble:0.34, slide:true, fall:1, curve:2,
+   note:"The same, holding size while a piece is still well inside and letting most of it go near the edge."},
+  {key:"pse",    name:"Pebble, sliding, early", pebble:0.34, slide:true, fall:1, curve:0.6,
+   note:"The same, letting go sooner, so the difference between the near piece and the far one shows up earlier."},
+  {key:"plain",  name:"Sliding", slide:true, fall:1,
+   note:"The spacing and the size on their own, with neither the rounding nor the floor, to see what each is doing."},
+  {key:"floor",  name:"Floor", floor:9,
+   note:"The other reference, untouched."},
+  {key:"fs",     name:"Floor, sliding", floor:9, slide:true, fall:1,
+   note:"The floor with the same two fixes."},
+  {key:"place",  name:"Falling in place", pebble:0.34, fall:0.42,
+   note:"Kept to compare: the size falls off, but the pieces still stand where the turn projects them rather than a cell apart. This is the one that would not read."}
 ];
+
 
 
 
@@ -551,7 +552,7 @@ function project(st, spin, v){
      * to be showing — a face turning out of view is a step change, the piece's
      * own reach is not. Nothing at all when the piece is home, because a shape
      * at rest reaches exactly to the edge of the square and no further.     */
-    if (v.fall && mine.length){
+    if (v.fall && mine.length && moving){   /* a piece at rest is at home, and home is full size */
       /* A field standing still in the square, not something done to a piece.
        * Size depends on where a thing is and on nothing else: full size over
        * the middle, smaller the further out it stands, nothing at all when it
@@ -565,20 +566,36 @@ function project(st, spin, v){
        * instant, turn included: a bar that has come round end-on is sixty-nine
        * wide, not a hundred and fifty, and measuring it as the latter would
        * land it shrunk at the end of a turn it had finished. */
-      var wide = piece.long ? LONG/2 : SIDE/2;
+      /* How wide the piece is, taken as it sits rather than as the turn has it
+         part way round. A box on the diagonal measures half again as wide as it
+         is, and reading that as reach had every piece a quarter shrunk while it
+         was still at home and gone long before the edge. So: its width now,
+         its width when the turn is done, and the way from one to the other. */
+      var wide = piece.long ? LONG/2 : SIDE/2, sides = [wide, SIDE/2, SIDE/2];
+      var Tend = mul(spinAbout(mv.axis, spin.full || 90), M);
+      var u = spin.full ? Math.abs(spin.deg / spin.full) : 0;
       var reach = [0,0], ax, k;
-      for (ax=0; ax<2; ax++)
-        reach[ax] = Math.abs(T[ax*3])   * wide +
-                    Math.abs(T[ax*3+1]) * SIDE/2 +
-                    Math.abs(T[ax*3+2]) * SIDE/2;
-      /* A sliding piece has to be gone by the time it reaches the far side,
-         or it would still be there when it comes back round the other one.
-         So its field runs out over its own width: full while its leading edge
-         is still inside the square, nothing once its trailing edge has left. */
-      var span0 = v.slide ? 2 * reach[0] : 32, span1 = v.slide ? 2 * reach[1] : 32;
-      var out1 = (Math.abs(C[0]) + reach[0] - 75) / span0;
-      var out2 = (Math.abs(C[1]) + reach[1] - 75) / span1;
-      var over = out1 > out2 ? out1 : out2;
+      for (ax=0; ax<2; ax++){
+        var now = 0, end = 0;
+        for (k=0;k<3;k++){
+          now += Math.abs(M[ax*3+k]) * sides[k];
+          end += Math.abs(Tend[ax*3+k]) * sides[k];
+        }
+        reach[ax] = now + (end - now) * u;
+      }
+      var over;
+      if (v.slide){
+        /* Full size anywhere a piece could be at home, then falling away over
+           the cell beyond that and gone exactly where the next place along
+           would be — so it is at nothing when it comes round, and there is
+           nothing to see in the coming round. Position and nothing else. */
+        var far = Math.max(Math.abs(C[0]), Math.abs(C[1]));
+        over = (far - HALF) / CELL;
+      } else {
+        var out1 = (Math.abs(C[0]) + reach[0] - 75) / 32;
+        var out2 = (Math.abs(C[1]) + reach[1] - 75) / 32;
+        over = out1 > out2 ? out1 : out2;
+      }
       if (over > 0){
         if (over > 1) over = 1;
         if (v.curve) over = Math.pow(over, v.curve);
@@ -630,9 +647,7 @@ function paint(inst, st, spin){
   }
   inst.fit.setAttribute("transform", room > 1.001
     ? "translate(75 75) scale(" + num(1/room) + ") translate(-75 -75)" : "");
-  /* a sliding piece travels a whole cell past the square before it is gone,
-     and takes its ground with it, so that version keeps to its own box */
-  inst.host.classList.toggle("is-locked", HELD === 2 || !!v.slide);
+  inst.host.classList.toggle("is-locked", HELD === 2);
   for (i=0; i<inst.cells.length; i++){
     var cell = inst.cells[i];
     if (i >= faces.length){ cell.g.setAttribute("display", "none"); continue; }
@@ -641,10 +656,17 @@ function paint(inst, st, spin){
     cell.g.setAttribute("transform",
       "translate(" + num(F.x) + " " + num(F.y) + ") matrix(" +
       num(F.dir[0]) + " " + num(F.dir[1]) + " " + num(F.up[0]) + " " + num(F.up[1]) + " 0 0)");
-    cell.tile.setAttribute("x", num(-F.tw/2));
-    cell.tile.setAttribute("y", num(-F.th/2));
-    cell.tile.setAttribute("width", num(F.tw));
-    cell.tile.setAttribute("height", num(F.th));
+    /* A tile is the ground a piece carries to hide what is behind it, and it
+       only works while the tiles meet edge to edge. Slid to a fixed pitch they
+       no longer do, and a tile that does not tile is just a hole cut in its
+       neighbour. Nothing is behind a sliding piece anyway — what is far out has
+       been taken to nothing by the falloff — so it carries no ground, and where
+       two shapes cross they simply meet, both being ink. */
+    var tw = v.slide ? 0 : F.tw, th = v.slide ? 0 : F.th;
+    cell.tile.setAttribute("x", num(-tw/2));
+    cell.tile.setAttribute("y", num(-th/2));
+    cell.tile.setAttribute("width", num(tw));
+    cell.tile.setAttribute("height", num(th));
     cell.art.setAttribute("d", outline(F.shape, F.sx, F.sy));
   }
 }

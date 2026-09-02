@@ -54,7 +54,14 @@ function trackPath(W,x,w,cy,nh,r,dy){
   return d.join("");
 }
 
+/* Mounting twice draws a second track over the first: two nubs on one rail,
+   with the newer one's rail striking through the older one. A host that upgrades
+   a slider itself and then lets init() sweep the page is doing exactly that, so
+   the guard belongs here rather than only in init. */
 function mountSlider(host){
+  if(host.__rayl) return host;
+  host.__rayl=true;
+
   const min=+host.dataset.min,max=+host.dataset.max,step=+host.dataset.step;
   /* `shown` runs free while dragging so the nub tracks the cursor exactly; the
      readout is always the snapped value, and on release the nub glides to it */
