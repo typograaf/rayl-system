@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rayl Mark</title>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=35c0fcde"></script>
+<style>
+  /* ====================================================== the moving mark ==
+   * The icon is a 2x2 grid, so it is the front face of a 2x2x2 cube. The four
+   * front stickers carry the four quadrants of Icon.svg; the other five faces
+   * of the cube are five steps of the same greyscale, and the body under the
+   * stickers is the darkest step. Solved is the only state that reads as the
+   * mark, which is the whole idea: it is always working its way back to it.
+   * Nothing here is a Rayl component — this is one page's own drawing.
+   * ======================================================================== */
+  .mark3d{
+    --body:var(--rayl-black);
+    --sticker-f:var(--rayl-paper);   --art:var(--rayl-black);
+    --sticker-u:var(--rayl-bone);    --sticker-d:var(--rayl-dark-off-white);
+    --sticker-r:var(--rayl-porcelain);
+    --sticker-l:var(--rayl-dark-porcelain);
+    --sticker-b:var(--rayl-pale-concrete);
+    position:relative;width:calc(var(--c) * 2);height:calc(var(--c) * 2);
+    perspective:calc(var(--c) * 11);
+  }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .mark3d{
+    --body:var(--rayl-black);
+    --sticker-f:var(--rayl-deep-black); --art:var(--rayl-white);
+    --sticker-u:var(--rayl-off-black);  --sticker-d:var(--rayl-dark-concrete);
+    --sticker-r:var(--rayl-light-concrete);
+    --sticker-l:var(--rayl-pale-concrete);
+    --sticker-b:var(--rayl-dark-porcelain);
+  } }
+  :root[data-theme="dark"] .mark3d{
+    --body:var(--rayl-black);
+    --sticker-f:var(--rayl-deep-black); --art:var(--rayl-white);
+    --sticker-u:var(--rayl-off-black);  --sticker-d:var(--rayl-dark-concrete);
+    --sticker-r:var(--rayl-light-concrete);
+    --sticker-l:var(--rayl-pale-concrete);
+    --sticker-b:var(--rayl-dark-porcelain);
+  }
+  .mark3d .cube{position:absolute;inset:0;transform-style:preserve-3d;}
+  .mark3d .cubie{position:absolute;width:var(--c);height:var(--c);
+    left:calc(50% - var(--c) / 2);top:calc(50% - var(--c) / 2);
+    transform-style:preserve-3d;}
+  /* every face exists; the three a corner never shows are the body */
+  .mark3d .face{position:absolute;inset:0;overflow:hidden;
+    background:var(--body);backface-visibility:hidden;}
+  .mark3d .s-f{background:var(--sticker-f);}
+  .mark3d .s-u{background:var(--sticker-u);}
+  .mark3d .s-d{background:var(--sticker-d);}
+  .mark3d .s-r{background:var(--sticker-r);}
+  .mark3d .s-l{background:var(--sticker-l);}
+  .mark3d .s-b{background:var(--sticker-b);}
+  /* the sticker is a window onto one quadrant of the whole icon, so the two
+     halves of the top bar are one drawing cut in half rather than two shapes */
+  .mark3d .face svg{position:absolute;width:200%;height:200%;
+    left:calc(var(--qx) * -100%);top:calc(var(--qy) * -100%);}
+  .mark3d .face svg path{fill:var(--art);}
+
+  /* the stage has to be bigger than the cube: a turning layer swings its
+     corners out to root two, half a cell past the face it started on */
+  .stage{display:grid;place-items:center;}
+  .stage.is-big{min-height:520px;}
+  .band{background:var(--media-ground);border-radius:var(--rayl-radius);
+    display:flex;justify-content:center;padding:48px 24px;}
+  .sizes{display:flex;flex-wrap:wrap;align-items:flex-end;gap:72px;}
+  .size{display:flex;flex-direction:column;align-items:center;gap:20px;}
+</style>
+</head>
+<body class="rayl">
+<div class="rayl-page is-wide">
+
+  <header class="rayl-head">
+    <svg class="rayl-mark" viewBox="0 0 151 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M141.065 98.6391C135.909 98.6391 132.144 94.7512 132.144 89.7173C132.144 84.8061 135.909 81 141.065 81C146.099 81 149.905 84.7243 149.905 89.7173C149.905 94.7512 146.181 98.6391 141.065 98.6391ZM141.025 97.084C145.035 97.084 148.228 93.9326 148.228 89.7173C148.228 85.5428 144.994 82.4733 141.025 82.4733C137.055 82.4733 133.862 85.5428 133.862 89.7173C133.862 93.9326 136.973 97.084 141.025 97.084ZM137.873 94.4647V85.1335H141.638C143.767 85.1335 145.076 86.3204 145.076 88.0393C145.076 89.3898 144.299 90.3721 142.948 90.8223C144.135 91.8454 144.749 93.0732 145.076 94.4647H143.357C143.03 93.2778 142.621 92.091 141.065 91.0269H139.633V94.4647H137.873ZM139.633 89.5126H141.72C142.662 89.5126 143.316 88.8987 143.316 88.0393C143.316 87.2617 142.662 86.6887 141.802 86.6887H139.633V89.5126Z"/><path d="M34.5 81C53.5538 81 69 96.4462 69 115.5C69 134.554 53.5538 150 34.5 150C15.4462 150 4.12351e-06 134.554 0 115.5C0 96.4462 15.4462 81 34.5 81Z"/><path d="M81 98.249C81 82.6584 99.8496 74.8502 110.874 85.874L145.126 120.126C156.15 131.15 148.342 150 132.751 150H98.5C88.835 150 81 142.165 81 132.5V98.249Z"/><path d="M115.5 0C134.554 0 150 15.4462 150 34.5C150 53.5538 134.554 69 115.5 69H17.5C7.83502 69 0 61.165 0 51.5V17.5C0 7.83502 7.83502 0 17.5 0H115.5Z"/></svg>
+    <div class="rayl-seg is-tight" id="theme">
+      <button class="rayl-seg-opt" type="button" data-mode="light">Light</button>
+      <button class="rayl-seg-opt" type="button" data-mode="dark">Dark</button>
+    </div>
+  </header>
+
+  <section class="rayl-hero">
+    <span class="rayl-label">The mark in motion</span>
+    <h1 class="rayl-72">The icon is the solved state.</h1>
+    <p class="rayl-18 rayl-measure">The mark is already a two-by-two grid, so it is
+    the front face of a two-by-two cube. It scrambles itself, works out the shortest
+    way back, makes the occasional wrong turn, and lands on the mark exactly.
+    Nothing is faked: the turns are real turns and the solution is searched for,
+    not replayed backwards.</p>
+  </section>
+
+  <section class="rayl-split is-lead is-centred">
+    <div class="rayl-media stage is-big"><div class="mark3d" data-size="300"></div></div>
+    <div class="rayl-section">
+      <span class="rayl-label">What you are watching</span>
+      <p class="rayl-12 rayl-measure">Three layers turn — the right column, the top
+      row and the front face. The four quadrants of the icon ride on the four front
+      stickers, so the top bar arrives in two halves and only joins up when every
+      piece is home and the right way up.</p>
+      <div class="rayl-row">
+        <span class="rayl-label">Motion</span>
+        <div class="rayl-seg is-tight" id="run">
+          <button class="rayl-seg-opt is-on" type="button">Play</button>
+          <button class="rayl-seg-opt" type="button">Hold</button>
+        </div>
+      </div>
+      <div class="rayl-row">
+        <span class="rayl-label">Tempo</span>
+        <div class="rayl-seg is-tight" id="tempo">
+          <button class="rayl-seg-opt" type="button">Slow</button>
+          <button class="rayl-seg-opt is-on" type="button">Even</button>
+          <button class="rayl-seg-opt" type="button">Quick</button>
+        </div>
+      </div>
+      <div class="rayl-cluster">
+        <button class="rayl-btn" type="button" id="scramble">Scramble it</button>
+        <button class="rayl-btn" type="button" id="solve">Solve it</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">The same cube at the sizes the icon ships at</span>
+    <div class="band">
+      <div class="sizes">
+        <div class="size"><div class="mark3d" data-size="112"></div><span class="rayl-label">112</span></div>
+        <div class="size"><div class="mark3d" data-size="56"></div><span class="rayl-label">56</span></div>
+        <div class="size"><div class="mark3d" data-size="32"></div><span class="rayl-label">32</span></div>
+      </div>
+    </div>
+    <p class="rayl-12 rayl-measure">One puzzle drives all four. Below about 32 the
+    turns stop being legible and only the landing reads — which is the size at which
+    you should be shipping the still file anyway.</p>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">The rules it plays by</span>
+    <div class="rayl-split is-three">
+      <div class="rayl-card">
+        <span class="rayl-label">The pieces</span>
+        <p class="rayl-12">Eight corners. The four facing you carry a quarter of the
+        icon each; the other faces are five steps of the greyscale, and the plastic
+        under the stickers is Black.</p>
+      </div>
+      <div class="rayl-card">
+        <span class="rayl-label">The turns</span>
+        <p class="rayl-12">Right, top and front, a quarter or a half at a time. The
+        back-left-bottom corner never moves, so the mark can only ever land square to
+        you and upright.</p>
+      </div>
+      <div class="rayl-card">
+        <span class="rayl-label">The solve</span>
+        <p class="rayl-12">A search from both ends at once finds the shortest way
+        home from wherever it is. Sometimes it plays a move that is not on that path,
+        thinks, and finds the way again.</p>
+      </div>
+    </div>
+  </section>
+
+  <span class="rayl-label">Azeret and Concrette are TRIAL cuts — licence them before anything public</span>
+
+</div>
+
+<script>
+/* ==================================================== the two-by-two mark ==
+ * A real 2x2x2: eight corner cubies, three turning layers, one fixed corner.
+ * The camera never moves — face-on is the only view the mark is allowed to be
+ * seen from, so depth arrives as pieces rolling away and coming back.
+ * ========================================================================= */
+(function(){
+"use strict";
+
+/* the icon, once, with the fill left to CSS so it can invert with the theme */
+var ART = '<path d="M141.065 98.6391C135.909 98.6391 132.144 94.7512 132.144 89.7173C132.144 84.8061 135.909 81 141.065 81C146.099 81 149.905 84.7243 149.905 89.7173C149.905 94.7512 146.181 98.6391 141.065 98.6391ZM141.025 97.084C145.035 97.084 148.228 93.9326 148.228 89.7173C148.228 85.5428 144.994 82.4733 141.025 82.4733C137.055 82.4733 133.862 85.5428 133.862 89.7173C133.862 93.9326 136.973 97.084 141.025 97.084ZM137.873 94.4647V85.1335H141.638C143.767 85.1335 145.076 86.3204 145.076 88.0393C145.076 89.3898 144.299 90.3721 142.948 90.8223C144.135 91.8454 144.749 93.0732 145.076 94.4647H143.357C143.03 93.2778 142.621 92.091 141.065 91.0269H139.633V94.4647H137.873ZM139.633 89.5126H141.72C142.662 89.5126 143.316 88.8987 143.316 88.0393C143.316 87.2617 142.662 86.6887 141.802 86.6887H139.633V89.5126Z"/><path d="M34.5 81C53.5538 81 69 96.4462 69 115.5C69 134.554 53.5538 150 34.5 150C15.4462 150 4.12351e-06 134.554 0 115.5C0 96.4462 15.4462 81 34.5 81Z"/><path d="M81 98.249C81 82.6584 99.8496 74.8502 110.874 85.874L145.126 120.126C156.15 131.15 148.342 150 132.751 150H98.5C88.835 150 81 142.165 81 132.5V98.249Z"/><path d="M115.5 0C134.554 0 150 15.4462 150 34.5C150 53.5538 134.554 69 115.5 69H17.5C7.83502 69 0 61.165 0 51.5V17.5C0 7.83502 7.83502 0 17.5 0H115.5Z"/>';
+
+/* ------------------------------------------------------------- the solid -- *
+ * Screen axes: x right, y down, z toward you. A slot is a corner of the cube;
+ * the first four face you and are the four quadrants of the icon.            */
+var SLOT = [[-1,-1,1],[1,-1,1],[-1,1,1],[1,1,1],
+            [-1,-1,-1],[1,-1,-1],[-1,1,-1],[1,1,-1]];
+var SLOT_AT = {};
+SLOT.forEach(function(s,i){ SLOT_AT[s.join(",")] = i; });
+
+var ID = [1,0,0, 0,1,0, 0,0,1];
+/* quarter turns about x, y and z, in the sense CSS itself rotates */
+var BASE = [[1,0,0, 0,0,-1, 0,1,0],
+            [0,0,1, 0,1,0, -1,0,0],
+            [0,-1,0, 1,0,0, 0,0,1]];
+
+function mul(a,b){
+  var o = new Array(9);
+  for (var r=0;r<3;r++) for (var c=0;c<3;c++){
+    var s=0; for (var k=0;k<3;k++) s += a[r*3+k]*b[k*3+c];
+    o[r*3+c]=s;
+  }
+  return o;
+}
+function turn(m,v){
+  return [m[0]*v[0]+m[1]*v[1]+m[2]*v[2],
+          m[3]*v[0]+m[4]*v[1]+m[5]*v[2],
+          m[6]*v[0]+m[7]*v[1]+m[8]*v[2]];
+}
+
+/* the 24 ways a cubie can sit, closed under the three quarter turns */
+var ORI = [ID], ORI_AT = {};
+ORI_AT[ID.join(",")] = 0;
+for (var qi=0; qi<ORI.length; qi++){
+  for (var bi=0; bi<3; bi++){
+    var n = mul(BASE[bi], ORI[qi]), nk = n.join(",");
+    if (!(nk in ORI_AT)){ ORI_AT[nk] = ORI.length; ORI.push(n); }
+  }
+}
+
+/* Right, Up and Front, a quarter, a half and a quarter back. Only three layers
+   turn, so the back-left-bottom corner is nailed down and the solved cube can
+   only be the mark, square to the camera and upright. */
+var LAYERS = [{axis:0,val:1},{axis:1,val:-1},{axis:2,val:1}];
+var MOVES = [];
+LAYERS.forEach(function(L){
+  for (var t=1;t<=3;t++){
+    var m = ID;
+    for (var i=0;i<t;i++) m = mul(BASE[L.axis], m);
+    MOVES.push({axis:L.axis, val:L.val, quarters:t, mat:m});
+  }
+});
+var POS_MOVE = MOVES.map(function(mv){
+  return SLOT.map(function(s){ return SLOT_AT[turn(mv.mat,s).join(",")]; });
+});
+var ORI_MOVE = MOVES.map(function(mv){
+  return ORI.map(function(o){ return ORI_AT[mul(mv.mat,o).join(",")]; });
+});
+var IN_LAYER = MOVES.map(function(mv){
+  return SLOT.map(function(s){ return s[mv.axis] === mv.val; });
+});
+function inverse(m){ var b = m - m%3; return b + (2 - m%3); }
+function sameLayer(a,b){ return (a - a%3) === (b - b%3); }
+
+/* --------------------------------------------------------- the position -- */
+function solved(){ return {p:[0,1,2,3,4,5,6,7], o:[0,0,0,0,0,0,0,0]}; }
+function play(st,m){
+  var p = st.p.slice(), o = st.o.slice();
+  for (var i=0;i<8;i++) if (IN_LAYER[m][p[i]]){
+    o[i] = ORI_MOVE[m][o[i]];
+    p[i] = POS_MOVE[m][p[i]];
+  }
+  return {p:p, o:o};
+}
+function key(st){
+  var k = "";
+  for (var i=0;i<8;i++) k += st.p[i].toString(36) + st.o[i].toString(36);
+  return k;
+}
+var HOME = key(solved());
+function isSolved(st){ return key(st) === HOME; }
+
+/* ------------------------------------------------------------ the solve -- *
+ * Breadth-first from both ends at once. Eleven turns is the worst a 2x2 can
+ * do, and the two frontiers meet long before either gets big.               */
+function solve(start){
+  if (isSolved(start)) return [];
+  var A = {}, B = {};                       /* paths from here, paths from solved */
+  var kA = key(start);
+  A[kA] = []; B[HOME] = [];
+  var frontA = [{st:start, k:kA}], frontB = [{st:solved(), k:HOME}];
+  for (var depth=0; depth<12; depth++){
+    var fromStart = frontA.length <= frontB.length;
+    var front = fromStart ? frontA : frontB;
+    var seen  = fromStart ? A : B;
+    var other = fromStart ? B : A;
+    var next = [];
+    for (var i=0;i<front.length;i++){
+      var node = front[i], path = seen[node.k];
+      for (var m=0;m<MOVES.length;m++){
+        /* two turns of one layer in a row are one turn, so no shortest path
+           ever holds a pair — not searching them keeps the frontier small */
+        if (path.length && sameLayer(path[path.length-1], m)) continue;
+        var st = play(node.st, m), sk = key(st);
+        if (sk in seen) continue;
+        var grown = path.concat(m);
+        if (sk in other){
+          var hit = other[sk];
+          return fromStart ? grown.concat(hit.slice().reverse().map(inverse))
+                           : hit.concat(grown.slice().reverse().map(inverse));
+        }
+        seen[sk] = grown;
+        next.push({st:st, k:sk});
+      }
+    }
+    if (!next.length) break;
+    if (fromStart) frontA = next; else frontB = next;
+  }
+  return null;
+}
+
+/* ----------------------------------------------------------- the drawing --*/
+var FACE = [
+  {n:[1,0,0],  css:"rotateY(90deg) ",  tag:"r"},
+  {n:[-1,0,0], css:"rotateY(-90deg) ", tag:"l"},
+  {n:[0,-1,0], css:"rotateX(90deg) ",  tag:"u"},
+  {n:[0,1,0],  css:"rotateX(-90deg) ", tag:"d"},
+  {n:[0,0,1],  css:"",                 tag:"f"},
+  {n:[0,0,-1], css:"rotateY(180deg) ", tag:"b"}
+];
+
+function build(host){
+  var size = parseFloat(host.dataset.size) || 150;
+  var c = size / 2, h = c / 2;
+  host.style.setProperty("--c", c + "px");
+  var cube = document.createElement("div");
+  cube.className = "cube";
+  var cubies = [];
+  for (var i=0;i<8;i++){
+    var slot = SLOT[i];
+    var el = document.createElement("div");
+    el.className = "cubie";
+    for (var f=0;f<6;f++){
+      var F = FACE[f], face = document.createElement("div");
+      face.className = "face";
+      var shows = (F.n[0] && slot[0] === F.n[0]) ||
+                  (F.n[1] && slot[1] === F.n[1]) ||
+                  (F.n[2] && slot[2] === F.n[2]);
+      if (shows){
+        face.className = "face s-" + F.tag;
+        if (F.tag === "f"){
+          face.innerHTML = '<svg viewBox="0 0 150 150" aria-hidden="true" style="--qx:' +
+            ((slot[0]+1)/2) + ';--qy:' + ((slot[1]+1)/2) + '">' + ART + '</svg>';
+        }
+      }
+      face.style.transform = F.css + "translateZ(" + h + "px)";
+      el.appendChild(face);
+    }
+    cube.appendChild(el);
+    cubies.push(el);
+  }
+  host.appendChild(cube);
+  return {cubies:cubies, h:h};
+}
+
+function matrix3d(m){
+  return "matrix3d(" + m[0] + "," + m[3] + "," + m[6] + ",0," +
+                       m[1] + "," + m[4] + "," + m[7] + ",0," +
+                       m[2] + "," + m[5] + "," + m[8] + ",0,0,0,0,1)";
+}
+function paint(inst, st, spin){
+  for (var i=0;i<8;i++){
+    var s = SLOT[st.p[i]], h = inst.h;
+    var t = "translate3d(" + (s[0]*h) + "px," + (s[1]*h) + "px," + (s[2]*h) + "px) " +
+            matrix3d(ORI[st.o[i]]);
+    if (spin && IN_LAYER[spin.move][st.p[i]]){
+      var a = MOVES[spin.move].axis;
+      t = "rotate3d(" + (a===0?1:0) + "," + (a===1?1:0) + "," + (a===2?1:0) + "," +
+          spin.deg.toFixed(2) + "deg) " + t;
+    }
+    inst.cubies[i].style.transform = t;
+  }
+}
+
+/* ------------------------------------------------------------ the timing --*/
+/* the system's own easing, solved rather than declared */
+function ease(x){
+  var p1 = 0.65, p2 = 0.35, t = x, i, f, d;
+  for (i=0;i<8;i++){
+    f = 3*(1-t)*(1-t)*t*p1 + 3*(1-t)*t*t*p2 + t*t*t - x;
+    d = 3*(1-t)*(1-t)*p1 + 6*(1-t)*t*(p2-p1) + 3*t*t*(1-p2);
+    if (Math.abs(d) < 1e-6) break;
+    t -= f/d;
+    if (t < 0) t = 0; else if (t > 1) t = 1;
+  }
+  return 3*(1-t)*(1-t)*t*0 + 3*(1-t)*t*t*1 + t*t*t;
+}
+
+var TURN_SCRAMBLE = 200, TURN_SOLVE = 300, BEAT = 90,
+    THINK = 360, DOUBT = 460, LANDED = 2800;
+
+var hosts = [].slice.call(document.querySelectorAll(".mark3d")).map(build);
+var state = solved();
+var queue = [], step = null, mode = "landed", slips = 0, tempo = 1, running = false;
+var REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function pick(exclude){
+  var m;
+  do { m = Math.floor(Math.random()*MOVES.length); }
+  while (exclude !== undefined && sameLayer(m, exclude));
+  return m;
+}
+function move(m, ms){ queue.push({move:m, ms:ms}); }
+function wait(ms){ queue.push({ms:ms}); }
+
+function decide(){
+  if (mode === "landed"){
+    var n = 6 + Math.floor(Math.random()*5), last;
+    for (var i=0;i<n;i++){ last = pick(last); move(last, TURN_SCRAMBLE); wait(BEAT/2); }
+    wait(THINK);
+    mode = "solving"; slips = 0;
+    return;
+  }
+  var path = solve(state);
+  if (!path || !path.length){ wait(LANDED); mode = "landed"; return; }
+  /* a wrong turn, thought about, and then found again — the trying is the
+     point, so it happens on the way rather than being staged at the end */
+  if (slips < 2 && path.length > 2 && Math.random() < 0.5){
+    var keep = 1 + Math.floor(Math.random()*2);
+    for (var j=0;j<keep;j++){ move(path[j], TURN_SOLVE); wait(BEAT); }
+    var wrong = pick(path[keep]);
+    move(wrong, TURN_SOLVE); wait(DOUBT);
+    slips++;
+    return;
+  }
+  for (var k=0;k<path.length;k++){ move(path[k], TURN_SOLVE); wait(BEAT); }
+}
+
+function draw(now){
+  if (!step){
+    if (!queue.length) decide();
+    step = queue.shift();
+    step.t0 = now;
+    if (step.move !== undefined){
+      var q = MOVES[step.move].quarters;
+      /* a half turn is as true one way as the other, so let it choose */
+      step.deg = q === 3 ? -90 : q === 2 ? (Math.random() < 0.5 ? 180 : -180) : 90;
+    }
+  }
+  var p = step.ms <= 0 ? 1 : (now - step.t0) / (step.ms * tempo);
+  if (p > 1) p = 1;
+  if (step.move === undefined){
+    if (p >= 1) step = null;                /* a pause draws nothing */
+  } else {
+    show({move:step.move, deg:step.deg * ease(p)});
+    if (p >= 1){ state = play(state, step.move); step = null; show(null); }
+  }
+  raf = running ? requestAnimationFrame(draw) : 0;
+}
+
+function show(spin){
+  for (var i=0;i<hosts.length;i++) paint(hosts[i], state, spin);
+}
+
+var raf = 0;
+function start(){
+  if (!raf && running && !document.hidden) raf = requestAnimationFrame(draw);
+}
+running = !REDUCED;
+wait(1400);                                  /* open on the mark, then go */
+show(null);
+start();
+
+document.addEventListener("visibilitychange", function(){
+  if (document.hidden){ if (raf) cancelAnimationFrame(raf); raf = 0; }
+  else if (running){ if (step) step.t0 = performance.now(); start(); }
+});
+
+/* ---------------------------------------------------------- the controls --*/
+var run = document.getElementById("run");
+var runOpts = run.querySelectorAll(".rayl-seg-opt");
+run.addEventListener("rayl:change", function(e){
+  running = e.detail.index === 0 && !REDUCED;
+  if (running){ if (step) step.t0 = performance.now(); start(); }
+  else if (raf){ cancelAnimationFrame(raf); raf = 0; }
+});
+document.getElementById("tempo").addEventListener("rayl:change", function(e){
+  tempo = [1.7, 1, 0.6][e.detail.index];
+});
+function resume(){
+  if (REDUCED) return;
+  running = true;
+  run.select(runOpts[0]);
+  start();
+}
+document.getElementById("scramble").addEventListener("click", function(){
+  queue = []; step = null; mode = "landed"; slips = 0; decide(); resume();
+});
+document.getElementById("solve").addEventListener("click", function(){
+  queue = []; step = null; mode = "solving"; slips = 2; decide(); resume();
+});
+})();
+</script>
+
+<script>
+  /* The group owns the selection — this only says what a selection means. */
+  var root=document.documentElement, seg=document.getElementById("theme");
+  var mode=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+  root.dataset.theme=mode;
+  seg.querySelectorAll(".rayl-seg-opt").forEach(function(o){
+    o.classList.toggle("is-on", o.dataset.mode===mode);
+  });
+  seg.addEventListener("rayl:change",function(e){
+    root.dataset.theme=e.detail.option.dataset.mode;
+  });
+</script>
+</body>
+</html>

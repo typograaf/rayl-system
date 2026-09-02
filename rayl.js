@@ -556,7 +556,7 @@ function mountSlider(host){
     return clamp(min+u*(max-min),min,max);
   }
 
-  let hovering=false, dragging=false, focused=false;
+  let hovering=false, dragging=false, focused=false, fromPointer=false;
   /* Engaged is one state with three ways in, and the nub carries the hover
      colour through all of them. Magnetism already starts before the pointer
      reaches the nub, so the colour has to start there too — otherwise the thing
@@ -574,19 +574,25 @@ function mountSlider(host){
   svg.addEventListener("pointerdown",e=>{
     dragging=true; engaged();
     try{svg.setPointerCapture(e.pointerId);}catch(err){}
+    fromPointer=true;                      /* the focus this is about to take */
     svg.focus();
     scaleTo(S_HOVER,120);                  /* touch has no hover, so grow on contact */
     pullTo(0,120); pullYTo(0,120);         /* the cursor takes it from here */
     aV.done=true; shown=valueAt(e.clientX); render(); e.preventDefault();
   });
+  /* where the pointer is relative to the nub, in the svg's own units */
+  function offsets(cx,cy){
+    const rect=svg.getBoundingClientRect();
+    const px=localX(cx);
+    const py=((cy-rect.top)/rect.height)*VB;
+    return {d:px-nubHome(), dv:py-VB/2};
+  }
   svg.addEventListener("pointermove",e=>{
     if(dragging){ shown=valueAt(e.clientX); render(); return; }
     /* lean toward the cursor: nothing at the nub, nothing past the radius,
        most in between, so it eases in and out of range on its own */
-    const rect=svg.getBoundingClientRect();
-    const px=localX(e.clientX);
-    const py=((e.clientY-rect.top)/rect.height)*VB;
-    const d=px-nubHome(), dv=py-VB/2;
+    const o=offsets(e.clientX,e.clientY);
+    const d=o.d, dv=o.dv;
     const dist=Math.hypot(d,dv);
     const on=inRange(dist);
     if(on!==hovering){ hovering=on; engaged(); scaleTo(on?S_HOVER:S_IDLE, on?180:240); }
@@ -596,9 +602,19 @@ function mountSlider(host){
     pullTo(clamp(d*PULL_STRENGTH*fall,-PULL_MAX,PULL_MAX),90);
     pullYTo(clamp(dv*PULL_STRENGTH_Y*fall,-room,room),90);
   });
-  function release(){
+  function release(e){
     if(!dragging) return;
-    dragging=false; engaged();
+    dragging=false;
+    try{ svg.releasePointerCapture(e.pointerId); }catch(err){}
+    /* Capture routes every move here, including the ones far outside the
+       control, so `hovering` is stale by the time the drag ends. Ask where the
+       pointer actually is instead of trusting it — otherwise letting go leaves
+       the nub grown and lit with nothing near it. */
+    if(e && e.clientX !== undefined){
+      const o=offsets(e.clientX,e.clientY);
+      hovering=inRange(Math.hypot(o.d,o.dv));
+    }
+    engaged();
     const landed=snap(shown);              /* settle onto the nearest step */
     if(REDUCED) shown=landed; else run(aV,landed,200,shown);
     scaleTo(hovering?S_HOVER:S_IDLE, hovering?140:240);
@@ -607,12 +623,19 @@ function mountSlider(host){
   }
   svg.addEventListener("pointerup",release);
   svg.addEventListener("pointercancel",release);
-  svg.addEventListener("focus",()=>{ focused=true; engaged(); scaleTo(S_HOVER,180); });
-  svg.addEventListener("blur",()=>{ focused=false; engaged();
+  /* Focus lights the nub only when a KEYBOARD put it there. A click focuses it
+     too, and a pointer already says where it is — lighting up for that leaves
+     the control looking held down long after it was let go. */
+  svg.addEventListener("focus",()=>{
+    focused=!fromPointer; engaged();
+    if(focused) scaleTo(S_HOVER,180);
+  });
+  svg.addEventListener("blur",()=>{ focused=false; fromPointer=false; engaged();
     if(!hovering&&!dragging) scaleTo(S_IDLE,240); });
   svg.addEventListener("keydown",e=>{
     const n={ArrowLeft:-1,ArrowDown:-1,ArrowRight:1,ArrowUp:1}[e.key];
     if(!n) return; e.preventDefault();
+    if(!focused){ fromPointer=false; focused=true; engaged(); scaleTo(S_HOVER,180); }
     const next=snap(snap(shown)+n*step*(e.shiftKey?10:1));
     if(REDUCED){ shown=next; render(); } else run(aV,next,140,shown);
   });

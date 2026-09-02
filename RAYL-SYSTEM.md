@@ -633,7 +633,13 @@ The slider is a groove in the panel, not a mark drawn on it. Do not invert it.
 starts where the magnetism starts, not where the pointer lands. The nub already
 leans toward a cursor that is still some way off; if the colour waited for
 contact, the control would be reaching for you while insisting it had not been
-touched. Dragging and keyboard focus hold the same colour.
+touched. Dragging holds the same colour, and so does keyboard
+focus — but only keyboard focus. A click focuses the control too, and a pointer
+already says where it is; lighting up for that leaves the nub looking held down
+long after it was let go. Releasing a drag also re-reads where the pointer
+actually is, because pointer capture routes every move to the control including
+the ones far outside it, so by the end of a drag the hover state it has been
+keeping is stale.
 
 **A row names its control in ordinary type**, not in the 8 label: 12, Medium,
 `ink/primary`, sentence case. The 8 label names a *section*; a row names a thing
