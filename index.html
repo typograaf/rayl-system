@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl System</title>
-<script src="rayl.js?v=2ea77201"></script>
+<script src="rayl.js?v=7be12ba8"></script>
 <style>
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
@@ -182,6 +182,11 @@ frame with rayl-frame-tag. Give every frame far more room than its content
 needs; that air is the whole look. Name the thing and show it — never write a
 paragraph explaining it.
 
+AN ARRAY ALWAYS MOVES. Never data-motion=&quot;still&quot; — that is for a frame grab,
+not for a page. Use &quot;wave&quot; (the default, and right almost always), &quot;scroll&quot;
+for an array the reader passes, or &quot;pointer&quot; ONLY on a large or full-screen
+header. A still array is a photograph of the thing rather than the thing.
+
 WHILE SOMETHING IS LOADING, show the mark solving itself — not a spinner, not
 a bar, not three dots: &lt;span class=&quot;rayl-solve&quot; data-size=&quot;150&quot; data-
 label=&quot;Loading&quot;&gt;&lt;/span&gt; Call el.solve() when the thing has arrived, so the
@@ -277,6 +282,7 @@ are most likely to hit:
   - 96 on the spacing scale — the page rhythm is 96 and the scale as written stops at 72
   - The Rayl look — the layered gradient treatment, and the largest single gap in the system
   - The reveal button&#x27;s label — White #FFFFFF on the approved frame, Off White in the ink table
+  - Two icons the controls need — there is no tick and no chevron in the eighteen
   - Transparency — the scrim behind a dialog is the first thing in Rayl drawn at part strength
   - An array as a ground — the array can sit behind or in front of content, and nothing says how
   - The fonts — Azeret and Concrette here are TRIAL cuts

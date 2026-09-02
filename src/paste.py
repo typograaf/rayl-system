@@ -143,6 +143,11 @@ rayl-frame-tag. Give every frame far more room than its content needs; that air
 is the whole look. Name the thing and show it — never write a paragraph
 explaining it.
 
+AN ARRAY ALWAYS MOVES. Never data-motion="still" — that is for a frame grab,
+not for a page. Use "wave" (the default, and right almost always), "scroll" for
+an array the reader passes, or "pointer" ONLY on a large or full-screen header.
+A still array is a photograph of the thing rather than the thing.
+
 WHILE SOMETHING IS LOADING, show the mark solving itself — not a spinner, not a
 bar, not three dots: <span class="rayl-solve" data-size="150" data-label="Loading"></span>
 Call el.solve() when the thing has arrived, so the wait ends on the mark rather

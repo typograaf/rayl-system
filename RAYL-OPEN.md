@@ -63,6 +63,12 @@ Flat vector art with gradient fills, stamped repeatedly, no specular highlight �
 
 One value, two approved sources. Ask before using either.
 
+## Two icons the controls need
+
+**OPEN** — there is no tick and no chevron in the eighteen
+
+A checkbox wants a tick and a select wants a chevron, and the set has neither. The controls first substituted: a Plus turned 45 degrees for the tick, which is a cross and means remove, and a plain Plus for the chevron, which means add. Both are gone — a ticked box is the ground change alone and a select carries no glyph — because section 9 says ask rather than substitute and that applies to the system's own work first. Either the eighteen become twenty, or these two controls stay as they are, which they can: neither is unreadable without a glyph.
+
 ## Transparency
 
 **OPEN** — the scrim behind a dialog is the first thing in Rayl drawn at part strength

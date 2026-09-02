@@ -1373,17 +1373,28 @@ whichever way the row runs, which is why it is not x, y and z.
 
 ### The four motions
 
+**An array on a page always moves. Never ship one on `still`.** A still array is
+a photograph of the thing rather than the thing, and the movement is what the
+brand owns — a row of plates that does not drift is a stock image of a row of
+plates. Choose one of three:
+
 - **`wave`** — a crest travelling the length of the row and out the far end,
-  looping. What the films do, and the default.
-- **`still`** — one composed frame with the crest parked where `data-at` says.
-  The right choice for a header or a background.
+  looping. What the films do, and the default. Reach for this unless you have a
+  reason not to.
 - **`scroll`** — the crest crosses the row once per screenful as the page moves.
-- **`pointer`** — the crest follows the cursor along the row and goes back to
-  `data-at` when it leaves.
+  For an array the reader passes rather than arrives at.
+- **`pointer`** — the crest follows the cursor along the row and returns to
+  `data-at` when it leaves. **Only on a large or full-screen header.** Anywhere
+  smaller, the cursor is on its way somewhere else and the array twitches at it.
+
+`still` exists for a frame grab — an export, a print, a screenshot in a deck. It
+is not a placement choice, and a page that ships one has left the picture
+switched off.
 
 `wave` stops on its own under `prefers-reduced-motion`, off screen, and in a
-background tab. Do not add your own animation on top of an array, and do not
-animate the element it lives in.
+background tab, so choosing it is not a decision about whether the reader wants
+motion. Do not add your own animation on top of an array, and do not animate the
+element it lives in.
 
 ### Pasting a look out of the app
 

@@ -31,8 +31,7 @@
       that context attached to the work, so filling a gap is a decision rather than a
       gamble.</p>
     </div>
-    <div class="rayl-media is-square" data-rayl-array="plate" data-motion="still"
-       data-layout="vertical" data-sheet="none"></div>
+    <div class="rayl-media is-square" data-rayl-array="plate" data-layout="vertical" data-sheet="none"></div>
   </section>
 
   <section class="rayl-band">
@@ -83,14 +82,22 @@
   </section>
 
 
-  <section class="rayl-split is-lead is-centred">
+  <section class="rayl-split is-lead">
     <div class="rayl-stack">
       <h2 class="rayl-36 rayl-serif">Put one shift in and see who it finds</h2>
       <p class="rayl-12 rayl-measure">No contract and no card. The first service is
       the whole trial — if nobody suitable turns up, you have lost an evening of
       typing rather than a quarter of a subscription.</p>
+      <div class="rayl-cluster">
+        <button class="rayl-btn is-strong">Post the shift</button>
+        <button class="rayl-btn">See an example rota</button>
+      </div>
     </div>
+    <!-- Every line is a row, so one name column runs down the whole form and
+         the controls start on one edge. A control standing outside that column
+         is what made this read as a pile rather than a form. -->
     <div class="rayl-stack rayl-gap-12">
+      <span class="rayl-label">The shift</span>
       <div class="rayl-row"><span class="rayl-row-name">Section</span>
         <span class="rayl-select">
           <button class="rayl-menu-opt is-on">Pass</button>
@@ -103,13 +110,10 @@
       <div class="rayl-row"><span class="rayl-row-name">Hours</span>
         <span class="rayl-slider" data-min="2" data-max="12" data-val="8" data-step="1"></span>
       </div>
-      <button class="rayl-check" aria-checked="true">Offer to the closest match first</button>
+      <div class="rayl-row"><span class="rayl-row-name">Offers</span>
+        <button class="rayl-check" aria-checked="true">Closest match first</button></div>
       <div class="rayl-row"><span class="rayl-row-name">Overtime</span>
         <button class="rayl-toggle" aria-checked="false" data-on="Allowed" data-off="Blocked"></button>
-      </div>
-      <div class="rayl-cluster">
-        <button class="rayl-btn is-strong">Post the shift</button>
-        <span class="rayl-solve" data-size="32" data-label="Finding people"></span>
       </div>
     </div>
   </section>

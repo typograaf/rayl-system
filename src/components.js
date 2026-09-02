@@ -534,7 +534,10 @@ function upgradeSelect(sel){
   host.dataset.label = sel.dataset.label ||
                        (chosen ? chosen.textContent.trim() : (opts[0] ? opts[0].textContent.trim() : ""));
   face.appendChild(host);
-  face.appendChild(makeIcon("Plus"));
+  /* No icon. There is no chevron in the eighteen and Plus means add, not open —
+     a borrowed glyph that means something else is worse than none, and section
+     9 says ask rather than substitute. The ground says it is a control and the
+     value rolling says it changed. The chevron is on the open list. */
   sel.insertBefore(face, sel.firstChild);
   sel.appendChild(menu);
 
