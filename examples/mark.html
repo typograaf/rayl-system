@@ -16,40 +16,32 @@
    * on all four of its long faces, a circle is a circle on all six — so there
    * is never a blank face and never a shape cut in half.
    *
-   * There is no perspective, no light and no background. Perspective would let
-   * the camera see a sliver down the side of every piece, which puts a hairline
-   * through a mark that is meant to be exact; light would put tones on it that
-   * are not on the ladder; and the back of the cube is simply not drawn. So a
-   * turn reads as flat shapes moving rather than as an object being rendered.
+   * There is no perspective, no light, no second tone and no background. Every
+   * shape is ink at full strength; the back of the cube is hidden the way a
+   * solid hides what is behind it, and a piece that has settled at the back is
+   * then not drawn at all, which nobody can see because it was already covered.
+   * So a turn reads as flat shapes moving rather than as an object rendered.
    *
    * Nothing here is a Rayl component. This is one page's own drawing.
    * ======================================================================== */
   .mark3d{
-    /* One colour. The mark is ink, so every face of every piece is ink and a
-       turn is read from the silhouette alone — no ladder, no shading, no
-       second tone anywhere. */
-    --tone-f:var(--ink-primary); --tone-b:var(--ink-primary);
-    --tone-u:var(--ink-primary); --tone-d:var(--ink-primary);
-    --tone-r:var(--ink-primary); --tone-l:var(--ink-primary);
+    /* One colour, and nothing behind it. Every face of every piece is ink, so
+       a turn is read from the silhouette alone.
+
+       Each face also carries an opaque tile in the ground colour, a whole cell
+       wide, which is what hides the back of the cube: not a fade and not a
+       trick, just a solid surface in front of it. Nothing is ever drawn at
+       part strength. The one thing this asks in return is that the mark stands
+       on the ground it says it does — set --mark-ground if it sits on
+       something else. */
+    --mark-ground:var(--surface-idle);
     position:relative;
   }
   .mark3d .cube{position:absolute;inset:0;transform-style:preserve-3d;}
   .mark3d .piece{position:absolute;left:50%;top:50%;transform-style:preserve-3d;}
-  /* a face is its shape and nothing else — no ground, no edge, no box */
-  .mark3d .face{position:absolute;left:50%;top:50%;backface-visibility:hidden;}
-  .mark3d .face svg{display:block;width:100%;height:100%;}
-  /* There is no background. A piece that has turned to the back is not drawn
-     at all, so what you see is only ever the front of the cube. It goes as it
-     crosses the middle — by then it is swung wide of the mark, and once it
-     settles at the back it is exactly behind the piece in front of it, so
-     there is nothing to see going. */
-  .mark3d .piece{--gone:0%;}
-  .mark3d .s-f svg{fill:color-mix(in oklab,var(--tone-f),transparent var(--gone));}
-  .mark3d .s-b svg{fill:color-mix(in oklab,var(--tone-b),transparent var(--gone));}
-  .mark3d .s-u svg{fill:color-mix(in oklab,var(--tone-u),transparent var(--gone));}
-  .mark3d .s-d svg{fill:color-mix(in oklab,var(--tone-d),transparent var(--gone));}
-  .mark3d .s-r svg{fill:color-mix(in oklab,var(--tone-r),transparent var(--gone));}
-  .mark3d .s-l svg{fill:color-mix(in oklab,var(--tone-l),transparent var(--gone));}
+  .mark3d .face{position:absolute;left:50%;top:50%;display:grid;place-items:center;
+    background:var(--mark-ground);backface-visibility:hidden;}
+  .mark3d .face svg{display:block;fill:var(--ink-primary);}
 
   /* the stage has to be bigger than the mark: a turning layer swings its far
      corner out to root two, well past the square it started in */
@@ -106,10 +98,10 @@
       <p class="rayl-12 rayl-measure">Every piece carries its own shape on every one
       of its faces — a bar is a bar on all four of its long faces and a circle on the
       two ends, the way a capsule sections — so nothing is ever cut and no face is
-      ever blank. Everything is ink, so a turn is read from the silhouette alone,
-      and there is no background at all: a piece that has turned to the back is not
-      drawn. It goes while it is swung wide of the mark and comes back the same
-      way.</p>
+      ever blank. Everything is ink at full strength — no second tone, nothing at
+      part opacity — and there is no background: each shape sits on a tile of the
+      ground a whole cell wide, so the back of the cube is hidden the way a solid
+      hides what is behind it.</p>
       <div class="rayl-row">
         <span class="rayl-label">Motion</span>
         <div class="rayl-seg is-tight" id="run">
@@ -188,15 +180,15 @@
       </div>
       <div class="rayl-card">
         <span class="rayl-label">The turns</span>
-        <p class="rayl-12">Any of the six layers, a quarter or a half at a time, as
-        long as the layer does not run through a bar. Twelve turns are on offer while
-        the two bars lie the same way, six once they do not.</p>
+        <p class="rayl-12">Any layer you can see, a quarter or a half at a time, as
+        long as it does not run through a bar. The back layer is left alone — nothing
+        in it is drawn, so turning it would be a turn nobody could watch.</p>
       </div>
       <div class="rayl-card">
         <span class="rayl-label">The solve</span>
         <p class="rayl-12">Two thousand and sixteen positions exist and none is more
-        than nine turns from home, so it knows the shortest way back from all of
-        them. Sometimes it takes a turn that is not on it, thinks, and finds the way
+        than ten turns from home, so it knows the shortest way back from all of them.
+        Sometimes it takes a turn that is not on it, thinks, and finds the way
         again.</p>
       </div>
     </div>
@@ -228,9 +220,11 @@ var ART = {
 
 /* ------------------------------------------------------------ the solid -- *
  * Screen axes: x right, y down, z toward you. Cells sit at +-1 on each axis;
- * one lattice step is the icon's own pitch, 81 of its 150 units, and a piece
- * is 69 of them, so the space left between pieces is the gap in the mark.   */
-var PITCH = 40.5, SIDE = 69, LONG = 150;
+ * one lattice step is the icon's own pitch, 81 of its 150 units, and a shape
+ * is 69 of them, so the space left between shapes is the gap in the mark. The
+ * tile a shape is drawn on is the whole cell and a hair more, so two tiles
+ * side by side leave no seam for the back of the cube to show through.      */
+var HALF = 40.5, CELL = 81, SIDE = 69, LONG = 150, LAP = 2;
 
 var ID = [1,0,0, 0,1,0, 0,0,1];
 var BASE = [[1,0,0, 0,0,-1, 0,1,0],      /* quarter turns about x, y and z, */
@@ -268,11 +262,19 @@ var HOME = [
   {c:[1,1,-1],  long:null,    art:"triangle"}
 ];
 
+/* Five layers, not six. The back layer is there, but nothing in it is drawn,
+   so turning it is a turn nobody can see — and a run of those reads as the
+   mark sitting still, or worse, as the front face spinning twice in a row with
+   a pause in between. Leaving it out costs nothing: all 2016 positions are
+   still reachable, the furthest just goes from nine turns out to ten. */
 var MOVES = [];
-for (var ax=0; ax<3; ax++) for (var side=0; side<2; side++) for (var q=1; q<=3; q++){
-  var m = ID;
-  for (var i=0;i<q;i++) m = mul(BASE[ax], m);
-  MOVES.push({axis:ax, val:side?1:-1, quarters:q, mat:m, layer:ax*2+side});
+for (var ax=0; ax<3; ax++) for (var side=0; side<2; side++){
+  if (ax === 2 && !side) continue;                       /* the back layer */
+  for (var q=1; q<=3; q++){
+    var m = ID;
+    for (var i=0;i<q;i++) m = mul(BASE[ax], m);
+    MOVES.push({axis:ax, val:side?1:-1, quarters:q, mat:m, layer:ax*2+side});
+  }
 }
 function inverse(m){ var b = m - m%3; return b + (2 - m%3); }
 function sameLayer(a,b){ return MOVES[a].layer === MOVES[b].layer; }
@@ -373,21 +375,30 @@ function build(host){
   cube.className = "cube";
   var els = [];
   for (var i=0;i<HOME.length;i++){
-    var piece = HOME[i], box = [(piece.long ? LONG : SIDE)*u, SIDE*u, SIDE*u];
+    var piece = HOME[i];
+    /* the solid is whole cells, so neighbours touch and nothing shows between
+       them; the shape inside it is the icon's own size */
+    var box = [(piece.long ? 2*CELL : CELL)*u, CELL*u, CELL*u];
     var el = document.createElement("div");
     el.className = "piece";
     el.style.width = box[0] + "px";
     el.style.height = box[1] + "px";
     el.style.margin = (-box[1]/2) + "px 0 0 " + (-box[0]/2) + "px";
     for (var f=0;f<6;f++){
-      var F = FACES[f], w = box[F.dims[0]], h = box[F.dims[1]];
+      var F = FACES[f], end = F.cut && piece.long;
+      var w = box[F.dims[0]] + LAP*u, h = box[F.dims[1]] + LAP*u;
+      var art = end ? "circle" : piece.art;
+      var sw = (art === "bar" ? LONG : SIDE) * u, sh = SIDE * u;
       var face = document.createElement("div");
       face.className = "face s-" + F.tag;
       face.style.width = w + "px";
       face.style.height = h + "px";
       face.style.margin = (-h/2) + "px 0 0 " + (-w/2) + "px";
       face.style.transform = F.css + "translateZ(" + (box[F.out]/2) + "px)";
-      face.innerHTML = ART[(F.cut && piece.long) ? "circle" : piece.art];
+      face.innerHTML = ART[art];
+      var svg = face.firstChild;
+      svg.style.width = sw + "px";
+      svg.style.height = sh + "px";
       el.appendChild(face);
     }
     cube.appendChild(el);
@@ -403,7 +414,6 @@ function matrix3d(m){
 }
 /* how far forward a piece reaches, the turn it is in included: a bar lying
    front to back is at the front even though its middle is not */
-var GO = 0.20, STAY = 0.80;          /* gone by here, all there by here */
 function reach(st, i, spin){
   var cs = cells(st, i), best = -2, r, cos, sin, a;
   if (spin){
@@ -420,15 +430,9 @@ function reach(st, i, spin){
   }
   return best;
 }
-function showing(v){                 /* eased so it neither pops nor lingers */
-  var t = (v - GO) / (STAY - GO);
-  if (t <= 0) return 0;
-  if (t >= 1) return 1;
-  return t*t*(3 - 2*t);
-}
 function paint(inst, st, spin){
   for (var i=0;i<HOME.length;i++){
-    var p = st[i], k = PITCH * inst.u, moving = false;
+    var p = st[i], k = HALF * inst.u, moving = false;
     var t = "translate3d(" + (p.c[0]*k) + "px," + (p.c[1]*k) + "px," + (p.c[2]*k) + "px) " +
             matrix3d(ORI[p.o]);
     if (spin && sits(st, i, MOVES[spin.move].axis, MOVES[spin.move].val) === 2){
@@ -439,8 +443,12 @@ function paint(inst, st, spin){
     }
     var el = inst.els[i];
     el.style.transform = t;
-    var gone = ((1 - showing(reach(st, i, moving ? spin : null))) * 100).toFixed(1) + "%";
-    if (el.__gone !== gone){ el.__gone = gone; el.style.setProperty("--gone", gone); }
+    /* A piece at the back is not drawn. It can only get there by turning, and
+       a turning piece is always drawn, so by the time this takes it away it is
+       already behind the tile of the piece that took its place — there is
+       nothing to see going. */
+    var here = moving || reach(st, i, null) >= 0;
+    if (el.__here !== here){ el.__here = here; el.style.display = here ? "" : "none"; }
   }
 }
 
@@ -512,16 +520,51 @@ function options(st, avoid){
   }
   return out;
 }
+/* A turn of the front layer spins the whole mark without taking it apart, so
+   it is the one move that says least. It should be a punctuation mark, not a
+   habit. */
+function isSpin(m){ return MOVES[m].axis === 2; }
+/* nineteen positions in a hundred can do nothing but spin, so a scramble that
+   wanders into one has to spin its way back out — this is how it sees them
+   coming and goes elsewhere */
+function cornered(st){
+  for (var m=0;m<MOVES.length;m++) if (!isSpin(m) && legal(st,m)) return false;
+  return true;
+}
+function wander(st, avoid, sober){
+  var all = options(st, avoid);
+  /* sometimes the layer just turned is the only one that can turn again —
+     a bandaged cube is allowed to insist */
+  if (!all.length) all = options(st);
+  var spins = [], turns = [], open = [];
+  for (var i=0;i<all.length;i++){
+    var m = all[i];
+    if (isSpin(m)){ spins.push(m); continue; }
+    turns.push(m);
+    if (!cornered(play(st, m))) open.push(m);
+  }
+  var pool;
+  if (!turns.length){
+    /* nothing on offer but a spin, so spin the way that opens something up —
+       any other choice can leave it spinning in place for turn after turn */
+    pool = [];
+    for (var j=0;j<spins.length;j++) if (!cornered(play(st, spins[j]))) pool.push(spins[j]);
+    if (!pool.length) pool = spins;
+  }
+  else if (!sober && spins.length && Math.random() < 0.15) pool = spins;
+  else pool = open.length ? open : turns;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
 function move(m, ms){ queue.push({move:m, ms:ms}); }
 function wait(ms){ queue.push({ms:ms}); }
 
 function decide(){
   if (mode === "landed"){
     /* far enough out to be worth solving, not so far it is the same walk twice */
-    var st = state, path = [], last, guard = 0;
+    var st = state, path = [], last, spun = false, guard = 0;
     while ((path.length < 8 || DIST[key(st)] < 6) && guard++ < 60){
-      var pick = options(st, last);
-      last = pick[Math.floor(Math.random()*pick.length)];
+      last = wander(st, last, spun);
+      spun = isSpin(last);
       st = play(st, last);
       path.push(last);
     }
@@ -539,7 +582,7 @@ function decide(){
     for (var j=0;j<keep;j++){ move(road[j], TIME.turn); wait(TIME.gap); at = play(at, road[j]); }
     var astray = options(at, road[keep]);
     if (astray.length){
-      move(astray[Math.floor(Math.random()*astray.length)], TIME.turn);
+      move(wander(at, road[keep], keep && isSpin(road[keep-1])), TIME.turn);
       wait(TIME.doubt);
       slips++;
       return;
