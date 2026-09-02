@@ -1751,6 +1751,7 @@ window.Rayl={init:init, icons:Object.keys(ICONS), upgrade:{
 })();
 
 </script>
+<script type="module" src="https://typograaf.github.io/rayl-system/assets/array/rayl-array.js"></script>
 </head>
 <body class="rayl">
 <div class="rayl-page is-wide">
@@ -1786,7 +1787,8 @@ window.Rayl={init:init, icons:Object.keys(ICONS), upgrade:{
       that context attached to the work, so filling a gap is a decision rather than a
       gamble.</p>
     </div>
-    <div class="rayl-media is-square"></div>
+    <div class="rayl-media is-square" data-rayl-array="plate" data-motion="still"
+       data-layout="vertical" data-sheet="none"></div>
   </section>
 
   <section class="rayl-band">
@@ -1811,7 +1813,7 @@ window.Rayl={init:init, icons:Object.keys(ICONS), upgrade:{
   </section>
 
   <section class="rayl-split is-centred">
-    <div class="rayl-media is-wide"></div>
+    <div class="rayl-media is-wide" data-rayl-array="card" data-sheet="none"></div>
     <div class="rayl-section">
       <h2 class="rayl-24 rayl-serif">A rota you can read at a glance</h2>
       <p class="rayl-12 rayl-measure">Open shifts, confirmed shifts and the ones still
@@ -1836,6 +1838,38 @@ window.Rayl={init:init, icons:Object.keys(ICONS), upgrade:{
     </div>
   </section>
 
+
+  <section class="rayl-split is-lead is-centred">
+    <div class="rayl-stack">
+      <h2 class="rayl-36 rayl-serif">Put one shift in and see who it finds</h2>
+      <p class="rayl-12 rayl-measure">No contract and no card. The first service is
+      the whole trial — if nobody suitable turns up, you have lost an evening of
+      typing rather than a quarter of a subscription.</p>
+    </div>
+    <div class="rayl-stack rayl-gap-12">
+      <div class="rayl-row"><span class="rayl-row-name">Section</span>
+        <span class="rayl-select">
+          <button class="rayl-menu-opt is-on">Pass</button>
+          <button class="rayl-menu-opt">Larder</button>
+          <button class="rayl-menu-opt">Pastry</button>
+        </span>
+      </div>
+      <div class="rayl-row"><span class="rayl-row-name">Starts</span>
+        <input class="rayl-input" value="Friday, 17:00"></div>
+      <div class="rayl-row"><span class="rayl-row-name">Hours</span>
+        <span class="rayl-slider" data-min="2" data-max="12" data-val="8" data-step="1"></span>
+      </div>
+      <button class="rayl-check" aria-checked="true">Offer to the closest match first</button>
+      <div class="rayl-row"><span class="rayl-row-name">Overtime</span>
+        <button class="rayl-toggle" aria-checked="false" data-on="Allowed" data-off="Blocked"></button>
+      </div>
+      <div class="rayl-cluster">
+        <button class="rayl-btn is-strong">Post the shift</button>
+        <span class="rayl-solve" data-size="32" data-label="Finding people"></span>
+      </div>
+    </div>
+  </section>
+
   <footer class="rayl-head">
     <span class="rayl-label">Rayl — Antwerpen</span>
     <div class="rayl-seg is-tight" id="theme">
@@ -1849,6 +1883,19 @@ window.Rayl={init:init, icons:Object.keys(ICONS), upgrade:{
   /* The group owns the selection — this only says what a selection means.
      The starting cell is set before rayl.js upgrades the group, so the page
      opens on the right one instead of animating onto it. */
+  var root=document.documentElement, seg=document.getElementById("theme");
+  var mode=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+  root.dataset.theme=mode;
+  seg.querySelectorAll(".rayl-seg-opt").forEach(function(o){
+    o.classList.toggle("is-on", o.dataset.mode===mode);
+  });
+  seg.addEventListener("rayl:change",function(e){
+    root.dataset.theme=e.detail.option.dataset.mode;
+  });
+</script>
+
+<script>
+  /* The group owns the selection — this only says what a selection means. */
   var root=document.documentElement, seg=document.getElementById("theme");
   var mode=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
   root.dataset.theme=mode;

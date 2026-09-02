@@ -1,13 +1,3 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rayl Landing</title>
-<script src="https://typograaf.github.io/rayl-system/rayl.js?v=2ea77201"></script>
-<script type="module" src="https://typograaf.github.io/rayl-system/assets/array/rayl-array.js"></script>
-</head>
-<body class="rayl">
 <div class="rayl-page is-wide">
 
   <header class="rayl-head">
@@ -147,18 +137,3 @@
     root.dataset.theme=e.detail.option.dataset.mode;
   });
 </script>
-
-<script>
-  /* The group owns the selection — this only says what a selection means. */
-  var root=document.documentElement, seg=document.getElementById("theme");
-  var mode=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
-  root.dataset.theme=mode;
-  seg.querySelectorAll(".rayl-seg-opt").forEach(function(o){
-    o.classList.toggle("is-on", o.dataset.mode===mode);
-  });
-  seg.addEventListener("rayl:change",function(e){
-    root.dataset.theme=e.detail.option.dataset.mode;
-  });
-</script>
-</body>
-</html>

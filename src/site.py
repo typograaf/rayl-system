@@ -22,6 +22,26 @@ FOOT = ('  <div class="rayl-container">\n'
 TAIL = "\n</div>\n" + THEME_JS + "\n</body>\n</html>\n"
 
 
+# ----------------------------------------------------------- the page --------
+# "A page" was hand-written, so it went on demonstrating the system as it stood
+# on the day somebody typed it. It is generated now: a rule change reaches it on
+# the next build, and a component that ships without appearing here is a
+# component nothing composes.
+
+LANDING = (ROOT / "src/landing.html").read_text()
+
+landing = (
+  '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
+  '<meta name="viewport" content="width=device-width, initial-scale=1">\n'
+  '<title>Rayl Landing</title>\n'
+  '<script src="https://typograaf.github.io/rayl-system/rayl.js"></script>\n'
+  '<script type="module" src="https://typograaf.github.io/rayl-system/assets/array/rayl-array.js"></script>\n'
+  '</head>\n<body class="rayl">\n' + LANDING + "\n" + THEME_JS + "\n</body>\n</html>\n"
+)
+(ROOT / "examples/landing.html").write_text(landing)
+print("examples/landing.html", len(landing), "bytes")
+
+
 # ------------------------------------------------------------- the bench ----
 # An overview, not an explanation. Every part the system ships, shown at the
 # size it ships at, with nothing between the label and the thing itself.
@@ -47,8 +67,6 @@ print("examples/bench.html", len(bench), "bytes")
 PASTE_CSS = """
   pre{margin:0;font:inherit;font-size:12px;line-height:1.5;white-space:pre-wrap;
     word-break:break-word;}
-  .paste{background:var(--surface-idle);border-radius:8px;padding:24px;
-    display:flex;flex-direction:column;gap:12px;align-items:flex-start;}
 """
 
 LINKS = chapter("Where everything is") + block(
@@ -76,23 +94,36 @@ LINKS = chapter("Where everything is") + block(
 )
 
 HERO = ('  <div class="rayl-container">\n'
-        '    <span class="rayl-label">The Rayl design system</span>\n'
-        '    <h1 class="rayl-48">Hand this to an AI and what it builds comes out '
-        'looking like Rayl.</h1>\n'
-        '    <p class="rayl-18 rayl-measure">Including the parts nobody has designed '
-        'yet. You do not need to read any code to use it — copy the block below and '
+        '    <div class="rayl-split is-lead is-centred">\n'
+        '      <div class="rayl-stack">\n'
+        '        <span class="rayl-label">The Rayl design system</span>\n'
+        '        <h1 class="rayl-48">Hand this to an AI and what it builds comes '
+        'out looking like Rayl.</h1>\n'
+        '      </div>\n'
+        '      <div class="rayl-stack">\n'
+        '        <p class="rayl-18">Including the parts nobody has designed yet. '
+        'You do not need to read any code to use it — copy the block below and '
         'paste it above whatever you are asking for.</p>\n'
+        '        <div class="rayl-cluster">\n'
+        '          <a class="rayl-btn" href="#the-block">The block</a>\n'
+        '          <a class="rayl-btn" href="RAYL-RULES.md">The rules</a>\n'
+        '          <a class="rayl-btn" href="examples/bench.html">The bench</a>\n'
+        '        </div>\n'
+        '      </div>\n'
+        '    </div>\n'
         '  </div>\n')
 
-PASTE_BLOCK = chapter("The block") + block(
+PASTE_BLOCK = chapter("The block", "the-block") + block(
     rail("Paste this at the top of your prompt",
          "It carries the tokens, the type scale, the layout primitives and every "
          "control. You do not need to read any of it.",
          "It also tells the model what the system does NOT have, what to do when "
-         "it hits one of those, and how to check its own work before it answers."),
-    frame(None,
-          f'<div class="paste"><pre id="paste">{PASTE}</pre>'
-          f'<button class="rayl-ibtn" data-icon="Document" id="copy">Copy</button></div>'))
+         "it hits one of those, and how to check its own work before it answers.")
+    + '<div class="rayl-rail-foot rayl-stack rayl-gap-12">'
+      '<button class="rayl-ibtn" data-icon="Document" id="copy">Copy the block</button>'
+      '<span class="rayl-label">Generated from src/parts.py</span></div>',
+    # the pre sat in a box inside a frame — two containers doing one job
+    frame(None, f'<pre id="paste">{PASTE}</pre>'))
 
 COPY_JS = '''<script>
   document.getElementById("copy").addEventListener("click",function(){

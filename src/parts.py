@@ -71,8 +71,9 @@ SLIDERS = [("Count",1,33,12),("Tilt",0,90,62),("Peaks",1,12,4),
 # The board's own layout language: a chapter label on the ground, then blocks of
 # a narrow rail of words against a wide field of things.
 
-def chapter(name):
-    return f'  <h2 class="rayl-chapter">{name}</h2>\n'
+def chapter(name, anchor=None):
+    at = f' id="{anchor}"' if anchor else ""
+    return f'  <h2 class="rayl-chapter"{at}>{name}</h2>\n'
 
 def block(rail, *frames):
     """A rail against a field. Everything the reader has to READ is in the rail;
