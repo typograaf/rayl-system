@@ -638,8 +638,14 @@ function project(st, spin, v){
            the cell beyond that and gone exactly where the next place along
            would be — so it is at nothing when it comes round, and there is
            nothing to see in the coming round. Position and nothing else. */
-        var far = Math.max(Math.abs(C[0]), Math.abs(C[1]));
-        over = (far - HALF) / CELL;
+        /* Measured from the edge of the piece, not its middle. A bar is two
+           cells long: sitting a cell out it is still half inside the square and
+           has to be drawn half there, where its middle alone would call it gone.
+           Full while the whole of it is inside, nothing once the whole of it has
+           left, and the way between. */
+        var out0 = (Math.abs(C[0]) + reach[0] - 75) / (2 * reach[0]);
+        var out1b = (Math.abs(C[1]) + reach[1] - 75) / (2 * reach[1]);
+        over = out0 > out1b ? out0 : out1b;
       } else {
         var out1 = (Math.abs(C[0]) + reach[0] - 75) / 32;
         var out2 = (Math.abs(C[1]) + reach[1] - 75) / 32;
