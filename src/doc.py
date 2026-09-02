@@ -436,4 +436,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # --check runs the assertions and writes nothing, so build.py can find out
+    # whether this build is allowed BEFORE it starts overwriting the repo
+    if "--check" in sys.argv:
+        check()
+        print("facts check out")
+    else:
+        main()

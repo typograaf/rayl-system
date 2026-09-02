@@ -752,13 +752,39 @@ OPEN = [
   "this list rather than hidden in a stylesheet."),
 
  ("A colour change runs 120ms", "PROVISIONAL",
-  "the ground under a button moves at 120ms ease-out, not on the system's curve",
-  "Every documented movement is 280ms on cubic-bezier(0.65,0,0.35,1), and the "
-  "guideline says both surfaces move together on the same duration and curve. "
+  "the ground under a control moves at 120ms ease-out, not on the system's curve",
+  "Every documented movement is 280ms on cubic-bezier(0.65,0,0.35,1), and "
+  "section 7 says both surfaces move together on the same duration and curve. "
   "The shipped controls do not: a hover's colour change is 120ms ease-out while "
-  "the label rolls at 280ms. It reads well and it is what ships, so it is "
-  "written down rather than quietly corrected — but it is a second easing in a "
-  "system whose whole argument is that there is one."),
+  "the label rolls at 280ms. It was in two places when it was first written "
+  "down. The thirteen controls took it as the house value and it is now in "
+  "eleven, which is worth knowing before deciding: this is no longer a stray, "
+  "it is the system's second easing in practice. Either it joins the system as "
+  "the value a ground moves on, or every one of the eleven changes."),
+
+ ("Transparency", "OPEN",
+  "the scrim behind a dialog is the first thing in Rayl drawn at part strength",
+  "Everything else in the system is flat and opaque — it is why the loading "
+  "mark carries a tile on every face rather than fading, and why the palette is "
+  "fifteen solid steps. A dialog has to dim what is behind it, so --rayl-scrim "
+  "is a 20% mix and it is the right answer for that job. What is not decided is "
+  "whether transparency is now a thing the system has, or one exception a "
+  "dialog gets. Nothing else may fade until that is answered."),
+
+ ("An array as a ground", "OPEN",
+  "the array can sit behind or in front of content, and nothing says how",
+  "Section 11 already calls data-motion=\"still\" the right choice for a "
+  "header or a background, and then never says how to place one. The system "
+  "has no layering vocabulary at all: z-index appears six times in core.css "
+  "and every one is inside a component. So a background array today means "
+  "hand-rolled position, inset and stacking, re-decided on every page, which "
+  "is what layout primitives exist to prevent. Three things have to be "
+  "answered before the primitive can be drawn. Is a background forced to "
+  "still, or may it wave under text? What colour is type over an array — the "
+  "ink flip works off a single L* and an array is a gradient sheet with bodies "
+  "moving across it, so there is nothing to test. And does foreground mean "
+  "over-and-clipped, like a masthead, or over-and-transparent, which the "
+  "bodies being opaque makes a different question again."),
 
  ("The fonts", "OPEN",
   "Azeret and Concrette here are TRIAL cuts",

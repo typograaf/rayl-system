@@ -11,6 +11,15 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC  = ROOT / "src"
 HUB  = "https://typograaf.github.io/rayl-system"
 
+# ---------------------------------------------------------------------------
+# Ask first, write second. This used to write rayl.js and then run the checks,
+# so a build that stopped had already overwritten the file it was checking —
+# and the error said "nothing was published", which was not true.
+import subprocess as _sp, sys as _sys
+if _sp.run([_sys.executable, str(SRC / "paste.py")], cwd=str(SRC)).returncode \
+   or _sp.run([_sys.executable, str(SRC / "doc.py"), "--check"], cwd=str(SRC)).returncode:
+    raise SystemExit("\nbuild stopped before writing anything.")
+
 css   = (SRC / "core.css").read_text()
 comp  = (SRC / "components.js").read_text()
 slid  = (SRC / "slider.js").read_text()
@@ -120,10 +129,6 @@ def run(script):
     if r.returncode:
         raise SystemExit(f"\nbuild stopped in src/{script} — nothing was published.")
 
-
-# the block people paste, rendered from parts.py. It goes first because doc.py
-# refuses to build when what is on disk is not what paste.py renders.
-run("paste.py")
 
 # the values, for anything that cannot include this file
 run("tokens.py")

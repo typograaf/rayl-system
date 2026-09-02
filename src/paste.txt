@@ -185,6 +185,8 @@ are most likely to hit:
   - 96 on the spacing scale — the page rhythm is 96 and the scale as written stops at 72
   - The Rayl look — the layered gradient treatment, and the largest single gap in the system
   - The reveal button's label — White #FFFFFF on the approved frame, Off White in the ink table
+  - Transparency — the scrim behind a dialog is the first thing in Rayl drawn at part strength
+  - An array as a ground — the array can sit behind or in front of content, and nothing says how
   - The fonts — Azeret and Concrette here are TRIAL cuts
   - CMYK — the printed values are arithmetic, not a profile conversion
 
@@ -198,7 +200,7 @@ it as a rule of the system:
   - Deep Black #11110F — the dark-mode ground, and the one palette colour not on the approved frame
   - The 8 radius — every control rounds 8; the board's own ladder is 4, 12, 24
   - The loading mark's timing — rayl-solve runs on numbers and a curve that are not the system's
-  - A colour change runs 120ms — the ground under a button moves at 120ms ease-out, not on the system's curve
+  - A colour change runs 120ms — the ground under a control moves at 120ms ease-out, not on the system's curve
 
 The system still has no sheet and drawer, toast, progress and context menu. If
 the brief needs one:

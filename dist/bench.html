@@ -639,11 +639,16 @@ function upgradeSelect(sel){
       if (!opts[here].disabled){ opts[here].focus(); return; }
     }
   });
-  document.addEventListener("pointerdown", function(e){
-    if (!sel.contains(e.target)) open(false);
-  });
+  OUTSIDE.push(function(t){ if (!sel.contains(t)) open(false); });
   return r;
 }
+/* Every open thing that has to shut when you click elsewhere shares one
+   listener. A listener per instance is a listener per instance that nobody
+   removes, and a page with ten selects on it was carrying ten. */
+var OUTSIDE = [];
+document.addEventListener("pointerdown", function(e){
+  for (var i = 0; i < OUTSIDE.length; i++) OUTSIDE[i](e.target);
+});
 
 
 /* ================================================== SURFACES THAT ARRIVE == */
@@ -679,6 +684,13 @@ function upgradeTip(host){
   host.addEventListener("focus", show);
   host.addEventListener("pointerleave", hide);
   host.addEventListener("blur", hide);
+  /* the node lives on the body so a control that clips its own contents cannot
+     clip it, which means nothing else would ever take it away again */
+  if (window.MutationObserver && host.parentNode){
+    new MutationObserver(function(_, obs){
+      if (!host.isConnected){ tip.remove(); obs.disconnect(); }
+    }).observe(document.body, {childList:true, subtree:true});
+  }
   return tip;
 }
 
