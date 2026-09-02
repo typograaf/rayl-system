@@ -86,6 +86,7 @@ const fragment = /* glsl */ `
   uniform float uCorner;
   uniform float uShade;
   uniform float uOcclusion;
+  uniform float uBounce;
 
   uniform sampler2D uArt;
   uniform float uArtOn;
@@ -219,11 +220,24 @@ const fragment = /* glsl */ `
        the gradient and cooler where it faces the other, which is most of the
        modelling on a matte white thing. */
     vec3 sky = mix(uGround, uSky, normal.y * 0.5 + 0.5);
-    float open = 1.0 - uOcclusion * 0.55 * clamp(
+    float near = clamp(
       crowded(vWorld, normal, vPrev) + crowded(vWorld, normal, vNext), 0.0, 1.0);
-    vec3 ambient = sky * uAmbient * SHEET * open;
+    vec3 ambient = sky * uAmbient * SHEET * (1.0 - uOcclusion * 0.55 * near);
 
-    vec3 colour = body * (light + ambient) + body * through * uTranslucency + sheen;
+    /*
+     * And what the neighbours throw back.
+     *
+     * White bodies a centimetre apart pass a great deal of light between them,
+     * and a row rendered without it is a row of grey ones — the near faces go
+     * dark exactly where, in the thing itself, they are brightest. The
+     * neighbour is the same body in the same light, so what it is sending back
+     * is near enough what this fragment is receiving, tinted by what they are
+     * both made of.
+     */
+    vec3 bounced = body * uBounce * near * 0.3 * (light + ambient);
+
+    vec3 colour = body * (light + ambient) + bounced +
+                  body * through * uTranslucency + sheen;
 
     /* Pivoted about middle grey, so turning it up does not turn the picture
        into a silhouette. */
@@ -270,6 +284,7 @@ export function surfaceMaterial() {
       uCorner: { value: 1.07 },
       uShade: { value: 1 },
       uOcclusion: { value: 1 },
+      uBounce: { value: 1 },
       uArt: { value: null },
       uArtOn: { value: 0 },
       uArtSize: { value: new THREE.Vector2(1, 1) },

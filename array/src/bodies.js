@@ -322,8 +322,21 @@ export function reachAlong(geometry, quaternion, direction) {
   return high - low;
 }
 
-/** The furthest any part of the body is from its own middle. */
-export function radiusOf(geometry) {
-  geometry.computeBoundingSphere();
-  return geometry.boundingSphere.radius;
+/**
+ * The two sizes everything else is written in.
+ *
+ * `extent` is the footprint, half the wider of the two ground axes — what the
+ * spacing and the light placement are quoted in. `reach` is the half-diagonal
+ * of the box, a sphere that holds the body however it is turned, which is what
+ * the framing needs: a card's long axis is its height, so it is half again
+ * bigger than its footprint says and a fit measured on the footprint cuts the
+ * top and bottom off it.
+ */
+export function measure(geometry) {
+  geometry.computeBoundingBox();
+  const box = geometry.boundingBox;
+  const x = (box.max.x - box.min.x) / 2;
+  const y = (box.max.y - box.min.y) / 2;
+  const z = (box.max.z - box.min.z) / 2;
+  return { extent: Math.max(x, z), reach: Math.hypot(x, y, z) };
 }

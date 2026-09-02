@@ -1,3 +1,5 @@
+import { LAYOUTS } from "../baked/layouts.js";
+
 /**
  * What an array is, as numbers.
  *
@@ -27,6 +29,9 @@ export const SHEETS = {
 export const DEFAULTS = {
   /* what it is made of */
   body: "plate", // plate | card | basket
+  /* Which approved composition to stand on: horizontal, vertical, or none for
+     the bare defaults. Everything a page sets is laid over the top of it. */
+  layout: "horizontal",
   count: 14,
   /* The air between one body and the next, in bodies. Nought is touching and
      negative is an overlap, which is most of what an array is for. */
@@ -66,7 +71,11 @@ export const DEFAULTS = {
   exposure: 1.0,
   contrast: 1.05,
   occlusion: 1.15,
-  shade: 1, // how strongly a body shadows the one behind it
+  /* How strongly a body shadows the one behind it. Nothing by default — it
+     follows the occlusion the look asks for, which is the app's own control for
+     how much light a row is allowed to lose to itself, so a layout's own number
+     drives it rather than a second one nobody set. */
+  shade: null,
 
   /* what it is made of, as a material */
   translucency: 0.72,
@@ -80,9 +89,16 @@ export const DEFAULTS = {
   sheet: "none", // porcelain | concrete | none, or two colours
   sky: null, // what an upward face sees; the sheet's top unless told
   ground: null, // and a downward one; the sheet's bottom
-  fov: 32,
-  zoom: 1, // above one is closer in
-  pan: [0, 0], // and where the middle sits, in frames
+  projection: "lens", // lens | iso — a real lens, or a parallel one
+  fov: 32, // which the parallel projection ignores, being parallel
+  /* The crop, exactly as the app means it: the shape the picture was composed
+     in, how much of the fit to take (under one is closer in) and where the
+     middle of it sits, in world units off the middle of the row. An element
+     whose own shape differs is filled rather than letterboxed — see fit(). */
+  aspect: 16 / 9,
+  zoom: 1,
+  pan: [0, 0],
+  bounce: 1, // how much light the bodies throw at each other
   art: null, // an image to print on the face of a card
   dpr: 2, // the most pixels a device pixel ratio may ask for
 };
@@ -101,6 +117,7 @@ const FROM_APP = {
   keyOn: (v) => (Number(v) < 0.5 ? { key: 0 } : {}),
   fillOn: (v) => (Number(v) < 0.5 ? { fill: 0 } : {}),
   rimOn: (v) => (Number(v) < 0.5 ? { rim: 0 } : {}),
+  projection: (v) => ({ projection: Math.round(v) === 1 ? "iso" : "lens" }),
 };
 
 /* Things the app carries that a page has no use for: how many samples it
@@ -114,9 +131,7 @@ const APP_ONLY = new Set([
   "videoQuality",
   "format",
   "alpha",
-  "aspect",
   "width",
-  "projection",
   "preview",
   "print",
   "design",
@@ -124,26 +139,37 @@ const APP_ONLY = new Set([
   "colorLow",
   "colorHigh",
   "variation",
-  "bounce",
   "tone",
   "glow",
   "room",
   "radius",
   "waveTurns",
+  /* Real settings in the app that this does not do. Frost is what you see
+     *through* a body, which needs the stack drawn twice; the transparency it
+     goes with is three parts in a hundred in every approved layout, so what is
+     lost is three parts in a hundred. Glow is a pass. Say so rather than
+     pretending, and use the app for a still that needs them. */
+  "frost",
+  "transparency",
+  "glow",
+  "ink",
   "v",
   /* Same name, different question: the app's `motion` is which shape of crest
-     it runs, and here it is what drives the crest at all. The app's framing
-     goes too — a page's box is not the tool's window, so the fit is the page's
-     to make. */
+     it runs, and here it is what drives the crest at all. The crop beside it —
+     aspect, zoom and pan — does come across, since a composed picture is a
+     composition and not a window size. */
   "motion",
-  "zoom",
-  "pan",
 ]);
 
 const NUMBERS = new Set(
   Object.keys(DEFAULTS).filter((k) => typeof DEFAULTS[k] === "number"),
 );
 const TRIPLES = new Set(["keyAt", "fillAt", "rimAt"]);
+/* The app writes the pan as three numbers. The third is along the view axis,
+   where a pan cannot go, and it is nought in everything the tool has ever
+   written — so it is dropped rather than carried as a setting that does
+   nothing. */
+const PAIRS = new Set(["pan"]);
 const QUADS = new Set(["ease"]);
 
 /**
@@ -183,6 +209,12 @@ export function readLook(source) {
     }
     if (APP_ONLY.has(name)) continue;
     if (!(name in DEFAULTS)) continue;
+    if (PAIRS.has(name)) {
+      const parts = raw.split(",").map(Number).slice(0, 2);
+      if (parts.length === 2 && parts.every(Number.isFinite))
+        look[name] = parts;
+      continue;
+    }
     if (TRIPLES.has(name) || QUADS.has(name)) {
       const parts = raw.split(",").map(Number);
       const want = TRIPLES.has(name) ? 3 : 4;
@@ -206,6 +238,34 @@ export function readLook(source) {
     look.motion = "still";
   }
   return look;
+}
+
+/*
+ * The six approved compositions.
+ *
+ * Count, spacing, angles, rig, projection and crop, composed in the app and
+ * saved out of it — not assembled here from settings that looked reasonable.
+ * A horizontal layout is a row running across the bottom of its frame and a
+ * vertical one is a column, and each body has one of each.
+ *
+ * This is the way to use an array. Everything else in this file exists so that
+ * a layout can be nudged, not so that one can be invented.
+ */
+export const LAYOUT_NAMES = Object.keys(LAYOUTS);
+
+const BODY_PLURAL = { plate: "plates", card: "cards", basket: "baskets" };
+
+/** The approved look for a body in a direction, or nothing if there is none. */
+export function layoutFor(body = "plate", layout = "horizontal") {
+  const name = `${BODY_PLURAL[body] || body}-${layout}`;
+  const found = LAYOUTS[name];
+  if (!found) {
+    console.warn(
+      `rayl-array: there is no approved "${name}" layout. There are ${LAYOUT_NAMES.join(", ")}.`,
+    );
+    return null;
+  }
+  return readLook(found);
 }
 
 /** The look a page asked for, over the top of the one everybody gets. */

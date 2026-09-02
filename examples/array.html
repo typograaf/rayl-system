@@ -7,9 +7,10 @@
 <script src="../rayl.js?v=e2ed2114"></script>
 <script type="module" src="../assets/array/rayl-array.js"></script>
 <style>
-  .frame { height: 380px; }
-  .frame.is-tall { height: 520px; }
-  .strip { height: 200px; }
+  .wide { aspect-ratio: 16 / 9; }
+  .tall { aspect-ratio: 9 / 16; }
+  .short { height: 220px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
   .markup {
     font: inherit;
     line-height: 1.5;
@@ -27,41 +28,61 @@
   </header>
 
   <section class="rayl-section">
-    <span class="rayl-label">The array, live</span>
-    <div class="frame is-tall" id="stage" data-rayl-array="plate" data-sheet="porcelain"></div>
+    <span class="rayl-label">Plates horizontal</span>
+    <div class="wide" data-rayl-array="plate" data-layout="horizontal" data-sheet="porcelain"></div>
   </section>
 
   <section class="rayl-section">
-    <span class="rayl-label">Body</span>
+    <span class="rayl-label">Cards horizontal</span>
+    <div class="wide" data-rayl-array="card" data-layout="horizontal" data-sheet="porcelain"></div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Baskets horizontal</span>
+    <div class="wide" data-rayl-array="basket" data-layout="horizontal" data-sheet="porcelain"></div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Plates, cards and baskets vertical</span>
+    <div class="rayl-grid">
+      <div class="tall" data-rayl-array="plate" data-layout="vertical" data-sheet="porcelain"></div>
+      <div class="tall" data-rayl-array="card" data-layout="vertical" data-sheet="porcelain"></div>
+      <div class="tall" data-rayl-array="basket" data-layout="vertical" data-sheet="porcelain"></div>
+    </div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">A layout, with settings laid over the top of it</span>
+    <div class="wide" id="stage" data-rayl-array="plate" data-layout="horizontal" data-sheet="porcelain"></div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Which composition</span>
     <div class="rayl-seg" id="body">
       <button class="rayl-seg-opt is-third is-on" type="button">Plate</button>
       <button class="rayl-seg-opt is-third" type="button">Card</button>
       <button class="rayl-seg-opt is-third" type="button">Basket</button>
     </div>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">Array</span>
-    <div class="rayl-row"><span class="rayl-row-name">Count</span><span class="rayl-slider" id="count" data-min="1" data-max="33" data-val="14" data-step="1"></span></div>
-    <div class="rayl-row"><span class="rayl-row-name">Spread</span><span class="rayl-slider" id="spread" data-min="-0.9" data-max="1" data-val="-0.455" data-step="0.005"></span></div>
-    <div class="rayl-row"><span class="rayl-row-name">Spin</span><span class="rayl-slider" id="spin" data-min="-90" data-max="90" data-val="24" data-step="1"></span></div>
-    <div class="rayl-row"><span class="rayl-row-name">Tilt</span><span class="rayl-slider" id="tilt" data-min="-90" data-max="90" data-val="-14" data-step="1"></span></div>
-    <div class="rayl-seg" id="direction">
-      <button class="rayl-seg-opt is-on" type="button">Across</button>
-      <button class="rayl-seg-opt" type="button">Up</button>
+    <div class="rayl-seg" id="layout">
+      <button class="rayl-seg-opt is-on" type="button">Horizontal</button>
+      <button class="rayl-seg-opt" type="button">Vertical</button>
     </div>
   </section>
 
   <section class="rayl-section">
-    <span class="rayl-label">Motion</span>
+    <span class="rayl-label">Over the top</span>
+    <div class="rayl-row"><span class="rayl-row-name">Count</span><span class="rayl-slider" id="count" data-min="1" data-max="40" data-val="21" data-step="1"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Spread</span><span class="rayl-slider" id="spread" data-min="-0.9" data-max="1" data-val="-0.329" data-step="0.005"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Spin</span><span class="rayl-slider" id="spin" data-min="-90" data-max="90" data-val="63" data-step="1"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Tilt</span><span class="rayl-slider" id="tilt" data-min="-90" data-max="90" data-val="-20" data-step="1"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Wave</span><span class="rayl-slider" id="wave" data-min="0" data-max="2" data-val="0.39" data-step="0.01"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Zoom</span><span class="rayl-slider" id="zoom" data-min="0.15" data-max="2" data-val="0.376" data-step="0.005"></span></div>
     <div class="rayl-seg" id="motion">
       <button class="rayl-seg-opt is-on" type="button">Wave</button>
       <button class="rayl-seg-opt" type="button">Still</button>
       <button class="rayl-seg-opt" type="button">Scroll</button>
       <button class="rayl-seg-opt" type="button">Pointer</button>
     </div>
-    <div class="rayl-row"><span class="rayl-row-name">Wave</span><span class="rayl-slider" id="wave" data-min="0" data-max="2" data-val="0.62" data-step="0.01"></span></div>
-    <div class="rayl-row"><span class="rayl-row-name">Seconds</span><span class="rayl-slider" id="seconds" data-min="1" data-max="20" data-val="6" data-step="0.5"></span></div>
   </section>
 
   <section class="rayl-section">
@@ -70,48 +91,69 @@
   </section>
 
   <section class="rayl-section">
-    <span class="rayl-label">A row that follows the page</span>
-    <div class="strip" data-rayl-array="card" data-motion="scroll" data-count="11"
-         data-spread="-0.28" data-spin="30" data-tilt="-6" data-wave="0.9"></div>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">A row that follows the cursor</span>
-    <div class="strip" data-rayl-array="plate" data-motion="pointer" data-count="16"
-         data-spread="-0.42" data-spin="18" data-tilt="-10" data-wave="0.8"></div>
+    <span class="rayl-label">A row that follows the page, and one that follows the cursor</span>
+    <div class="pair">
+      <div class="short" data-rayl-array="card" data-layout="horizontal" data-motion="scroll"></div>
+      <div class="short" data-rayl-array="plate" data-layout="horizontal" data-motion="pointer"></div>
+    </div>
   </section>
 
 </div>
 
 <script type="module">
   const stage = document.getElementById("stage");
-  const look = { body: "plate", count: 14, spread: -0.455, spin: 24, tilt: -14,
-                 direction: "across", motion: "wave", wave: 0.62, seconds: 6 };
+  /* What the page has said, which is only ever laid over a layout. */
+  const said = { body: "plate", layout: "horizontal" };
+  const OVER = ["count", "spread", "spin", "tilt", "wave", "zoom"];
 
   const show = () => {
-    const markup = Object.entries(look)
-      .map(([k, v]) => `  data-${k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase())}="${v}"`)
-      .join("\n");
+    const over = Object.entries(said)
+      .filter(([k]) => k !== "body" && k !== "layout")
+      .map(([k, v]) => `\n  data-${k}="${v}"`)
+      .join("");
     document.getElementById("markup").textContent =
-      `<div style="height: 520px"\n  data-rayl-array="${look.body}"\n${markup}></div>`;
+      `<div style="aspect-ratio: 16 / 9"\n  data-rayl-array="${said.body}"` +
+      `\n  data-layout="${said.layout}"${over}></div>`;
   };
 
   const set = (change) => {
-    Object.assign(look, change);
+    Object.assign(said, change);
     stage.raylArray?.set(change);
     show();
   };
 
-  for (const name of ["count", "spread", "spin", "tilt", "wave", "seconds"]) {
+  /* Picking a body or a layout starts again from that composition, so the
+     sliders show what it says rather than keeping the last one's numbers. */
+  const follow = () => {
+    const look = stage.raylArray?.look;
+    if (!look) return;
+    for (const name of OVER) {
+      delete said[name];
+      const slider = document.getElementById(name);
+      slider.setValue?.(look[name]);
+    }
+    show();
+  };
+
+  for (const name of OVER) {
     document.getElementById(name).addEventListener("rayl:input", (e) =>
       set({ [name]: e.detail.value }),
     );
   }
-  for (const name of ["body", "direction", "motion"]) {
-    document.getElementById(name).addEventListener("rayl:change", (e) =>
-      set({ [name]: String(e.detail.value).toLowerCase() }),
-    );
+  document.getElementById("motion").addEventListener("rayl:change", (e) =>
+    set({ motion: String(e.detail.value).toLowerCase() }),
+  );
+  for (const name of ["body", "layout"]) {
+    document.getElementById(name).addEventListener("rayl:change", async (e) => {
+      for (const key of OVER) delete said[key];
+      said[name] = String(e.detail.value).toLowerCase();
+      await stage.raylArray?.set({ ...said, ...blank() });
+      follow();
+    });
   }
+  /* Undoing what was laid over: a setting is unset by handing back nothing,
+     which the array reads as "take the layout's". */
+  const blank = () => Object.fromEntries(OVER.map((k) => [k, undefined]));
   show();
 </script>
 </body>

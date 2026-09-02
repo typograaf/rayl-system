@@ -5,10 +5,17 @@ import {
   cardGeometry,
   basketGeometry,
   reachAlong,
-  radiusOf,
+  measure,
 } from "./bodies.js";
 import { surfaceMaterial } from "./surface.js";
-import { DEFAULTS, SHEETS, readLook, settle, easing } from "./look.js";
+import {
+  DEFAULTS,
+  SHEETS,
+  readLook,
+  settle,
+  easing,
+  layoutFor,
+} from "./look.js";
 
 const UP = new THREE.Vector3(0, 1, 0);
 const RIGHT = new THREE.Vector3(1, 0, 0);
@@ -34,6 +41,10 @@ export const HOME = new URL(
    across while keeping headroom for a body lifted out of it. */
 const MARGIN_ACROSS = 1.06;
 const MARGIN_UP = 1.02;
+/* How far the idle drift can carry a body off where the layout put it. Both
+   margins and this are the app's, so a layout frames here the way it framed
+   where it was composed. */
+const DRIFT = 0.07;
 
 const geometries = new Map();
 let basketPromise = null;
@@ -64,7 +75,17 @@ function bodyGeometry(look) {
 export class RaylArray {
   constructor(element, options = {}) {
     this.element = element;
-    this.look = settle(readLook(options.look), options);
+    /*
+     * What the page asked for, kept apart from what it got.
+     *
+     * A look is an approved layout with the page's own changes laid over it, so
+     * both halves have to be remembered: change the body and the layout under
+     * it has to be looked up again — a page asking for cards wants the cards
+     * composition, not the plate one with cards in it — while everything the
+     * page said stays said.
+     */
+    this.given = { ...readLook(options.look), ...strip(options) };
+    this.look = this.compose();
 
     this.canvas = document.createElement("canvas");
     this.canvas.style.cssText = "display:block;width:100%;height:100%";
@@ -83,8 +104,13 @@ export class RaylArray {
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(this.look.fov, 1, 0.1, 400);
-    this.scene.add(this.camera);
+    this.perspective = new THREE.PerspectiveCamera(this.look.fov, 1, 0.1, 400);
+    /* Its frustum is set every resize; these are placeholders that only have to
+       be legal. An orthographic camera has no aspect of its own, so one is kept
+       on it anyway, since the fit asks the live camera for it either way. */
+    this.orthographic = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 400);
+    this.orthographic.aspect = 1;
+    this.camera = this.perspective;
 
     this.material = surfaceMaterial();
     this.mesh = null;
@@ -94,6 +120,11 @@ export class RaylArray {
     this.places = [];
     this.matrix = new THREE.Matrix4();
     this.scratch = new THREE.Vector3();
+    this.turned = new THREE.Quaternion();
+    this.bend = new THREE.Quaternion();
+    this.tangent = new THREE.Vector3();
+    /* Whether this body turns to follow a bent row — see place(). */
+    this.follows = false;
 
     this.lightAt = [
       [0, 0, 1],
@@ -116,6 +147,14 @@ export class RaylArray {
     this.ready = this.build();
   }
 
+  /** The approved layout for what is being asked for, with the page over it. */
+  compose() {
+    const body = this.given.body || DEFAULTS.body;
+    const layout = this.given.layout || DEFAULTS.layout;
+    const under = layout === "none" ? null : layoutFor(body, layout);
+    return settle(under, this.given);
+  }
+
   /* --------------------------------------------------------------- shape --- */
 
   async build() {
@@ -134,6 +173,9 @@ export class RaylArray {
     const shared = await bodyGeometry(look);
     if (!this.renderer) return; // taken down while the basket was in the post
     const geometry = shared.clone();
+    /* About its own middle, which is where the layout, the spacing and the
+       framing all assume it is. */
+    geometry.center();
 
     if (this.mesh) {
       this.scene.remove(this.mesh);
@@ -166,7 +208,18 @@ export class RaylArray {
     geometry.setAttribute("aVary", vary);
 
     this.scene.add(this.mesh);
-    this.bodyRadius = radiusOf(geometry);
+    /*
+     * The two sizes the framing and the rig are written in, measured the app's
+     * way: `extent` is the footprint — how far it reaches sideways — and
+     * `reach` is a sphere that holds it however it is turned. They are not the
+     * same and a card is where it shows, its long axis being its height: half
+     * again bigger than its footprint says.
+     */
+    const size = measure(geometry);
+    this.extent = size.extent;
+    this.reach = size.reach;
+    this.bodyRadius = size.reach;
+    this.follows = look.body === "basket";
     this.footprint(geometry);
     this.pose();
     this.paint();
@@ -192,11 +245,11 @@ export class RaylArray {
         Math.max(long - corner, 0),
       );
       u.uCorner.value = corner;
-      u.uShade.value = this.look.shade;
+      u.uShade.value = shadeOf(this.look);
     } else if (this.look.body === "plate") {
       u.uFootprint.value.set(0, 0);
       u.uCorner.value = (box.max.x - box.min.x) / 2;
-      u.uShade.value = this.look.shade;
+      u.uShade.value = shadeOf(this.look);
     } else {
       u.uShade.value = 0;
     }
@@ -246,7 +299,7 @@ export class RaylArray {
      * under it. Same floor and the same multiple as the app.
      */
     const half = (Math.max(this.mesh.count, 1) - 1) * this.step * 0.5;
-    this.lightRadius = Math.max(half + this.bodyRadius, this.bodyRadius * 2.5);
+    this.lightRadius = Math.max(half + this.extent, this.reach * 2.5);
     u.uScale.value = this.lightRadius;
     this.aim();
 
@@ -274,7 +327,9 @@ export class RaylArray {
     u.uCoat.value = look.coat;
     u.uContrast.value = look.contrast;
     u.uOcclusion.value = look.occlusion;
-    u.uShade.value = look.body === "basket" ? 0 : look.shade;
+    u.uBounce.value = look.bounce;
+    /* A crate full of slots does not cast a solid shadow, so it casts none. */
+    u.uShade.value = look.body === "basket" ? 0 : shadeOf(look);
 
     const lights = [
       [look.key, look.keyColour, look.keyAt, look.keySize],
@@ -371,7 +426,7 @@ export class RaylArray {
       /* The largest, not the sum: two crests overlapping raise a body once. */
       crest = Math.max(crest, 0.5 * (1 + Math.cos(Math.PI * d)));
     }
-    return crest * look.wave * this.bodyRadius * 1.5;
+    return crest * look.wave * this.extent * 1.5;
   }
 
   /** Where the crest is, this frame, according to whatever is driving it. */
@@ -409,8 +464,31 @@ export class RaylArray {
       const at = places[i] || (places[i] = new THREE.Vector3());
       at.copy(this.rail).multiplyScalar(along).addScaledVector(this.push, lift);
     }
+
+    /*
+     * A body with depth has to turn to follow the line it stands in.
+     *
+     * A plate does not mind a bent row: it is a disc a few millimetres thick, a
+     * neighbour rising past it has somewhere to go. A basket minds a great
+     * deal. Lift one out of a nested row and the two beside it are still
+     * pointing where the rail used to point, so their walls run straight
+     * through it — not a spacing problem, and no amount of spread fixes it,
+     * because the row is no longer straight and they are all still square to
+     * the straight version of it.
+     *
+     * So it is turned by the difference between the direction the rail had
+     * there and the direction it has now. At rest the two are the same, the
+     * difference is nothing, and every setting means what it meant.
+     */
+    const follows = this.follows && count > 1;
     for (let i = 0; i < count; i++) {
-      this.matrix.compose(places[i], this.orientation, ONE);
+      this.turned.copy(this.orientation);
+      if (follows) {
+        tangentAt(places, i, count, this.tangent);
+        this.bend.setFromUnitVectors(this.rail, this.tangent);
+        this.turned.premultiply(this.bend);
+      }
+      this.matrix.compose(places[i], this.turned, ONE);
       this.mesh.setMatrixAt(i, this.matrix);
       const before =
         i > 0 ? this.scratch.subVectors(places[i - 1], places[i]) : ZERO;
@@ -429,53 +507,73 @@ export class RaylArray {
   /* --------------------------------------------------------------- frame --- */
 
   /**
-   * Where the row gets to, and how far back the camera has to stand to see it.
+   * The frame, as the app composes it and then as the element crops it.
    *
-   * Taken at the wave's full swing rather than where it happens to be, or the
-   * framing would breathe with the animation — but only on the side the wave
-   * actually goes. A crest lifts a body up and never down, so reserving the
-   * same headroom underneath leaves a third of the picture empty, which is the
-   * difference between a row that fills a banner and a row sitting in the
-   * middle of one.
+   * Two separate questions, and they were one before, which is why the pictures
+   * were wrong. The app fits the row to a *chosen shape* — 16:9 or 9:16 — takes
+   * a share of that fit as its zoom, and moves the middle with a pan. That is
+   * the composition: a horizontal layout is a row along the bottom of a wide
+   * frame, and it is only that because of the crop. Refitting it to whatever
+   * box a page happens to have throws the composition away and centres a row in
+   * a rectangle, which is what this used to do.
    *
-   * Each body then gives a closed-form bound, since depth along the view axis
-   * is linear in the distance, and the answer is the largest of them. Nothing
-   * to iterate.
+   * So the fit is made against the layout's own aspect, exactly as the app
+   * makes it, and the element's shape only decides how much *more* than the
+   * composed frame is shown. Never less: a box narrower than the composition is
+   * pushed back until the composed width still fits, the way a covering
+   * background image behaves, so nothing composed is ever cut off.
    */
   fit() {
+    const look = this.look;
     const count = this.mesh?.count || 1;
-    const r = this.bodyRadius;
-    const lift = this.look.motion === "still" ? 0 : this.look.wave * r * 1.5;
 
-    const low = new THREE.Vector3(Infinity, Infinity, Infinity);
-    const high = new THREE.Vector3(-Infinity, -Infinity, -Infinity);
-    const corners = [];
+    /*
+     * How much room a body needs around where the layout put it: itself, plus
+     * the wave at full swing, plus the drift. Taken at full swing rather than
+     * where it happens to be, or the framing would breathe with the animation.
+     */
+    const wave = look.motion === "still" ? 0 : look.wave;
+    const room = this.reach + wave * this.extent + DRIFT;
+
+    const composed = Math.max(Number(look.aspect) || 16 / 9, 0.05);
+    const tanUp = Math.tan(rad(look.fov) / 2) * MARGIN_UP;
+    const tanAcross = tanUp * composed * MARGIN_ACROSS;
+
+    /* The row itself. Its middle is the origin, since it is laid out about
+       the origin, and the app measures the same way. */
+    let distance = this.extent * 4;
+    let half = this.reach;
     for (let i = 0; i < count; i++) {
       const along = (i - (count - 1) / 2) * this.step;
-      const base = new THREE.Vector3().copy(this.rail).multiplyScalar(along);
-      const top = base.clone().addScaledVector(this.push, lift);
-      corners.push(base, top);
-      low.min(base).min(top);
-      high.max(base).max(top);
-    }
-    const centre = low.clone().add(high).multiplyScalar(0.5);
-
-    const aspect = Math.max(this.camera.aspect, 0.01);
-    const tanUp = Math.tan(rad(this.look.fov) / 2) * MARGIN_UP;
-    const tanAcross = tanUp * aspect * MARGIN_ACROSS;
-
-    let distance = r * 3;
-    for (const point of corners) {
-      const depth = point.z - centre.z;
-      const across = Math.abs(point.x - centre.x) + r;
-      const up = Math.abs(point.y - centre.y) + r;
+      this.scratch.copy(this.rail).multiplyScalar(along);
+      const across = Math.abs(this.scratch.x) + room;
+      const up = Math.abs(this.scratch.y) + room;
+      const depth = -this.scratch.z;
       distance = Math.max(
         distance,
         across / tanAcross - depth,
         up / tanUp - depth,
       );
+      half = Math.max(
+        half,
+        up * MARGIN_UP,
+        (across * MARGIN_ACROSS) / composed,
+      );
     }
-    return { centre, distance: distance / Math.max(this.look.zoom, 0.05) };
+
+    /*
+     * And then the element. A box wider than the composition shows more to the
+     * sides for nothing; a narrower one has to stand back, or the ends of the
+     * row would be cut off — which for a layout that is *about* being a long
+     * row is the one thing that must not happen.
+     */
+    const shown = Math.max(this.camera.aspect || composed, 0.05);
+    const cover = shown < composed ? composed / shown : 1;
+
+    return {
+      distance: distance * look.zoom * cover,
+      half: half * look.zoom * cover,
+    };
   }
 
   resize() {
@@ -485,20 +583,46 @@ export class RaylArray {
     const dpr = Math.min(window.devicePixelRatio || 1, this.look.dpr);
     this.renderer.setPixelRatio(dpr);
     this.renderer.setSize(width, height, false);
-    this.camera.aspect = width / height;
-    this.camera.fov = this.look.fov;
+
+    const aspect = width / height;
+    const iso = this.look.projection === "iso";
+    /*
+     * Two cameras, and the live one is swapped rather than reconfigured: a
+     * parallel projection is not a lens set to a long focal length, and the
+     * layouts use both — the plates and the cards are drawn without
+     * perspective, the baskets with it.
+     */
+    this.camera = iso ? this.orthographic : this.perspective;
+    this.camera.aspect = aspect;
 
     if (this.mesh) {
-      const { centre, distance } = this.fit();
-      /* Pan is in frames, so half a frame moves the row to the edge of the
-         picture whatever the fit came out at. */
-      const reach = Math.tan(rad(this.look.fov) / 2) * distance;
-      const x = centre.x - this.look.pan[0] * reach * this.camera.aspect * 2;
-      const y = centre.y - this.look.pan[1] * reach * 2;
-      this.camera.position.set(x, y, centre.z + distance);
-      this.camera.lookAt(x, y, centre.z);
-      this.camera.near = Math.max(distance * 0.02, 0.05);
-      this.camera.far = distance * 4 + this.bodyRadius * 8;
+      const { distance, half } = this.fit();
+      /* Pan is in world units off the middle of the row, which is what the app
+         writes: the camera looks at a point beside the row rather than at it. */
+      const x = this.look.pan[0];
+      const y = this.look.pan[1];
+      const span = this.lightRadius + this.extent * 2;
+
+      if (iso) {
+        this.camera.left = -half * aspect;
+        this.camera.right = half * aspect;
+        this.camera.top = half;
+        this.camera.bottom = -half;
+        /*
+         * As close as the near plane allows. Under a parallel projection the
+         * distance changes nothing about the picture, only what is clipped.
+         */
+        const stand = span * 1.5;
+        this.camera.position.set(x, y, stand);
+        this.camera.near = Math.max(0.1, stand - span * 4);
+        this.camera.far = stand + span * 4;
+      } else {
+        this.camera.fov = this.look.fov;
+        this.camera.position.set(x, y, distance);
+        this.camera.near = Math.max(0.1, distance - span * 3);
+        this.camera.far = distance + span * 3;
+      }
+      this.camera.lookAt(x, y, 0);
     }
     this.camera.updateProjectionMatrix();
     this.dirty = true;
@@ -580,7 +704,8 @@ export class RaylArray {
   /** Change a look on a live array — the same names the page opened with. */
   set(options = {}) {
     const before = this.look;
-    this.look = settle(before, readLook(options.look), options);
+    Object.assign(this.given, readLook(options.look), strip(options));
+    this.look = this.compose();
     const remade =
       this.look.body !== before.body ||
       Math.round(this.look.count) !== Math.round(before.count) ||
@@ -616,6 +741,29 @@ const ONE = new THREE.Vector3(1, 1, 1);
 const ZERO = new THREE.Vector3(0, 0, 0);
 
 const rad = (degrees) => (degrees * Math.PI) / 180;
+
+/** How dark a body's shadow on its neighbour is, unless a page says. */
+function shadeOf(look) {
+  return look.shade == null ? Math.min(look.occlusion, 1) : look.shade;
+}
+
+/**
+ * Which way the row is going at body `i`: where the next one is, less where the
+ * last one was. The ends borrow their neighbour's, a line having no direction
+ * beyond its own end.
+ */
+function tangentAt(places, i, count, out) {
+  const before = Math.max(i - 1, 0);
+  const after = Math.min(i + 1, count - 1);
+  if (before === after) return out.set(1, 0, 0);
+  return out.subVectors(places[after], places[before]).normalize();
+}
+
+/** The options themselves, without the look string they were handed beside. */
+function strip(options) {
+  const { look, ...rest } = options;
+  return rest;
+}
 
 /**
  * One number per place in the row, the same one every frame.

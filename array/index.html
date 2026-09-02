@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8" />
-<title>Rayl array — bench</title>
+<title>Rayl array — the six layouts</title>
 <style>
   body {
     margin: 0;
@@ -10,52 +10,70 @@
     background: #f7f7f2;
     color: #1c1c1a;
   }
-  section {
-    padding: 24px;
-  }
   h2 {
-    font-size: 8px;
+    font-size: 9px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin: 0 0 12px;
+    margin: 0 0 6px;
+    opacity: 0.6;
   }
-  .frame {
-    height: 340px;
+  .wide {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 24px;
+  }
+  .tall {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 0 24px 24px;
+  }
+  .h {
+    aspect-ratio: 16 / 9;
+  }
+  .v {
+    aspect-ratio: 9 / 16;
+  }
+  .sheet {
+    background: linear-gradient(180deg, #cfcfc4, #f7f7f2);
   }
 </style>
-<section>
-  <h2>plate, across</h2>
-  <div
-    class="frame"
-    data-rayl-array="plate"
-    data-sheet="porcelain"
-    data-look="object=0&count=14&spread=0.46&direction=0&lean=0&spin=24&tilt=-14&brush=2&key=1.55&fill=0.3&rim=0.8&keyOn=1&fillOn=1&rimOn=1&keySize=0.75&fillSize=1&rimSize=0.4&ambient=1.4&contrast=1.05&motion=1&wave=0&peaks=1&waveSeconds=4.5&translucency=0.72&exposure=0.754&roughness=1&scatter=0.26&wrap=0.23&falloff=3.3&keyColor=f7f7ef&fillColor=e2e2d3&rimColor=f7f7ef&keyAt=0.30%2C0.75%2C0.85&fillAt=-0.90%2C0.05%2C0.40&rimAt=0.20%2C0.35%2C-0.60&color=f7f7ef&v=3"
-  ></div>
-</section>
-<section>
-  <h2>card, up</h2>
-  <div
-    class="frame"
-    data-rayl-array="card"
-    data-count="9"
-    data-spread="-0.42"
-    data-spin="34"
-    data-tilt="-8"
-    data-sheet="porcelain"
-  ></div>
-</section>
-<section>
-  <h2>basket</h2>
-  <div
-    class="frame"
-    data-rayl-array="basket"
-    data-count="8"
-    data-spread="-0.1"
-    data-spin="70"
-    data-tilt="0"
-  ></div>
-</section>
 <script>
   window.RAYL_ARRAY_HOME = "/";
 </script>
+
+<div class="wide">
+  <div>
+    <h2>plates horizontal</h2>
+    <div class="h sheet" data-rayl-array="plate" data-layout="horizontal"></div>
+  </div>
+  <div>
+    <h2>cards horizontal</h2>
+    <div class="h sheet" data-rayl-array="card" data-layout="horizontal"></div>
+  </div>
+  <div>
+    <h2>baskets horizontal</h2>
+    <div
+      class="h sheet"
+      data-rayl-array="basket"
+      data-layout="horizontal"
+    ></div>
+  </div>
+</div>
+<div class="tall">
+  <div>
+    <h2>plates vertical</h2>
+    <div class="v sheet" data-rayl-array="plate" data-layout="vertical"></div>
+  </div>
+  <div>
+    <h2>cards vertical</h2>
+    <div class="v sheet" data-rayl-array="card" data-layout="vertical"></div>
+  </div>
+  <div>
+    <h2>baskets vertical</h2>
+    <div class="v sheet" data-rayl-array="basket" data-layout="vertical"></div>
+  </div>
+</div>
+
 <script type="module" src="/src/index.js"></script>

@@ -168,13 +168,18 @@ THE ARRAY is the row of plates, cards or baskets the brand is made of, and it
 is a live renderer rather than something to approximate. One tag and one box:
 
 <script type="module" src="{HUB}/assets/array/rayl-array.js"></script>
-<div data-rayl-array="plate" style="height: 380px"></div>
+<div data-rayl-array="plate" data-layout="horizontal" style="height: 380px"></div>
 
 Give the element a height; everything fits itself to the box. Bodies are plate,
-card and basket and there is no fourth. Motion is wave, still, scroll or
-pointer. A look composed in the Rayl Stack app pastes in whole as data-look.
-Never draw an array by hand out of CSS shapes — read section 11 of RAYL-RULES.md
-before using it, and say so rather than imitating it if a page cannot carry it.
+card and basket and there is no fourth. THERE ARE SIX APPROVED LAYOUTS — each
+body horizontal and vertical — and each carries its own count, spacing, angles,
+lighting, projection and crop. Horizontal is a row along the bottom of a wide
+frame, vertical a column down one side of a tall one. Use one; do not assemble a
+composition out of settings that look reasonable, and do not set data-direction
+against the layout. Motion is wave, still, scroll or pointer. A look composed in
+the Rayl Stack app pastes in whole as data-look. Never draw an array by hand out
+of CSS shapes — read section 11 of RAYL-RULES.md before using it, and say so
+rather than imitating it if a page cannot carry it.
 
 These examples show the parts composed. Read them if you are unsure how things
 go together — but do not clone one and change the words, or you inherit a

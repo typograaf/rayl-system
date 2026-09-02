@@ -1010,6 +1010,40 @@ downloaded.
 Working example, with every control live:
 [examples/array.html](https://typograaf.github.io/rayl-system/examples/array.html).
 
+### Six layouts, and you do not compose a seventh
+
+An array is not a row of settings you pick. **Every body has two approved
+compositions — horizontal and vertical — and those are what a page uses.** Each
+one carries its own count, spacing, angles, lighting, projection and crop,
+composed in the app and exported from it; assembling your own out of numbers
+that look reasonable produces something that is not a Rayl array, which is what
+this section exists to prevent.
+
+```html
+<div data-rayl-array="plate"  data-layout="horizontal" style="height: 380px"></div>
+<div data-rayl-array="card"   data-layout="vertical"   style="height: 720px"></div>
+```
+
+`horizontal` is a row running along the **bottom** of a wide frame, cropped
+close, and it is the default — it is what goes across the foot of a section, a
+header or a banner. `vertical` is a column down one **side** of a tall frame,
+for a page edge, a sidebar or a phone-shaped panel. Between them:
+
+| | horizontal | vertical |
+|---|---|---|
+| **plate** | 21 plates, spun 63°, tipped 20°, parallel | 19 plates, column leaning 8°, tipped 62° |
+| **card** | 19 cards, spun 62°, tipped 24°, parallel | 34 cards, seen edge on, one pulled out |
+| **basket** | 12 baskets swinging through a deep crest | 7 baskets, tipped 61° |
+
+`data-layout="none"` leaves an array with nothing but the bare defaults. It is
+for a look you are pasting in whole out of the app, not for hand-building one.
+
+**The crop is part of the composition.** Each layout was framed in 16:9 or 9:16,
+and that framing is reproduced exactly — the row sits low in its frame because
+that is where it was put. An element of a different shape is *filled*, never
+letterboxed and never re-centred: a wider box shows more to the sides, and a
+narrower one stands back far enough that nothing composed is cut off.
+
 ### The three bodies
 
 | body | what it is | what it costs |
@@ -1021,38 +1055,43 @@ Working example, with every control live:
 There is no fourth. The app also has a ring, and it is **not** in the web
 version — if a brief needs one, say so rather than substituting a plate.
 
-### Every setting
+### Changing a layout
 
-Each is a `data-` attribute named after itself, and the same name in code.
+Any setting can be laid over the top of a layout, and each is a `data-`
+attribute named after itself. **The value a layout gives is the right one until
+somebody says otherwise**, so reach for these to adjust a composition, not to
+build one.
 
-| setting | what it does | default |
-|---|---|---|
-| `data-count` | how many | `14` |
-| `data-spread` | the **air between one body and the next**, in bodies. Nought is touching; negative overlaps, which is most of what an array is for | `-0.455` |
-| `data-direction` | `across` or `up` | `across` |
-| `data-depth` | how thick a card is, against its own width. Cards only | `0.05` |
-| `data-lean` | turns the whole rack, so the row recedes | `0` |
-| `data-spin` | turns the bodies without turning the row | `24` |
-| `data-tilt` | tips them towards you or away | `-14` |
-| `data-motion` | `wave`, `still`, `scroll` or `pointer` — see below | `wave` |
-| `data-wave` | how far a body is lifted out of the row, in bodies | `0.62` |
-| `data-brush` | how many bodies wide the crest is | `2` |
-| `data-peaks` | how many crests run at once | `1` |
-| `data-seconds` | how long one pass takes | `6` |
-| `data-at` | where the crest sits when nothing is driving it | `0.35` |
-| `data-colour` | what the bodies are made of | `#F7F7F2` |
-| `data-sheet` | `porcelain`, `concrete`, `none`, or two colours | `none` |
-| `data-key` `data-key-colour` `data-key-at` `data-key-size` | the big source, its colour, where it stands and how wide it is | `1.55` `#F7F7F2` `0.3,0.75,0.85` `0.75` |
-| `data-fill` `data-fill-colour` `data-fill-at` `data-fill-size` | the cool fill | `0.3` `#E2E2D3` `-0.9,0.05,0.4` `1` |
-| `data-rim` `data-rim-colour` `data-rim-at` `data-rim-size` | the light behind, which is the only one the glow-through has to work with | `0.8` `#F7F7F2` `0.2,0.35,-0.6` `0.4` |
-| `data-ambient` | how much of the sheet reaches the bodies | `1.4` |
-| `data-translucency` `data-scatter` `data-wrap` `data-falloff` | how much light comes through a body, how far it spreads inside, how far round the form it bends and how sharply it falls off | `0.72` `0.26` `0.23` `3.3` |
-| `data-roughness` `data-coat` | matte at 1; a clear layer over it, the way a fired glaze has one | `1` `0` |
-| `data-shade` `data-occlusion` | how hard a body shadows the one behind, and how much light the row loses to itself | `1` `1.15` |
-| `data-exposure` `data-contrast` | the picture | `1` `1.05` |
-| `data-fov` `data-zoom` `data-pan` | the lens, closer in above one, and where the middle sits in frames | `32` `1` `0,0` |
-| `data-art` | an image printed on the face of a card | none |
-| `data-dpr` | the most device pixels it may ask for | `2` |
+| setting | what it does |
+|---|---|
+| `data-count` | how many |
+| `data-spread` | the **air between one body and the next**, in bodies. Nought is touching; negative overlaps, which is most of what an array is for |
+| `data-direction` | `across` or `up` — the layout sets it, and setting it against the layout is how a composition gets broken |
+| `data-depth` | how thick a card is, against its own width |
+| `data-lean` | turns the whole rack, so the row recedes |
+| `data-spin` | turns the bodies without turning the row |
+| `data-tilt` | tips them towards you or away |
+| `data-motion` | `wave`, `still`, `scroll` or `pointer` — see below |
+| `data-wave` | how far a body is lifted out of the row, in bodies |
+| `data-brush` | how many bodies wide the crest is |
+| `data-peaks` | how many crests run at once |
+| `data-seconds` | how long one pass takes |
+| `data-at` | where the crest sits when nothing is driving it |
+| `data-colour` | what the bodies are made of |
+| `data-sheet` | `porcelain`, `concrete`, `none`, or two colours. `none` by default, so an array sits on whatever ground the page already has |
+| `data-key` `data-key-colour` `data-key-at` `data-key-size` | the big source, its colour, where it stands and how wide it is |
+| `data-fill` `data-fill-colour` `data-fill-at` `data-fill-size` | the cool fill |
+| `data-rim` `data-rim-colour` `data-rim-at` `data-rim-size` | the light behind, which is the only one the glow-through has to work with |
+| `data-ambient` | how much of the sheet reaches the bodies |
+| `data-translucency` `data-scatter` `data-wrap` `data-falloff` | how much light comes through a body, how far it spreads inside, how far round the form it bends and how sharply it falls off |
+| `data-roughness` `data-coat` | matte at 1; a clear layer over it, the way a fired glaze has one |
+| `data-occlusion` `data-bounce` | how much light the row loses to itself, and how much the bodies throw back at each other. The shadow a body casts on the one behind it follows the occlusion unless `data-shade` says otherwise |
+| `data-exposure` `data-contrast` | the picture |
+| `data-projection` | `lens` or `iso` — a real lens, or a parallel one. The plates and the cards are composed parallel, the baskets with a lens |
+| `data-aspect` `data-zoom` `data-pan` | the crop: the shape it was composed in, how much of the fit to take (under one is closer), and where the middle sits, in world units off the middle of the row |
+| `data-fov` | the lens, which the parallel projection ignores |
+| `data-art` | an image printed on the face of a card |
+| `data-dpr` | the most device pixels it may ask for |
 
 A light's position is three numbers — along the row, across it, and towards you
 — in units of the row's own radius, about its middle. Held that way a rig means
@@ -1074,46 +1113,51 @@ animate the element it lives in.
 
 ### Pasting a look out of the app
 
-A look is composed in **Rayl Stack**, where there are sliders and a picture, and
-the link it produces is understood as it stands:
+A look is composed in **Rayl Stack**, and the settings string it saves — a
+`.rayl` file, or the tail of a link — is understood as it stands, back to
+version 3:
 
 ```html
 <div data-rayl-array
-     data-look="object=0&count=14&spread=0.46&spin=24&tilt=-14&…&v=3"
+     data-look="object=0&count=21&spread=-0.328&spin=63&tilt=-20&…&v=5"
      style="height: 380px"></div>
 ```
 
-Everything about the row, the rig and the surface comes across. Two things do
-not, deliberately: **which crest shape** the tool was running, and **the tool's
-own framing** — a page's box is not the tool's window, so the fit is made
-against the element it is in. Set `data-motion` and, if you need it,
-`data-zoom` and `data-pan` here.
+Everything comes across: the row, the angles, the rig, the surface, the
+projection and the crop. One thing does not — which crest shape the tool was
+running — so set `data-motion` beside it. **A look composed this way belongs in
+`layouts/` as a seventh approved composition, not scattered through a page's
+markup**: if a project needs a picture the six do not give, that is a decision,
+and the decision has a home.
 
 ### From code
 
 ```js
 import { RaylArray } from "https://typograaf.github.io/rayl-system/assets/array/rayl-array.js";
 
-const array = new RaylArray(element, { body: "card", motion: "scroll" });
-await array.set({ count: 20, spread: -0.3 });
+const array = new RaylArray(element, { body: "card", layout: "vertical" });
+await array.set({ motion: "scroll" });
 array.destroy();
 ```
 
 `element.raylArray` is the one that was started for you from the markup, so a
 page can drive an array it did not construct. `mount()` starts any that have
-been added since.
+been added since. Changing the body re-reads the layout under it, so asking for
+cards gives you the cards composition rather than the plate one with cards in
+it.
 
 ### The rules
 
 - **Give the element a height.** Everything else fits itself to the box.
+- **Use a layout.** Six exist; a seventh is a decision, not a set of attributes.
 - **The sheet belongs to the page, not the canvas.** `data-sheet` paints the
-  element behind a transparent canvas; leave it `none` and the array sits on
-  whatever ground the page already has. A sheet does not move when a light does.
+  element behind a transparent canvas, and a sheet does not move when a light
+  does.
 - **One array is one canvas.** Three on a page is three renderers; put one
   behind a whole section rather than one per card.
 - **Do not restyle it and do not filter it.** No `filter`, no `mix-blend-mode`,
   no CSS shadow on the element. The picture is the picture.
-- **It costs 187K gzipped**, plus the basket if you ask for one. That is a
+- **It costs 190K gzipped**, plus the basket if you ask for one. That is a
   renderer; if a page cannot afford it, use a still image of an array rather
   than a hand-drawn imitation.
 
@@ -1121,9 +1165,10 @@ been added since.
 
 The app it is taken from does more, and these are the differences rather than
 faults to fix: no ring body, no printed card designs (an image through
-`data-art` is as far as it goes), no card swing when a column opens, no bloom,
-no export, and no dragging a body out of the row. If a brief needs one of them,
-say which, and use the app.
+`data-art` is as far as it goes), no card swing when a column opens, no frost —
+what you see *through* a body, which every approved layout sets to three parts
+in a hundred — no bloom, no export, and no dragging a body out of the row. If a
+brief needs one of them, say which, and use the app.
 
 ---
 
