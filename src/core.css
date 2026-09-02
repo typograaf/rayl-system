@@ -526,10 +526,11 @@
   background:var(--surface-idle);
   transition:background 120ms ease-out;
 }
-/* Paper and Bone are five L* apart, which is a ground change you can measure
-   and not one you can see across a form. The tick carries it and the ground
-   backs it up. */
-.rayl-check-box .rayl-icon{opacity:0;transition:opacity 120ms ease-out;}
+/* The mark is Plus turned 45 degrees, measured at 1194:412 — a 9.93 square
+   whose rotated bounding box is 14.04. Not a tick: the set has no tick and the
+   approved frame does not use one. */
+.rayl-check-box .rayl-icon{transform:rotate(45deg);opacity:0;
+  transition:opacity 120ms ease-out;}
 .rayl-check[aria-checked="true"] .rayl-check-box{background:var(--surface-active);}
 .rayl-check[aria-checked="true"] .rayl-check-box .rayl-icon{opacity:1;}
 .rayl-check:hover:enabled .rayl-check-box{background:var(--surface-idle-hover);}
@@ -550,14 +551,12 @@
    The knob is White at rest and ink when it is on: the only thing in the
    system that goes to full ink at 24 across. */
 .rayl-toggle{
-  /* --tog-w is written by rayl.js from the longer of the two words. A fixed
-     track clipped every label past four characters, and a track sized by its
-     content cannot animate a knob across itself — translateX(%) resolves
-     against the knob, not the track. So the width is measured once and the
-     travel is arithmetic again. */
+  /* Measured at 1182:23 — 60 x 24, r12, a 24 x 16 knob inset 4, and a 28 lane
+     for the word. The lane holds about three characters, which is what On, Off,
+     Yes and No are. A toggle is not a place for a sentence: if the two states
+     need more than a short word, they are an option group. */
   --tog-w:60px;--tog-h:24px;--tog-kw:24px;--tog-kh:16px;
   --tog-pad:calc((var(--tog-h) - var(--tog-kh)) / 2);
-  --tog-lane:calc(var(--tog-kw) + var(--tog-pad) * 2);
   --tog-travel:calc(var(--tog-w) - var(--tog-kw) - var(--tog-pad) * 2);
   --rayl-travel:var(--tog-h);
   position:relative;display:inline-flex;align-items:center;
@@ -577,17 +576,16 @@
   transition:transform var(--rayl-dur) var(--rayl-ease),
              background 120ms ease-out;
 }
-/* The word takes the lane the knob is not in, and the lane swaps as the knob
-   travels — same duration, same curve, so the pair is one movement. */
+/* the word sits in the half the knob is not in, so it shifts by half a knob */
 .rayl-toggle-word{
-  position:absolute;inset:0;
+  position:absolute;left:0;right:0;
   display:flex;align-items:center;justify-content:center;
-  padding-inline:var(--tog-lane) 12px;
-  transition:padding var(--rayl-dur) var(--rayl-ease);
+  transform:translateX(calc(var(--tog-kw) / 2));
+  transition:transform var(--rayl-dur) var(--rayl-ease);
 }
 .rayl-toggle[aria-checked="true"]{background:var(--surface-active);color:var(--ink-on-active);}
 .rayl-toggle[aria-checked="true"] .rayl-toggle-word{
-  padding-inline:12px var(--tog-lane);}
+  transform:translateX(calc(var(--tog-kw) / -2));}
 .rayl-toggle[aria-checked="true"] .rayl-toggle-knob{
   background:var(--fill-strong);transform:translateX(var(--tog-travel));}
 .rayl-toggle:hover:enabled{background:var(--surface-idle-hover);}

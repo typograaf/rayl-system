@@ -58,8 +58,7 @@ SCALE = [
  (12,"140%","+2%","—","Schoonmaak Medewerker")]
 
 ICONS = ["Profile","Image","Document","Save","Bookmark","Folder","Minus","Pause",
-         "Play","Plus","Upload","Download","ID","Bell","Broom","Stack","Cup","Organise",
-         "Check","Chevron"]
+         "Play","Plus","Upload","Download","ID","Bell","Broom","Stack","Cup","Organise"]
 
 GROUNDS = [("White","Soft Black"),("Paper","Deep Black"),("Off White","Black"),
            ("Bone","Off-Black"),("Dark Off-White","Dark Concrete")]
@@ -761,19 +760,6 @@ OPEN = [
   "eleven, which is worth knowing before deciding: this is no longer a stray, "
   "it is the system's second easing in practice. Either it joins the system as "
   "the value a ground moves on, or every one of the eleven changes."),
-
- ("The eighteen are twenty", "PROVISIONAL",
-  "Check and Chevron were drawn, because the controls needed them",
-  "A checkbox wants a tick and a select wants a chevron, and the set had "
-  "neither. The controls first substituted — a Plus turned 45 degrees for the "
-  "tick, which is a cross and means remove, and a plain Plus for the chevron, "
-  "which means add — and both read as the opposite of what they meant. Going "
-  "without was worse: Paper and Bone are five L* apart, so an unticked box and "
-  "a ticked one are a difference you can measure and not one you can see "
-  "across a form. Both are drawn in the set's own language, capsules of the "
-  "same 2.48 thickness and 1.24 cap as Minus, rotated and overlapped so the "
-  "joint closes on itself. They are provisional because they were drawn here "
-  "rather than in the file the other eighteen came from."),
 
  ("Transparency", "OPEN",
   "the scrim behind a dialog is the first thing in Rayl drawn at part strength",

@@ -1029,7 +1029,8 @@ eventually not.
 **Closed it is a button carrying its value, and the value rolls when it
 changes.** A select is a control whose label turns over, which is the movement
 the system already has; there is no second one for arriving in a list. Its icon
-is **Chevron**, one of the two glyphs drawn for these controls.
+is **Plus**, measured at `1194:399` — the approved frame uses it and the set
+has no chevron.
 
 **Open, the menu is a Paper card of 6 padding** holding items at control height,
 and the chosen one is painted in `surface/active` — the same Bone every selection
@@ -1055,9 +1056,9 @@ Selecting fires `rayl:change` on the select, carrying `value` and `index`.
 target and a label wired to an input by id is a second thing to get wrong.
 
 **On is a ground change**: the box turns `surface/active`, the way everything
-selected in this system does, and **Check** sits in it — Paper and Bone are five
-L\* apart, which is a difference you can measure and not one you can see across a
-form, so the tick carries the state and the ground backs it up. What is not used
+selected in this system does, and the mark inside is **Plus turned 45 degrees**,
+measured at `1194:412`. Not a tick: the set has no tick and the approved frame
+does not use one. What is not used
 so the mark inside is Plus turned 45 degrees. That is on the open list — the
 error panel shows the same drawing — and it is not a licence to draw a tick.
 
@@ -1145,6 +1146,11 @@ The panel is a change of ground 12 below the bar, with no rule between them.
 </div>
 ```
 
+**A toggle carries a short word and nothing longer.** The track is 60 wide with a
+24 knob inset 4, which leaves a lane of 28 — about three characters, which is
+what On, Off, Yes and No are. If the two states need more than that to say
+themselves, they are an option group, not a toggle.
+
 ### The collapsible section
 
 `rayl-fold`, on a native `details`, so open, closed and the keyboard are the
@@ -1204,9 +1210,9 @@ name column is fixed so every control in a stack lines up.
 ## 9. Icons
 
 <!-- generated:icons -->
-There are twenty, and they are drawn, not licensed:
+There are eighteen, and they are drawn, not licensed:
 
-Bell · Bookmark · Broom · Check · Chevron · Cup · Document · Download · Folder · ID · Image · Minus · Organise · Pause · Play · Plus · Profile · Save · Stack · Upload
+Bell · Bookmark · Broom · Cup · Document · Download · Folder · ID · Image · Minus · Organise · Pause · Play · Plus · Profile · Save · Stack · Upload
 
 **Every icon is a 12 x 12 frame holding one filled path.** Filled, never
 stroked — there is no line weight to match, which is why an icon lifted
@@ -1476,7 +1482,7 @@ provisional protocol in section 0 if you cannot stop and ask.
 The system has a button, a reveal button, an option group, a slider, a
 rolling line, a field, a select, a menu, a checkbox, a toggle, a dialog, a
 tooltip, a popover, tabs, a collapsible section, a table, an empty panel, a
-skeleton, a loading mark and twenty icons. It has no:
+skeleton, a loading mark and eighteen icons. It has no:
 
 | missing | what a brief will ask for |
 |---|---|

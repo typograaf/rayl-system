@@ -96,7 +96,7 @@ def motion_table():
 
 
 def icons_table():
-    return ("There are twenty, and they are drawn, not licensed:\n\n" +
+    return ("There are eighteen, and they are drawn, not licensed:\n\n" +
             " · ".join(sorted(ICONS)) + "\n\n"
             "**Every icon is a 12 x 12 frame holding one filled path.** Filled, never\n"
             "stroked — there is no line weight to match, which is why an icon lifted\n"
@@ -156,7 +156,7 @@ def missing_table():
     return ("The system has a button, a reveal button, an option group, a slider, a\n"
             "rolling line, a field, a select, a menu, a checkbox, a toggle, a dialog, a\n"
             "tooltip, a popover, tabs, a collapsible section, a table, an empty panel, a\n"
-            "skeleton, a loading mark and twenty icons. It has no:\n\n"
+            "skeleton, a loading mark and eighteen icons. It has no:\n\n"
             "| missing | what a brief will ask for |\n|---|---|\n" +
             "\n".join(f"| **{c}** | {w} |" for c, w in MISSING) +
             "\n\nThe four that used to head this list — field, select, checkbox and\n"
