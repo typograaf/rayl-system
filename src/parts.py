@@ -355,7 +355,7 @@ INVENTORY = [
 ]
 
 # Produced by rayl.js inside a component. Never authored, never styled.
-INTERNAL = ["rayl-roll", "rayl-ch", "rayl-g", "rayl-cur", "rayl-nxt",
+INTERNAL = ["rayl-roll", "rayl-ch", "rayl-g", "rayl-cur", "rayl-nxt", "rayl-type",
             "rayl-reel", "rayl-col", "rayl-strip", "rayl-digit", "rayl-num",
             "rayl-val", "rayl-seg-fill", "rayl-ibtn-body", "rayl-ibtn-dot",
             "rayl-ibtn-icon"]

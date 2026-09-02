@@ -146,7 +146,7 @@ the other, so if a part is not in this table it is not in the system.
 | `rayl-12` | 12 / 140% / +2% |
 | `rayl-serif` | Concrette, on a size class from 24 up |
 
-Produced by `rayl.js` inside a component, never authored and never styled: `rayl-roll`, `rayl-ch`, `rayl-g`, `rayl-cur`, `rayl-nxt`, `rayl-reel`, `rayl-col`, `rayl-strip`, `rayl-digit`, `rayl-num`, `rayl-val`, `rayl-seg-fill`, `rayl-ibtn-body`, `rayl-ibtn-dot`, `rayl-ibtn-icon`.
+Produced by `rayl.js` inside a component, never authored and never styled: `rayl-roll`, `rayl-ch`, `rayl-g`, `rayl-cur`, `rayl-nxt`, `rayl-type`, `rayl-reel`, `rayl-col`, `rayl-strip`, `rayl-digit`, `rayl-num`, `rayl-val`, `rayl-seg-fill`, `rayl-ibtn-body`, `rayl-ibtn-dot`, `rayl-ibtn-icon`.
 <!-- /generated:inventory -->
 
 Modifiers go on the class they belong to: `is-wide`, `is-lead`, `is-three`,
@@ -845,6 +845,22 @@ lines up.
   <span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span>
 </div>
 ```
+
+**Click the nub to type in it, drag it to slide.** Which of the two you meant is
+decided by whether the pointer moved: a press that lands on the nub does not
+move the value until the pointer does, and one that goes down and up in the same
+place hands over to a field instead. A press anywhere else on the rail is a jump
+and moves it at once.
+
+The field is invisible until it is wanted — a caret blinking inside a number
+that is also a handle would say the handle is a text box, which it is only
+sometimes. Enter commits, Escape restores, and arrow keys inside it edit the
+text rather than the value.
+
+**The control reports what it holds.** `rayl:input` while it moves and
+`rayl:change` when it lands, both carrying `detail.value` — the same pair a
+native range fires. `el.value` reads it. `el.setValue(n)` moves the nub from
+outside without an event, which is what a preset or an undo wants.
 
 **The nub reaches both ends, and there is never a stub of rail beyond it.** Each
 rail is drawn only if there is room for one — when the nub arrives at an end,

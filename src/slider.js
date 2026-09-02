@@ -81,6 +81,14 @@ function mountSlider(host){
   val.className="rayl-val";
   host.append(val);
   const reel=new Reel(val,max);
+  /* The same number, as a field. Read-only until a click without a drag asks
+     for it, so the nub is a handle first and a text box only when told. */
+  const type=document.createElement("input");
+  type.className="rayl-type";
+  type.readOnly=true;
+  type.inputMode="decimal";
+  type.tabIndex=-1;
+  val.append(type);
   function nubWidth(s){
     return Math.max(MIN_NUB*s, Math.ceil(textWidth(readout(),8*s))+PAD*s);
   }
@@ -181,6 +189,7 @@ function mountSlider(host){
   }
 
   let hovering=false, dragging=false, focused=false, fromPointer=false;
+  let downAt=null, onNub=false, typing=false;
   /* Engaged is one state with three ways in, and the nub carries the hover
      colour through all of them. Magnetism already starts before the pointer
      reaches the nub, so the colour has to start there too — otherwise the thing
@@ -199,13 +208,22 @@ function mountSlider(host){
     if(!dragging){ scaleTo(S_IDLE,240); pullTo(0,320); pullYTo(0,320); }  /* drift home */
   });
   svg.addEventListener("pointerdown",e=>{
+    if(typing) return;
     dragging=true; engaged();
     try{svg.setPointerCapture(e.pointerId);}catch(err){}
     fromPointer=true;                      /* the focus this is about to take */
     svg.focus();
     scaleTo(S_HOVER,120);                  /* touch has no hover, so grow on contact */
     pullTo(0,120); pullYTo(0,120);         /* the cursor takes it from here */
-    aV.done=true; shown=valueAt(e.clientX); render(); e.preventDefault();
+    aV.done=true;
+    /* A press that lands ON the nub might be a click meaning "let me type",
+       so the value is not moved until the pointer actually does. A press
+       anywhere else on the rail is a jump and moves it at once. */
+    const px=localX(e.clientX);
+    onNub = px>=box.x && px<=box.x+box.w;
+    downAt = onNub ? {x:e.clientX,y:e.clientY} : null;
+    if(!onNub) shown=valueAt(e.clientX);
+    render(); e.preventDefault();
   });
   /* where the pointer is relative to the nub, in the svg's own units */
   function offsets(cx,cy){
@@ -215,7 +233,12 @@ function mountSlider(host){
     return {d:px-nubHome(), dv:py-VB/2};
   }
   svg.addEventListener("pointermove",e=>{
-    if(dragging){ shown=valueAt(e.clientX); render(); return; }
+    if(dragging){
+      /* moved far enough to mean it: this is a drag, not a click */
+      if(downAt && Math.hypot(e.clientX-downAt.x,e.clientY-downAt.y)>=3) downAt=null;
+      if(!downAt||!onNub) shown=valueAt(e.clientX);
+      render(); return;
+    }
     /* lean toward the cursor: nothing at the nub, nothing past the radius,
        most in between, so it eases in and out of range on its own */
     const o=offsets(e.clientX,e.clientY);
@@ -242,6 +265,10 @@ function mountSlider(host){
       hovering=inRange(Math.hypot(o.d,o.dv));
     }
     engaged();
+    if(downAt && onNub){                   /* down and up in the same place */
+      downAt=null; startTyping(); return;
+    }
+    downAt=null;
     const landed=snap(shown);              /* settle onto the nearest step */
     if(REDUCED) shown=landed; else run(aV,landed,200,shown);
     shown=landed; tell("rayl:change");
@@ -286,6 +313,32 @@ function mountSlider(host){
     shown=clamp(snap(+v),min,max);
     told=shown; host.value=shown; aV.done=true; render();
   };
+
+  /* --- typing ----------------------------------------------------------- */
+  function startTyping(){
+    typing=true; host.classList.add("is-typing");
+    type.readOnly=false; type.value=String(snap(shown));
+    type.focus(); type.select();
+  }
+  function stopTyping(commit){
+    if(!typing) return;
+    typing=false; host.classList.remove("is-typing");
+    type.readOnly=true; type.blur();
+    if(commit){
+      const v=parseFloat(type.value);
+      if(Number.isFinite(v)){
+        shown=clamp(snap(v),min,max);
+        aV.done=true; render(); tell("rayl:change");
+      }
+    }
+    render();
+  }
+  type.addEventListener("blur",()=>stopTyping(true));
+  type.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){ e.preventDefault(); stopTyping(true); }
+    if(e.key==="Escape"){ e.preventDefault(); stopTyping(false); }
+    e.stopPropagation();                   /* arrows edit the text, not the value */
+  });
 
   host.value=snap(shown);
   render();

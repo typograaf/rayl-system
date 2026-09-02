@@ -309,6 +309,25 @@
   transition:fill 120ms ease-out;}
 /* magnetism starts before the pointer reaches the nub, so the colour does too */
 .rayl-slider.is-near svg{fill:var(--surface-idle-hover);}
+/* THE READOUT IS TYPEABLE.
+   Click the nub to type in it, drag it to slide. Which you meant is decided by
+   whether the pointer moved, so the two gestures share the same target without
+   either having to be given up. The field sits on the reel and is invisible
+   until it is wanted — a caret blinking inside a number that is also a handle
+   would say the handle is a text box, which it is only sometimes. */
+.rayl-type{
+  position:absolute;inset:0;width:100%;height:100%;
+  border:0;padding:0;margin:0;background:none;border-radius:0;
+  font:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;
+  color:var(--ink-primary);text-align:center;
+  opacity:0;pointer-events:none;outline:none;
+  -moz-appearance:textfield;appearance:textfield;
+}
+.rayl-type::-webkit-outer-spin-button,
+.rayl-type::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.rayl-slider.is-typing .rayl-val{pointer-events:auto;}
+.rayl-slider.is-typing .rayl-reel{opacity:0;}
+.rayl-slider.is-typing .rayl-type{opacity:1;pointer-events:auto;}
 /* a numeric readout is a reel, not a swap: each column is a strip of digits and
    its position is a continuous function of the value, so it spins as fast as the
    value changes and lands on a whole number when the value does */
