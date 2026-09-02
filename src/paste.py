@@ -138,9 +138,9 @@ For a DOCUMENT rather than an app — a guideline, a reference, an overview — 
 rayl-doc on the body and rayl-doc-page inside it, then alternate rayl-chapter
 (an 8 label on the ground) with rayl-block. A block is two columns: rayl-rail
 carries the words, rayl-field carries rayl-frame boxes holding the things
-themselves, side by side in a rayl-field-row where they fit. Name a frame with
-rayl-frame-tag. Give every frame far more room than its content needs; that air
-is the whole look. Name the thing and show it — never write a paragraph
+themselves, side by side in a rayl-field-row where they fit. A frame carries no
+label — what it holds is what names it. Give every frame far more room than its
+content needs; that air is the whole look. Name the thing and show it — never write a paragraph
 explaining it.
 
 AN ARRAY ALWAYS MOVES. Never data-motion="still" — that is for a frame grab,

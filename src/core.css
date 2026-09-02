@@ -526,11 +526,10 @@
   background:var(--surface-idle);
   transition:background 120ms ease-out;
 }
-/* No glyph. The system has no tick, and a Plus turned 45 degrees is a cross,
-   which means remove — the opposite of what a ticked box says. ON is the
-   ground change, exactly as this control's own note says it is. The tick is on
-   the open list. */
-.rayl-check-box .rayl-icon{display:none;}
+/* Paper and Bone are five L* apart, which is a ground change you can measure
+   and not one you can see across a form. The tick carries it and the ground
+   backs it up. */
+.rayl-check-box .rayl-icon{opacity:0;transition:opacity 120ms ease-out;}
 .rayl-check[aria-checked="true"] .rayl-check-box{background:var(--surface-active);}
 .rayl-check[aria-checked="true"] .rayl-check-box .rayl-icon{opacity:1;}
 .rayl-check:hover:enabled .rayl-check-box{background:var(--surface-idle-hover);}
@@ -551,18 +550,19 @@
    The knob is White at rest and ink when it is on: the only thing in the
    system that goes to full ink at 24 across. */
 .rayl-toggle{
-  --tog-h:24px;--tog-kw:24px;--tog-kh:16px;
+  /* --tog-w is written by rayl.js from the longer of the two words. A fixed
+     track clipped every label past four characters, and a track sized by its
+     content cannot animate a knob across itself — translateX(%) resolves
+     against the knob, not the track. So the width is measured once and the
+     travel is arithmetic again. */
+  --tog-w:60px;--tog-h:24px;--tog-kw:24px;--tog-kh:16px;
   --tog-pad:calc((var(--tog-h) - var(--tog-kh)) / 2);
-  --tog-travel:calc(100% - var(--tog-kw) - var(--tog-pad) * 2);
+  --tog-lane:calc(var(--tog-kw) + var(--tog-pad) * 2);
+  --tog-travel:calc(var(--tog-w) - var(--tog-kw) - var(--tog-pad) * 2);
   --rayl-travel:var(--tog-h);
-  /* The track is as wide as the word it carries plus the knob's lane. It was a
-     fixed 60, which left about 32px for the label and clipped every word longer
-     than four characters — the one thing a control that exists to SAY which
-     state it is in must not do. */
   position:relative;display:inline-flex;align-items:center;
-  min-width:60px;height:var(--tog-h);
-  padding-inline:calc(var(--tog-kw) + var(--tog-pad) * 2) 12px;
-  border:0;border-radius:calc(var(--tog-h) / 2);
+  width:var(--tog-w);height:var(--tog-h);
+  padding:0;border:0;border-radius:calc(var(--tog-h) / 2);
   background:var(--surface-idle);cursor:pointer;
   font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
   letter-spacing:0;line-height:1.2;color:var(--ink-disabled);
@@ -577,16 +577,19 @@
   transition:transform var(--rayl-dur) var(--rayl-ease),
              background 120ms ease-out;
 }
-/* The word keeps its own lane and the knob travels beside it, so a long label
-   makes the track longer instead of disappearing into it. */
+/* The word takes the lane the knob is not in, and the lane swaps as the knob
+   travels — same duration, same curve, so the pair is one movement. */
 .rayl-toggle-word{
-  display:flex;align-items:center;justify-content:flex-start;white-space:nowrap;
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  padding-inline:var(--tog-lane) 12px;
+  transition:padding var(--rayl-dur) var(--rayl-ease);
 }
-.rayl-toggle[aria-checked="true"]{background:var(--surface-active);color:var(--ink-on-active);
-  padding-inline:12px calc(var(--tog-kw) + var(--tog-pad) * 2);}
+.rayl-toggle[aria-checked="true"]{background:var(--surface-active);color:var(--ink-on-active);}
+.rayl-toggle[aria-checked="true"] .rayl-toggle-word{
+  padding-inline:12px var(--tog-lane);}
 .rayl-toggle[aria-checked="true"] .rayl-toggle-knob{
   background:var(--fill-strong);transform:translateX(var(--tog-travel));}
-
 .rayl-toggle:hover:enabled{background:var(--surface-idle-hover);}
 .rayl-toggle[aria-checked="true"]:hover:enabled{background:var(--surface-active-hover);}
 .rayl-toggle:disabled{color:var(--ink-disabled);cursor:default;}
@@ -784,19 +787,12 @@ body.rayl.rayl-doc{background:var(--rayl-doc-ground);padding:0;}
   --rayl-gap:24px;
   position:relative;flex:1 1 0;min-width:0;
   background:var(--rayl-doc-container);border-radius:24px;
-  padding:48px 48px 48px 72px;        /* the wider left is the tag's lane */
+  padding:48px;
   display:flex;flex-direction:column;justify-content:center;
   gap:var(--rayl-gap);
 }
 .rayl-frame.is-wide{flex:2 1 0;}       /* the 736 against the 403 and the 341 */
-.rayl-frame.is-tall{padding:96px 96px 96px 120px;}
-.rayl-frame-tag{
-  position:absolute;left:24px;top:48px;
-  writing-mode:vertical-rl;transform:rotate(180deg);
-  font-family:var(--rayl-font);font-size:8px;font-weight:500;
-  letter-spacing:0.08em;text-transform:uppercase;
-  color:var(--rayl-doc-tag);pointer-events:none;
-}
+.rayl-frame.is-tall{padding:96px;}
 /* the plain box, for a header or a footer that has no rail and no field */
 .rayl-container{
   --rayl-gap:24px;
@@ -812,8 +808,7 @@ body.rayl.rayl-doc{background:var(--rayl-doc-ground);padding:0;}
   .rayl-field-row{flex-direction:column;}
   .rayl-frame{padding:24px;}
   .rayl-frame.is-tall{padding:24px;}
-  .rayl-frame-tag{display:none;}
-  .rayl-rail,.rayl-container{padding:24px;}
+    .rayl-rail,.rayl-container{padding:24px;}
 }
 
 /* ============================================================= the type === *

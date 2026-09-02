@@ -85,10 +85,10 @@ For a DOCUMENT rather than an app — a guideline, a reference, an overview —
 put rayl-doc on the body and rayl-doc-page inside it, then alternate rayl-
 chapter (an 8 label on the ground) with rayl-block. A block is two columns:
 rayl-rail carries the words, rayl-field carries rayl-frame boxes holding the
-things themselves, side by side in a rayl-field-row where they fit. Name a
-frame with rayl-frame-tag. Give every frame far more room than its content
-needs; that air is the whole look. Name the thing and show it — never write a
-paragraph explaining it.
+things themselves, side by side in a rayl-field-row where they fit. A frame
+carries no label — what it holds is what names it. Give every frame far more
+room than its content needs; that air is the whole look. Name the thing and
+show it — never write a paragraph explaining it.
 
 AN ARRAY ALWAYS MOVES. Never data-motion="still" — that is for a frame grab,
 not for a page. Use "wave" (the default, and right almost always), "scroll"
@@ -141,9 +141,9 @@ error, so do not borrow a red. rayl-skeleton makes blocks where type will land
 and DOES NOT MOVE; what says something is loading is still rayl-solve.
 
 ICONS: Profile, Image, Document, Save, Bookmark, Folder, Minus, Pause, Play,
-Plus, Upload, Download, ID, Bell, Broom, Stack, Cup, Organise. Every one is a
-12x12 filled path. There are no others; do not substitute one from a public
-set.
+Plus, Upload, Download, ID, Bell, Broom, Stack, Cup, Organise, Check, Chevron.
+Every one is a 12x12 filled path. There are no others; do not substitute one
+from a public set.
 
 THE LOGO is a file, never something you draw:
 https://typograaf.github.io/rayl-system/assets/logo/Lockup.svg It is #1C1C1A
@@ -185,14 +185,13 @@ and do not substitute something that looks close. The open list is
 https://typograaf.github.io/rayl-system/RAYL-OPEN.md; these are the ones you
 are most likely to hit:
 
-  - A check glyph — the eighteen icons have none, so a ticked box and a failed panel show the same mark
+  - A check glyph — the icon set has no colour, so a ticked box and a failed panel show the same mark
   - Semantic colour — nothing means error, warning, success or info
   - Hover: the ladder or the token — two approved sources give a Paper base two different hovers
   - A container's padding — "a container pads one step below the gap it sits in"
   - 96 on the spacing scale — the page rhythm is 96 and the scale as written stops at 72
   - The Rayl look — the layered gradient treatment, and the largest single gap in the system
   - The reveal button's label — White #FFFFFF on the approved frame, Off White in the ink table
-  - Two icons the controls need — there is no tick and no chevron in the eighteen
   - Transparency — the scrim behind a dialog is the first thing in Rayl drawn at part strength
   - An array as a ground — the array can sit behind or in front of content, and nothing says how
   - The fonts — Azeret and Concrette here are TRIAL cuts
@@ -209,6 +208,7 @@ it as a rule of the system:
   - The 8 radius — every control rounds 8; the board's own ladder is 4, 12, 24
   - The loading mark's timing — rayl-solve runs on numbers and a curve that are not the system's
   - A colour change runs 120ms — the ground under a control moves at 120ms ease-out, not on the system's curve
+  - The eighteen are twenty — Check and Chevron were drawn, because the controls needed them
 
 The system still has no sheet and drawer, toast, progress and context menu. If
 the brief needs one:

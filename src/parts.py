@@ -58,7 +58,8 @@ SCALE = [
  (12,"140%","+2%","—","Schoonmaak Medewerker")]
 
 ICONS = ["Profile","Image","Document","Save","Bookmark","Folder","Minus","Pause",
-         "Play","Plus","Upload","Download","ID","Bell","Broom","Stack","Cup","Organise"]
+         "Play","Plus","Upload","Download","ID","Bell","Broom","Stack","Cup","Organise",
+         "Check","Chevron"]
 
 GROUNDS = [("White","Soft Black"),("Paper","Deep Black"),("Off White","Black"),
            ("Bone","Off-Black"),("Dark Off-White","Dark Concrete")]
@@ -88,9 +89,12 @@ def rail(name, *paras):
     return f'<h3 class="rayl-24">{name}</h3>{body}'
 
 def frame(tag, body, cls=""):
+    """`tag` is kept in the signature and ignored. Frames used to be named by an
+    8 label turned on its side down the left edge; it read as decoration, it
+    made every frame carry a 72 left padding for a lane nothing else used, and
+    it is gone. What a frame holds is what names it."""
     c = (" " + cls) if cls else ""
-    t = f'<span class="rayl-frame-tag">{tag}</span>' if tag else ""
-    return f'      <div class="rayl-frame{c}">{t}{body}</div>\n'
+    return f'      <div class="rayl-frame{c}">{body}</div>\n'
 
 def row(*frames):
     return ('      <div class="rayl-field-row">\n' +
@@ -502,7 +506,6 @@ INVENTORY = [
   ("rayl-field",      "the things of a block, stacked 12 apart"),
   ("rayl-field-row",  "frames side by side inside a field"),
   ("rayl-frame",      "one white box holding one thing; is-tall, is-wide"),
-  ("rayl-frame-tag",  "names a frame, turned on its side, costing no height"),
   ("rayl-container",  "a plain white box for a header or footer"),
  ]),
  ("Controls", [
@@ -672,7 +675,7 @@ OPEN = [
   "enterable surfaces above."),
 
  ("A check glyph", "OPEN",
-  "the eighteen icons have none, so a ticked box and a failed panel show the "
+  "the icon set has no colour, so a ticked box and a failed panel show the "
   "same mark",
   "ON is carried by the ground — the box turns Bone the way every selected "
   "thing does — and the mark inside it is Plus turned 45 degrees, because that "
@@ -759,16 +762,18 @@ OPEN = [
   "it is the system's second easing in practice. Either it joins the system as "
   "the value a ground moves on, or every one of the eleven changes."),
 
- ("Two icons the controls need", "OPEN",
-  "there is no tick and no chevron in the eighteen",
-  "A checkbox wants a tick and a select wants a chevron, and the set has "
-  "neither. The controls first substituted: a Plus turned 45 degrees for the "
+ ("The eighteen are twenty", "PROVISIONAL",
+  "Check and Chevron were drawn, because the controls needed them",
+  "A checkbox wants a tick and a select wants a chevron, and the set had "
+  "neither. The controls first substituted — a Plus turned 45 degrees for the "
   "tick, which is a cross and means remove, and a plain Plus for the chevron, "
-  "which means add. Both are gone — a ticked box is the ground change alone "
-  "and a select carries no glyph — because section 9 says ask rather than "
-  "substitute and that applies to the system's own work first. Either the "
-  "eighteen become twenty, or these two controls stay as they are, which they "
-  "can: neither is unreadable without a glyph."),
+  "which means add — and both read as the opposite of what they meant. Going "
+  "without was worse: Paper and Bone are five L* apart, so an unticked box and "
+  "a ticked one are a difference you can measure and not one you can see "
+  "across a form. Both are drawn in the set's own language, capsules of the "
+  "same 2.48 thickness and 1.24 cap as Minus, rotated and overlapped so the "
+  "joint closes on itself. They are provisional because they were drawn here "
+  "rather than in the file the other eighteen came from."),
 
  ("Transparency", "OPEN",
   "the scrim behind a dialog is the first thing in Rayl drawn at part strength",

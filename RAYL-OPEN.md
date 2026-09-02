@@ -23,7 +23,7 @@ There are three words and they mean different things:
 
 ## A check glyph
 
-**OPEN** — the eighteen icons have none, so a ticked box and a failed panel show the same mark
+**OPEN** — the icon set has no colour, so a ticked box and a failed panel show the same mark
 
 ON is carried by the ground — the box turns Bone the way every selected thing does — and the mark inside it is Plus turned 45 degrees, because that is the only glyph in the set that reads as a mark rather than an instruction. The empty panel's error twin shows the same glyph at 24. Two opposite meanings on one drawing is a real weakness and it wants either a nineteenth icon or a decision that the ground alone is enough. Do not draw a tick.
 
@@ -62,12 +62,6 @@ Flat vector art with gradient fills, stamped repeatedly, no specular highlight �
 **OPEN** — White #FFFFFF on the approved frame, Off White in the ink table
 
 One value, two approved sources. Ask before using either.
-
-## Two icons the controls need
-
-**OPEN** — there is no tick and no chevron in the eighteen
-
-A checkbox wants a tick and a select wants a chevron, and the set has neither. The controls first substituted: a Plus turned 45 degrees for the tick, which is a cross and means remove, and a plain Plus for the chevron, which means add. Both are gone — a ticked box is the ground change alone and a select carries no glyph — because section 9 says ask rather than substitute and that applies to the system's own work first. Either the eighteen become twenty, or these two controls stay as they are, which they can: neither is unreadable without a glyph.
 
 ## Transparency
 
@@ -135,6 +129,12 @@ A turn is 480ms with no beat between turns, a scramble turn 480ms, and it sits o
 
 Every documented movement is 280ms on cubic-bezier(0.65,0,0.35,1), and section 7 says both surfaces move together on the same duration and curve. The shipped controls do not: a hover's colour change is 120ms ease-out while the label rolls at 280ms. It was in two places when it was first written down. The thirteen controls took it as the house value and it is now in eleven, which is worth knowing before deciding: this is no longer a stray, it is the system's second easing in practice. Either it joins the system as the value a ground moves on, or every one of the eleven changes.
 
+## The eighteen are twenty
+
+**PROVISIONAL** — Check and Chevron were drawn, because the controls needed them
+
+A checkbox wants a tick and a select wants a chevron, and the set had neither. The controls first substituted — a Plus turned 45 degrees for the tick, which is a cross and means remove, and a plain Plus for the chevron, which means add — and both read as the opposite of what they meant. Going without was worse: Paper and Bone are five L* apart, so an unticked box and a ticked one are a difference you can measure and not one you can see across a form. Both are drawn in the set's own language, capsules of the same 2.48 thickness and 1.24 cap as Minus, rotated and overlapped so the joint closes on itself. They are provisional because they were drawn here rather than in the file the other eighteen came from.
+
 ---
 
 ## Controls nobody has designed
@@ -142,7 +142,7 @@ Every documented movement is 280ms on cubic-bezier(0.65,0,0.35,1), and section 7
 The system has a button, a reveal button, an option group, a slider, a
 rolling line, a field, a select, a menu, a checkbox, a toggle, a dialog, a
 tooltip, a popover, tabs, a collapsible section, a table, an empty panel, a
-skeleton, a loading mark and eighteen icons. It has no:
+skeleton, a loading mark and twenty icons. It has no:
 
 | missing | what a brief will ask for |
 |---|---|

@@ -450,7 +450,7 @@ function upgradeCheck(box){
   box.textContent = "";
   var square = document.createElement("span");
   square.className = "rayl-check-box";
-  square.appendChild(makeIcon("Plus"));
+  square.appendChild(makeIcon("Check"));
   box.appendChild(square);
   if (label){
     var word = document.createElement("span");
@@ -488,6 +488,24 @@ function upgradeToggle(tog){
   tog.__raylNamed = tog.hasAttribute("aria-label");
   var r = new Roll(word, tog);
   tog.__rayl = r;
+  /* The track is as wide as the longer word plus the knob's lane, measured in
+     the control's own font. Done once, and again when the real face lands. */
+  function size(){
+    var cs = getComputedStyle(tog);
+    var lane = parseFloat(cs.getPropertyValue("--tog-kw")) +
+               parseFloat(cs.getPropertyValue("--tog-pad")) * 2;
+    var w = 0, ruler = document.createElement("span");
+    ruler.style.cssText = "position:absolute;visibility:hidden;white-space:pre;" +
+      "font:" + cs.font + ";letter-spacing:" + cs.letterSpacing;
+    document.body.appendChild(ruler);
+    [says.on, says.off].forEach(function(x){
+      ruler.textContent = x; w = Math.max(w, ruler.offsetWidth);
+    });
+    ruler.remove();
+    tog.style.setProperty("--tog-w", Math.ceil(lane + w + 12) + "px");
+  }
+  size();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(size);
   tog.setAttribute("role", "switch");
   tog.setAttribute("aria-checked", on ? "true" : "false");
   if (tog.disabled) return r;
@@ -531,10 +549,7 @@ function upgradeSelect(sel){
   host.dataset.label = sel.dataset.label ||
                        (chosen ? chosen.textContent.trim() : (opts[0] ? opts[0].textContent.trim() : ""));
   face.appendChild(host);
-  /* No icon. There is no chevron in the eighteen and Plus means add, not open —
-     a borrowed glyph that means something else is worse than none, and section
-     9 says ask rather than substitute. The ground says it is a control and the
-     value rolling says it changed. The chevron is on the open list. */
+  face.appendChild(makeIcon("Chevron"));
   sel.insertBefore(face, sel.firstChild);
   sel.appendChild(menu);
 
