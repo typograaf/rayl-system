@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rayl Mark Cut</title>
+<title>Rayl Mark Sliding</title>
 <script src="https://typograaf.github.io/rayl-system/rayl.js?v=1e165025"></script>
 <style>
   /* ====================================================== the folding mark ==
@@ -20,8 +20,6 @@
      so the drawing is allowed past the edge of the box it is measured by */
   .mark2d{display:block;overflow:visible;}
   .mark2d path{fill:var(--ink-primary);}
-  /* the ground, carried by the piece: what hides the back of the cube */
-  .mark2d .tile{fill:var(--surface-idle);}
 
   /* the system has a button for a link that is a destination; this is the
      other kind, a word in a sentence */
@@ -67,30 +65,30 @@
 
   <section class="rayl-hero">
     <span class="rayl-label">The mark in motion</span>
-    <h1 class="rayl-72">The same turn, cut instead of squashed.</h1>
-    <p class="rayl-18 rayl-measure">The same puzzle as <a href="mark.html">the other
-    one</a>, and the same turn: a layer still sweeps round its axis, the near pieces
-    swinging wide and the far ones coming into view behind them. What is different is
-    what gets drawn while it does. There it is a face squashed by perspective; here
-    the turn only says how wide a face has become, and the shape is cut again at that
-    width with its corners still round — so a circle narrows into a capsule and then
-    into a line, and never into an ellipse. Nothing is scaled and nothing is 3D.
-    A face on its way to edge-on still passes through being a hairline;
-    <a href="mark-slide.html">the sliding version</a> holds the spacing steady and takes
-    the size off the position instead, and <a href="mark-options.html">ten answers</a>
-    to the thinness are laid out side by side.</p>
+    <h1 class="rayl-72">Sliding, a cell apart, smaller toward the edge.</h1>
+    <p class="rayl-18 rayl-measure">The same puzzle as <a href="mark.html">the turning
+    one</a> and the same shapes as <a href="mark-cut.html">the cut one</a>, with three
+    rules and nothing else in it. Where: a lane's four pieces slide along one line,
+    always a cell apart, one cell per quarter turn, the far one coming back round to
+    the near side — not where a turn would project them, because a turn puts its
+    pieces on a circle and shows you that circle from the side, so their spacing
+    closes up and opens out as it goes round. What shape: the piece still turns on its
+    own centre and the face toward you is cut again at the width that leaves it,
+    corners staying round. How big: the further out it stands the smaller, and gone by
+    the edge — read off its position and nothing else, so a piece moving out shrinks
+    as it goes and the piece behind it shrinks when it reaches the same place.</p>
   </section>
 
   <section class="rayl-split is-lead is-centred">
     <div class="stage is-big"><svg class="mark2d" data-size="300" viewBox="0 0 150 150" aria-hidden="true"></svg></div>
     <div class="rayl-section">
       <span class="rayl-label">What you are watching</span>
-      <p class="rayl-12 rayl-measure">Every piece still carries its own shape on
-      every one of its faces, so a bar can arrive standing up and a bar seen end-on
-      is a circle. Mid-turn a piece shows two of them at once, the one turning away
-      and the one coming round, each cut to its own width. Everything is ink at full
-      strength, and the back of the cube stays hidden behind the ground each piece
-      carries with it.</p>
+      <p class="rayl-12 rayl-measure">One shape per piece, only ever the face most
+      nearly square to you. Two faces at once is what needed a ground tile behind each
+      piece to hide what was behind it, and those tiles are what were cutting into
+      things. Nothing overlaps here, so nothing needs hiding: a cell of pitch is wider
+      than anything that can stand in it, and no piece is ever drawn bigger than the
+      room it has left, which is also why nothing is ever clipped.</p>
       <div class="rayl-row">
         <span class="rayl-label">Motion</span>
         <div class="rayl-seg is-tight" id="run">
@@ -164,16 +162,16 @@
     <div class="rayl-split is-three">
       <div class="rayl-card">
         <span class="rayl-label">The pieces</span>
-        <p class="rayl-12">Six: two bars two cells wide, and four corners. They fill
-        eight cells at the icon's own pitch, so the gaps between them are the gaps
-        in the mark.</p>
+        <p class="rayl-12">Six: two bars two cells wide, and four corners, over eight
+        places — the four you can see and four off the sides. The pitch is the icon's
+        own, so the gaps between them are the gaps in the mark, at every moment.</p>
       </div>
       <div class="rayl-card">
         <span class="rayl-label">The turns</span>
-        <p class="rayl-12">Any layer you can see, a quarter or a half at a time, as
-        long as it does not run through a bar. A turn about the upright cuts the
-        shapes narrower as they swing; one about the level cuts them shorter; the
-        front layer turns on the spot and is cut not at all.</p>
+        <p class="rayl-12">Four lanes slide — the two rows and the two columns — a
+        cell at a time, as long as the lane does not run through a bar. The face
+        itself turns on the spot, which is the one move that reorients a bar rather
+        than moving it along.</p>
       </div>
       <div class="rayl-card">
         <span class="rayl-label">The solve</span>
@@ -414,22 +412,42 @@ function solve(st){
 }
 
 /* ----------------------------------------------------------- the drawing --*/
-/* A layer turns exactly as it does on the cube — the pieces sweep round the
-   axis, the near ones swinging wide and the far ones coming into view behind
-   them. What is different is what gets drawn when they do. On the cube a face
-   turning away is the same drawing squashed; here the projection only says how
-   wide the face has become, and the shape is cut again at that width with its
-   corners still round. Nothing is ever scaled, and nothing is 3D: every face
-   lands as a flat rectangle of a known size, in an order set by its depth. */
-var LAP = 2;                    /* tiles overlap a hair so no seam shows through */
-
-function spinAbout(axis, deg){
-  var r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
-  if (axis === 0) return [1,0,0, 0,c,-s, 0,s,c];
-  if (axis === 1) return [c,0,s, 0,1,0, -s,0,c];
-  return [c,-s,0, s,c,0, 0,0,1];
+/* Three things and nothing else.
+ *
+ * Where: the four pieces of a turning lane slide along one line, always a cell
+ * apart, one cell per quarter turn, the far one coming back round to the near
+ * side. Not where the turn projects them — a turn puts its pieces on a circle
+ * and shows you that circle from the side, so their spacing closes up and opens
+ * out as it goes round. Sliding holds the pitch.
+ *
+ * What shape: the piece still turns on its own centre, and the face it has
+ * toward you is cut again at the width that turn leaves it — the interpolation
+ * from the other version, corners staying round. Only ever one face: the one
+ * most nearly square to you. Two at once is what needed the ground tiles behind
+ * them, and the tiles are what were cutting into things.
+ *
+ * How big: the further out a piece stands, the smaller, and gone by the edge.
+ * Read off its position and nothing else, so a piece moving out shrinks as it
+ * goes and the piece behind it shrinks when it reaches the same place. It also
+ * means nothing ever leaves the square, so nothing is ever clipped.
+ * ========================================================================== */
+var LANES = [
+  {axis:1, val:-1, ring:[[-1,-1],[-1,1],[1,1],[1,-1]], along:0},  /* top row */
+  {axis:1, val: 1, ring:[[-1,-1],[-1,1],[1,1],[1,-1]], along:0},  /* bottom row */
+  {axis:0, val:-1, ring:[[-1,-1],[-1,1],[1,1],[1,-1]], along:1},  /* left column */
+  {axis:0, val: 1, ring:[[-1,-1],[-1,1],[1,1],[1,-1]], along:1}   /* right column */
+];
+function laneOf(mv){
+  for (var i=0;i<LANES.length;i++)
+    if (LANES[i].axis === mv.axis && LANES[i].val === mv.val) return LANES[i];
+  return null;
 }
-var FACEUV = [
+/* which of the four places along a lane a cell sits in */
+function place(cell, lane){
+  var side = lane.along === 0 ? cell[0] : cell[1], deep = cell[2];
+  return side < 0 ? (deep < 0 ? 0 : 1) : (deep < 0 ? 3 : 2);
+}
+var FACES = [
   {d:[1,0,0],  U:[0,0,-1], V:[0,1,0]},
   {d:[-1,0,0], U:[0,0,1],  V:[0,1,0]},
   {d:[0,-1,0], U:[1,0,0],  V:[0,0,1]},
@@ -437,81 +455,79 @@ var FACEUV = [
   {d:[0,0,1],  U:[1,0,0],  V:[0,1,0]},
   {d:[0,0,-1], U:[-1,0,0], V:[0,1,0]}
 ];
-function axisOf(v){ return v[0] ? 0 : v[1] ? 1 : 2; }
-/* a bar lying front to back counts as being at the front, though its middle is not */
 function atFront(st, i){
   var cs = cells(st, i);
   for (var k=0;k<cs.length;k++) if (cs[k][2] > 0) return true;
   return false;
 }
-
-/* Every face of every piece that is turned toward you, with how wide and how
-   tall it has become and how far away it is. */
-function project(st, spin){
-  var out = [], mv = spin ? MOVES[spin.move] : null;
-  var R = spin ? spinAbout(mv.axis, spin.deg) : null;
-  for (var i=0;i<HOME.length;i++){
-    var moving = mv && sits(st, i, mv.axis, mv.val) === 2;
-    /* a piece settled at the back is not drawn; it can only be there because a
-       turn put it there, and while that turn is running it is drawn */
-    if (!moving && !atFront(st, i)) continue;
-    var piece = HOME[i], M = ORI[st[i].o], T = moving ? mul(R, M) : M;
-    var c = st[i].c, C = [c[0]*HALF, c[1]*HALF, c[2]*HALF];
-    if (moving) C = turn(R, C);
-    var h = piece.long ? [CELL, HALF, HALF] : [HALF, HALF, HALF];
-    for (var f=0;f<6;f++){
-      var F = FACEUV[f], n = turn(T, F.d);
-      if (n[2] < 0.002) continue;                    /* turned away, or edge on */
-      var d = F.d, off = turn(T, [d[0]*h[0], d[1]*h[1], d[2]*h[2]]);
-      var uD = turn(T, F.U), vD = turn(T, F.V);
-      var lu = Math.hypot(uD[0], uD[1]), lv = Math.hypot(vD[0], vD[1]);
-      if (lu < 1e-4 || lv < 1e-4) continue;
-      var end = piece.long && axisOf(d) === 0;       /* a bar seen end on */
-      out.push({
-        z: C[2] + off[2],
-        x: C[0] + off[0] + 75, y: C[1] + off[1] + 75,
-        fw: 2*h[axisOf(F.U)] + LAP, fh: 2*h[axisOf(F.V)] + LAP,
-        shape: SHAPES[end ? "circle" : piece.art],
-        lu: lu, lv: lv,
-        su: [uD[0]/lu, uD[1]/lu], sv: [vD[0]/lv, vD[1]/lv]
-      });
-    }
-  }
-  out.sort(function(a,b){ return a.z - b.z; });      /* far ones drawn first */
-  return out;
+function spinAbout(axis, deg){
+  var r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
+  if (axis === 0) return [1,0,0, 0,c,-s, 0,s,c];
+  if (axis === 1) return [c,0,s, 0,1,0, -s,0,c];
+  return [c,-s,0, s,c,0, 0,0,1];
 }
 
-var POOL = 14;                       /* six pieces, at most two faces apiece */
 function build(host){
   var size = parseFloat(host.dataset.size) || 150;
   host.style.width = host.style.height = size + "px";
-  var NS = "http://www.w3.org/2000/svg", cells = [];
-  for (var i=0;i<POOL;i++){
-    var g = document.createElementNS(NS, "g");
-    var tile = document.createElementNS(NS, "rect");
-    tile.setAttribute("class", "tile");
-    var art = document.createElementNS(NS, "path");
-    g.appendChild(tile); g.appendChild(art); host.appendChild(g);
-    cells.push({g:g, tile:tile, art:art});
+  var arts = [];
+  for (var i=0;i<HOME.length;i++){
+    var el = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    host.appendChild(el);
+    arts.push(el);
   }
-  return {cells:cells};
+  return {arts:arts};
 }
+
 function paint(inst, st, spin){
-  var faces = project(st, spin), i;
-  for (i=0; i<inst.cells.length; i++){
-    var cell = inst.cells[i];
-    if (i >= faces.length){ cell.g.setAttribute("display", "none"); continue; }
-    var F = faces[i];
-    cell.g.removeAttribute("display");
-    cell.g.setAttribute("transform",
-      "translate(" + num(F.x) + " " + num(F.y) + ") matrix(" +
-      num(F.su[0]) + " " + num(F.su[1]) + " " + num(F.sv[0]) + " " + num(F.sv[1]) + " 0 0)");
-    var tw = F.fw * F.lu, th = F.fh * F.lv;
-    cell.tile.setAttribute("x", num(-tw/2));
-    cell.tile.setAttribute("y", num(-th/2));
-    cell.tile.setAttribute("width", num(tw));
-    cell.tile.setAttribute("height", num(th));
-    cell.art.setAttribute("d", outline(F.shape, F.lu, F.lv));
+  var mv = spin ? MOVES[spin.move] : null;
+  var lane = mv && mv.axis !== 2 ? laneOf(mv) : null;
+  var turn2 = mv ? spinAbout(mv.axis, spin.deg) : null;
+  var slidBy = lane ? (mv.axis === 1 ? 1 : -1) * (spin.deg / 90) : 0;
+  for (var i=0;i<HOME.length;i++){
+    var el = inst.arts[i];
+    var moving = mv && sits(st, i, mv.axis, mv.val) === 2;
+    if (!moving && !atFront(st, i)){ el.setAttribute("d", ""); continue; }
+    var piece = HOME[i], M = ORI[st[i].o], T = moving ? mul(turn2, M) : M;
+    var c = st[i].c, x = c[0]*HALF, y = c[1]*HALF;
+
+    /* ------------------------------------------------------------ where -- */
+    if (moving && lane){
+      var cs = cells(st, i), sum = 0;
+      for (var q=0;q<cs.length;q++) sum += place(cs[q], lane);
+      var step = sum/cs.length - 1.5 + slidBy;
+      while (step >= 2) step -= 4;
+      while (step < -2) step += 4;
+      if (lane.along === 0) x = step * CELL; else y = step * CELL;
+    } else if (moving){                       /* the face turning on the spot */
+      var r = spin.deg * Math.PI/180, cs2 = Math.cos(r), sn = Math.sin(r);
+      var nx = x*cs2 - y*sn, ny = x*sn + y*cs2;
+      x = nx; y = ny;
+    }
+
+    /* ----------------------------------------------------- what shape -- */
+    var best = null, bestZ = 0;
+    for (var f=0;f<6;f++){
+      var n = turn(T, FACES[f].d);
+      if (n[2] > bestZ){ bestZ = n[2]; best = FACES[f]; }
+    }
+    if (!best){ el.setAttribute("d", ""); continue; }
+    var end = piece.long && best.d[0] !== 0;
+    var shape = SHAPES[end ? "circle" : piece.art];
+    var uD = turn(T, best.U), vD = turn(T, best.V);
+    var lu = Math.hypot(uD[0], uD[1]), lv = Math.hypot(vD[0], vD[1]);
+    if (lu < 0.002 || lv < 0.002){ el.setAttribute("d", ""); continue; }
+
+    /* -------------------------------------------------------- how big -- */
+    var wide = (piece.long ? LONG : SIDE) / 2, tall = SIDE / 2;
+    var room = Math.min((75 - Math.abs(x)) / wide, (75 - Math.abs(y)) / tall, 1);
+    if (room <= 0.01){ el.setAttribute("d", ""); continue; }
+
+    el.setAttribute("d", outline(shape, lu * room, lv * room));
+    el.setAttribute("transform",
+      "translate(" + num(x + 75) + " " + num(y + 75) + ") matrix(" +
+      num(uD[0]/lu) + " " + num(uD[1]/lu) + " " +
+      num(vD[0]/lv) + " " + num(vD[1]/lv) + " 0 0)");
   }
 }
 
