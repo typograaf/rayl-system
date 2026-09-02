@@ -1,10 +1,21 @@
 Build this to the Rayl design system.
 
-Include one file. It carries the colour tokens, the type scale, the page ground and rhythm, the layout primitives, the button, the option group, the slider and the icons:
+Include one file. It carries the colour tokens, the type scale, the page
+ground and rhythm, the layout primitives, the button, the reveal button, the
+option group, the slider, the rolling line and the icons:
 
 <script src="https://typograaf.github.io/rayl-system/rayl.js"></script>
 
-Put class="rayl" on the body and write markup. Never restyle these and never rebuild them:
+If you cannot include a script — React, Tailwind, SwiftUI, anything rendered
+on a server, anything offline — take the values instead and build the
+components yourself from the rules:
+
+  https://typograaf.github.io/rayl-system/rayl.tokens.json     every colour, token, size and number, as data
+  https://typograaf.github.io/rayl-system/rayl-vars.css        the same as CSS custom properties
+  https://typograaf.github.io/rayl-system/RAYL-RULES.md        the rules, in full
+
+Put class="rayl" on the body and write markup. Never restyle these and never
+rebuild them:
 
 <body class="rayl"><div class="rayl-page">
   <section class="rayl-section">
@@ -25,34 +36,131 @@ Put class="rayl" on the body and write markup. Never restyle these and never reb
   </section>
 </div></body>
 
-Space under a heading: 96 takes 72, 72 and 48 take 48, 36 and 24 take 24, 18 takes 12. The size classes carry this, so do not add margins to headings. A gap says how related two things are: 6 within a control, 12 within a block, 24 between blocks, 48 between columns, 72 between sections. A container pads one step below the gap it sits in.
+SPACING is 6, 12, 24, 36, 48, 60, 72, 96 — and nothing else. A group takes the
+gap its largest text asks for: 96 takes 60, 72 and 48 take 48, 36 takes 36, 24
+and 18 take 24. The size classes carry that, so never add a margin under a
+heading. Where a group has no heading to derive from, set it with rayl-gap-6 …
+rayl-gap-72 on the group. What the numbers mean: 6 parts of one control —
+buttons in a cluster, a stepper's digits; 12 things in a document: blocks on
+the page, frames in a field; 24 a group led by nothing larger than a 24; 36 a
+group led by a 36; three columns of a split; 48 a group led by a 48 or a 72;
+two columns of a split; 60 a group led by a 96; 96 sections of a page.
 
-Never draw a line around anything — no borders on cards, swatches, tables or sections. Rayl has no border vocabulary; boundaries are made by a change of ground. The only stroke is the keyboard focus ring.
+RADIUS is its own scale, not the spacing one: 4, 8, 12, 24, and half the
+height for anything meant to read as fully round. A control is 8, a container
+is 24.
 
-Layout comes from the system, so do not invent spacing. Panel: rayl-page, rayl-section, rayl-stack, rayl-cluster, rayl-grid, rayl-head, rayl-card, rayl-label, rayl-hint. Wide: rayl-page is-wide, rayl-hero, rayl-band (is-ink), rayl-split (is-lead, is-three, is-centred), rayl-measure, rayl-media.
+NEVER DRAW A LINE AROUND ANYTHING — no borders on cards, swatches, tables or
+sections. Rayl has no border vocabulary; boundaries are made by a change of
+ground. The only stroke in the system is the keyboard focus ring.
 
-For a document rather than an app — a guideline, a reference, an overview — put rayl-doc on the body and rayl-doc-page inside it, then alternate rayl-chapter (an 8 label on the ground) with rayl-block. A block is two columns: rayl-rail carries the words, rayl-field carries rayl-frame boxes holding the things themselves, side by side in a rayl-field-row where they fit. Name a frame with rayl-frame-tag. Give every frame far more room than its content needs; that air is the whole look. Name the thing and show it — never write a paragraph explaining it.
+TYPE is 96, 72, 48, 36, 24, 18, 12, plus 8 for labels, and no others. Use
+rayl-96 … rayl-12 and rayl-label — each carries its own leading and tracking,
+which are one decision and not three. Azeret is the workhorse and sets
+everything including headlines. Concrette is a serif for titles and subheads
+only, 24 and up: add rayl-serif. Never below 24, never for running text. One
+weight, 500, everywhere: no bold, no light.
 
-Build the structure the brief needs. These examples show the parts composed — read them if you are unsure how things go together, but do not clone one and change the words:
+A CONTROL TRACKS 0. The scale's +2% at 12 is for running text; buttons,
+options and row names are set at 0. A row names its control with rayl-row-name
+— 12, Medium, full ink, sentence case — never with the 8 label, which names a
+section.
+
+COLOUR comes only from the tokens. Never write a hex in a build. Every token
+resolves per mode, so a page that names tokens is right in light and dark and
+a page that names hexes is right in neither. Dark mode is
+document.documentElement.dataset.theme = "dark"; leave it unset to follow the
+viewer's own setting.
+
+LAYOUT comes from the system, so do not invent spacing. Panel: rayl-page,
+rayl-section, rayl-stack, rayl-cluster, rayl-grid, rayl-head, rayl-card, rayl-
+row, rayl-label, rayl-hint. Wide: rayl-page is-wide, rayl-hero, rayl-band (is-
+ink), rayl-split (is-lead, is-three, is-centred), rayl-measure, rayl-media.
+
+For a DOCUMENT rather than an app — a guideline, a reference, an overview —
+put rayl-doc on the body and rayl-doc-page inside it, then alternate rayl-
+chapter (an 8 label on the ground) with rayl-block. A block is two columns:
+rayl-rail carries the words, rayl-field carries rayl-frame boxes holding the
+things themselves, side by side in a rayl-field-row where they fit. Name a
+frame with rayl-frame-tag. Give every frame far more room than its content
+needs; that air is the whole look. Name the thing and show it — never write a
+paragraph explaining it.
+
+CONTROLS. An active control takes aria-pressed="true". Where exactly one of a
+set is on, use rayl-seg with rayl-seg-opt cells and put is-on on the one that
+is — the group owns the selection, so never wire that up yourself. Cells are
+half-width; is-third makes three to a row, is-joined closes the group into one
+bar and its first cell can be a rayl-seg-name carrying the set's name in full
+ink, is-tight sizes it to its own content. Never build a one-of-many row out
+of rayl-btn and aria-pressed. A value on a line rolls the same way a button
+label does: rayl-line with data-label and data-swap, and data-rolls on the
+control that changes it.
+
+ICONS: Profile, Image, Document, Save, Bookmark, Folder, Minus, Pause, Play,
+Plus, Upload, Download, ID, Bell, Broom, Stack, Cup, Organise. Every one is a
+12x12 filled path. There are no others; do not substitute one from a public
+set.
+
+THE LOGO is a file, never something you draw:
+https://typograaf.github.io/rayl-system/assets/logo/Lockup.svg It is #1C1C1A
+on light and #FFFFFF on dark — the same as text. Clear space around it is its
+own height, half that for the icon alone. There is no minimum size.
+
+These examples show the parts composed. Read them if you are unsure how things
+go together — but do not clone one and change the words, or you inherit a
+structure built for a different problem:
 
   https://typograaf.github.io/rayl-system/examples/landing.html
   https://typograaf.github.io/rayl-system/examples/panel.html
   https://typograaf.github.io/rayl-system/examples/bench.html
 
-A value on a line rolls the same way a button label does: rayl-line with data-label and data-swap, and data-rolls on the control that changes it. Use it whenever the thing that changed is not a button.
+For anything this block does not cover, read https://typograaf.github.io/rayl-
+system/RAYL-RULES.md and follow it exactly. https://typograaf.github.io/rayl-
+system/RAYL-WHY.md says why a rule is what it is, and is worth reading before
+you decide a rule looks wrong.
 
-An active control takes aria-pressed="true". Where exactly one of a set is on, use rayl-seg with rayl-seg-opt cells and put is-on on the one that is — the group owns the selection, so never wire that up yourself. Cells are half-width; is-third makes three to a row, is-joined on the group closes it into one bar and its first cell can be a rayl-seg-name carrying the set's name in full ink, is-tight sizes it to its own content for a header or a line of running layout. Never build a one-of-many row out of rayl-btn and aria-pressed. Dark mode is document.documentElement.dataset.theme = "dark"; leave it unset to follow the viewer's own setting.
+WHERE THE SYSTEM DOES NOT COVER SOMETHING, SAY SO AND ASK. Do not invent it
+and do not substitute something that looks close. The open list is
+https://typograaf.github.io/rayl-system/RAYL-OPEN.md; these are the ones you
+are most likely to hit:
 
-Icons: Bell, Bookmark, Broom, Cup, Document, Download, Folder, ID, Image, Minus, Organise, Pause, Play, Plus, Profile, Save, Stack, Upload.
+  - Enterable surfaces — text input, select, checkbox and toggle, and the modal that holds them
+  - Semantic colour — nothing means error, warning, success or info
+  - Hover: the ladder or the token — two approved sources give a Paper base two different hovers
+  - A container's padding — "a container pads one step below the gap it sits in"
+  - 96 on the spacing scale — the page rhythm is 96 and the scale as written stops at 72
+  - Component states — loading, empty, error, skeleton
+  - The Rayl look — the layered gradient treatment, and the largest single gap in the system
+  - The reveal button's label — White #FFFFFF on the approved frame, Off White in the ink table
+  - The fonts — Azeret and Concrette here are TRIAL cuts
+  - CMYK — the printed values are arithmetic, not a profile conversion
 
-For anything the templates and the file do not cover, read https://typograaf.github.io/rayl-system/RAYL-SYSTEM.md and follow it exactly:
+The system also has no text and number input, select, checkbox and toggle,
+modal, sheet, drawer, and no loading, empty or error state. If the brief needs
+one:
 
-- Colour comes only from the tokens. Never a raw hex.
-- Spacing is 6, 12, 24, 48, 72 and nothing else.
-- A control tracks 0. The scale's +2% at 12 is for running text; buttons, options and row names are set at 0. A row names its control with rayl-row-name — 12, Medium, full ink, sentence case — never with the 8 label, which names a section.
-- Type is seven sizes: 96, 72, 48, 36, 24, 18, 12, plus 8 for labels. Use rayl-96 ... rayl-12 and rayl-label — each carries its own leading and tracking, which are not separate decisions.
-- Azeret is the workhorse and sets everything including headlines. Concrette is a serif for titles and subheads only, 24 and up: add rayl-serif. Never below 24, never for running text.
-- Wide layouts: rayl-hero, rayl-band, rayl-split, rayl-measure, rayl-media. Put is-wide on rayl-page for a 960 column.
-- The logo is a file, never something you draw: https://typograaf.github.io/rayl-system/assets/logo/Lockup.svg It is #1C1C1A on light and #FFFFFF on dark — the same as text. Clear space around it is its own height (half that for the icon alone). There is no minimum size.
-- One weight: 500. No bold, no light. There is no green, and nothing yet means error, warning or success — ask.
-- Where the system does not cover something, tell me and ask. Do not invent it.
+  1. Say which part is missing, in one line, before anything else.
+  2. If you cannot stop and ask, build it — but mark every invented part with a
+     data-rayl-provisional="what it is" attribute, and list all of them at the
+     end of your answer under "Provisional — not Rayl yet".
+  3. Never restyle a shipped rayl-* component to make it fit, and never invent
+     a colour, a size, a gap or a second movement. Build the missing part out of
+     the values that already exist.
+
+An invention you can see is a decision waiting to be made. An invention you
+cannot see becomes the standard.
+
+VERIFY BEFORE YOU ANSWER. Check your output against these, and say which ones
+you checked:
+
+  - no hex colours anywhere, only tokens
+  - no border, outline or hairline except the focus ring
+  - every gap, margin and padding on the spacing scale
+  - every font-size on the type scale, every weight 500
+  - no rayl-serif below 24
+  - no rayl-* class restyled, overridden or rebuilt
+  - one movement only, and nothing animated that the system does not animate
+  - every provisional part marked and listed
+
+https://typograaf.github.io/rayl-system/rayl-check.py runs those checks over a
+file if you can execute one: python3 rayl-check.py yourpage.html

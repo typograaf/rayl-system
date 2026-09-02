@@ -104,6 +104,7 @@
      Measured at 997:7659. */
   letter-spacing:0;
   --rayl-btn-h:calc(var(--rayl-cap) + 24px);
+  --rayl-travel:var(--rayl-btn-h);      /* the label is clipped by the button */
   height:var(--rayl-btn-h);padding:0 12px;
   display:inline-flex;align-items:center;justify-content:center;
   border:0;border-radius:var(--rayl-radius);
@@ -125,8 +126,17 @@
 .rayl-btn:disabled{color:var(--ink-disabled);cursor:default;background:var(--surface-idle);}
 .rayl-btn:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
 
+/* THE ROLL DOES NOT DECLARE ITS OWN TRAVEL.
+   It used to say --rayl-travel:var(--rayl-btn-h), which reads well until the
+   roll is put on a control that is not rayl-btn: --rayl-btn-h is undefined
+   there, the declaration shadows whatever the host set on its own button with
+   an invalid value, and every translate below collapses to nothing. The class
+   still toggles and the transition is still armed, so it looks exactly like a
+   roll that runs and moves zero pixels — which is what it is.
+   A host sets --rayl-travel on its control; the fallback is the button's own
+   height, which is what the system's own controls are. */
 .rayl-roll{position:relative;display:flex;align-items:center;white-space:pre;
-  height:var(--rayl-cap);--rayl-travel:var(--rayl-btn-h);}
+  height:var(--rayl-cap);}
 .rayl-ch{position:relative;display:block;flex:0 0 auto;height:var(--rayl-cap);width:0;
   transition:width var(--rayl-dur) var(--rayl-ease) calc(var(--i,0) * var(--rayl-stagger));}
 .rayl-g{position:absolute;top:0;left:0;height:var(--rayl-cap);line-height:var(--rayl-cap);
@@ -136,8 +146,8 @@
   .rayl-g{height:auto;line-height:1;text-box-trim:trim-both;text-box-edge:cap alphabetic;}
 }
 .rayl-cur{transform:translateY(0);}
-.rayl-nxt{transform:translateY(calc(var(--rayl-travel) * var(--rayl-dir) * -1));}
-.rayl-ch.is-rolled .rayl-cur{transform:translateY(calc(var(--rayl-travel) * var(--rayl-dir)));}
+.rayl-nxt{transform:translateY(calc(var(--rayl-travel,32.376px) * var(--rayl-dir) * -1));}
+.rayl-ch.is-rolled .rayl-cur{transform:translateY(calc(var(--rayl-travel,32.376px) * var(--rayl-dir)));}
 .rayl-ch.is-rolled .rayl-nxt{transform:translateY(0);}
 .rayl-roll.is-instant .rayl-g,.rayl-roll.is-instant .rayl-ch{transition:none;}
 

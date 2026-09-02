@@ -1,0 +1,703 @@
+{
+  "$schema": "https://typograaf.github.io/rayl-system/rayl.tokens.json",
+  "name": "Rayl",
+  "rules": "https://typograaf.github.io/rayl-system/RAYL-RULES.md",
+  "why": "https://typograaf.github.io/rayl-system/RAYL-WHY.md",
+  "open": [
+    {
+      "name": "Enterable surfaces",
+      "status": "OPEN",
+      "what": "text input, select, checkbox and toggle, and the modal that holds them",
+      "detail": "In a system with no strokes, a control that ACCEPTS input has to read as enterable through a change of ground alone. That is one decision and all four follow from it. Martijn is designing it. Until it lands there is no correct form in this system."
+    },
+    {
+      "name": "Semantic colour",
+      "status": "OPEN",
+      "what": "nothing means error, warning, success or info",
+      "detail": "Every colour in the palette sits on one hue, so any of these is the brand's first hue break. Do not draft a palette colour in to stand for a state and do not borrow a red."
+    },
+    {
+      "name": "Deep Black #11110F",
+      "status": "PROVISIONAL",
+      "what": "the dark-mode ground, and the one palette colour not on the approved frame",
+      "detail": "It ships and it works. Either it joins the palette or dark mode grounds on a colour already in it."
+    },
+    {
+      "name": "Hover: the ladder or the token",
+      "status": "OPEN",
+      "what": "two approved sources give a Paper base two different hovers",
+      "detail": "The L* ladder says Bone, five steps away. surface/idle-hover says Off White, one step. Build with the tokens — they are what ships — but the disagreement is real and wants a decision."
+    },
+    {
+      "name": "A container's padding",
+      "status": "OPEN",
+      "what": "\"a container pads one step below the gap it sits in\"",
+      "detail": "It held when the page ran 72 and a band padded 48. The page runs 96 now and the band still pads 48, where the rule would say 72. Do not apply it to anything new."
+    },
+    {
+      "name": "96 on the spacing scale",
+      "status": "OPEN",
+      "what": "the page rhythm is 96 and the scale as written stops at 72",
+      "detail": "96 steps by 12 like every other member and is what rayl-page actually uses, so it is listed. Confirm it is a member rather than a page-only figure."
+    },
+    {
+      "name": "The 8 radius",
+      "status": "PROVISIONAL",
+      "what": "every control rounds 8; the board's own ladder is 4, 12, 24",
+      "detail": "8 is measured off the approved UI rather than the demo, and where the two disagree the UI wins. Worth confirming the ladder gains an 8."
+    },
+    {
+      "name": "Component states",
+      "status": "OPEN",
+      "what": "loading, empty, error, skeleton",
+      "detail": "Hover, pressed, disabled and focus are covered by the tokens. These four are not, and a tool without them is a demo."
+    },
+    {
+      "name": "The Rayl look",
+      "status": "OPEN",
+      "what": "the layered gradient treatment, and the largest single gap in the system",
+      "detail": "Flat vector art with gradient fills, stamped repeatedly, no specular highlight — it is not lighting and cannot be reproduced with lighting. There is no reference file in this repo. Everything else here makes a build correct; this is what makes it Rayl. Say the reference is missing rather than approximating it."
+    },
+    {
+      "name": "The reveal button's label",
+      "status": "OPEN",
+      "what": "White #FFFFFF on the approved frame, Off White in the ink table",
+      "detail": "One value, two approved sources. Ask before using either."
+    },
+    {
+      "name": "The fonts",
+      "status": "OPEN",
+      "what": "Azeret and Concrette here are TRIAL cuts",
+      "detail": "Fine for internal work and prototypes. The licensed files have to replace them before anything built with this goes public."
+    },
+    {
+      "name": "CMYK",
+      "status": "OPEN",
+      "what": "the printed values are arithmetic, not a profile conversion",
+      "detail": "Fine on screen, not fine at a printer."
+    }
+  ],
+  "css": "https://typograaf.github.io/rayl-system/rayl-vars.css",
+  "js": "https://typograaf.github.io/rayl-system/rayl.js",
+  "note": "Never write a hex in a build. Name a token; it resolves per mode.",
+  "palette": [
+    {
+      "name": "White",
+      "hex": "#FFFFFF",
+      "lstar": 100.0,
+      "var": "--rayl-white"
+    },
+    {
+      "name": "Paper",
+      "hex": "#FBFBF6",
+      "lstar": 98.5,
+      "var": "--rayl-paper"
+    },
+    {
+      "name": "Off White",
+      "hex": "#F7F7EF",
+      "lstar": 97.1,
+      "var": "--rayl-off-white"
+    },
+    {
+      "name": "Bone",
+      "hex": "#EDEDDF",
+      "lstar": 93.3,
+      "var": "--rayl-bone"
+    },
+    {
+      "name": "Dark Off-White",
+      "hex": "#E2E2D3",
+      "lstar": 89.5,
+      "var": "--rayl-dark-off-white"
+    },
+    {
+      "name": "Porcelain",
+      "hex": "#CFCFC1",
+      "lstar": 82.8,
+      "var": "--rayl-porcelain"
+    },
+    {
+      "name": "Mid Porcelain",
+      "hex": "#C3C3B6",
+      "lstar": 78.5,
+      "var": "--rayl-mid-porcelain"
+    },
+    {
+      "name": "Dark Porcelain",
+      "hex": "#ACACA0",
+      "lstar": 70.1,
+      "var": "--rayl-dark-porcelain"
+    },
+    {
+      "name": "Pale Concrete",
+      "hex": "#89897F",
+      "lstar": 56.9,
+      "var": "--rayl-pale-concrete"
+    },
+    {
+      "name": "Light Concrete",
+      "hex": "#696961",
+      "lstar": 44.2,
+      "var": "--rayl-light-concrete"
+    },
+    {
+      "name": "Dark Concrete",
+      "hex": "#55554E",
+      "lstar": 35.9,
+      "var": "--rayl-dark-concrete"
+    },
+    {
+      "name": "Off-Black",
+      "hex": "#373732",
+      "lstar": 22.9,
+      "var": "--rayl-off-black"
+    },
+    {
+      "name": "Soft Black",
+      "hex": "#262623",
+      "lstar": 15.2,
+      "var": "--rayl-soft-black"
+    },
+    {
+      "name": "Black",
+      "hex": "#1C1C1A",
+      "lstar": 10.2,
+      "var": "--rayl-black"
+    },
+    {
+      "name": "Deep Black",
+      "hex": "#11110F",
+      "lstar": 5.0,
+      "var": "--rayl-deep-black"
+    }
+  ],
+  "gradients": {
+    "porcelain": {
+      "from": "#CFCFC1",
+      "to": "#F7F7EF",
+      "angle": "180deg",
+      "var": "--rayl-porcelain-gradient"
+    },
+    "concrete": {
+      "from": "#696961",
+      "to": "#CFCFC1",
+      "angle": "180deg",
+      "var": "--rayl-concrete-gradient"
+    }
+  },
+  "tokens": [
+    {
+      "token": "surface/ground",
+      "var": "--surface-ground",
+      "light": "White",
+      "dark": "Soft Black",
+      "job": "The panel or page itself"
+    },
+    {
+      "token": "surface/idle",
+      "var": "--surface-idle",
+      "light": "Paper",
+      "dark": "Deep Black",
+      "job": "A control at rest"
+    },
+    {
+      "token": "surface/idle-hover",
+      "var": "--surface-idle-hover",
+      "light": "Off White",
+      "dark": "Black",
+      "job": "Rest control, pointer over it"
+    },
+    {
+      "token": "surface/idle-pressed",
+      "var": "--surface-idle-pressed",
+      "light": "Bone",
+      "dark": "Off-Black",
+      "job": "Rest control, being pressed"
+    },
+    {
+      "token": "surface/active",
+      "var": "--surface-active",
+      "light": "Bone",
+      "dark": "Dark Concrete",
+      "job": "A control that is on"
+    },
+    {
+      "token": "surface/active-hover",
+      "var": "--surface-active-hover",
+      "light": "Dark Off-White",
+      "dark": "Light Concrete",
+      "job": "On control, pointer over it"
+    },
+    {
+      "token": "surface/active-pressed",
+      "var": "--surface-active-pressed",
+      "light": "Porcelain",
+      "dark": "Off-Black",
+      "job": "On control, being pressed"
+    },
+    {
+      "token": "ink/primary",
+      "var": "--ink-primary",
+      "light": "Black",
+      "dark": "White",
+      "job": "All text and icons"
+    },
+    {
+      "token": "ink/on-active",
+      "var": "--ink-on-active",
+      "light": "Black",
+      "dark": "White",
+      "job": "Text on an active control"
+    },
+    {
+      "token": "ink/disabled",
+      "var": "--ink-disabled",
+      "light": "Dark Porcelain",
+      "dark": "Light Concrete",
+      "job": "Unavailable text"
+    },
+    {
+      "token": "line/track",
+      "var": "--line-track",
+      "light": "Dark Porcelain",
+      "dark": "Pale Concrete",
+      "job": "Slider rails and small marks"
+    },
+    {
+      "token": "fill/strong",
+      "var": "--fill-strong",
+      "light": "Black",
+      "dark": "White",
+      "job": "A high-emphasis button"
+    },
+    {
+      "token": "fill/strong-hover",
+      "var": "--fill-strong-hover",
+      "light": "Soft Black",
+      "dark": "Off White",
+      "job": "…with the pointer over it"
+    },
+    {
+      "token": "ink/on-strong",
+      "var": "--ink-on-strong",
+      "light": "White",
+      "dark": "Soft Black",
+      "job": "Text on one"
+    }
+  ],
+  "type": {
+    "faces": {
+      "body": {
+        "family": "Azeret",
+        "role": "everything, including headlines",
+        "cap": 0.698,
+        "trial": true
+      },
+      "display": {
+        "family": "Concrette",
+        "role": "titles and subheads, 24 and up only",
+        "cap": 0.708,
+        "optical size": "S ships; M and XL exist",
+        "trial": true
+      }
+    },
+    "weight": 500,
+    "weights": [
+      500
+    ],
+    "label": {
+      "size": 8,
+      "tracking": "+8%",
+      "case": "uppercase",
+      "use": "names a section, and nothing else"
+    },
+    "control tracking": "0",
+    "trim": {
+      "text-box-trim": "trim-both",
+      "text-box-edge": "cap alphabetic",
+      "fallback line-height": 0.698
+    },
+    "sizes": [
+      {
+        "size": 96,
+        "leading": "110%",
+        "azeret": "−4%",
+        "concrette": "−6%",
+        "class": "rayl-96"
+      },
+      {
+        "size": 72,
+        "leading": "110%",
+        "azeret": "−3%",
+        "concrette": "−5%",
+        "class": "rayl-72"
+      },
+      {
+        "size": 48,
+        "leading": "110%",
+        "azeret": "−3%",
+        "concrette": "−4%",
+        "class": "rayl-48"
+      },
+      {
+        "size": 36,
+        "leading": "110%",
+        "azeret": "−2%",
+        "concrette": "−4%",
+        "class": "rayl-36"
+      },
+      {
+        "size": 24,
+        "leading": "115%",
+        "azeret": "−1%",
+        "concrette": "−3%",
+        "class": "rayl-24"
+      },
+      {
+        "size": 18,
+        "leading": "130%",
+        "azeret": "+1%",
+        "concrette": null,
+        "class": "rayl-18"
+      },
+      {
+        "size": 12,
+        "leading": "140%",
+        "azeret": "+2%",
+        "concrette": null,
+        "class": "rayl-12"
+      }
+    ]
+  },
+  "spacing": {
+    "scale": [
+      6,
+      12,
+      24,
+      36,
+      48,
+      60,
+      72,
+      96
+    ],
+    "classes": [
+      "rayl-gap-6",
+      "rayl-gap-12",
+      "rayl-gap-24",
+      "rayl-gap-36",
+      "rayl-gap-48",
+      "rayl-gap-60",
+      "rayl-gap-72"
+    ],
+    "heading gap": {
+      "96": 60,
+      "72": 48,
+      "48": 48,
+      "36": 36,
+      "24": 24,
+      "18": 24
+    },
+    "meaning": {
+      "6": "parts of one control — buttons in a cluster, a stepper's digits",
+      "12": "things in a document: blocks on the page, frames in a field",
+      "24": "a group led by nothing larger than a 24",
+      "36": "a group led by a 36; three columns of a split",
+      "48": "a group led by a 48 or a 72; two columns of a split",
+      "60": "a group led by a 96",
+      "96": "sections of a page"
+    },
+    "fixed": [
+      {
+        "class": "rayl-page",
+        "property": "gap",
+        "value": "96px",
+        "what": "sections of a page"
+      },
+      {
+        "class": "rayl-cluster",
+        "property": "gap",
+        "value": "6px",
+        "what": "parts of one control"
+      },
+      {
+        "class": "rayl-grid",
+        "property": "gap",
+        "value": "12px",
+        "what": "cards or swatches"
+      },
+      {
+        "class": "rayl-head",
+        "property": "gap",
+        "value": "24px",
+        "what": "a header row"
+      },
+      {
+        "class": "rayl-split",
+        "property": "gap",
+        "value": "48px",
+        "what": "two columns"
+      },
+      {
+        "class": "rayl-band",
+        "property": "gap",
+        "value": "36px",
+        "what": "inside a band"
+      },
+      {
+        "class": "rayl-field",
+        "property": "gap",
+        "value": "12px",
+        "what": "frames in a field"
+      },
+      {
+        "class": "rayl-card",
+        "property": "padding",
+        "value": "12px",
+        "what": "inside a card"
+      },
+      {
+        "class": "rayl-rail",
+        "property": "padding",
+        "value": "48px",
+        "what": "inside a rail"
+      }
+    ],
+    "figures": {
+      "the panel column": "520",
+      "the wide column": "960",
+      "the document field": "1440",
+      "the tool panel": "300, padding 48, groups 48 apart",
+      "a reading measure": "62 characters",
+      "a showcase frame": "padding 144 — three times the ordinary 48"
+    }
+  },
+  "radius": {
+    "scale": [
+      "4",
+      "8",
+      "12",
+      "24"
+    ],
+    "control": "8",
+    "container": "24",
+    "round": "half the height",
+    "meaning": {
+      "4": "the board's smallest rounding",
+      "8": "a control — button, option cell, card, swatch",
+      "12": "the board's middle rounding",
+      "24": "a container — a rail, a frame, a panel",
+      "half the height": "anything meant to read as fully round"
+    }
+  },
+  "motion": {
+    "duration": {
+      "value": "280ms",
+      "what": "one character's travel"
+    },
+    "stagger": {
+      "value": "20ms",
+      "what": "one character to the next, compressed so a roll never runs past 400ms"
+    },
+    "curve": {
+      "value": "cubic-bezier(0.65, 0, 0.35, 1)",
+      "what": "in and out, everywhere"
+    },
+    "order": {
+      "value": "random",
+      "what": "reshuffled on every roll"
+    },
+    "direction": {
+      "value": "upward",
+      "what": "always"
+    },
+    "press down": {
+      "value": "90ms",
+      "what": "a button sinking to 0.96"
+    },
+    "press up": {
+      "value": "220ms",
+      "what": "and coming back — deliberately slower than down"
+    },
+    "a line returns": {
+      "value": "2400ms",
+      "what": "before a swapped line goes back to what it was"
+    }
+  },
+  "icons": {
+    "grid": "12x12",
+    "fill": "one filled path, never stroked",
+    "colour": "ink/primary",
+    "names": [
+      "Bell",
+      "Bookmark",
+      "Broom",
+      "Cup",
+      "Document",
+      "Download",
+      "Folder",
+      "ID",
+      "Image",
+      "Minus",
+      "Organise",
+      "Pause",
+      "Play",
+      "Plus",
+      "Profile",
+      "Save",
+      "Stack",
+      "Upload"
+    ]
+  },
+  "strokes": {
+    "borders": "none, anywhere",
+    "how boundaries are made": "a change of ground",
+    "the one exception": "the keyboard focus ring"
+  },
+  "classes": {
+    "Page": {
+      "rayl-page": "the app or panel column: ground, 72 rhythm, 520 wide",
+      "rayl-page is-wide": "the same at 960, for a page that has to breathe",
+      "rayl-section": "a section; its gap is derived the same way",
+      "rayl-stack": "a group; its gap is what its largest text asks for",
+      "rayl-cluster": "parts of one control — gaps 6",
+      "rayl-grid": "an even grid of cards or swatches",
+      "rayl-head": "a header or footer row: mark on the left, controls right",
+      "rayl-card": "a panel that lifts off the ground",
+      "rayl-row": "a named control on one line",
+      "rayl-row-name": "the name in that row — 12, Medium, full ink, sentence case",
+      "rayl-label": "the 8 uppercase section label, and nothing else",
+      "rayl-hint": "a quiet line of explanation under a block",
+      "rayl-gap-6": "set a group's gap when it has no heading to derive one",
+      "rayl-gap-12": "the same, at 12",
+      "rayl-gap-24": "the same, at 24",
+      "rayl-gap-36": "the same, at 36",
+      "rayl-gap-48": "the same, at 48",
+      "rayl-gap-60": "the same, at 60",
+      "rayl-gap-72": "the same, at 72"
+    },
+    "Wide layout": {
+      "rayl-hero": "the opening statement of a page",
+      "rayl-band": "a full-width band; is-ink for one in ink",
+      "rayl-split": "two columns; is-lead 3:2, is-three, is-centred",
+      "rayl-measure": "running text stopped at 62 characters",
+      "rayl-media": "a picture that follows the column beside it"
+    },
+    "Document": {
+      "rayl-doc": "on the body: the document ground rather than the app one",
+      "rayl-doc-page": "the document column — blocks 12 apart",
+      "rayl-chapter": "an 8 label on the ground, over the blocks under it",
+      "rayl-block": "a 500 rail against a 1504 field",
+      "rayl-rail": "the words of a block",
+      "rayl-rail-foot": "pinned to the floor of a rail",
+      "rayl-field": "the things of a block, stacked 12 apart",
+      "rayl-field-row": "frames side by side inside a field",
+      "rayl-frame": "one white box holding one thing; is-tall, is-wide",
+      "rayl-frame-tag": "names a frame, turned on its side, costing no height",
+      "rayl-container": "a plain white box for a header or footer"
+    },
+    "Controls": {
+      "rayl-btn": "the button; aria-pressed for on, data-icon for an icon",
+      "rayl-ibtn": "the reveal button: the label contracts, a circle irises open",
+      "rayl-seg": "the option group — exactly one on; is-joined, is-tight",
+      "rayl-seg-opt": "one cell of it; is-on, is-third",
+      "rayl-seg-name": "the name that opens a joined bar — never a disabled cell",
+      "rayl-slider": "the track: data-min, data-max, data-val, data-step",
+      "rayl-line": "a value on a line that rolls; data-label, data-swap",
+      "rayl-icon": "an icon on its own; data-icon",
+      "rayl-mark": "the logo mark, inline"
+    },
+    "Type": {
+      "rayl-96": "96 / 110% / -4%",
+      "rayl-72": "72 / 110% / -3%",
+      "rayl-48": "48 / 110% / -3%",
+      "rayl-36": "36 / 110% / -2%",
+      "rayl-24": "24 / 115% / -1%",
+      "rayl-18": "18 / 130% / +1%",
+      "rayl-12": "12 / 140% / +2%",
+      "rayl-serif": "Concrette, on a size class from 24 up"
+    }
+  },
+  "internal classes": [
+    "rayl-roll",
+    "rayl-ch",
+    "rayl-g",
+    "rayl-cur",
+    "rayl-nxt",
+    "rayl-type",
+    "rayl-reel",
+    "rayl-col",
+    "rayl-strip",
+    "rayl-digit",
+    "rayl-num",
+    "rayl-val",
+    "rayl-sign",
+    "rayl-point",
+    "rayl-seg-fill",
+    "rayl-ibtn-body",
+    "rayl-ibtn-dot",
+    "rayl-ibtn-icon"
+  ],
+  "missing": [
+    {
+      "control": "text and number input",
+      "a brief will ask for": "any form, any name field, any numeric entry"
+    },
+    {
+      "control": "select",
+      "a brief will ask for": "a list too long for an option group"
+    },
+    {
+      "control": "checkbox and toggle",
+      "a brief will ask for": "a setting that is on or off on its own"
+    },
+    {
+      "control": "modal, sheet, drawer",
+      "a brief will ask for": "a confirm, an export dialog, a settings panel"
+    },
+    {
+      "control": "collapsible section",
+      "a brief will ask for": "the approved panel draws one — every section label carries a – and nothing implements it"
+    },
+    {
+      "control": "tooltip and popover",
+      "a brief will ask for": "a label on an icon button"
+    },
+    {
+      "control": "tabs",
+      "a brief will ask for": "more than one view in a panel"
+    },
+    {
+      "control": "table",
+      "a brief will ask for": "any list of records"
+    },
+    {
+      "control": "toast",
+      "a brief will ask for": "anything reporting that a background job finished"
+    },
+    {
+      "control": "progress",
+      "a brief will ask for": "an export, an upload, a render"
+    },
+    {
+      "control": "menu",
+      "a brief will ask for": "a right-click or an overflow"
+    },
+    {
+      "control": "badge, chip, tag",
+      "a brief will ask for": "a count, a status, a filter"
+    },
+    {
+      "control": "avatar",
+      "a brief will ask for": "anybody's face"
+    },
+    {
+      "control": "scrollbar",
+      "a brief will ask for": "every panel taller than its frame"
+    },
+    {
+      "control": "app shell",
+      "a brief will ask for": "a control panel beside a canvas — the only layout the system cannot express"
+    }
+  ]
+}

@@ -359,3 +359,175 @@ INTERNAL = ["rayl-roll", "rayl-ch", "rayl-g", "rayl-cur", "rayl-nxt", "rayl-type
             "rayl-reel", "rayl-col", "rayl-strip", "rayl-digit", "rayl-num",
             "rayl-val", "rayl-sign", "rayl-point", "rayl-seg-fill", "rayl-ibtn-body", "rayl-ibtn-dot",
             "rayl-ibtn-icon"]
+
+
+# =========================================================== the spacing ====
+# These used to live only as prose in the guideline and as numbers in core.css,
+# which is exactly how the two came to disagree. They are data now, every
+# document renders them from here, and doc.py asserts each one against the
+# stylesheet before the build is allowed to finish.
+
+SPACING = [6, 12, 24, 36, 48, 60, 72, 96]
+
+# the escape-hatch classes, rayl-gap-N
+GAP_CLASSES = [6, 12, 24, 36, 48, 60, 72]
+
+# a group takes the gap its largest text asks for
+HEADING_GAP = [(96, 60), (72, 48), (48, 48), (36, 36), (24, 24), (18, 24)]
+
+GAP_MEANING = [
+ (6,  "parts of one control — buttons in a cluster, a stepper's digits"),
+ (12, "things in a document: blocks on the page, frames in a field"),
+ (24, "a group led by nothing larger than a 24"),
+ (36, "a group led by a 36; three columns of a split"),
+ (48, "a group led by a 48 or a 72; two columns of a split"),
+ (60, "a group led by a 96"),
+ (72, "—"),
+ (96, "sections of a page"),
+]
+
+# Corner radius is its own scale and does not share the spacing one.
+RADIUS = [
+ ("4",              "the board's smallest rounding"),
+ ("8",              "a control — button, option cell, card, swatch"),
+ ("12",             "the board's middle rounding"),
+ ("24",             "a container — a rail, a frame, a panel"),
+ ("half the height","anything meant to read as fully round"),
+]
+
+# Figures that are not gaps: a fixed width, a measure, a padding.
+FIGURES = [
+ ("the panel column",     "520"),
+ ("the wide column",      "960"),
+ ("the document field",   "1440"),
+ ("the tool panel",       "300, padding 48, groups 48 apart"),
+ ("a reading measure",    "62 characters"),
+ ("a showcase frame",     "padding 144 — three times the ordinary 48"),
+]
+
+# What the containers fix, asserted against core.css by doc.py. Nothing here is
+# derived from a heading, so nothing here can be got from HEADING_GAP.
+FIXED = [
+ (".rayl-page",    "gap",     "96px", "sections of a page"),
+ (".rayl-cluster", "gap",     "6px",  "parts of one control"),
+ (".rayl-grid",    "gap",     "12px", "cards or swatches"),
+ (".rayl-head",    "gap",     "24px", "a header row"),
+ (".rayl-split",   "gap",     "48px", "two columns"),
+ (".rayl-band",    "gap",     "36px", "inside a band"),
+ (".rayl-field",   "gap",     "12px", "frames in a field"),
+ (".rayl-card",    "padding", "12px", "inside a card"),
+ (".rayl-rail",    "padding", "48px", "inside a rail"),
+]
+
+# ============================================================= the motion ====
+
+MOTION = [
+ ("duration",  "280ms",  "one character's travel"),
+ ("stagger",   "20ms",   "one character to the next, compressed so a roll never runs past 400ms"),
+ ("curve",     "cubic-bezier(0.65, 0, 0.35, 1)", "in and out, everywhere"),
+ ("order",     "random", "reshuffled on every roll"),
+ ("direction", "upward", "always"),
+ ("press down","90ms",   "a button sinking to 0.96"),
+ ("press up",  "220ms",  "and coming back — deliberately slower than down"),
+ ("a line returns", "2400ms", "before a swapped line goes back to what it was"),
+]
+
+# ============================================================== the gaps =====
+# Every open question in the system, in one place, with one status word. The
+# guideline used NOT DECIDED, UNDER REVIEW, "still open" and plain prose for the
+# same thing; a reader could not tell which of those was binding.
+#
+#   RULE        settled, follow it
+#   PROVISIONAL in the shipped code, works, may still change — safe to build on
+#   OPEN        genuinely undecided. Do not invent. Say which one you hit.
+#
+# Anything an AI can hit is listed here whether or not it also appears in prose,
+# because RAYL-OPEN.md is generated from this list and nothing else.
+
+OPEN = [
+ ("Enterable surfaces", "OPEN",
+  "text input, select, checkbox and toggle, and the modal that holds them",
+  "In a system with no strokes, a control that ACCEPTS input has to read as "
+  "enterable through a change of ground alone. That is one decision and all "
+  "four follow from it. Martijn is designing it. Until it lands there is no "
+  "correct form in this system."),
+
+ ("Semantic colour", "OPEN",
+  "nothing means error, warning, success or info",
+  "Every colour in the palette sits on one hue, so any of these is the brand's "
+  "first hue break. Do not draft a palette colour in to stand for a state and "
+  "do not borrow a red."),
+
+ ("Deep Black #11110F", "PROVISIONAL",
+  "the dark-mode ground, and the one palette colour not on the approved frame",
+  "It ships and it works. Either it joins the palette or dark mode grounds on "
+  "a colour already in it."),
+
+ ("Hover: the ladder or the token", "OPEN",
+  "two approved sources give a Paper base two different hovers",
+  "The L* ladder says Bone, five steps away. surface/idle-hover says Off White, "
+  "one step. Build with the tokens — they are what ships — but the "
+  "disagreement is real and wants a decision."),
+
+ ("A container's padding", "OPEN",
+  "\"a container pads one step below the gap it sits in\"",
+  "It held when the page ran 72 and a band padded 48. The page runs 96 now and "
+  "the band still pads 48, where the rule would say 72. Do not apply it to "
+  "anything new."),
+
+ ("96 on the spacing scale", "OPEN",
+  "the page rhythm is 96 and the scale as written stops at 72",
+  "96 steps by 12 like every other member and is what rayl-page actually uses, "
+  "so it is listed. Confirm it is a member rather than a page-only figure."),
+
+ ("The 8 radius", "PROVISIONAL",
+  "every control rounds 8; the board's own ladder is 4, 12, 24",
+  "8 is measured off the approved UI rather than the demo, and where the two "
+  "disagree the UI wins. Worth confirming the ladder gains an 8."),
+
+ ("Component states", "OPEN",
+  "loading, empty, error, skeleton",
+  "Hover, pressed, disabled and focus are covered by the tokens. These four "
+  "are not, and a tool without them is a demo."),
+
+ ("The Rayl look", "OPEN",
+  "the layered gradient treatment, and the largest single gap in the system",
+  "Flat vector art with gradient fills, stamped repeatedly, no specular "
+  "highlight — it is not lighting and cannot be reproduced with lighting. "
+  "There is no reference file in this repo. Everything else here makes a build "
+  "correct; this is what makes it Rayl. Say the reference is missing rather "
+  "than approximating it."),
+
+ ("The reveal button's label", "OPEN",
+  "White #FFFFFF on the approved frame, Off White in the ink table",
+  "One value, two approved sources. Ask before using either."),
+
+ ("The fonts", "OPEN",
+  "Azeret and Concrette here are TRIAL cuts",
+  "Fine for internal work and prototypes. The licensed files have to replace "
+  "them before anything built with this goes public."),
+
+ ("CMYK", "OPEN",
+  "the printed values are arithmetic, not a profile conversion",
+  "Fine on screen, not fine at a printer."),
+]
+
+# Controls the system does not have. A brief that needs one of these has hit a
+# gap, not a thing to design on the spot.
+MISSING = [
+ ("text and number input", "any form, any name field, any numeric entry"),
+ ("select",                "a list too long for an option group"),
+ ("checkbox and toggle",   "a setting that is on or off on its own"),
+ ("modal, sheet, drawer",  "a confirm, an export dialog, a settings panel"),
+ ("collapsible section",   "the approved panel draws one — every section label carries a – and nothing implements it"),
+ ("tooltip and popover",   "a label on an icon button"),
+ ("tabs",                  "more than one view in a panel"),
+ ("table",                 "any list of records"),
+ ("toast",                 "anything reporting that a background job finished"),
+ ("progress",              "an export, an upload, a render"),
+ ("menu",                  "a right-click or an overflow"),
+ ("badge, chip, tag",      "a count, a status, a filter"),
+ ("avatar",                "anybody's face"),
+ ("scrollbar",             "every panel taller than its frame"),
+ ("app shell",             "a control panel beside a canvas — the only layout the system cannot express"),
+]

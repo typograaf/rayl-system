@@ -1,0 +1,108 @@
+/*! Rayl — the values, and nothing else.
+ *
+ *  The custom properties every Rayl component resolves through, with no
+ *  components in them. Use this where you cannot include rayl.js: you get the
+ *  colours, the type, the radius and the motion, and you build the components
+ *  yourself from https://typograaf.github.io/rayl-system/RAYL-RULES.md.
+ *
+ *  Both modes are here. Set document.documentElement.dataset.theme = "dark",
+ *  or leave it unset to follow the viewer's own setting.
+ *
+ *  Cut from core.css by src/tokens.py. Do not edit.
+ */
+@font-face{font-family:"Azeret";font-weight:500;font-display:swap;
+  src:url("https://typograaf.github.io/rayl-system/assets/fonts/Azeret-TRIAL-Medium.woff2") format("woff2");}
+@font-face{font-family:"Concrette";font-weight:500;font-display:swap;
+  src:url("https://typograaf.github.io/rayl-system/assets/fonts/ConcretteS-TRIAL-Medium.woff2") format("woff2");}
+
+:root{
+  --rayl-white:#FFFFFF; --rayl-paper:#FBFBF6; --rayl-off-white:#F7F7EF;
+  --rayl-bone:#EDEDDF; --rayl-dark-off-white:#E2E2D3; --rayl-porcelain:#CFCFC1;
+  --rayl-mid-porcelain:#C3C3B6; --rayl-dark-porcelain:#ACACA0;
+  --rayl-pale-concrete:#89897F; --rayl-light-concrete:#696961;
+  --rayl-dark-concrete:#55554E; --rayl-off-black:#373732;
+  --rayl-soft-black:#262623; --rayl-black:#1C1C1A; --rayl-deep-black:#11110F;
+
+  --surface-ground:var(--rayl-white);
+  --surface-idle:var(--rayl-paper);
+  --surface-idle-hover:var(--rayl-off-white);
+  --surface-idle-pressed:var(--rayl-bone);
+  --surface-active:var(--rayl-bone);
+  --surface-active-hover:var(--rayl-dark-off-white);
+  --surface-active-pressed:var(--rayl-porcelain);
+  /* An unselected cell of an option group, being pressed. Not
+     surface/idle-pressed: in light that is Bone, which is also what selection
+     is painted in, so the press would read as a selection and the circle would
+     then open Bone on Bone. One rung further out. */
+  --rayl-seg-press:var(--rayl-dark-off-white);
+  --rayl-doc-ground:var(--rayl-off-white);
+  --rayl-doc-container:var(--rayl-white);
+  --rayl-doc-chapter:var(--rayl-dark-concrete);
+  --rayl-doc-tag:var(--rayl-dark-off-white);
+  --ink-primary:var(--rayl-black);
+  --ink-on-active:var(--rayl-black);
+  --ink-disabled:var(--rayl-dark-porcelain);
+  --line-track:var(--rayl-dark-porcelain);
+  --fill-strong:var(--ink-primary);
+  --fill-strong-hover:var(--rayl-soft-black);
+  --rayl-porcelain-gradient:linear-gradient(180deg,var(--rayl-porcelain) 0.349%,var(--rayl-off-white));
+  --rayl-concrete-gradient:linear-gradient(180deg,var(--rayl-light-concrete) 0.349%,var(--rayl-porcelain));
+  --media-ground:var(--rayl-porcelain-gradient);
+  --ink-on-strong:var(--surface-ground);
+
+  --rayl-font:"Azeret",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --rayl-font-display:"Concrette",Georgia,"Times New Roman",serif;
+  --rayl-size:12px; --rayl-cap:8.376px; --rayl-radius:8px;
+  --rayl-dur:280ms; --rayl-stagger:20ms;
+  /* a roll is duration + (characters - 1) x stagger, which grows without limit.
+     Past this the stagger compresses so a long label lands with the button
+     rather than long after it. */
+  --rayl-roll-max:400ms;
+  --rayl-ease:cubic-bezier(0.65,0,0.35,1);
+  --rayl-dir:-1;
+  --rayl-press:0.96;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --surface-ground:var(--rayl-soft-black);
+  --surface-idle:var(--rayl-deep-black);
+  --surface-idle-hover:var(--rayl-black);
+  --surface-idle-pressed:var(--rayl-off-black);
+  --surface-active:var(--rayl-dark-concrete);
+  --surface-active-hover:var(--rayl-light-concrete);
+  --surface-active-pressed:var(--rayl-off-black);
+  --rayl-seg-press:var(--rayl-off-black);
+  --rayl-doc-ground:var(--rayl-deep-black);
+  --rayl-doc-container:var(--rayl-soft-black);
+  --rayl-doc-chapter:var(--rayl-pale-concrete);
+  --rayl-doc-tag:var(--rayl-dark-concrete);
+  --ink-primary:var(--rayl-white);
+  --ink-on-active:var(--rayl-white);
+  --ink-disabled:var(--rayl-light-concrete);
+  --line-track:var(--rayl-pale-concrete);
+  --fill-strong:var(--ink-primary);
+  --fill-strong-hover:var(--rayl-off-white);
+  --ink-on-strong:var(--surface-ground);
+  --media-ground:var(--rayl-concrete-gradient);
+} }
+:root[data-theme="dark"]{
+  --surface-ground:var(--rayl-soft-black);
+  --surface-idle:var(--rayl-deep-black);
+  --surface-idle-hover:var(--rayl-black);
+  --surface-idle-pressed:var(--rayl-off-black);
+  --surface-active:var(--rayl-dark-concrete);
+  --surface-active-hover:var(--rayl-light-concrete);
+  --surface-active-pressed:var(--rayl-off-black);
+  --rayl-seg-press:var(--rayl-off-black);
+  --rayl-doc-ground:var(--rayl-deep-black);
+  --rayl-doc-container:var(--rayl-soft-black);
+  --rayl-doc-chapter:var(--rayl-pale-concrete);
+  --rayl-doc-tag:var(--rayl-dark-concrete);
+  --ink-primary:var(--rayl-white);
+  --ink-on-active:var(--rayl-white);
+  --ink-disabled:var(--rayl-light-concrete);
+  --line-track:var(--rayl-pale-concrete);
+  --fill-strong:var(--ink-primary);
+  --fill-strong-hover:var(--rayl-off-white);
+  --ink-on-strong:var(--surface-ground);
+  --media-ground:var(--rayl-concrete-gradient);
+}
