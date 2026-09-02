@@ -116,7 +116,8 @@ both are documents that have to print the palette.
 
 ## Housekeeping
 
-- `array/` is untracked work in progress with `node_modules` in it. Leave it out
-  of commits.
+- `array/` is tracked — source, the six `layouts/*.rayl`, and what `bake.mjs`
+  generates into `baked/`. Its `node_modules`, `shots/` and `public/` are not,
+  through `array/.gitignore`.
 - The Azeret and Concrette files are TRIAL cuts served from a public URL. They
   need licensing before anything built with this goes public.
