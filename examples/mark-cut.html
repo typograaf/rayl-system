@@ -202,85 +202,78 @@
  * drawing rather than a crop. There are only three: a bar seen end-on is a
  * circle, which is what a capsule's section is anyway, so the two faces across
  * the glue need nothing of their own.                                       */
-/* The three shapes, each one a recipe rather than a drawing, so it can be
-   asked for at any size. A rounded rectangle is its four corners; the triangle
-   is its three sides, which is the only way to keep it exactly its own box
-   wide at every width — scale a triangle's corners instead and the rounding at
-   the sharp end drags the whole shape down off the top of the box. */
+/* The three shapes, each one a recipe rather than a drawing, so it can be asked
+   for at any size. Each is given as the corners of its box and the radius at
+   each one, and what is drawn is the outline around the circles that sit in
+   those corners — arcs where the circles are, straight runs on the common
+   tangents between them.
+
+   Built this way a shape cannot misbehave at any size. The earlier version
+   worked out the corner points by intersecting the sides, which is fine for a
+   rectangle but not for the cut corner: squeeze that one and the diagonal comes
+   close to parallel with a side, the intersection runs away — at two thirds
+   height it landed a hundred and twenty units outside a sixty-nine unit box —
+   and rounding a corner that far out is what put the long sharp overshoots into
+   the turn. A circle in a corner has nowhere to run to. */
 var SHAPES = {
-  bar:      {w:150, h:69, r:[17.5,34.5,34.5,17.5], pts:box},
-  circle:   {w:69,  h:69, r:[34.5,34.5,34.5,34.5], pts:box},
-  triangle: {w:69,  h:69, r:[17.5],                pts:wedge}
+  bar:      {w:150, h:69, corners:[[-1,-1,17.5],[1,-1,34.5],[1,1,34.5],[-1,1,17.5]]},
+  circle:   {w:69,  h:69, corners:[[-1,-1,34.5],[1,-1,34.5],[1,1,34.5],[-1,1,34.5]]},
+  triangle: {w:69,  h:69, corners:[[-1,-1,17.5],[1,1,17.5],[-1,1,17.5]]}
 };
-function box(w, h){
-  return [[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]];
-}
-/* The cut corner, built from the two circles it has to touch: one tangent to
-   the left side and to the top, one tangent to the bottom and to the right, and
-   the diagonal is their common tangent. Fall out of that and the shape is its
-   own box wide and its own box tall whatever you ask for. As it narrows the
-   two circles close on each other and the diagonal stands up, until there is
-   nothing left to cut and it is simply a capsule. */
-function wedge(w, h){
-  var r = Math.min(17.5, w/2, h/2);
-  var c1 = [-w/2 + r, -h/2 + r], c2 = [w/2 - r, h/2 - r];
-  var dx = c2[0] - c1[0], dy = c2[1] - c1[1], len = Math.hypot(dx, dy);
-  if (len < 1e-6 || Math.abs(dx) < 1e-6 || Math.abs(dy) < 1e-6) return box(w, h);
-  var ux = dx/len, uy = dy/len;
-  var ox = c1[0] + r*uy, oy = c1[1] - r*ux;        /* a point on the diagonal */
-  return [[-w/2, oy + (-w/2 - ox) * (uy/ux)],
-          [ox + (h/2 - oy) * (ux/uy), h/2],
-          [-w/2, h/2]];
-}
 
 function num(v){ return Math.round(v * 1000) / 1000; }
 
-/* A shape at any size, rounded rather than squashed. The corner radius is a
-   length, not a proportion, so it stays what it is until the shape is too
-   narrow to hold it and then it is only ever as big as half the width — which
-   is what turns a circle into a capsule and a capsule into a line. */
 function outline(shape, sx, sy){
-  var p = shape.pts(shape.w * sx, shape.h * sy), n = p.length, i;
-  var radii = [];
-  for (i=0;i<n;i++) radii[i] = shape.r[i < shape.r.length ? i : 0];
-  var cut = [], bend = [];
+  var w = shape.w * sx, h = shape.h * sy, n = shape.corners.length, i;
+  if (w <= 0.01 || h <= 0.01) return "";
+  var c = [];
   for (i=0;i<n;i++){
-    var a = p[(i+n-1)%n], b = p[i], c = p[(i+1)%n];
-    var d1 = Math.hypot(a[0]-b[0], a[1]-b[1]), d2 = Math.hypot(c[0]-b[0], c[1]-b[1]);
-    if (!d1 || !d2){ cut[i] = 0; bend[i] = 0; continue; }
-    var u1 = [(a[0]-b[0])/d1, (a[1]-b[1])/d1], u2 = [(c[0]-b[0])/d2, (c[1]-b[1])/d2];
-    var dot = u1[0]*u2[0] + u1[1]*u2[1];
-    var ang = Math.acos(dot < -1 ? -1 : dot > 1 ? 1 : dot);
-    bend[i] = Math.tan(ang / 2);
-    cut[i] = bend[i] > 1e-4 ? radii[i] / bend[i] : 0;
+    var k = shape.corners[i];
+    /* the radius is a length until the shape is too small to hold it, and then
+       it is only ever as much as there is room for — which is what turns a
+       circle into a capsule and a capsule into a line */
+    var r = Math.min(k[2], w/2, h/2);
+    c.push([k[0] * (w/2 - r), k[1] * (h/2 - r), r]);
   }
-  /* no corner may eat more of an edge than it leaves for the one at the far
-     end of it — this is the whole of the collapse, and it needs two passes
-     because shortening one corner can free the edge next to it */
-  for (var pass=0; pass<3; pass++) for (i=0;i<n;i++){
-    var j = (i+1)%n, len = Math.hypot(p[j][0]-p[i][0], p[j][1]-p[i][1]);
-    if (cut[i] + cut[j] > len && cut[i] + cut[j] > 0){
-      var k = len / (cut[i] + cut[j]);
-      cut[i] *= k; cut[j] *= k;
-    }
-  }
-  var d = "";
+  var starts = [], ends = [];
   for (i=0;i<n;i++){
-    var a = p[(i+n-1)%n], b = p[i], c = p[(i+1)%n];
-    var d1 = Math.hypot(a[0]-b[0], a[1]-b[1]), d2 = Math.hypot(c[0]-b[0], c[1]-b[1]);
-    if (!d1 || !d2) continue;
-    var u1 = [(a[0]-b[0])/d1, (a[1]-b[1])/d1], u2 = [(c[0]-b[0])/d2, (c[1]-b[1])/d2];
-    var s1 = [b[0] + u1[0]*cut[i], b[1] + u1[1]*cut[i]];
-    var s2 = [b[0] + u2[0]*cut[i], b[1] + u2[1]*cut[i]];
-    d += (d ? "L" : "M") + num(s1[0]) + " " + num(s1[1]);
-    var r = cut[i] * bend[i];
-    if (r > 0.002){
-      var cross = u1[0]*u2[1] - u1[1]*u2[0];
-      d += "A" + num(r) + " " + num(r) + " 0 0 " + (cross > 0 ? 0 : 1) + " " +
-           num(s2[0]) + " " + num(s2[1]);
+    var a = c[i], b = c[(i+1)%n];
+    var dx = b[0]-a[0], dy = b[1]-a[1], len = Math.hypot(dx, dy);
+    var nx, ny;
+    if (len < 1e-9){
+      /* two corner circles in the same place — a circle is four of them, and a
+         bar's round end is two — so the tangent has to come from which side of
+         the box the pair sits on rather than from the line between them */
+      var ka = shape.corners[i], kb = shape.corners[(i+1)%n];
+      if (ka[1] === kb[1]){ nx = 0; ny = ka[1]; }
+      else if (ka[0] === kb[0]){ nx = ka[0]; ny = 0; }
+      else { nx = 0; ny = ka[1] || -1; }
     }
+    else {
+      var ux = dx/len, uy = dy/len;
+      /* the tangent leans by the difference in the two radii, so it touches
+         both circles however unequal they are */
+      var lean = (a[2] - b[2]) / len;
+      if (lean > 1) lean = 1; else if (lean < -1) lean = -1;
+      var lie = Math.sqrt(1 - lean*lean);
+      nx = uy * lie + ux * lean;
+      ny = -ux * lie + uy * lean;
+    }
+    ends[i] = [a[0] + nx*a[2], a[1] + ny*a[2]];
+    starts[(i+1)%n] = [b[0] + nx*b[2], b[1] + ny*b[2]];
   }
-  return d ? d + "Z" : "";
+  var d = "M" + num(starts[0][0]) + " " + num(starts[0][1]);
+  for (i=0;i<n;i++){
+    var r2 = c[i][2];
+    if (r2 > 0.002 &&
+        (Math.abs(starts[i][0]-ends[i][0]) > 0.002 || Math.abs(starts[i][1]-ends[i][1]) > 0.002))
+      d += "A" + num(r2) + " " + num(r2) + " 0 0 1 " + num(ends[i][0]) + " " + num(ends[i][1]);
+    else
+      d += "L" + num(ends[i][0]) + " " + num(ends[i][1]);
+    var nx2 = starts[(i+1)%n];
+    d += "L" + num(nx2[0]) + " " + num(nx2[1]);
+  }
+  return d + "Z";
 }
 
 /* ------------------------------------------------------------ the solid -- *
