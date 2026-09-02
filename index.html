@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl System</title>
-<script src="rayl.js?v=8498d598"></script>
+<script src="rayl.js?v=b405608c"></script>
 <style>
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
@@ -100,7 +100,7 @@ Put class=&quot;rayl&quot; on the body and write markup. Never restyle these and
       &lt;button class=&quot;rayl-seg-opt&quot;&gt;5:4&lt;/button&gt;
       &lt;button class=&quot;rayl-seg-opt is-third&quot;&gt;1:1&lt;/button&gt;
     &lt;/div&gt;
-    &lt;div class=&quot;rayl-row&quot;&gt;&lt;span class=&quot;rayl-label&quot;&gt;Count&lt;/span&gt;
+    &lt;div class=&quot;rayl-row&quot;&gt;&lt;span class=&quot;rayl-row-name&quot;&gt;Count&lt;/span&gt;
       &lt;span class=&quot;rayl-slider&quot; data-min=&quot;1&quot; data-max=&quot;33&quot; data-val=&quot;12&quot; data-step=&quot;1&quot;&gt;&lt;/span&gt;&lt;/div&gt;
     &lt;p class=&quot;rayl-hint&quot;&gt;A quiet line of explanation.&lt;/p&gt;
   &lt;/section&gt;
@@ -130,6 +130,7 @@ For anything the templates and the file do not cover, read https://typograaf.git
 
 - Colour comes only from the tokens. Never a raw hex.
 - Spacing is 6, 12, 24, 48, 72 and nothing else.
+- A control tracks 0. The scale&#x27;s +2% at 12 is for running text; buttons, options and row names are set at 0. A row names its control with rayl-row-name — 12, Medium, full ink, sentence case — never with the 8 label, which names a section.
 - Type is seven sizes: 96, 72, 48, 36, 24, 18, 12, plus 8 for labels. Use rayl-96 ... rayl-12 and rayl-label — each carries its own leading and tracking, which are not separate decisions.
 - Azeret is the workhorse and sets everything including headlines. Concrette is a serif for titles and subheads only, 24 and up: add rayl-serif. Never below 24, never for running text.
 - Wide layouts: rayl-hero, rayl-band, rayl-split, rayl-measure, rayl-media. Put is-wide on rayl-page for a 960 column.

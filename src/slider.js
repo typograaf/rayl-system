@@ -157,18 +157,23 @@ function mountSlider(host){
     return clamp(min+u*(max-min),min,max);
   }
 
-  let hovering=false, dragging=false;
+  let hovering=false, dragging=false, focused=false;
+  /* Engaged is one state with three ways in, and the nub carries the hover
+     colour through all of them. Magnetism already starts before the pointer
+     reaches the nub, so the colour has to start there too — otherwise the thing
+     leans toward you while still insisting it has not been touched. */
+  function engaged(){ host.classList.toggle("is-near", hovering||dragging||focused); }
   /* growth and magnetism share one range: the moment the nub starts leaning
      toward the cursor it is also allowed to grow. A little hysteresis on the
      boundary so a cursor resting exactly on it does not stutter. */
   function inRange(dist){ return dist < (hovering ? PULL_RADIUS+10 : PULL_RADIUS); }
   svg.addEventListener("pointerenter",()=>{ /* the rail alone does not grow it */ });
   svg.addEventListener("pointerleave",()=>{
-    hovering=false;
+    hovering=false; engaged();
     if(!dragging){ scaleTo(S_IDLE,240); pullTo(0,320); pullYTo(0,320); }  /* drift home */
   });
   svg.addEventListener("pointerdown",e=>{
-    dragging=true;
+    dragging=true; engaged();
     try{svg.setPointerCapture(e.pointerId);}catch(err){}
     svg.focus();
     scaleTo(S_HOVER,120);                  /* touch has no hover, so grow on contact */
@@ -185,7 +190,7 @@ function mountSlider(host){
     const d=px-nubHome(), dv=py-VB/2;
     const dist=Math.hypot(d,dv);
     const on=inRange(dist);
-    if(on!==hovering){ hovering=on; scaleTo(on?S_HOVER:S_IDLE, on?180:240); }
+    if(on!==hovering){ hovering=on; engaged(); scaleTo(on?S_HOVER:S_IDLE, on?180:240); }
     if(!on){ pullTo(0,140); pullYTo(0,140); return; }
     const fall=1-dist/PULL_RADIUS;         /* nothing at the nub, nothing at the edge */
     const room=leanRoom(scale);
@@ -194,7 +199,7 @@ function mountSlider(host){
   });
   function release(){
     if(!dragging) return;
-    dragging=false;
+    dragging=false; engaged();
     const landed=snap(shown);              /* settle onto the nearest step */
     if(REDUCED) shown=landed; else run(aV,landed,200,shown);
     scaleTo(hovering?S_HOVER:S_IDLE, hovering?140:240);
@@ -203,8 +208,9 @@ function mountSlider(host){
   }
   svg.addEventListener("pointerup",release);
   svg.addEventListener("pointercancel",release);
-  svg.addEventListener("focus",()=>scaleTo(S_HOVER,180));
-  svg.addEventListener("blur",()=>{ if(!hovering&&!dragging) scaleTo(S_IDLE,240); });
+  svg.addEventListener("focus",()=>{ focused=true; engaged(); scaleTo(S_HOVER,180); });
+  svg.addEventListener("blur",()=>{ focused=false; engaged();
+    if(!hovering&&!dragging) scaleTo(S_IDLE,240); });
   svg.addEventListener("keydown",e=>{
     const n={ArrowLeft:-1,ArrowDown:-1,ArrowRight:1,ArrowUp:1}[e.key];
     if(!n) return; e.preventDefault();

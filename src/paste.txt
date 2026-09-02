@@ -19,7 +19,7 @@ Put class="rayl" on the body and write markup. Never restyle these and never reb
       <button class="rayl-seg-opt">5:4</button>
       <button class="rayl-seg-opt is-third">1:1</button>
     </div>
-    <div class="rayl-row"><span class="rayl-label">Count</span>
+    <div class="rayl-row"><span class="rayl-row-name">Count</span>
       <span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span></div>
     <p class="rayl-hint">A quiet line of explanation.</p>
   </section>
@@ -49,6 +49,7 @@ For anything the templates and the file do not cover, read https://typograaf.git
 
 - Colour comes only from the tokens. Never a raw hex.
 - Spacing is 6, 12, 24, 48, 72 and nothing else.
+- A control tracks 0. The scale's +2% at 12 is for running text; buttons, options and row names are set at 0. A row names its control with rayl-row-name — 12, Medium, full ink, sentence case — never with the 8 label, which names a section.
 - Type is seven sizes: 96, 72, 48, 36, 24, 18, 12, plus 8 for labels. Use rayl-96 ... rayl-12 and rayl-label — each carries its own leading and tracking, which are not separate decisions.
 - Azeret is the workhorse and sets everything including headlines. Concrette is a serif for titles and subheads only, 24 and up: add rayl-serif. Never below 24, never for running text.
 - Wide layouts: rayl-hero, rayl-band, rayl-split, rayl-measure, rayl-media. Put is-wide on rayl-page for a 960 column.

@@ -137,10 +137,10 @@ def controls_section():
                     for r in ("1:1", "16:9", "9:16")))
     bars = "".join(bar(n, o) for n, o in (("Bisque", 2), ("Sheen", 1), ("Chalk", 3)))
     lines = ('<div class="rayl-stack">'
-             '<div class="rayl-row"><span class="rayl-label">Email</span>'
+             '<div class="rayl-row"><span class="rayl-row-name">Email</span>'
              '<span class="rayl-line" id="line-email" data-label="contact@rayl.com"'
              ' data-swap="Copied to clipboard"></span></div>'
-             '<div class="rayl-row"><span class="rayl-label">Status</span>'
+             '<div class="rayl-row"><span class="rayl-row-name">Status</span>'
              '<span class="rayl-line" id="line-status" data-label="Four shifts open"'
              ' data-swap="All shifts filled"></span></div>'
              '</div>'
@@ -149,7 +149,7 @@ def controls_section():
              '<button class="rayl-btn" data-rolls="line-status" data-swap="Undo">Fill them</button>'
              '</div>')
     sliders = "".join(
-        f'<div class="rayl-row"><span class="rayl-label">{n}</span>'
+        f'<div class="rayl-row"><span class="rayl-row-name">{n}</span>'
         f'<span class="rayl-slider" data-min="{lo}" data-max="{hi}" data-val="{v}" data-step="1"></span></div>'
         for n, lo, hi, v in SLIDERS)
 

@@ -347,6 +347,19 @@ purpose and the text stays Azeret.
 
 Both are TRIAL cuts and both need licensing before anything public.
 
+### A control tracks 0
+
+The scale's tracking is for **running text**. A control is set at **0**.
+
+Every 12 label in the approved panel — button, option, joined-bar name, row name
+— is Azeret Medium at 12 with no tracking at all, measured at `997:7659`. The
+`+2%` the scale gives 12 belongs to a paragraph, where it opens small text up;
+on a button it pushes a short word off its own centre.
+
+So `rayl-12` tracks +2% and `rayl-btn`, `rayl-seg`, `rayl-row` and the slider
+readout track 0. If a control looks subtly wrong beside the design, this is
+usually why.
+
 ### Weights
 
 **500, everywhere.** One weight for the whole system — headlines, running text,
@@ -615,6 +628,26 @@ to neither piece. The path has to be generated.
 
 **Colour: the shape is `surface/idle`, the number sits on it in `ink/primary`.**
 The slider is a groove in the panel, not a mark drawn on it. Do not invert it.
+
+**The nub takes `surface/idle-hover` the moment it is engaged** — and engaged
+starts where the magnetism starts, not where the pointer lands. The nub already
+leans toward a cursor that is still some way off; if the colour waited for
+contact, the control would be reaching for you while insisting it had not been
+touched. Dragging and keyboard focus hold the same colour.
+
+**A row names its control in ordinary type**, not in the 8 label: 12, Medium,
+`ink/primary`, sentence case. The 8 label names a *section*; a row names a thing
+you are about to touch, and the panel sets those the same size as the button
+beside them. Measured at `997:7711` — the row is 264 by 32.376 with the name and
+the control 12 apart, and the name column is fixed so every control in a stack
+lines up.
+
+```html
+<div class="rayl-row">
+  <span class="rayl-row-name">Count</span>
+  <span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span>
+</div>
+```
 
 **The nub reaches both ends, and there is never a stub of rail beyond it.** Each
 rail is drawn only if there is room for one — when the nub arrives at an end,

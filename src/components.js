@@ -1,8 +1,8 @@
 /* --------------------------------------------------------- the label roll */
 var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 var ruler = null, advCache = Object.create(null);
-function advance(ch, font){
-  var key = font + "|" + ch;
+function advance(ch, font, track){
+  var key = font + "|" + track + "|" + ch;
   if (advCache[key] !== undefined) return advCache[key];
   if (!ruler){
     ruler = document.createElement("span");
@@ -11,7 +11,7 @@ function advance(ch, font){
     document.body.appendChild(ruler);
   }
   ruler.style.font = font;
-  ruler.style.letterSpacing = "0.02em";
+  ruler.style.letterSpacing = track;   /* a control tracks 0, running text +2% */
   ruler.textContent = ch;
   var w = ruler.getBoundingClientRect().width;
   advCache[key] = w;
@@ -27,6 +27,7 @@ function Roll(host){
   host.textContent = "";
   var cs = getComputedStyle(host);
   this.font = cs.fontStyle+" "+cs.fontWeight+" "+cs.fontSize+"/"+cs.fontSize+" "+cs.fontFamily;
+  this.track = cs.letterSpacing;
   this.render(this.text);
 }
 Roll.prototype.grow = function(n){
@@ -44,7 +45,7 @@ Roll.prototype.render = function(text){        /* no animation, straight to it *
   for (var i=0;i<this.chars.length;i++){
     var c = this.chars[i], g = i < text.length ? text.charAt(i) : "";
     c.cur.textContent = g; c.nxt.textContent = g;
-    c.box.style.width = (g ? advance(g, this.font) : 0) + "px";
+    c.box.style.width = (g ? advance(g, this.font, this.track) : 0) + "px";
   }
   this.showing = text;
 };
@@ -82,7 +83,7 @@ Roll.prototype.to = function(next, force){
     var g = i < next.length ? next.charAt(i) : "";
     var was = c.cur.textContent;
     c.nxt.textContent = g;
-    c.box.style.width = (g ? advance(g, this.font) : 0) + "px";
+    c.box.style.width = (g ? advance(g, this.font, this.track) : 0) + "px";
     if (force || g !== was) moving.push(c);
   }
   this.showing = next;
@@ -126,7 +127,7 @@ function Reel(host, max){
   this.places = String(Math.max(1, Math.round(max))).length;
   var cs = getComputedStyle(host);
   var font = cs.fontStyle+" "+cs.fontWeight+" "+cs.fontSize+"/"+cs.fontSize+" "+cs.fontFamily;
-  this.w = advance("0", font);
+  this.w = advance("0", font, cs.letterSpacing);
   this.cols = [];
   for (var p = this.places - 1; p >= 0; p--){
     var col = document.createElement("span");
