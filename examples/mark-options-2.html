@@ -409,10 +409,10 @@ var VARIANTS = [
    note:"Where we left it. A face thinner than nine units is dropped, and the drop is the thing that jumps."},
   {key:"handed", name:"Handed over", floor:9, hand:true,
    note:"The width the floor takes away is given to the face beside it, so the piece keeps its silhouette and nothing jumps at all."},
-  {key:"slid",   name:"Slid under", floor:9, slide:true,
-   note:"Held at nine units and slid behind its partner rather than dropped. It leaves by going somewhere."},
-  {key:"shrunk", name:"Shrunk out", floor:9, shrink:true,
-   note:"Held at nine units and scaled down to nothing over the last of the turn. It leaves by getting smaller."},
+  {key:"slid",   name:"Slid under", floor:17, slide:true,
+   note:"Held at seventeen units and slid in behind its partner rather than dropped. It leaves by going somewhere rather than by stopping."},
+  {key:"shrunk", name:"Shrunk out", floor:17, shrink:true,
+   note:"Held at seventeen units and taken down to nothing where it stands. It leaves by getting smaller."},
   {key:"both",   name:"Handed and swayed", floor:9, hand:true, lead:11,
    note:"The hand-over, with the sway below. The two answers do not fight each other."},
   {key:"pebble", name:"Pebble", pebble:0.34,
@@ -460,54 +460,91 @@ function atFront(st, i){
 
 function project(st, spin, v){
   var out = [], mv = spin ? MOVES[spin.move] : null;
-  var deg = spin ? bend(spin.deg, v) : 0;
-  var R = spin ? spinAbout(mv.axis, deg) : null;
-  var dz = v.depth || 1;
+  var base = spin ? bend(spin.deg, v) : 0;
+  /* how far through the turn we are, so a sway can be nothing at both ends */
+  var through = (spin && spin.full) ? Math.abs(spin.deg / spin.full) : 0;
+  var sway = (v.lead && mv && mv.axis !== 2) ? v.lead * Math.sin(Math.PI * through) : 0;
   for (var i=0;i<HOME.length;i++){
     var moving = mv && sits(st, i, mv.axis, mv.val) === 2;
     if (!moving && !atFront(st, i)) continue;
-    var piece = HOME[i], M = ORI[st[i].o], T = moving ? mul(R, M) : M;
-    var c = st[i].c, C = [c[0]*HALF, c[1]*HALF, c[2]*HALF];
+    var piece = HOME[i], M = ORI[st[i].o], c = st[i].c;
+    /* which end of the layer a piece is at: the sway leans them apart, and the
+       falloff can start earlier on one than the other */
+    var along = moving ? (mv.axis === 1 ? c[0] : mv.axis === 0 ? c[1] : 0) : 0;
+    var side = along > 0 ? 1 : along < 0 ? -1 : 0;
+    var R = moving ? spinAbout(mv.axis, base + sway * side) : null;
+    var T = moving ? mul(R, M) : M;
+    var C = [c[0]*HALF, c[1]*HALF, c[2]*HALF];
     if (moving) C = turn(R, C);
-    var h = [piece.long ? CELL : HALF, HALF, HALF * dz];
-    var mine = [];
-    for (var f=0;f<6;f++){
+    var h = [piece.long ? CELL : HALF, HALF, HALF];
+    var mine = [], f;
+    for (f=0;f<6;f++){
       var F = FACEUV[f], n = turn(T, F.d);
       if (n[2] < 0.002) continue;
       var d = F.d, off = turn(T, [d[0]*h[0], d[1]*h[1], d[2]*h[2]]);
       var uD = turn(T, F.U), vD = turn(T, F.V);
       var lu = Math.hypot(uD[0], uD[1]), lv = Math.hypot(vD[0], vD[1]);
       if (lu < 1e-4 || lv < 1e-4) continue;
-      var uAx = axisOf(F.U), vAx = axisOf(F.V), end = piece.long && axisOf(d) === 0;
-      /* a face lying on the cube's depth is only as wide as the cube is deep */
-      var su = uAx === 2 ? dz : 1, sv = vAx === 2 ? dz : 1;
+      var uAx = axisOf(F.U), vAx = axisOf(F.V);
       mine.push({
         z: C[2] + off[2], x: C[0] + off[0] + 75, y: C[1] + off[1] + 75,
-        fw: 2*h[uAx] + LAP, fh: 2*h[vAx] + LAP,
-        shape: SHAPES[end ? "circle" : piece.art],
-        art: end ? "circle" : piece.art,
-        lu: lu, lv: lv, su: su, sv: sv,
+        tw: (2*h[uAx] + LAP) * lu, th: (2*h[vAx] + LAP) * lv,
+        shape: SHAPES[(piece.long && axisOf(d) === 0) ? "circle" : piece.art],
+        sx: lu, sy: lv,
         dir: [uD[0]/lu, uD[1]/lu], up: [vD[0]/lv, vD[1]/lv]
       });
     }
-    /* Joined: two faces of one piece carrying the same shape are drawn once,
-       across the pair. The union of the two is never narrower than the face was
-       to begin with — it swells and comes back — so the piece bends rather than
-       thinning. */
-    if (v.joined && mine.length === 2){
-      var A = mine[0], B = mine[1];
-      var ta = A.fw * A.lu, tb = B.fw * B.lu;              /* the tiles, on screen */
-      var sa = A.shape.w * A.lu * A.su, sb = B.shape.w * B.lu * B.su;
-      /* one drawing for the pair, and always the piece's own shape, so there is
-         no moment where it changes its mind about what it is */
-      A.shape = SHAPES[piece.art];
-      A.x = (A.x * ta + B.x * tb) / (ta + tb || 1);
-      A.y = (A.y * ta + B.y * tb) / (ta + tb || 1);
-      A.z = A.z > B.z ? A.z : B.z;
-      A.fw = ta + tb; A.lu = 1; A.su = (sa + sb) / A.shape.w;
-      mine = [A];
+    /* ------------------------------------------------------- the falloff -- */
+    if (v.pebble) for (f=0;f<mine.length;f++){
+      var m = mine[f], flat = m.sx < m.sy;
+      var thin = flat ? m.sx : m.sy;
+      var lim = v.pebble * (v.spread ? 1 + v.spread * side : 1);
+      if (lim > 0 && thin < lim){
+        var g = thin / lim;
+        if (v.curve) g = Math.pow(g, v.curve);
+        if (flat){ m.sy *= g; m.th *= g; } else { m.sx *= g; m.tw *= g; }
+      }
     }
-    for (var k=0;k<mine.length;k++) out.push(mine[k]);
+    /* --------------------------------------------------------- the floor -- */
+    if (v.floor && mine.length){
+      var keep = [], gone = [];
+      for (f=0;f<mine.length;f++){
+        var q = mine[f], qw = q.shape.w * q.sx, qh = q.shape.h * q.sy;
+        ((qw < v.floor || qh < v.floor) ? gone : keep).push(q);
+      }
+      if (gone.length && keep.length){
+        var K = keep[0], G = gone[0];
+        var gw = G.shape.w * G.sx, gh = G.shape.h * G.sy;
+        var thinIsU = gw < gh, was = thinIsU ? gw : gh;
+        if (v.hand){
+          /* what the floor takes away is given to the face beside it, so the
+             piece keeps the width it had and nothing jumps */
+          var dx = G.x - K.x, dy = G.y - K.y, len = Math.hypot(dx, dy) || 1;
+          var overU = Math.abs(dx*K.dir[0] + dy*K.dir[1]) >
+                      Math.abs(dx*K.up[0]  + dy*K.up[1]);
+          if (overU){ K.sx += was / K.shape.w; K.tw += was; }
+          else      { K.sy += was / K.shape.h; K.th += was; }
+          K.x += dx/len * was/2; K.y += dy/len * was/2;
+        } else if (v.slide){
+          /* held at the floor and pushed in behind its partner */
+          var back = v.floor / (was || 1);
+          if (thinIsU){ G.sx *= back; G.tw *= back; } else { G.sy *= back; G.th *= back; }
+          var ax = K.x - G.x, ay = K.y - G.y, al = Math.hypot(ax, ay) || 1;
+          var push = (1 - was / v.floor) * (v.floor * 2.2 + 10);
+          G.x += ax/al * push; G.y += ay/al * push;
+          G.z = Math.min(G.z, K.z - 1);
+          keep.push(G);
+        } else if (v.shrink){
+          /* held at the floor and taken down to nothing where it stands */
+          var up = v.floor / (was || 1), fade = was / v.floor;
+          if (thinIsU){ G.sx *= up; G.tw *= up; } else { G.sy *= up; G.th *= up; }
+          G.sx *= fade; G.sy *= fade; G.tw *= fade; G.th *= fade;
+          keep.push(G);
+        }
+      }
+      mine = keep;
+    }
+    for (f=0;f<mine.length;f++) out.push(mine[f]);
   }
   out.sort(function(a,b){ return a.z - b.z; });
   return out;
@@ -522,26 +559,14 @@ function build(host){
   var NS = "http://www.w3.org/2000/svg";
   var fit = document.createElementNS(NS, "g");
   host.appendChild(fit);
-  var defs = null;
-  if (v.slice){ defs = document.createElementNS(NS, "defs"); host.appendChild(defs); }
   var cells = [];
   for (var i=0;i<POOL;i++){
     var g = document.createElementNS(NS, "g");
     var tile = document.createElementNS(NS, "rect");
     tile.setAttribute("class", "tile");
     var art = document.createElementNS(NS, "path");
-    var clip = null;
-    if (v.slice){
-      var id = "cut" + (++CLIPS);
-      clip = document.createElementNS(NS, "clipPath");
-      clip.setAttribute("id", id);
-      var r = document.createElementNS(NS, "rect");
-      clip.appendChild(r); defs.appendChild(clip);
-      art.setAttribute("clip-path", "url(#" + id + ")");
-      clip = r;
-    }
     g.appendChild(tile); g.appendChild(art); fit.appendChild(g);
-    cells.push({g:g, tile:tile, art:art, clip:clip});
+    cells.push({g:g, tile:tile, art:art});
   }
   return {cells:cells, fit:fit, v:v, host:host};
 }
@@ -552,8 +577,7 @@ function paint(inst, st, spin){
   var room = 1;
   if (spin && HELD === 1){
     var a = bend(spin.deg, v) * Math.PI / 180;
-    var dz = MOVES[spin.move].axis === 2 ? 1 : (v.depth || 1);
-    room = Math.abs(Math.cos(a)) + dz * Math.abs(Math.sin(a));
+    room = Math.abs(Math.cos(a)) + Math.abs(Math.sin(a));
     if (room < 1) room = 1;
   }
   inst.fit.setAttribute("transform", room > 1.001
@@ -563,38 +587,15 @@ function paint(inst, st, spin){
     var cell = inst.cells[i];
     if (i >= faces.length){ cell.g.setAttribute("display", "none"); continue; }
     var F = faces[i];
-    var thin = Math.min(F.lu * F.su, F.lv * F.sv);
-    var sx = F.lu * F.su, sy = F.lv * F.sv;
-    if (v.floor && Math.min(F.shape.w * sx, F.shape.h * sy) < v.floor){
-      cell.g.setAttribute("display", "none"); continue;
-    }
-    if (v.pebble && thin < v.pebble){
-      var k = thin / v.pebble;
-      if (F.lu * F.su < F.lv * F.sv) sy *= k; else sx *= k;
-    }
-    if (v.squat){
-      var keep = v.squat + (1 - v.squat) * thin;
-      if (F.lu * F.su < F.lv * F.sv) sy *= keep; else sx *= keep;
-    }
     cell.g.removeAttribute("display");
     cell.g.setAttribute("transform",
       "translate(" + num(F.x) + " " + num(F.y) + ") matrix(" +
       num(F.dir[0]) + " " + num(F.dir[1]) + " " + num(F.up[0]) + " " + num(F.up[1]) + " 0 0)");
-    var tw = F.fw * F.lu, th = F.fh * F.lv;
-    cell.tile.setAttribute("x", num(-tw/2));
-    cell.tile.setAttribute("y", num(-th/2));
-    cell.tile.setAttribute("width", num(tw));
-    cell.tile.setAttribute("height", num(th));
-    if (v.slice){
-      /* keep the shape whole and let the face's own edges cut it */
-      cell.art.setAttribute("d", outline(F.shape, F.su, F.sv));
-      cell.clip.setAttribute("x", num(-tw/2));
-      cell.clip.setAttribute("y", num(-th/2));
-      cell.clip.setAttribute("width", num(tw));
-      cell.clip.setAttribute("height", num(th));
-    } else {
-      cell.art.setAttribute("d", outline(F.shape, sx, sy));
-    }
+    cell.tile.setAttribute("x", num(-F.tw/2));
+    cell.tile.setAttribute("y", num(-F.th/2));
+    cell.tile.setAttribute("width", num(F.tw));
+    cell.tile.setAttribute("height", num(F.th));
+    cell.art.setAttribute("d", outline(F.shape, F.sx, F.sy));
   }
 }
 
@@ -772,7 +773,7 @@ function draw(now){
   if (step.move === undefined){
     if (p >= 1) step = null;                       /* a pause draws nothing */
   } else {
-    show({move:step.move, deg:step.deg * ease(p)});
+    show({move:step.move, deg:step.deg * ease(p), full:step.deg});
     if (p >= 1){ state = play(state, step.move); step = null; show(null); }
   }
   raf = running ? requestAnimationFrame(draw) : 0;

@@ -129,7 +129,7 @@
         <div class="rayl-row">
           <span class="rayl-label">Easing</span>
           <input class="field is-curve" id="ease" spellcheck="false"
-                 value="cubic-bezier(0.65, 0, 0.35, 1)" aria-label="Easing">
+                 value="cubic-bezier(0.85, 0, 0.15, 1)" aria-label="Easing">
           <svg class="curve" id="curve" viewBox="-8 -8 116 116" aria-hidden="true">
             <line x1="0" y1="100" x2="100" y2="100"></line>
             <line x1="0" y1="0" x2="0" y2="100"></line>
@@ -154,9 +154,10 @@
         rhythm: how long a turn takes, the beat between two of them, the quicker
         turn it scrambles at, and how long it sits on the solved mark before
         scrambling again.</p>
-        <p class="rayl-12 rayl-measure">The default is the system's own —
-        cubic-bezier(0.65, 0, 0.35, 1) over 300ms, the same curve and duration every
-        Rayl control moves on.</p>
+        <p class="rayl-12 rayl-measure">It opens on cubic-bezier(0.85, 0, 0.15, 1),
+        which holds still at both ends and crosses the middle quickly — the system's
+        own curve, cubic-bezier(0.65, 0, 0.35, 1), is the gentler version of the same
+        idea and is what every Rayl control moves on.</p>
       </div>
     </div>
   </section>
@@ -509,7 +510,7 @@ function readEase(text){
 }
 
 var TIME = {turn:300, gap:90, fast:200, hold:2800, think:360, doubt:460};
-var ease = readEase("cubic-bezier(0.65, 0, 0.35, 1)");
+var ease = readEase("cubic-bezier(0.85, 0, 0.15, 1)");
 
 /* ------------------------------------------------------------- the drive --*/
 var hosts = [].slice.call(document.querySelectorAll(".mark3d")).map(build);
