@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rayl Mark Cut</title>
+<title>Rayl Mark Options</title>
 <script src="https://typograaf.github.io/rayl-system/rayl.js?v=60055a74"></script>
 <style>
   /* ====================================================== the folding mark ==
@@ -19,6 +19,16 @@
   /* a turn of the front layer swings the mark's corners outside its own box,
      so the drawing is allowed past the edge of the box it is measured by */
   .mark2d{display:block;overflow:visible;}
+  .mark2d.is-locked{overflow:hidden;}
+  /* a turn swings half a cell wider than the mark, so the tile has to be
+     wider than the mark or the free version climbs into its neighbour */
+  .options{display:grid;grid-template-columns:repeat(auto-fit,minmax(216px,1fr));gap:12px;}
+  .option{background:var(--surface-idle);border-radius:var(--rayl-radius);
+    padding:32px 32px 16px;display:flex;flex-direction:column;align-items:center;gap:16px;}
+  .option .mark2d{margin:0 auto;}
+  .option .caption{display:flex;flex-direction:column;gap:4px;align-items:center;
+    text-align:center;}
+  .option .caption .rayl-12{opacity:.62;}
   .mark2d path{fill:var(--ink-primary);}
   /* the ground, carried by the piece: what hides the back of the cube */
   .mark2d .tile{fill:var(--surface-idle);}
@@ -67,39 +77,46 @@
 
   <section class="rayl-hero">
     <span class="rayl-label">The mark in motion</span>
-    <h1 class="rayl-72">The same turn, cut instead of squashed.</h1>
-    <p class="rayl-18 rayl-measure">The same puzzle as <a href="mark.html">the other
-    one</a>, and the same turn: a layer still sweeps round its axis, the near pieces
-    swinging wide and the far ones coming into view behind them. What is different is
-    what gets drawn while it does. There it is a face squashed by perspective; here
-    the turn only says how wide a face has become, and the shape is cut again at that
-    width with its corners still round — so a circle narrows into a capsule and then
-    into a line, and never into an ellipse. Nothing is scaled and nothing is 3D.
-    A face on its way to edge-on still passes through being a hairline;
-    <a href="mark-options.html">ten answers to that</a> are laid out side by side,
-    along with a switch for holding the whole turn inside the square.</p>
+    <h1 class="rayl-72">Ten ways to keep a turn from going thin.</h1>
+    <p class="rayl-18 rayl-measure">The trouble with <a href="mark-cut.html">the cut
+    version</a> is the end of a turn: a face on its way to edge-on passes through
+    being a hairline, and a hairline looks like it might snap. Here is the same
+    puzzle driving ten answers to that at once, so they can be compared turn for
+    turn rather than described. The switch below also holds every one of them inside
+    the square, which none of them do on their own — a turn swings a piece half a
+    cell wider than the mark it belongs to.</p>
   </section>
 
-  <section class="rayl-split is-lead is-centred">
-    <div class="stage is-big"><svg class="mark2d" data-size="300" viewBox="0 0 150 150" aria-hidden="true"></svg></div>
-    <div class="rayl-section">
-      <span class="rayl-label">What you are watching</span>
-      <p class="rayl-12 rayl-measure">Every piece still carries its own shape on
-      every one of its faces, so a bar can arrive standing up and a bar seen end-on
-      is a circle. Mid-turn a piece shows two of them at once, the one turning away
-      and the one coming round, each cut to its own width. Everything is ink at full
-      strength, and the back of the cube stays hidden behind the ground each piece
-      carries with it.</p>
-      <div class="rayl-row">
-        <span class="rayl-label">Motion</span>
-        <div class="rayl-seg is-tight" id="run">
-          <button class="rayl-seg-opt is-on" type="button">Play</button>
-          <button class="rayl-seg-opt" type="button">Hold</button>
+  <section class="rayl-section">
+    <div class="rayl-split is-lead">
+      <div class="rayl-section">
+        <div class="rayl-row">
+          <span class="rayl-label">Motion</span>
+          <div class="rayl-seg is-tight" id="run">
+            <button class="rayl-seg-opt is-on" type="button">Play</button>
+            <button class="rayl-seg-opt" type="button">Hold</button>
+          </div>
+        </div>
+        <div class="rayl-row">
+          <span class="rayl-label">The square</span>
+          <div class="rayl-seg is-tight" id="fit">
+            <button class="rayl-seg-opt is-on" type="button">Free</button>
+            <button class="rayl-seg-opt" type="button">Held in</button>
+            <button class="rayl-seg-opt" type="button">Cropped</button>
+          </div>
+        </div>
+        <div class="rayl-cluster">
+          <button class="rayl-btn" type="button" id="scramble">Scramble it</button>
+          <button class="rayl-btn" type="button" id="solve">Solve it</button>
         </div>
       </div>
-      <div class="rayl-cluster">
-        <button class="rayl-btn" type="button" id="scramble">Scramble it</button>
-        <button class="rayl-btn" type="button" id="solve">Solve it</button>
+      <div class="rayl-section">
+        <span class="rayl-label">Holding it in</span>
+        <p class="rayl-12 rayl-measure">Free lets a turn swing wide of the mark, which
+        is what a cube does. Held in scales the whole mark down for as long as the
+        turn needs the room and lets it back up again — nothing is lost, but the mark
+        breathes. Cropped keeps it at size and cuts off whatever leaves the square,
+        which holds the size still and loses the corners of the swing.</p>
       </div>
     </div>
   </section>
@@ -121,66 +138,27 @@
         <span class="rayl-label" id="easenote">Anything CSS takes: cubic-bezier, linear, ease-in-out, steps</span>
         <div class="times">
           <label class="time"><span class="rayl-label">Turn</span>
-            <input class="field is-ms" id="t-turn" inputmode="numeric" value="300"></label>
+            <input class="field is-ms" id="t-turn" inputmode="numeric" value="420"></label>
           <label class="time"><span class="rayl-label">Between turns</span>
-            <input class="field is-ms" id="t-gap" inputmode="numeric" value="90"></label>
+            <input class="field is-ms" id="t-gap" inputmode="numeric" value="120"></label>
           <label class="time"><span class="rayl-label">Scramble turn</span>
-            <input class="field is-ms" id="t-fast" inputmode="numeric" value="200"></label>
+            <input class="field is-ms" id="t-fast" inputmode="numeric" value="300"></label>
           <label class="time"><span class="rayl-label">Hold on the mark</span>
-            <input class="field is-ms" id="t-hold" inputmode="numeric" value="2800"></label>
+            <input class="field is-ms" id="t-hold" inputmode="numeric" value="2600"></label>
         </div>
       </div>
       <div class="rayl-section">
-        <p class="rayl-12 rayl-measure">Paste an easing and it takes effect on the
-        next turn. Everything is in milliseconds, and the four fields are the whole
-        rhythm: how long a turn takes, the beat between two of them, the quicker
-        turn it scrambles at, and how long it sits on the solved mark before
-        scrambling again.</p>
-        <p class="rayl-12 rayl-measure">The default is the system's own —
-        cubic-bezier(0.65, 0, 0.35, 1) over 300ms, the same curve and duration every
-        Rayl control moves on.</p>
+        <p class="rayl-12 rayl-measure">Slower than the other pages by default, because
+        the thing being compared happens in the last third of a turn and goes past too
+        quickly to judge at three hundred milliseconds. Put it back to 300 to see them
+        at working speed.</p>
       </div>
     </div>
   </section>
 
   <section class="rayl-section">
-    <span class="rayl-label">The same cube at the sizes the icon ships at</span>
-    <div class="band">
-      <div class="sizes">
-        <div class="size"><svg class="mark2d" data-size="112" viewBox="0 0 150 150" aria-hidden="true"></svg><span class="rayl-label">112</span></div>
-        <div class="size"><svg class="mark2d" data-size="56" viewBox="0 0 150 150" aria-hidden="true"></svg><span class="rayl-label">56</span></div>
-        <div class="size"><svg class="mark2d" data-size="32" viewBox="0 0 150 150" aria-hidden="true"></svg><span class="rayl-label">32</span></div>
-      </div>
-    </div>
-    <p class="rayl-12 rayl-measure">One puzzle drives all four. This version holds
-    together smaller than the other does — a shape cut narrow keeps its corners at
-    any size, where a squashed one loses them.</p>
-  </section>
-
-  <section class="rayl-section">
-    <span class="rayl-label">The rules it plays by</span>
-    <div class="rayl-split is-three">
-      <div class="rayl-card">
-        <span class="rayl-label">The pieces</span>
-        <p class="rayl-12">Six: two bars two cells wide, and four corners. They fill
-        eight cells at the icon's own pitch, so the gaps between them are the gaps
-        in the mark.</p>
-      </div>
-      <div class="rayl-card">
-        <span class="rayl-label">The turns</span>
-        <p class="rayl-12">Any layer you can see, a quarter or a half at a time, as
-        long as it does not run through a bar. A turn about the upright cuts the
-        shapes narrower as they swing; one about the level cuts them shorter; the
-        front layer turns on the spot and is cut not at all.</p>
-      </div>
-      <div class="rayl-card">
-        <span class="rayl-label">The solve</span>
-        <p class="rayl-12">Two thousand and sixteen positions exist and none is more
-        than ten turns from home, so it knows the shortest way back from all of them.
-        Sometimes it takes a turn that is not on it, thinks, and finds the way
-        again.</p>
-      </div>
-    </div>
+    <span class="rayl-label">One puzzle, ten answers</span>
+    <div class="options" id="options"></div>
   </section>
 
   <span class="rayl-label">Azeret and Concrette are TRIAL cuts — licence them before anything public</span>
@@ -419,20 +397,50 @@ function solve(st){
 }
 
 /* ----------------------------------------------------------- the drawing --*/
-/* A layer turns exactly as it does on the cube — the pieces sweep round the
-   axis, the near ones swinging wide and the far ones coming into view behind
-   them. What is different is what gets drawn when they do. On the cube a face
-   turning away is the same drawing squashed; here the projection only says how
-   wide the face has become, and the shape is cut again at that width with its
-   corners still round. Nothing is ever scaled, and nothing is 3D: every face
-   lands as a flat rectangle of a known size, in an order set by its depth. */
-var LAP = 2;                    /* tiles overlap a hair so no seam shows through */
+/* The turn is the cube's own: a layer sweeps round its axis and a piece shows
+   two faces at once on the way. The projection says how wide each face has
+   become; the shape is then cut again at that width with its corners round.
+   What follows is ten different answers to the last part of that turn, where
+   a face on its way to edge-on passes through being a hairline. */
+var LAP = 2, GAP = 12;
+
+var VARIANTS = [
+  {key:"plain",  name:"As it is",
+   note:"The turn straight out of the projection, hairline and all."},
+  {key:"floor",  name:"Floor", floor:9,
+   note:"A face thinner than nine units is not drawn at all. Its partner is nearly full width by then, so nothing is missing."},
+  {key:"hold",   name:"Hold", bend:1.8,
+   note:"The angle is bent so a face holds its width and then goes quickly. Same turn, less time spent thin."},
+  {key:"step",   name:"Stepped", steps:6,
+   note:"Six positions and nothing in between, so it is never drawn at a width nobody chose."},
+  {key:"join",   name:"Joined", joined:true,
+   note:"A piece showing two faces is drawn once across both. The pair is never narrower than the face started, so it swells and comes back instead of thinning."},
+  {key:"pebble", name:"Pebble", pebble:0.34,
+   note:"Under a third of its width it starts losing height too, and leaves as a pebble rather than a needle."},
+  {key:"squat",  name:"Squat", squat:0.55,
+   note:"Height follows width the whole way, so a face is never much taller than it is wide."},
+  {key:"snap",   name:"Snap", snap:64,
+   note:"The last quarter of every turn is not drawn. It lands early and the thin part never happens."},
+  {key:"slab",   name:"Slab", depth:0.55,
+   note:"A shallower cube. The two faces share the width more evenly, and the swing stays nearer the square."},
+  {key:"slice",  name:"Slice", slice:true,
+   note:"Cut off by the fold instead of narrowed: the shape keeps its size and loses its edges."}
+];
 
 function spinAbout(axis, deg){
   var r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
   if (axis === 0) return [1,0,0, 0,c,-s, 0,s,c];
   if (axis === 1) return [c,0,s, 0,1,0, -s,0,c];
   return [c,-s,0, s,c,0, 0,0,1];
+}
+/* three of the ten work by changing the angle rather than the drawing */
+function bend(deg, v){
+  var sign = deg < 0 ? -1 : 1, a = Math.abs(deg);
+  var whole = Math.floor(a / 90) * 90, rest = a - whole;
+  if (v.steps){ var q = 90 / v.steps; rest = Math.round(rest / q) * q; }
+  else if (v.snap){ rest = rest > v.snap ? 90 : rest; }
+  else if (v.bend){ rest = 90 * Math.pow(rest / 90, v.bend); }
+  return sign * (whole + rest);
 }
 var FACEUV = [
   {d:[1,0,0],  U:[0,0,-1], V:[0,1,0]},
@@ -443,80 +451,149 @@ var FACEUV = [
   {d:[0,0,-1], U:[-1,0,0], V:[0,1,0]}
 ];
 function axisOf(v){ return v[0] ? 0 : v[1] ? 1 : 2; }
-/* a bar lying front to back counts as being at the front, though its middle is not */
 function atFront(st, i){
   var cs = cells(st, i);
   for (var k=0;k<cs.length;k++) if (cs[k][2] > 0) return true;
   return false;
 }
 
-/* Every face of every piece that is turned toward you, with how wide and how
-   tall it has become and how far away it is. */
-function project(st, spin){
+function project(st, spin, v){
   var out = [], mv = spin ? MOVES[spin.move] : null;
-  var R = spin ? spinAbout(mv.axis, spin.deg) : null;
+  var deg = spin ? bend(spin.deg, v) : 0;
+  var R = spin ? spinAbout(mv.axis, deg) : null;
+  var dz = v.depth || 1;
   for (var i=0;i<HOME.length;i++){
     var moving = mv && sits(st, i, mv.axis, mv.val) === 2;
-    /* a piece settled at the back is not drawn; it can only be there because a
-       turn put it there, and while that turn is running it is drawn */
     if (!moving && !atFront(st, i)) continue;
     var piece = HOME[i], M = ORI[st[i].o], T = moving ? mul(R, M) : M;
     var c = st[i].c, C = [c[0]*HALF, c[1]*HALF, c[2]*HALF];
     if (moving) C = turn(R, C);
-    var h = piece.long ? [CELL, HALF, HALF] : [HALF, HALF, HALF];
+    var h = [piece.long ? CELL : HALF, HALF, HALF * dz];
+    var mine = [];
     for (var f=0;f<6;f++){
       var F = FACEUV[f], n = turn(T, F.d);
-      if (n[2] < 0.002) continue;                    /* turned away, or edge on */
+      if (n[2] < 0.002) continue;
       var d = F.d, off = turn(T, [d[0]*h[0], d[1]*h[1], d[2]*h[2]]);
       var uD = turn(T, F.U), vD = turn(T, F.V);
       var lu = Math.hypot(uD[0], uD[1]), lv = Math.hypot(vD[0], vD[1]);
       if (lu < 1e-4 || lv < 1e-4) continue;
-      var end = piece.long && axisOf(d) === 0;       /* a bar seen end on */
-      out.push({
-        z: C[2] + off[2],
-        x: C[0] + off[0] + 75, y: C[1] + off[1] + 75,
-        fw: 2*h[axisOf(F.U)] + LAP, fh: 2*h[axisOf(F.V)] + LAP,
+      var uAx = axisOf(F.U), vAx = axisOf(F.V), end = piece.long && axisOf(d) === 0;
+      /* a face lying on the cube's depth is only as wide as the cube is deep */
+      var su = uAx === 2 ? dz : 1, sv = vAx === 2 ? dz : 1;
+      mine.push({
+        z: C[2] + off[2], x: C[0] + off[0] + 75, y: C[1] + off[1] + 75,
+        fw: 2*h[uAx] + LAP, fh: 2*h[vAx] + LAP,
         shape: SHAPES[end ? "circle" : piece.art],
-        lu: lu, lv: lv,
-        su: [uD[0]/lu, uD[1]/lu], sv: [vD[0]/lv, vD[1]/lv]
+        art: end ? "circle" : piece.art,
+        lu: lu, lv: lv, su: su, sv: sv,
+        dir: [uD[0]/lu, uD[1]/lu], up: [vD[0]/lv, vD[1]/lv]
       });
     }
+    /* Joined: two faces of one piece carrying the same shape are drawn once,
+       across the pair. The union of the two is never narrower than the face was
+       to begin with — it swells and comes back — so the piece bends rather than
+       thinning. */
+    if (v.joined && mine.length === 2){
+      var A = mine[0], B = mine[1];
+      var ta = A.fw * A.lu, tb = B.fw * B.lu;              /* the tiles, on screen */
+      var sa = A.shape.w * A.lu * A.su, sb = B.shape.w * B.lu * B.su;
+      /* one drawing for the pair, and always the piece's own shape, so there is
+         no moment where it changes its mind about what it is */
+      A.shape = SHAPES[piece.art];
+      A.x = (A.x * ta + B.x * tb) / (ta + tb || 1);
+      A.y = (A.y * ta + B.y * tb) / (ta + tb || 1);
+      A.z = A.z > B.z ? A.z : B.z;
+      A.fw = ta + tb; A.lu = 1; A.su = (sa + sb) / A.shape.w;
+      mine = [A];
+    }
+    for (var k=0;k<mine.length;k++) out.push(mine[k]);
   }
-  out.sort(function(a,b){ return a.z - b.z; });      /* far ones drawn first */
+  out.sort(function(a,b){ return a.z - b.z; });
   return out;
 }
 
-var POOL = 14;                       /* six pieces, at most two faces apiece */
+var POOL = 14;
+var CLIPS = 0;
 function build(host){
   var size = parseFloat(host.dataset.size) || 150;
+  var v = VARIANTS[+host.dataset.variant];
   host.style.width = host.style.height = size + "px";
-  var NS = "http://www.w3.org/2000/svg", cells = [];
+  var NS = "http://www.w3.org/2000/svg";
+  var fit = document.createElementNS(NS, "g");
+  host.appendChild(fit);
+  var defs = null;
+  if (v.slice){ defs = document.createElementNS(NS, "defs"); host.appendChild(defs); }
+  var cells = [];
   for (var i=0;i<POOL;i++){
     var g = document.createElementNS(NS, "g");
     var tile = document.createElementNS(NS, "rect");
     tile.setAttribute("class", "tile");
     var art = document.createElementNS(NS, "path");
-    g.appendChild(tile); g.appendChild(art); host.appendChild(g);
-    cells.push({g:g, tile:tile, art:art});
+    var clip = null;
+    if (v.slice){
+      var id = "cut" + (++CLIPS);
+      clip = document.createElementNS(NS, "clipPath");
+      clip.setAttribute("id", id);
+      var r = document.createElementNS(NS, "rect");
+      clip.appendChild(r); defs.appendChild(clip);
+      art.setAttribute("clip-path", "url(#" + id + ")");
+      clip = r;
+    }
+    g.appendChild(tile); g.appendChild(art); fit.appendChild(g);
+    cells.push({g:g, tile:tile, art:art, clip:clip});
   }
-  return {cells:cells};
+  return {cells:cells, fit:fit, v:v, host:host};
 }
+
+var HELD = 0;                          /* 0 free, 1 scaled to fit, 2 cropped */
 function paint(inst, st, spin){
-  var faces = project(st, spin), i;
+  var v = inst.v, faces = project(st, spin, v), i;
+  var room = 1;
+  if (spin && HELD === 1){
+    var a = bend(spin.deg, v) * Math.PI / 180;
+    var dz = MOVES[spin.move].axis === 2 ? 1 : (v.depth || 1);
+    room = Math.abs(Math.cos(a)) + dz * Math.abs(Math.sin(a));
+    if (room < 1) room = 1;
+  }
+  inst.fit.setAttribute("transform", room > 1.001
+    ? "translate(75 75) scale(" + num(1/room) + ") translate(-75 -75)" : "");
+  inst.host.classList.toggle("is-locked", HELD === 2);
   for (i=0; i<inst.cells.length; i++){
     var cell = inst.cells[i];
     if (i >= faces.length){ cell.g.setAttribute("display", "none"); continue; }
     var F = faces[i];
+    var thin = Math.min(F.lu * F.su, F.lv * F.sv);
+    var sx = F.lu * F.su, sy = F.lv * F.sv;
+    if (v.floor && Math.min(F.shape.w * sx, F.shape.h * sy) < v.floor){
+      cell.g.setAttribute("display", "none"); continue;
+    }
+    if (v.pebble && thin < v.pebble){
+      var k = thin / v.pebble;
+      if (F.lu * F.su < F.lv * F.sv) sy *= k; else sx *= k;
+    }
+    if (v.squat){
+      var keep = v.squat + (1 - v.squat) * thin;
+      if (F.lu * F.su < F.lv * F.sv) sy *= keep; else sx *= keep;
+    }
     cell.g.removeAttribute("display");
     cell.g.setAttribute("transform",
       "translate(" + num(F.x) + " " + num(F.y) + ") matrix(" +
-      num(F.su[0]) + " " + num(F.su[1]) + " " + num(F.sv[0]) + " " + num(F.sv[1]) + " 0 0)");
+      num(F.dir[0]) + " " + num(F.dir[1]) + " " + num(F.up[0]) + " " + num(F.up[1]) + " 0 0)");
     var tw = F.fw * F.lu, th = F.fh * F.lv;
     cell.tile.setAttribute("x", num(-tw/2));
     cell.tile.setAttribute("y", num(-th/2));
     cell.tile.setAttribute("width", num(tw));
     cell.tile.setAttribute("height", num(th));
-    cell.art.setAttribute("d", outline(F.shape, F.lu, F.lv));
+    if (v.slice){
+      /* keep the shape whole and let the face's own edges cut it */
+      cell.art.setAttribute("d", outline(F.shape, F.su, F.sv));
+      cell.clip.setAttribute("x", num(-tw/2));
+      cell.clip.setAttribute("y", num(-th/2));
+      cell.clip.setAttribute("width", num(tw));
+      cell.clip.setAttribute("height", num(th));
+    } else {
+      cell.art.setAttribute("d", outline(F.shape, sx, sy));
+    }
   }
 }
 
@@ -570,10 +647,26 @@ function readEase(text){
   return null;
 }
 
-var TIME = {turn:300, gap:90, fast:200, hold:2800, think:360, doubt:460};
+var TIME = {turn:420, gap:120, fast:300, hold:2600, think:400, doubt:520};
 var ease = readEase("cubic-bezier(0.65, 0, 0.35, 1)");
 
 /* ------------------------------------------------------------- the drive --*/
+var board = document.getElementById("options");
+VARIANTS.forEach(function(v, i){
+  var cell = document.createElement("div");
+  cell.className = "option";
+  var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("class", "mark2d");
+  svg.setAttribute("viewBox", "0 0 150 150");
+  svg.setAttribute("aria-hidden", "true");
+  svg.dataset.size = "150";
+  svg.dataset.variant = i;
+  var cap = document.createElement("div");
+  cap.className = "caption";
+  cap.innerHTML = '<span class="rayl-label">' + v.name + '</span>' +
+                  '<p class="rayl-12">' + v.note + '</p>';
+  cell.appendChild(svg); cell.appendChild(cap); board.appendChild(cell);
+});
 var hosts = [].slice.call(document.querySelectorAll(".mark2d")).map(build);
 var state = solved();
 var queue = [], step = null, mode = "landed", slips = 0, running = false, raf = 0;
@@ -724,6 +817,11 @@ document.getElementById("scramble").addEventListener("click", function(){
 });
 document.getElementById("solve").addEventListener("click", function(){
   queue = []; step = null; mode = "solving"; slips = 2; decide(); resume();
+});
+
+document.getElementById("fit").addEventListener("rayl:change", function(e){
+  HELD = e.detail.index;
+  show(null);
 });
 
 var easeField = document.getElementById("ease");
