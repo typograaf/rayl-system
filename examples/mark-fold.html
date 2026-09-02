@@ -3,45 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rayl Mark</title>
+<title>Rayl Mark Folded</title>
 <script src="https://typograaf.github.io/rayl-system/rayl.js?v=60055a74"></script>
 <style>
-  /* ====================================================== the moving mark ==
-   * The icon is three shapes on a two-by-two grid, so it is the front of a
-   * two-by-two cube whose top shape is one glued piece two cells wide. That
-   * gluing is the whole mechanic: a layer can only turn if it does not cut the
-   * bar, so which turns are available changes as the cube moves.
+  /* ====================================================== the folding mark ==
+   * The same puzzle as the other one, drawn without a third dimension. A turn
+   * is not a rotation here: the shapes it touches close to nothing along one
+   * axis and the shapes that replace them open out of the same line.
    *
-   * Every face of every piece carries that piece's own shape — a bar is a bar
-   * on all four of its long faces, a circle is a circle on all six — so there
-   * is never a blank face and never a shape cut in half.
-   *
-   * There is no perspective, no light, no second tone and no background. Every
-   * shape is ink at full strength; the back of the cube is hidden the way a
-   * solid hides what is behind it, and a piece that has settled at the back is
-   * then not drawn at all, which nobody can see because it was already covered.
-   * So a turn reads as flat shapes moving rather than as an object rendered.
-   *
-   * Nothing here is a Rayl component. This is one page's own drawing.
+   * What keeps it from reading as a squash is that nothing is ever scaled. A
+   * shape is redrawn at its new width with its corners still round — a circle
+   * narrows into a capsule and then into a line, never into an ellipse — which
+   * is exactly what a rounded rectangle does when you drag its side in.
    * ======================================================================== */
-  .mark3d{
-    /* One colour, and nothing behind it. Every face of every piece is ink, so
-       a turn is read from the silhouette alone.
-
-       Each face also carries an opaque tile in the ground colour, a whole cell
-       wide, which is what hides the back of the cube: not a fade and not a
-       trick, just a solid surface in front of it. Nothing is ever drawn at
-       part strength. The one thing this asks in return is that the mark stands
-       on the ground it says it does — set --mark-ground if it sits on
-       something else. */
-    --mark-ground:var(--surface-idle);
-    position:relative;
-  }
-  .mark3d .cube{position:absolute;inset:0;transform-style:preserve-3d;}
-  .mark3d .piece{position:absolute;left:50%;top:50%;transform-style:preserve-3d;}
-  .mark3d .face{position:absolute;left:50%;top:50%;display:grid;place-items:center;
-    background:var(--mark-ground);backface-visibility:hidden;}
-  .mark3d .face svg{display:block;fill:var(--ink-primary);}
+  /* a turn of the front layer swings the mark's corners outside its own box,
+     so the drawing is allowed past the edge of the box it is measured by */
+  .mark2d{display:block;overflow:visible;}
+  .mark2d path{fill:var(--ink-primary);}
 
   /* the system has a button for a link that is a destination; this is the
      other kind, a word in a sentence */
@@ -87,27 +65,24 @@
 
   <section class="rayl-hero">
     <span class="rayl-label">The mark in motion</span>
-    <h1 class="rayl-72">The icon is the solved state.</h1>
-    <p class="rayl-18 rayl-measure">Three shapes on a two-by-two grid, so the mark
-    is the front of a two-by-two cube. The bar is one piece two cells wide and is
-    never cut, which means a layer can only turn when it does not run through it —
-    the turns on offer change as the cube moves. It scrambles itself, works out the
-    shortest way back, takes the occasional wrong turn, and lands on the mark
-    exactly. <a href="mark-fold.html">The folded version</a> is the same puzzle with
-    the third dimension taken out.</p>
+    <h1 class="rayl-72">The same mark, with the third dimension taken out.</h1>
+    <p class="rayl-18 rayl-measure">The same puzzle as <a href="mark.html">the other
+    one</a> — the same bandaged two-by-two, the same solve — but nothing turns in
+    space. A shape closes to a line along one axis and the shape that takes its place
+    opens out of that same line. Nothing is scaled: every width is drawn afresh with
+    its corners still round, so a circle narrows into a capsule and then into a line,
+    and never into an ellipse.</p>
   </section>
 
   <section class="rayl-split is-lead is-centred">
-    <div class="stage is-big"><div class="mark3d" data-size="300"></div></div>
+    <div class="stage is-big"><svg class="mark2d" data-size="300" viewBox="0 0 150 150" aria-hidden="true"></svg></div>
     <div class="rayl-section">
       <span class="rayl-label">What you are watching</span>
-      <p class="rayl-12 rayl-measure">Every piece carries its own shape on every one
-      of its faces — a bar is a bar on all four of its long faces and a circle on the
-      two ends, the way a capsule sections — so nothing is ever cut and no face is
-      ever blank. Everything is ink at full strength — no second tone, nothing at
-      part opacity — and there is no background: each shape sits on a tile of the
-      ground a whole cell wide, so the back of the cube is hidden the way a solid
-      hides what is behind it.</p>
+      <p class="rayl-12 rayl-measure">Every piece still carries its own shape on
+      every one of its faces, so a bar can arrive standing up and a bar seen end-on
+      is a circle. Only the front of the cube is ever drawn — there is nothing to
+      hide, because there is no depth to hide it in. Everything is ink at full
+      strength.</p>
       <div class="rayl-row">
         <span class="rayl-label">Motion</span>
         <div class="rayl-seg is-tight" id="run">
@@ -165,14 +140,14 @@
     <span class="rayl-label">The same cube at the sizes the icon ships at</span>
     <div class="band">
       <div class="sizes">
-        <div class="size"><div class="mark3d" data-size="112"></div><span class="rayl-label">112</span></div>
-        <div class="size"><div class="mark3d" data-size="56"></div><span class="rayl-label">56</span></div>
-        <div class="size"><div class="mark3d" data-size="32"></div><span class="rayl-label">32</span></div>
+        <div class="size"><svg class="mark2d" data-size="112" viewBox="0 0 150 150" aria-hidden="true"></svg><span class="rayl-label">112</span></div>
+        <div class="size"><svg class="mark2d" data-size="56" viewBox="0 0 150 150" aria-hidden="true"></svg><span class="rayl-label">56</span></div>
+        <div class="size"><svg class="mark2d" data-size="32" viewBox="0 0 150 150" aria-hidden="true"></svg><span class="rayl-label">32</span></div>
       </div>
     </div>
-    <p class="rayl-12 rayl-measure">One puzzle drives all four. Below about 32 the
-    turns stop being legible and only the landing reads — which is the size at which
-    you should be shipping the still file anyway.</p>
+    <p class="rayl-12 rayl-measure">One puzzle drives all four. This version holds
+    together smaller than the turning one does — a shape closing to a line survives
+    being tiny in a way a foreshortened one does not.</p>
   </section>
 
   <section class="rayl-section">
@@ -187,8 +162,9 @@
       <div class="rayl-card">
         <span class="rayl-label">The turns</span>
         <p class="rayl-12">Any layer you can see, a quarter or a half at a time, as
-        long as it does not run through a bar. The back layer is left alone — nothing
-        in it is drawn, so turning it would be a turn nobody could watch.</p>
+        long as it does not run through a bar. A turn about the upright closes the
+        shapes sideways; one about the level closes them the short way; and the front
+        layer simply turns on the spot, which needs no folding at all.</p>
       </div>
       <div class="rayl-card">
         <span class="rayl-label">The solve</span>
@@ -218,11 +194,86 @@
  * drawing rather than a crop. There are only three: a bar seen end-on is a
  * circle, which is what a capsule's section is anyway, so the two faces across
  * the glue need nothing of their own.                                       */
-var ART = {
-  bar: '<svg viewBox="0 0 150 69" aria-hidden="true"><path d="M115.5 0C134.554 0 150 15.4462 150 34.5C150 53.5538 134.554 69 115.5 69H17.5C7.83502 69 0 61.165 0 51.5V17.5C0 7.83502 7.83502 0 17.5 0H115.5Z"/></svg>',
-  circle: '<svg viewBox="0 0 69 69" aria-hidden="true"><circle cx="34.5" cy="34.5" r="34.5"/></svg>',
-  triangle: '<svg viewBox="0 0 69 69" aria-hidden="true"><path d="M0 17.249C0 1.6584 18.8496 -6.1498 29.874 4.874L64.126 39.126C75.15 50.15 67.342 69 51.751 69H17.5C7.835 69 0 61.165 0 51.5V17.249Z"/></svg>'
+/* The three shapes, each one a recipe rather than a drawing, so it can be
+   asked for at any size. A rounded rectangle is its four corners; the triangle
+   is its three sides, which is the only way to keep it exactly its own box
+   wide at every width — scale a triangle's corners instead and the rounding at
+   the sharp end drags the whole shape down off the top of the box. */
+var SHAPES = {
+  bar:      {w:150, h:69, r:[17.5,34.5,34.5,17.5], pts:box},
+  circle:   {w:69,  h:69, r:[34.5,34.5,34.5,34.5], pts:box},
+  triangle: {w:69,  h:69, r:[17.5],                pts:wedge}
 };
+function box(w, h){
+  return [[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]];
+}
+/* The cut corner, built from the two circles it has to touch: one tangent to
+   the left side and to the top, one tangent to the bottom and to the right, and
+   the diagonal is their common tangent. Fall out of that and the shape is its
+   own box wide and its own box tall whatever you ask for. As it narrows the
+   two circles close on each other and the diagonal stands up, until there is
+   nothing left to cut and it is simply a capsule. */
+function wedge(w, h){
+  var r = Math.min(17.5, w/2, h/2);
+  var c1 = [-w/2 + r, -h/2 + r], c2 = [w/2 - r, h/2 - r];
+  var dx = c2[0] - c1[0], dy = c2[1] - c1[1], len = Math.hypot(dx, dy);
+  if (len < 1e-6 || Math.abs(dx) < 1e-6 || Math.abs(dy) < 1e-6) return box(w, h);
+  var ux = dx/len, uy = dy/len;
+  var ox = c1[0] + r*uy, oy = c1[1] - r*ux;        /* a point on the diagonal */
+  return [[-w/2, oy + (-w/2 - ox) * (uy/ux)],
+          [ox + (h/2 - oy) * (ux/uy), h/2],
+          [-w/2, h/2]];
+}
+
+function num(v){ return Math.round(v * 1000) / 1000; }
+
+/* A shape at any size, rounded rather than squashed. The corner radius is a
+   length, not a proportion, so it stays what it is until the shape is too
+   narrow to hold it and then it is only ever as big as half the width — which
+   is what turns a circle into a capsule and a capsule into a line. */
+function outline(shape, sx, sy){
+  var p = shape.pts(shape.w * sx, shape.h * sy), n = p.length, i;
+  var radii = [];
+  for (i=0;i<n;i++) radii[i] = shape.r[i < shape.r.length ? i : 0];
+  var cut = [], bend = [];
+  for (i=0;i<n;i++){
+    var a = p[(i+n-1)%n], b = p[i], c = p[(i+1)%n];
+    var d1 = Math.hypot(a[0]-b[0], a[1]-b[1]), d2 = Math.hypot(c[0]-b[0], c[1]-b[1]);
+    if (!d1 || !d2){ cut[i] = 0; bend[i] = 0; continue; }
+    var u1 = [(a[0]-b[0])/d1, (a[1]-b[1])/d1], u2 = [(c[0]-b[0])/d2, (c[1]-b[1])/d2];
+    var dot = u1[0]*u2[0] + u1[1]*u2[1];
+    var ang = Math.acos(dot < -1 ? -1 : dot > 1 ? 1 : dot);
+    bend[i] = Math.tan(ang / 2);
+    cut[i] = bend[i] > 1e-4 ? radii[i] / bend[i] : 0;
+  }
+  /* no corner may eat more of an edge than it leaves for the one at the far
+     end of it — this is the whole of the collapse, and it needs two passes
+     because shortening one corner can free the edge next to it */
+  for (var pass=0; pass<3; pass++) for (i=0;i<n;i++){
+    var j = (i+1)%n, len = Math.hypot(p[j][0]-p[i][0], p[j][1]-p[i][1]);
+    if (cut[i] + cut[j] > len && cut[i] + cut[j] > 0){
+      var k = len / (cut[i] + cut[j]);
+      cut[i] *= k; cut[j] *= k;
+    }
+  }
+  var d = "";
+  for (i=0;i<n;i++){
+    var a = p[(i+n-1)%n], b = p[i], c = p[(i+1)%n];
+    var d1 = Math.hypot(a[0]-b[0], a[1]-b[1]), d2 = Math.hypot(c[0]-b[0], c[1]-b[1]);
+    if (!d1 || !d2) continue;
+    var u1 = [(a[0]-b[0])/d1, (a[1]-b[1])/d1], u2 = [(c[0]-b[0])/d2, (c[1]-b[1])/d2];
+    var s1 = [b[0] + u1[0]*cut[i], b[1] + u1[1]*cut[i]];
+    var s2 = [b[0] + u2[0]*cut[i], b[1] + u2[1]*cut[i]];
+    d += (d ? "L" : "M") + num(s1[0]) + " " + num(s1[1]);
+    var r = cut[i] * bend[i];
+    if (r > 0.002){
+      var cross = u1[0]*u2[1] - u1[1]*u2[0];
+      d += "A" + num(r) + " " + num(r) + " 0 0 " + (cross > 0 ? 0 : 1) + " " +
+           num(s2[0]) + " " + num(s2[1]);
+    }
+  }
+  return d ? d + "Z" : "";
+}
 
 /* ------------------------------------------------------------ the solid -- *
  * Screen axes: x right, y down, z toward you. Cells sit at +-1 on each axis;
@@ -361,101 +412,77 @@ function solve(st){
 }
 
 /* ----------------------------------------------------------- the drawing --*/
-/* a face of a box W x H x D: which two of them it is, and which one it rides
-   out along. On a bar the two marked faces are the ones across the glue, and
-   they take the circle rather than the bar, which does not fit them. */
-var FACES = [
-  {tag:"f", css:"",                 dims:[0,1], out:2},
-  {tag:"b", css:"rotateY(180deg) ", dims:[0,1], out:2},
-  {tag:"r", css:"rotateY(90deg) ",  dims:[2,1], out:0, cut:1},
-  {tag:"l", css:"rotateY(-90deg) ", dims:[2,1], out:0, cut:1},
-  {tag:"u", css:"rotateX(90deg) ",  dims:[0,2], out:1},
-  {tag:"d", css:"rotateX(-90deg) ", dims:[0,2], out:1}
+/* Only the front of the cube is ever drawn. A bar lying front to back counts
+   as being at the front even though its middle is not. */
+function atFront(st, i){
+  var cs = cells(st, i);
+  for (var k=0;k<cs.length;k++) if (cs[k][2] > 0) return true;
+  return false;
+}
+/* Which face of a piece is toward you, and how that face's own two directions
+   land on screen. Same six faces as the cube has; there is just no depth to
+   draw them in, so a face is either square to you or it is not there. */
+var FACEUV = [
+  {d:[1,0,0],  U:[0,0,-1], V:[0,1,0]},
+  {d:[-1,0,0], U:[0,0,1],  V:[0,1,0]},
+  {d:[0,-1,0], U:[1,0,0],  V:[0,0,1]},
+  {d:[0,1,0],  U:[1,0,0],  V:[0,0,-1]},
+  {d:[0,0,1],  U:[1,0,0],  V:[0,1,0]},
+  {d:[0,0,-1], U:[-1,0,0], V:[0,1,0]}
 ];
-
+function look(st, i){
+  var piece = HOME[i], m = ORI[st[i].o], F = FACEUV[4], f;
+  for (f=0; f<6; f++) if (turn(m, FACEUV[f].d)[2] > 0.5){ F = FACEUV[f]; break; }
+  return {shape: SHAPES[(piece.long && F.d[0] !== 0) ? "circle" : piece.art],
+          su: turn(m, F.U), sv: turn(m, F.V), c: st[i].c};
+}
 function build(host){
   var size = parseFloat(host.dataset.size) || 150;
-  var u = size / 150;
   host.style.width = host.style.height = size + "px";
-  var cube = document.createElement("div");
-  cube.className = "cube";
-  var els = [];
+  var paths = [];
   for (var i=0;i<HOME.length;i++){
-    var piece = HOME[i];
-    /* the solid is whole cells, so neighbours touch and nothing shows between
-       them; the shape inside it is the icon's own size */
-    var box = [(piece.long ? 2*CELL : CELL)*u, CELL*u, CELL*u];
-    var el = document.createElement("div");
-    el.className = "piece";
-    el.style.width = box[0] + "px";
-    el.style.height = box[1] + "px";
-    el.style.margin = (-box[1]/2) + "px 0 0 " + (-box[0]/2) + "px";
-    for (var f=0;f<6;f++){
-      var F = FACES[f], end = F.cut && piece.long;
-      var w = box[F.dims[0]] + LAP*u, h = box[F.dims[1]] + LAP*u;
-      var art = end ? "circle" : piece.art;
-      var sw = (art === "bar" ? LONG : SIDE) * u, sh = SIDE * u;
-      var face = document.createElement("div");
-      face.className = "face s-" + F.tag;
-      face.style.width = w + "px";
-      face.style.height = h + "px";
-      face.style.margin = (-h/2) + "px 0 0 " + (-w/2) + "px";
-      face.style.transform = F.css + "translateZ(" + (box[F.out]/2) + "px)";
-      face.innerHTML = ART[art];
-      var svg = face.firstChild;
-      svg.style.width = sw + "px";
-      svg.style.height = sh + "px";
-      el.appendChild(face);
-    }
-    cube.appendChild(el);
-    els.push(el);
+    var el = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    host.appendChild(el);
+    paths.push(el);
   }
-  host.appendChild(cube);
-  return {els:els, u:u};
+  return {paths:paths};
 }
-function matrix3d(m){
-  return "matrix3d(" + m[0] + "," + m[3] + "," + m[6] + ",0," +
-                       m[1] + "," + m[4] + "," + m[7] + ",0," +
-                       m[2] + "," + m[5] + "," + m[8] + ",0,0,0,0,1)";
-}
-/* how far forward a piece reaches, the turn it is in included: a bar lying
-   front to back is at the front even though its middle is not */
-function reach(st, i, spin){
-  var cs = cells(st, i), best = -2, r, cos, sin, a;
-  if (spin){
-    r = spin.deg * Math.PI / 180; cos = Math.cos(r); sin = Math.sin(r);
-    a = MOVES[spin.move].axis;
+function place(el, st, i, axis, shut, spun){
+  var L = look(st, i), sx = 1, sy = 1;
+  if (shut < 1){
+    /* the axis being closed is a screen axis; which of the shape's own two
+       does that turn out to be, once the piece has been turned about? */
+    var uAcross = L.su[0] !== 0;
+    if ((axis === 0) === uAcross) sx = shut; else sy = shut;
   }
-  for (var k=0;k<cs.length;k++){
-    var c = cs[k], z = c[2];
-    if (spin){
-      if (a === 0) z = sin*c[1] + cos*c[2];
-      else if (a === 1) z = cos*c[2] - sin*c[0];
-    }
-    if (z > best) best = z;
-  }
-  return best;
+  el.setAttribute("d", outline(L.shape, sx, sy));
+  var x = 75 + L.c[0]*HALF, y = 75 + L.c[1]*HALF;
+  var tr = "translate(" + num(x) + " " + num(y) + ") matrix(" +
+           L.su[0] + " " + L.su[1] + " " + L.sv[0] + " " + L.sv[1] + " 0 0)";
+  if (spun) tr = "rotate(" + num(spun) + " 75 75) " + tr;
+  el.setAttribute("transform", tr);
 }
 function paint(inst, st, spin){
-  for (var i=0;i<HOME.length;i++){
-    var p = st[i], k = HALF * inst.u, moving = false;
-    var t = "translate3d(" + (p.c[0]*k) + "px," + (p.c[1]*k) + "px," + (p.c[2]*k) + "px) " +
-            matrix3d(ORI[p.o]);
-    if (spin && sits(st, i, MOVES[spin.move].axis, MOVES[spin.move].val) === 2){
-      var a = MOVES[spin.move].axis;
-      t = "rotate3d(" + (a===0?1:0) + "," + (a===1?1:0) + "," + (a===2?1:0) + "," +
-          spin.deg.toFixed(2) + "deg) " + t;
-      moving = true;
+  var use = st, shut = 1, axis = -1, spun = 0, mv = null, turning = false;
+  if (spin){
+    mv = MOVES[spin.move];
+    turning = true;
+    if (isSpin(spin.move)) spun = spin.deg;      /* the front layer turns flat */
+    else {
+      /* half a turn closes it, the other half opens what took its place */
+      var f = Math.cos(Math.PI * spin.e);
+      if (f < 0) use = spin.next;
+      shut = Math.abs(f);
+      axis = mv.axis === 1 ? 0 : 1;              /* upright closes it sideways */
     }
-    var el = inst.els[i];
-    el.style.transform = t;
-    /* A piece at the back is not drawn. It can only get there by turning, and
-       a turning piece is always drawn, so by the time this takes it away it is
-       already behind the tile of the piece that took its place — there is
-       nothing to see going. */
-    var here = moving || reach(st, i, null) >= 0;
-    if (el.__here !== here){ el.__here = here; el.style.display = here ? "" : "none"; }
   }
+  var k = 0;
+  for (var i=0;i<HOME.length;i++){
+    if (!atFront(use, i)) continue;                         /* the front only */
+    var moving = turning && sits(use, i, mv.axis, mv.val) === 2;
+    place(inst.paths[k++], use, i, axis, moving ? shut : 1, moving ? spun : 0);
+  }
+  for (; k<inst.paths.length; k++) inst.paths[k].setAttribute("d", "");
 }
 
 /* ------------------------------------------------------------ the timing --*/
@@ -512,7 +539,7 @@ var TIME = {turn:300, gap:90, fast:200, hold:2800, think:360, doubt:460};
 var ease = readEase("cubic-bezier(0.65, 0, 0.35, 1)");
 
 /* ------------------------------------------------------------- the drive --*/
-var hosts = [].slice.call(document.querySelectorAll(".mark3d")).map(build);
+var hosts = [].slice.call(document.querySelectorAll(".mark2d")).map(build);
 var state = solved();
 var queue = [], step = null, mode = "landed", slips = 0, running = false, raf = 0;
 var REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -609,6 +636,7 @@ function draw(now){
       var q = MOVES[step.move].quarters;
       /* a half turn is as true one way as the other, so let it choose */
       step.deg = q === 3 ? -90 : q === 2 ? (Math.random() < 0.5 ? 180 : -180) : 90;
+      step.next = play(state, step.move);
     }
   }
   var p = step.ms <= 0 ? 1 : (now - step.t0) / step.ms;
@@ -616,7 +644,8 @@ function draw(now){
   if (step.move === undefined){
     if (p >= 1) step = null;                       /* a pause draws nothing */
   } else {
-    show({move:step.move, deg:step.deg * ease(p)});
+    var e = ease(p);
+    show({move:step.move, e:e, deg:step.deg * e, next:step.next});
     if (p >= 1){ state = play(state, step.move); step = null; show(null); }
   }
   raf = running ? requestAnimationFrame(draw) : 0;
