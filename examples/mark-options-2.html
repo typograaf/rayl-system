@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Mark Options, Closer</title>
-<script src="https://typograaf.github.io/rayl-system/rayl.js?v=1644bc76"></script>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=c0606cbb"></script>
 <style>
   /* ====================================================== the folding mark ==
    * The same puzzle as the other one, drawn without a third dimension. A turn
@@ -406,26 +406,23 @@ var LAP = 2, GAP = 12;
 
 var VARIANTS = [
   {key:"floor",  name:"Floor", floor:9,
-   note:"Where we left it. A face thinner than nine units is dropped, and the drop is the thing that jumps."},
-  {key:"handed", name:"Handed over", floor:9, hand:true,
-   note:"The width the floor takes away is given to the face beside it, so the piece keeps its silhouette and nothing jumps at all."},
-  {key:"slid",   name:"Slid under", floor:17, slide:true,
-   note:"Held at seventeen units and slid in behind its partner rather than dropped. It leaves by going somewhere rather than by stopping."},
-  {key:"shrunk", name:"Shrunk out", floor:17, shrink:true,
-   note:"Held at seventeen units and taken down to nothing where it stands. It leaves by getting smaller."},
-  {key:"both",   name:"Handed and swayed", floor:9, hand:true, lead:11,
-   note:"The hand-over, with the sway below. The two answers do not fight each other."},
+   note:"Where we left it, for comparison. The two on their way out are the same size the whole way."},
+  {key:"fall1",  name:"Floor, falling", floor:9, fall:0.38,
+   note:"The falloff: a piece is smaller the further it has been pushed past the square. The one nearest the edge is smallest, the one behind it follows, and nothing matches until everything is home."},
+  {key:"fall2",  name:"Floor, falling far", floor:9, fall:0.58,
+   note:"The same, further: down to two fifths of itself at the widest point of the swing."},
+  {key:"fall3",  name:"Floor, falling late", floor:9, fall:0.5, curve:2.2,
+   note:"The same, on a curve: it keeps its size while it is still over the square and loses it once it is properly out."},
   {key:"pebble", name:"Pebble", pebble:0.34,
-   note:"Where we left it. Under a third of its width it loses height too — but both pieces do it in step."},
-  {key:"sway",   name:"Swayed", pebble:0.34, lead:11,
-   note:"The layer turns with a lean in it, eleven degrees at the middle of the turn and none at either end, so the two pieces are never the same size."},
-  {key:"reach",  name:"By reach", pebble:0.34, spread:0.6,
-   note:"No lean, but the far piece starts shrinking well before the near one. The layer stays rigid; only the falloff is staggered."},
-  {key:"late",   name:"Late", pebble:0.34, curve:2.4,
-   note:"The same shrink on a curve of its own: nothing for a while, then most of it at once."},
-  {key:"all",    name:"Swayed, late, floored", pebble:0.34, lead:11, curve:2.0, floor:6, hand:true,
-   note:"All of it together: the lean, the late shrink, and a small floor handed over at the end."}
+   note:"Where we left it, for comparison. Thin faces round off, but again both at once."},
+  {key:"fall4",  name:"Pebble, falling", pebble:0.34, fall:0.38,
+   note:"The falloff with the rounding: it shrinks as it travels out, and rounds off once the face itself has gone thin."},
+  {key:"fall5",  name:"Pebble, falling far", pebble:0.34, fall:0.58,
+   note:"The same, further."},
+  {key:"fall6",  name:"Pebble, falling late", pebble:0.34, fall:0.5, curve:2.2,
+   note:"The same, on a curve."}
 ];
+
 
 
 function spinAbout(axis, deg){
@@ -461,18 +458,15 @@ function atFront(st, i){
 function project(st, spin, v){
   var out = [], mv = spin ? MOVES[spin.move] : null;
   var base = spin ? bend(spin.deg, v) : 0;
-  /* how far through the turn we are, so a sway can be nothing at both ends */
-  var through = (spin && spin.full) ? Math.abs(spin.deg / spin.full) : 0;
-  var sway = (v.lead && mv && mv.axis !== 2) ? v.lead * Math.sin(Math.PI * through) : 0;
+
+
   for (var i=0;i<HOME.length;i++){
     var moving = mv && sits(st, i, mv.axis, mv.val) === 2;
     if (!moving && !atFront(st, i)) continue;
     var piece = HOME[i], M = ORI[st[i].o], c = st[i].c;
-    /* which end of the layer a piece is at: the sway leans them apart, and the
-       falloff can start earlier on one than the other */
-    var along = moving ? (mv.axis === 1 ? c[0] : mv.axis === 0 ? c[1] : 0) : 0;
-    var side = along > 0 ? 1 : along < 0 ? -1 : 0;
-    var R = moving ? spinAbout(mv.axis, base + sway * side) : null;
+    /* which way a turn carries a piece across the square */
+    var across = !mv || mv.axis !== 0;
+    var R = moving ? spinAbout(mv.axis, base) : null;
     var T = moving ? mul(R, M) : M;
     var C = [c[0]*HALF, c[1]*HALF, c[2]*HALF];
     if (moving) C = turn(R, C);
@@ -494,53 +488,49 @@ function project(st, spin, v){
         dir: [uD[0]/lu, uD[1]/lu], up: [vD[0]/lv, vD[1]/lv]
       });
     }
-    /* ------------------------------------------------------- the falloff -- */
+    /* ------------------------------------------------------- the falloff -- *
+     * Size follows position, not time. A piece sitting over its own cell is
+     * full size; the further a turn has pushed it past the edge of the square,
+     * the smaller it is. So the piece nearest the edge is always the smallest
+     * one, the piece behind it is next, and the ones coming back in grow as
+     * they arrive — nothing matches until everything is home.               */
+    if (v.fall && mine.length){
+      var edge = 0;
+      for (f=0;f<mine.length;f++){
+        var q = mine[f];
+        var half = across ? q.tw/2 : q.th/2;
+        var mid = across ? q.x - 75 : q.y - 75;
+        var reach = Math.abs(mid) + half;
+        if (reach > edge) edge = reach;
+      }
+      var over = (edge - 75) / 32;
+      if (over > 0){
+        if (over > 1) over = 1;
+        if (v.curve) over = Math.pow(over, v.curve);
+        var small = 1 - v.fall * over;
+        var px = C[0] + 75, py = C[1] + 75;
+        for (f=0;f<mine.length;f++){
+          var w = mine[f];
+          w.x = px + (w.x - px) * small;
+          w.y = py + (w.y - py) * small;
+          w.sx *= small; w.sy *= small; w.tw *= small; w.th *= small;
+        }
+      }
+    }
+    /* ---------------------------------------- what is left of the thinnest -- */
     if (v.pebble) for (f=0;f<mine.length;f++){
       var m = mine[f], flat = m.sx < m.sy;
       var thin = flat ? m.sx : m.sy;
-      var lim = v.pebble * (v.spread ? 1 + v.spread * side : 1);
-      if (lim > 0 && thin < lim){
-        var g = thin / lim;
-        if (v.curve) g = Math.pow(g, v.curve);
+      if (thin < v.pebble){
+        var g = thin / v.pebble;
         if (flat){ m.sy *= g; m.th *= g; } else { m.sx *= g; m.tw *= g; }
       }
     }
-    /* --------------------------------------------------------- the floor -- */
     if (v.floor && mine.length){
-      var keep = [], gone = [];
+      var keep = [];
       for (f=0;f<mine.length;f++){
-        var q = mine[f], qw = q.shape.w * q.sx, qh = q.shape.h * q.sy;
-        ((qw < v.floor || qh < v.floor) ? gone : keep).push(q);
-      }
-      if (gone.length && keep.length){
-        var K = keep[0], G = gone[0];
-        var gw = G.shape.w * G.sx, gh = G.shape.h * G.sy;
-        var thinIsU = gw < gh, was = thinIsU ? gw : gh;
-        if (v.hand){
-          /* what the floor takes away is given to the face beside it, so the
-             piece keeps the width it had and nothing jumps */
-          var dx = G.x - K.x, dy = G.y - K.y, len = Math.hypot(dx, dy) || 1;
-          var overU = Math.abs(dx*K.dir[0] + dy*K.dir[1]) >
-                      Math.abs(dx*K.up[0]  + dy*K.up[1]);
-          if (overU){ K.sx += was / K.shape.w; K.tw += was; }
-          else      { K.sy += was / K.shape.h; K.th += was; }
-          K.x += dx/len * was/2; K.y += dy/len * was/2;
-        } else if (v.slide){
-          /* held at the floor and pushed in behind its partner */
-          var back = v.floor / (was || 1);
-          if (thinIsU){ G.sx *= back; G.tw *= back; } else { G.sy *= back; G.th *= back; }
-          var ax = K.x - G.x, ay = K.y - G.y, al = Math.hypot(ax, ay) || 1;
-          var push = (1 - was / v.floor) * (v.floor * 2.2 + 10);
-          G.x += ax/al * push; G.y += ay/al * push;
-          G.z = Math.min(G.z, K.z - 1);
-          keep.push(G);
-        } else if (v.shrink){
-          /* held at the floor and taken down to nothing where it stands */
-          var up = v.floor / (was || 1), fade = was / v.floor;
-          if (thinIsU){ G.sx *= up; G.tw *= up; } else { G.sy *= up; G.th *= up; }
-          G.sx *= fade; G.sy *= fade; G.tw *= fade; G.th *= fade;
-          keep.push(G);
-        }
+        var k2 = mine[f];
+        if (k2.shape.w * k2.sx >= v.floor && k2.shape.h * k2.sy >= v.floor) keep.push(k2);
       }
       mine = keep;
     }

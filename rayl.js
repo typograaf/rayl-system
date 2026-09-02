@@ -480,7 +480,7 @@ function mountSlider(host){
   const min=+host.dataset.min,max=+host.dataset.max,step=+host.dataset.step;
   /* `shown` runs free while dragging so the nub tracks the cursor exactly; the
      readout is always the snapped value, and on release the nub glides to it */
-  let shown=+host.dataset.val, W=170;
+  let shown=+host.dataset.val, W=170, told=null;
   let scale=S_IDLE, pull=0, pullY=0, raf=0;
   let box={x:0,w:MIN_NUB,top:0,bot:H};     /* the nub as last drawn */
   const aS={from:S_IDLE,to:S_IDLE,t0:0,dur:0,done:true};
@@ -666,6 +666,7 @@ function mountSlider(host){
     engaged();
     const landed=snap(shown);              /* settle onto the nearest step */
     if(REDUCED) shown=landed; else run(aV,landed,200,shown);
+    shown=landed; tell("rayl:change");
     scaleTo(hovering?S_HOVER:S_IDLE, hovering?140:240);
     if(!hovering){ pullTo(0,320); pullYTo(0,320); }
     render();
@@ -687,8 +688,28 @@ function mountSlider(host){
     if(!focused){ fromPointer=false; focused=true; engaged(); scaleTo(S_HOVER,180); }
     const next=snap(snap(shown)+n*step*(e.shiftKey?10:1));
     if(REDUCED){ shown=next; render(); } else run(aV,next,140,shown);
+    shown=next; tell("rayl:change");
   });
 
+  /* The control has to be able to say what it holds, or it is a picture of a
+     slider. rayl:input while it is moving, rayl:change when it has landed —
+     the same pair a native range fires, and the same shape as the option
+     group's event, so a host wires them the way it wires anything else. */
+  function tell(kind){
+    const v=snap(shown);
+    if(kind==="rayl:input" && v===told) return;
+    told=v; host.value=v;
+    host.dispatchEvent(new CustomEvent(kind,{bubbles:true,detail:{value:v}}));
+  }
+
+  /* Set it from outside — a preset, an undo, a linked control. Moves the nub
+     without telling anybody, because whoever called it already knows. */
+  host.setValue=(v)=>{
+    shown=clamp(snap(+v),min,max);
+    told=shown; host.value=shown; aV.done=true; render();
+  };
+
+  host.value=snap(shown);
   render();
   if(window.ResizeObserver) new ResizeObserver(render).observe(host);
 }
