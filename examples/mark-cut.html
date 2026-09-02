@@ -75,10 +75,9 @@
     the turn only says how wide a face has become, and the shape is cut again at that
     width with its corners still round — so a circle narrows into a capsule and then
     into a line, and never into an ellipse. Nothing is scaled and nothing is 3D.
-    A face on its way to edge-on still passes through being a hairline;
-    <a href="mark-slide.html">the sliding version</a> holds the spacing steady and takes
-    the size off the position instead, and <a href="mark-options.html">ten answers</a>
-    to the thinness are laid out side by side.</p>
+    A face on its way to edge-on would pass through being a hairline, so under a
+    third of its width it starts losing its other side too and leaves as a pebble
+    rather than a needle.</p>
   </section>
 
   <section class="rayl-split is-lead is-centred">
@@ -421,7 +420,7 @@ function solve(st){
    wide the face has become, and the shape is cut again at that width with its
    corners still round. Nothing is ever scaled, and nothing is 3D: every face
    lands as a flat rectangle of a known size, in an order set by its depth. */
-var LAP = 2;                    /* tiles overlap a hair so no seam shows through */
+var LAP = 2, PEBBLE = 0.34;                    /* tiles overlap a hair so no seam shows through */
 
 function spinAbout(axis, deg){
   var r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
@@ -511,7 +510,17 @@ function paint(inst, st, spin){
     cell.tile.setAttribute("y", num(-th/2));
     cell.tile.setAttribute("width", num(tw));
     cell.tile.setAttribute("height", num(th));
-    cell.art.setAttribute("d", outline(F.shape, F.lu, F.lv));
+    /* A face on its way to edge-on passes through being a hairline, and a
+       hairline looks like it might snap. Under a third of its width it starts
+       losing its other side too, so it leaves as a pebble rather than a needle.
+       The drawing only: the tile behind it is the ground this piece carries to
+       hide the back of the cube, and a tile that has shrunk stops covering. */
+    var sx = F.lu, sy = F.lv, flat = sx < sy, thin = flat ? sx : sy;
+    if (thin < PEBBLE){
+      var g = thin / PEBBLE;
+      if (flat) sy *= g; else sx *= g;
+    }
+    cell.art.setAttribute("d", outline(F.shape, sx, sy));
   }
 }
 
