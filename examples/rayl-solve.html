@@ -507,7 +507,7 @@ function raylSolve(el){
 
   /* ----------------------------------------------------------- the drive -- */
   var state = P.solved(), queue = [], step = null;
-  var phase = "landed", next = "scramble", playing = false, raf = 0;
+  var phase = "landed", next = "scramble", slips = 0, playing = false, raf = 0;
 
   function say(next){
     if (next === phase) return;
@@ -547,7 +547,23 @@ function raylSolve(el){
     }
     var home = P.road(state);
     /* nothing left to undo: it is home, and it sits there */
-    if (!home.length){ wait("hold", "landed"); next = "scramble"; return; }
+    if (!home.length){ wait("hold", "landed"); next = "scramble"; slips = 0; return; }
+    /* A wrong turn, thought about, and then found again. The trying is the
+       point, so it happens on the way rather than being staged at the end,
+       and never more than twice before it gives up and goes home. */
+    if (slips < 2 && home.length > 2 && Math.random() < 0.5){
+      var keep = 1 + Math.floor(Math.random()*2), at = state;
+      for (var j=0;j<keep;j++){
+        push(home[j], "turn", "solving"); wait("gap", "solving");
+        at = P.play(at, home[j]);
+      }
+      if (P.options(at, home[keep]).length){
+        push(P.wander(at, home[keep], keep && P.isSpin(home[keep-1])), "turn", "solving");
+        wait("think", "solving");
+        slips++;
+        return;
+      }
+    }
     for (var k=0;k<home.length;k++){ push(home[k], "turn", "solving"); wait("gap", "solving"); }
   }
 
@@ -598,10 +614,10 @@ function raylSolve(el){
     return el;
   };
   el.scramble = function(){
-    queue = []; step = null; next = "scramble"; decide(); el.play(true); return el;
+    queue = []; step = null; next = "scramble"; slips = 0; decide(); el.play(true); return el;
   };
   el.solve = function(){
-    queue = []; step = null; next = "solve"; decide(); el.play(true); return el;
+    queue = []; step = null; next = "solve"; slips = 0; decide(); el.play(true); return el;
   };
 
   /* off the screen is not worth a frame */
