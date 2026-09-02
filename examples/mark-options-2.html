@@ -481,12 +481,20 @@ function project(st, spin, v){
     var slid = 0, ran = false;
     if (moving && v.slide && mv.axis !== 2){
       var lane = mv.axis === 1 ? 0 : 1;              /* across, or up and down */
-      var cs = cells(st, i), ring = 0;
+      var cs = cells(st, i), spots = [];
       for (var q=0;q<cs.length;q++){
         var one = cs[q], side = one[lane] < 0, front = one[2] > 0;
-        ring += side ? (front ? 1 : 0) : (front ? 2 : 3);
+        spots.push(side ? (front ? 1 : 0) : (front ? 2 : 3));
       }
-      ring = ring / cs.length;
+      /* The four places are a ring, so a bar can span the seam: three and
+         nought are next to each other. Averaged as they stand that reads as one
+         and a half — the middle of the ring, which is exactly where the other
+         bar is — and the two bars land in the same place and sit on top of one
+         another. Carry the low one round before taking the middle of them. */
+      var ring = 0, low = Math.min.apply(null, spots), high = Math.max.apply(null, spots);
+      for (var q2=0;q2<spots.length;q2++)
+        ring += (high - low > 1 && spots[q2] === low) ? spots[q2] + 4 : spots[q2];
+      ring = ring / spots.length;
       var way = mv.axis === 1 ? 1 : -1;
       var step = ring - 1.5 + way * (base / 90);
       while (step >= 2) step -= 4;
@@ -505,24 +513,23 @@ function project(st, spin, v){
       var lu = Math.hypot(uD[0], uD[1]), lv = Math.hypot(vD[0], vD[1]);
       if (lu < 1e-4 || lv < 1e-4) continue;
       var uAx = axisOf(F.U), vAx = axisOf(F.V);
+      /* On a slide the two faces are drawn over each other on the middle of
+         the piece rather than side by side. Side by side is what the projection
+         does, and it is right there because the same projection is closing the
+         spacing up to make room for it. At a fixed pitch there is no such room:
+         laid side by side they measure half again as wide as the piece and run
+         into whatever is beside them. Stacked, one grows as the other narrows,
+         the silhouette is only ever as wide as the wider of the two, and the
+         handover from one shape to the next is as smooth as it was. */
       mine.push({
-        z: C[2] + off[2], x: C[0] + off[0] + 75, y: C[1] + off[1] + 75,
+        z: C[2] + off[2],
+        x: C[0] + (v.slide ? 0 : off[0]) + 75,
+        y: C[1] + (v.slide ? 0 : off[1]) + 75,
         tw: (2*h[uAx] + LAP) * lu, th: (2*h[vAx] + LAP) * lv,
         shape: SHAPES[(piece.long && axisOf(d) === 0) ? "circle" : piece.art],
         sx: lu, sy: lv,
         dir: [uD[0]/lu, uD[1]/lu], up: [vD[0]/lv, vD[1]/lv]
       });
-    }
-    /* A piece part way round shows two faces, and together they measure half
-       again as wide as the piece is. That is fine where the turn also closes
-       the spacing up to make room for it, but at a fixed pitch they run into
-       the pieces either side and everything fuses. So on a slide, only the face
-       most nearly square to you is drawn: one shape, never wider than its cell,
-       nothing to collide with and nothing to hide. */
-    if (v.slide && mine.length > 1){
-      var front = mine[0];
-      for (f=1;f<mine.length;f++) if (mine[f].z > front.z) front = mine[f];
-      mine = [front];
     }
     /* ------------------------------------------------------- the falloff -- *
      * Size follows position, not time. A piece sitting over its own cell is
@@ -556,16 +563,37 @@ function project(st, spin, v){
       }
       mine = keep;
     }
-    /* A piece part way round shows two faces, and together they measure half
-       again as wide as the piece is. That is fine where the turn also closes
-       the spacing up to make room for it, but at a fixed pitch they run into
-       the pieces either side and everything fuses. So on a slide, only the face
-       most nearly square to you is drawn: one shape, never wider than its cell,
-       nothing to collide with and nothing to hide. */
-    if (v.slide && mine.length > 1){
-      var front = mine[0];
-      for (f=1;f<mine.length;f++) if (mine[f].z > front.z) front = mine[f];
-      mine = [front];
+    /* ------------------------------------------------------- the falloff -- *
+     * Size follows position, not time. A piece sitting over its own cell is
+     * full size; the further a turn has pushed it past the edge of the square,
+     * the smaller it is. So the piece nearest the edge is always the smallest
+     * one, the piece behind it is next, and the ones coming back in grow as
+     * they arrive — nothing matches until everything is home.               */
+    /* ---------------------------------------- what is left of the thinnest -- *
+     * Both of these read the face as the turn leaves it, before any falling
+     * away is applied. Test them against a size the falloff has already taken
+     * down and the two compound: a piece at the edge is judged thin long before
+     * it is, so it rounds off early and drops early, and what is left has far
+     * too much room around it.                                              */
+    if (v.pebble) for (f=0;f<mine.length;f++){
+      var m = mine[f], flat = m.sx < m.sy;
+      var thin = flat ? m.sx : m.sy;
+      if (thin < v.pebble){
+        /* the drawing only, never the tile: the tile is the ground this piece
+           carries to hide what is behind it, and a tile that has shrunk stops
+           covering its cell — which lets a corner of whatever is behind show
+           through, sharp-edged, in the middle of a turn */
+        var g = thin / v.pebble;
+        if (flat) m.sy *= g; else m.sx *= g;
+      }
+    }
+    if (v.floor && mine.length){
+      var keep = [];
+      for (f=0;f<mine.length;f++){
+        var k2 = mine[f];
+        if (k2.shape.w * k2.sx >= v.floor && k2.shape.h * k2.sy >= v.floor) keep.push(k2);
+      }
+      mine = keep;
     }
     /* ------------------------------------------------------- the falloff -- *
      * Last, and only a multiplier. How far this piece reaches past the square,
