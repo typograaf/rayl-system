@@ -59,9 +59,17 @@ function advance(ch, font, track){
   advCache[key] = w;
   return w;
 }
-function Roll(host){
+/* `owner` is the thing the roll is the label OF — a button, a cell, a row. It
+   matters because a rolled label is TWO glyphs per character: the one leaving
+   and the one arriving. Read as text it says EExxppoorrtt, which is what a
+   screen reader announces and what anything asking the button its name gets
+   back. So the spans are hidden from the accessibility tree and the owner
+   carries the real name, kept in step with what is showing. */
+function Roll(host, owner){
   this.host = host;
+  this.owner = owner || null;
   host.classList.add("rayl-roll");
+  host.setAttribute("aria-hidden", "true");
   this.text = host.dataset.label || host.textContent || "";
   this.swap = host.dataset.swap || this.text;
   this.showing = this.text;
@@ -71,7 +79,15 @@ function Roll(host){
   this.font = cs.fontStyle+" "+cs.fontWeight+" "+cs.fontSize+"/"+cs.fontSize+" "+cs.fontFamily;
   this.track = cs.letterSpacing;
   this.render(this.text);
+  this.name();
 }
+/* An owner that came with a name of its own keeps it — an icon-only button is
+   labelled for what it does, not for the nothing it has written on it. */
+Roll.prototype.name = function(){
+  if (this.owner && !this.owner.__raylNamed)
+    this.owner.setAttribute("aria-label", this.showing);
+};
+
 Roll.prototype.grow = function(n){
   while (this.chars.length < n){
     var box = document.createElement("span"); box.className = "rayl-ch";
@@ -90,6 +106,7 @@ Roll.prototype.render = function(text){        /* no animation, straight to it *
     c.box.style.width = (g ? advance(g, this.font, this.track) : 0) + "px";
   }
   this.showing = text;
+  this.name();
 };
 Roll.prototype.instant = function(fn){
   this.host.classList.add("is-instant"); fn();
@@ -129,6 +146,7 @@ Roll.prototype.to = function(next, force){
     if (force || g !== was) moving.push(c);
   }
   this.showing = next;
+  this.name();
   if (!moving.length) return;
   var idx = moving.map(function(_,i){ return i; });
   for (var k=idx.length-1;k>0;k--){
@@ -217,7 +235,8 @@ function upgradeButton(btn){
   btn.textContent = "";
   if (icon) btn.appendChild(icon);
   btn.appendChild(host);
-  var r = new Roll(host);
+  btn.__raylNamed = btn.hasAttribute("aria-label");
+  var r = new Roll(host, btn);
   btn.__rayl = r;
   if (btn.disabled) return r;
   btn.addEventListener("pointerenter", function(){ r.turn(); });
@@ -254,7 +273,8 @@ function upgradeIconButton(btn){
   btn.appendChild(body);
   btn.appendChild(dot);
 
-  var r = new Roll(host);
+  btn.__raylNamed = btn.hasAttribute("aria-label");
+  var r = new Roll(host, btn);
   btn.__rayl = r;
 
   function size(){
@@ -281,7 +301,9 @@ function upgradeIconButton(btn){
 function upgradeLine(el){
   if (el.__rayl) return el.__rayl;
   el.classList.add("is-line");
-  var r = new Roll(el);
+  /* a line labels itself: the name goes on the element the roll is on */
+  var r = new Roll(el, el);
+  el.removeAttribute("aria-hidden");
   el.__rayl = r;
   return r;
 }
@@ -331,7 +353,8 @@ function upgradeSeg(seg){
     o.textContent = "";
     o.appendChild(fill);
     o.appendChild(host);
-    o.__roll = new Roll(host);
+    o.__raylNamed = o.hasAttribute("aria-label");
+    o.__roll = new Roll(host, o);
     o.setAttribute("role", "radio");
     o.setAttribute("aria-checked", o.classList.contains("is-on") ? "true" : "false");
     o.tabIndex = -1;
