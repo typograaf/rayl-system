@@ -813,10 +813,11 @@ grid.addEventListener("pointerdown", function(e){
   }
   holding = best; picked = best;
   grid.setPointerCapture(e.pointerId);
-  move(e);
+  dragTo(e);
   e.preventDefault();
 });
-function move(e){
+/* named apart from the drive's own move(), which queues a turn */
+function dragTo(e){
   if (holding < 0 || !hand) return;
   var at = grab(e);
   /* CSS only takes a control point whose time is inside the turn; how far it
@@ -827,7 +828,7 @@ function move(e){
   hand[holding*2+1] = Math.round(y * 100) / 100;
   saySo();
 }
-grid.addEventListener("pointermove", move);
+grid.addEventListener("pointermove", dragTo);
 grid.addEventListener("pointerup", function(e){ holding = -1; });
 grid.addEventListener("pointercancel", function(){ holding = -1; });
 grid.addEventListener("keydown", function(e){
