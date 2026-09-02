@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Mark Cut</title>
-<script src="https://typograaf.github.io/rayl-system/rayl.js?v=aa651b03"></script>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=efc7905b"></script>
 <style>
   /* ====================================================== the folding mark ==
    * The same puzzle as the other one, drawn without a third dimension. A turn
@@ -151,11 +151,17 @@
         </div>
       </div>
       <div class="rayl-section">
-        <p class="rayl-12 rayl-measure">Paste an easing and it takes effect on the
-        next turn. Everything is in milliseconds, and the four fields are the whole
-        rhythm: how long a turn takes, the beat between two of them, the quicker
-        turn it scrambles at, and how long it sits on the solved mark before
-        scrambling again.</p>
+        <p class="rayl-12 rayl-measure">Drag the handles or paste an easing, and
+        the mark takes it on the next turn; the same goes for the times, which are
+        all in milliseconds. The four fields are the whole rhythm: how long a turn
+        takes, the beat between two of them, the quicker turn it scrambles at, and
+        how long it sits on the solved mark before going again.</p>
+        <p class="rayl-12 rayl-measure">The loop is the same shape every time. Up
+        to ten quick turns away from the mark, a beat to think, the solve at turn
+        speed, then the hold — about seven seconds at these numbers. The scramble
+        runs quicker than the solve on purpose, so the fast part reads as leaving
+        and the slower part as finding the way back. Put the same number in both
+        turn fields and it all runs at one speed.</p>
         <p class="rayl-12 rayl-measure">It opens on cubic-bezier(0.85, 0, 0.15, 1),
         which holds still at both ends and crosses the middle quickly — the system's
         own curve, cubic-bezier(0.65, 0, 0.35, 1), is the gentler version of the same
@@ -595,6 +601,8 @@ function readEase(text){
 }
 
 var TIME = {turn:300, gap:90, fast:200, hold:2800, think:360, doubt:460};
+/* how many turns the scramble may take, and how far out counts as lost */
+var SCRAMBLE = 10, LOST = 7;
 var ease = readEase("cubic-bezier(0.85, 0, 0.15, 1)");
 
 /* ------------------------------------------------------------- the drive --*/
@@ -623,7 +631,7 @@ function cornered(st){
   for (var m=0;m<MOVES.length;m++) if (!isSpin(m) && legal(st,m)) return false;
   return true;
 }
-function wander(st, avoid, sober){
+function choices(st, avoid, sober){
   var all = options(st, avoid);
   /* sometimes the layer just turned is the only one that can turn again —
      a bandaged cube is allowed to insist */
@@ -645,42 +653,72 @@ function wander(st, avoid, sober){
   }
   else if (!sober && spins.length && Math.random() < 0.15) pool = spins;
   else pool = open.length ? open : turns;
+  return pool;
+}
+function wander(st, avoid, sober){
+  var pool = choices(st, avoid, sober);
   return pool[Math.floor(Math.random()*pool.length)];
 }
-function move(m, ms){ queue.push({move:m, ms:ms}); }
-function wait(ms){ queue.push({ms:ms}); }
+/* Scrambling at random takes a long walk to get anywhere: half the time the
+   mark was still circling home after thirty-odd turns, which is why the fast
+   part ran on and on. This takes the turn that leaves it furthest from home,
+   so it is properly lost in a handful. */
+function stray(st, avoid, sober){
+  var pool = choices(st, avoid, sober), far = -1, best = [];
+  for (var i=0;i<pool.length;i++){
+    var d = DIST[key(play(st, pool[i]))];
+    if (d === undefined) d = -1;
+    if (d > far){ far = d; best = [pool[i]]; }
+    else if (d === far) best.push(pool[i]);
+  }
+  return best[Math.floor(Math.random()*best.length)];
+}
+/* A step says which clock it runs on rather than how long it lasts, and the
+   number is read as the step starts. Type a new time and the next move takes
+   it, instead of the change waiting out everything already queued. */
+function move(m, at){ queue.push({move:m, at:at}); }
+function wait(at){ queue.push({at:at}); }
+function clock(at){
+  if (typeof at === "number") return at;
+  if (at === "halfgap") return TIME.gap / 2;
+  return TIME[at];
+}
 
 function decide(){
   if (mode === "landed"){
     /* far enough out to be worth solving, not so far it is the same walk twice */
-    var st = state, path = [], last, spun = false, guard = 0;
-    while ((path.length < 8 || DIST[key(st)] < 6) && guard++ < 60){
-      last = wander(st, last, spun);
+    var st = state, path = [], last, spun = false, far = DIST[key(st)], stop = 0;
+    while (path.length < SCRAMBLE && DIST[key(st)] < LOST){
+      last = stray(st, last, spun);
       spun = isSpin(last);
       st = play(st, last);
       path.push(last);
+      /* a greedy walk can still plateau, so remember the furthest it got and
+         end the scramble there rather than wherever the count ran out */
+      if (DIST[key(st)] > far){ far = DIST[key(st)]; stop = path.length; }
     }
-    for (var i=0;i<path.length;i++){ move(path[i], TIME.fast); wait(TIME.gap/2); }
-    wait(TIME.think);
+    if (stop) path.length = stop;
+    for (var i=0;i<path.length;i++){ move(path[i], "fast"); wait("halfgap"); }
+    wait("think");
     mode = "solving"; slips = 0;
     return;
   }
   var road = solve(state);
-  if (!road.length){ wait(TIME.hold); mode = "landed"; return; }
+  if (!road.length){ wait("hold"); mode = "landed"; return; }
   /* a wrong turn, thought about, and then found again — the trying is the
      point, so it happens on the way rather than being staged at the end */
   if (slips < 2 && road.length > 2 && Math.random() < 0.5){
     var keep = 1 + Math.floor(Math.random()*2), at = state;
-    for (var j=0;j<keep;j++){ move(road[j], TIME.turn); wait(TIME.gap); at = play(at, road[j]); }
+    for (var j=0;j<keep;j++){ move(road[j], "turn"); wait("gap"); at = play(at, road[j]); }
     var astray = options(at, road[keep]);
     if (astray.length){
-      move(wander(at, road[keep], keep && isSpin(road[keep-1])), TIME.turn);
-      wait(TIME.doubt);
+      move(wander(at, road[keep], keep && isSpin(road[keep-1])), "turn");
+      wait("doubt");
       slips++;
       return;
     }
   }
-  for (var k=0;k<road.length;k++){ move(road[k], TIME.turn); wait(TIME.gap); }
+  for (var k=0;k<road.length;k++){ move(road[k], "turn"); wait("gap"); }
 }
 
 function show(spin){
@@ -691,6 +729,7 @@ function draw(now){
     if (!queue.length) decide();
     step = queue.shift();
     step.t0 = now;
+    step.ms = clock(step.at);
     if (step.move !== undefined){
       var q = MOVES[step.move].quarters;
       /* a half turn is as true one way as the other, so let it choose */
