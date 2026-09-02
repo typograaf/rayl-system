@@ -507,8 +507,12 @@ function project(st, spin, v){
       var m = mine[f], flat = m.sx < m.sy;
       var thin = flat ? m.sx : m.sy;
       if (thin < v.pebble){
+        /* the drawing only, never the tile: the tile is the ground this piece
+           carries to hide what is behind it, and a tile that has shrunk stops
+           covering its cell — which lets a corner of whatever is behind show
+           through, sharp-edged, in the middle of a turn */
         var g = thin / v.pebble;
-        if (flat){ m.sy *= g; m.th *= g; } else { m.sx *= g; m.tw *= g; }
+        if (flat) m.sy *= g; else m.sx *= g;
       }
     }
     if (v.floor && mine.length){
