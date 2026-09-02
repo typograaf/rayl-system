@@ -53,22 +53,35 @@ SLIDERS = [("Count",1,33,12),("Tilt",0,90,62),("Peaks",1,12,4),
 
 
 # --------------------------------------------------------- the container ----
-# The board divides a document with rounded boxes on a coloured ground: a
-# chapter label sits on the ground, everything under it sits in a box.
+# The board's own layout language: a chapter label on the ground, then blocks of
+# a narrow rail of words against a wide field of things.
 
 def chapter(name):
     return f'  <h2 class="rayl-chapter">{name}</h2>\n'
 
+def block(rail, *frames):
+    """A rail against a field. Everything the reader has to READ is in the rail;
+    the field holds nothing but the things themselves."""
+    return ('  <div class="rayl-block">\n'
+            f'    <div class="rayl-rail">{rail}</div>\n'
+            '    <div class="rayl-field">\n' + "".join(frames) + '    </div>\n'
+            '  </div>\n')
+
+def rail(name, *paras):
+    body = "".join(f'<p class="rayl-12">{t}</p>' for t in paras)
+    return f'<h3 class="rayl-24">{name}</h3>{body}'
+
+def frame(tag, body, cls=""):
+    c = (" " + cls) if cls else ""
+    t = f'<span class="rayl-frame-tag">{tag}</span>' if tag else ""
+    return f'      <div class="rayl-frame{c}">{t}{body}</div>\n'
+
+def row(*frames):
+    return ('      <div class="rayl-field-row">\n' +
+            "".join("  " + f.lstrip() for f in frames) + '      </div>\n')
+
 def container(*blocks):
     return '  <div class="rayl-container">\n' + "".join(blocks) + '  </div>\n'
-
-def block(label, body):
-    """A named row inside a container. The label names the thing; it never
-    explains it — that is what RAYL-SYSTEM.md is for."""
-    return (f'    <div class="rayl-stack">\n'
-            f'      <span class="rayl-label">{label}</span>\n'
-            f'      {body}\n'
-            f'    </div>\n')
 
 
 # ------------------------------------------------------------ the pieces ----
@@ -108,68 +121,67 @@ def bar(name, on):
 
 # ---------------------------------------------------------- the sections ----
 
-def buttons_section():
-    return chapter("Buttons") + container(
-        block("On each ground",
-              '<div class="rayl-grid">' +
-              "".join(ground_card(i, lt, dk) for i, (lt, dk) in enumerate(GROUNDS, 1)) +
-              '</div>'),
-        block("Reveal",
-              '<div class="rayl-cluster">' + "".join(
-                  f'<button class="rayl-ibtn" data-icon="{i}">{t}</button>' for i, t in
-                  (("Save","Save"),("Download","Export"),("Plus","Add a plate"),
-                   ("Broom","Reset positions"))) + '</div>'),
-        block("Icon",
-              '<div class="rayl-cluster">' + "".join(
-                  f'<button class="rayl-btn" data-icon="{n}" title="{n}" aria-label="{n}"></button>'
-                  for n in ICONS) + '</div>'),
-    )
-
-def groups_section():
+def controls_section():
+    grounds = ('<div class="rayl-grid">' +
+               "".join(ground_card(i, lt, dk) for i, (lt, dk) in enumerate(GROUNDS, 1)) +
+               '</div>')
+    reveal = ('<div class="rayl-cluster">' + "".join(
+        f'<button class="rayl-ibtn" data-icon="{i}">{t}</button>' for i, t in
+        (("Save","Save"),("Download","Export"),("Plus","Add a plate"))) + '</div>')
+    icons = ('<div class="rayl-cluster">' + "".join(
+        f'<button class="rayl-btn" data-icon="{n}" title="{n}" aria-label="{n}"></button>'
+        for n in ICONS) + '</div>')
     opts = ('<button class="rayl-seg-opt is-on" type="button">4:5</button>'
             '<button class="rayl-seg-opt" type="button">5:4</button>' +
             "".join(f'<button class="rayl-seg-opt is-third" type="button">{r}</button>'
                     for r in ("1:1", "16:9", "9:16")))
-    return chapter("Option groups") + container(
-        block("Aspect ratio", f'<div class="rayl-seg">{opts}</div>'),
-        block("Joined", "".join(bar(n, o) for n, o in
-                                (("Bisque", 2), ("Sheen", 1), ("Chalk", 3)))),
-    )
-
-def sliders_section():
-    rows = "".join(
+    bars = "".join(bar(n, o) for n, o in (("Bisque", 2), ("Sheen", 1), ("Chalk", 3)))
+    sliders = "".join(
         f'<div class="rayl-row"><span class="rayl-label">{n}</span>'
         f'<span class="rayl-slider" data-min="{lo}" data-max="{hi}" data-val="{v}" data-step="1"></span></div>'
         for n, lo, hi, v in SLIDERS)
-    return chapter("Sliders") + container(f'    <div class="rayl-stack">{rows}</div>\n')
+
+    return (
+        chapter("Controls")
+        + block(rail("Buttons"),
+                frame("On each ground", grounds, "is-tall"),
+                row(frame("Reveal", reveal), frame("Icon", icons)))
+        + block(rail("Option groups"),
+                frame("Aspect ratio", f'<div class="rayl-seg">{opts}</div>', "is-tall"),
+                frame("Joined", bars, "is-tall"))
+        + block(rail("Sliders"),
+                frame("Six at once", f'<div class="rayl-stack">{sliders}</div>', "is-tall"))
+    )
 
 def type_section():
-    return chapter("Type") + container(
-        "".join(specimen(*s) for s in SCALE),
-        block("8 · uppercase · +8%", '<span class="rayl-label">Aspect ratio</span>'),
+    return chapter("Typography") + block(
+        rail("The scale"),
+        frame("Seven sizes, and 8 for labels",
+              "".join(specimen(*s) for s in SCALE), "is-tall"),
+        frame("The label", '<span class="rayl-label">Aspect ratio</span>'),
     )
 
 def colour_section():
-    return chapter("Colour") + container(
-        block("The palette — fifteen steps on one hue",
-              '<div class="rayl-grid">' + "".join(swatch(*p) for p in PALETTE) + '</div>'),
-        block("Gradients",
-              '<div class="rayl-split">'
-              '<div class="grad" style="background:var(--rayl-porcelain-gradient);color:#1C1C1A">'
-              '<span>Porcelain</span>'
-              '<span class="mono" style="opacity:.62">#CFCFC1 → #F7F7EF, 180°</span></div>'
-              '<div class="grad" style="background:var(--rayl-concrete-gradient);color:#F7F7EF">'
-              '<span>Concrete</span>'
-              '<span class="mono" style="opacity:.62">#696961 → #CFCFC1, 180°</span></div>'
-              '</div>'),
+    grads = ('<div class="rayl-split">'
+             '<div class="grad" style="background:var(--rayl-porcelain-gradient);color:#1C1C1A">'
+             '<span>Porcelain</span>'
+             '<span class="mono" style="opacity:.62">#CFCFC1 → #F7F7EF, 180°</span></div>'
+             '<div class="grad" style="background:var(--rayl-concrete-gradient);color:#F7F7EF">'
+             '<span>Concrete</span>'
+             '<span class="mono" style="opacity:.62">#696961 → #CFCFC1, 180°</span></div>'
+             '</div>')
+    table = ('<div class="scroll"><table>'
+             '<thead><tr><th></th><th>Token</th><th>Light</th><th>Dark</th><th>Job</th></tr></thead>'
+             '<tbody>' + "".join(token(*t) for t in UI) + '</tbody></table></div>')
+    return (
+        chapter("Colour")
+        + block(rail("The palette"),
+                frame("Fifteen steps on one hue",
+                      '<div class="rayl-grid">' + "".join(swatch(*p) for p in PALETTE) + '</div>',
+                      "is-tall"),
+                frame("Gradients", grads))
+        + block(rail("UI colour"), frame("What the interface names", table, "is-tall"))
     )
-
-def ui_colour_section():
-    return chapter("UI colour") + container(
-        '    <div class="scroll"><table>\n'
-        '      <thead><tr><th></th><th>Token</th><th>Light</th><th>Dark</th><th>Job</th></tr></thead>\n'
-        '      <tbody>' + "".join(token(*t) for t in UI) + '</tbody>\n'
-        '    </table></div>\n')
 
 
 def head(title, script, extra_css=""):

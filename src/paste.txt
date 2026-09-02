@@ -31,7 +31,7 @@ Never draw a line around anything — no borders on cards, swatches, tables or s
 
 Layout comes from the system, so do not invent spacing. Panel: rayl-page, rayl-section, rayl-stack, rayl-cluster, rayl-grid, rayl-head, rayl-card, rayl-label, rayl-hint. Wide: rayl-page is-wide, rayl-hero, rayl-band (is-ink), rayl-split (is-lead, is-three, is-centred), rayl-measure, rayl-media.
 
-For a document rather than an app — a guideline, a reference, an overview — use rayl-doc on the body, rayl-doc-page inside it, then alternate rayl-chapter (an 8 label on the ground) with rayl-container (a white box, radius 24, 48 of padding) 12 apart. Label the thing and show it; do not write paragraphs explaining it.
+For a document rather than an app — a guideline, a reference, an overview — put rayl-doc on the body and rayl-doc-page inside it, then alternate rayl-chapter (an 8 label on the ground) with rayl-block. A block is two columns: rayl-rail carries the words, rayl-field carries rayl-frame boxes holding the things themselves, side by side in a rayl-field-row where they fit. Name a frame with rayl-frame-tag. Give every frame far more room than its content needs; that air is the whole look. Name the thing and show it — never write a paragraph explaining it.
 
 Build the structure the brief needs. These examples show the parts composed — read them if you are unsure how things go together, but do not clone one and change the words:
 

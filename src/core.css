@@ -27,6 +27,7 @@
   --rayl-doc-ground:var(--rayl-off-white);
   --rayl-doc-container:var(--rayl-white);
   --rayl-doc-chapter:var(--rayl-dark-concrete);
+  --rayl-doc-tag:var(--rayl-dark-off-white);
   --ink-primary:var(--rayl-black);
   --ink-on-active:var(--rayl-black);
   --ink-disabled:var(--rayl-dark-porcelain);
@@ -62,6 +63,7 @@
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);
   --rayl-doc-chapter:var(--rayl-pale-concrete);
+  --rayl-doc-tag:var(--rayl-dark-concrete);
   --ink-primary:var(--rayl-white);
   --ink-on-active:var(--rayl-white);
   --ink-disabled:var(--rayl-light-concrete);
@@ -83,6 +85,7 @@
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);
   --rayl-doc-chapter:var(--rayl-pale-concrete);
+  --rayl-doc-tag:var(--rayl-dark-concrete);
   --ink-primary:var(--rayl-white);
   --ink-on-active:var(--rayl-white);
   --ink-disabled:var(--rayl-light-concrete);
@@ -314,39 +317,78 @@
 }
 
 /* ========================================================== the container ===
- * How the guidelines board divides a document, measured at 966:99.
+ * How the board lays a document out, measured at 966:99.
  *
- * The board is the ground — Off White, 12 of padding, blocks stacked 12 apart.
- * A chapter is an 8 label sitting ON that ground: 24 of padding, no fill, so it
- * reads as a heading over the boxes rather than a box of its own. Everything
- * else lives inside a container: White, radius 24, 48 of padding.
+ * The ground is Off White with 12 of padding, and everything on it is 12 apart.
+ * A chapter is an 8 label sitting on that ground with no fill, so it reads as a
+ * heading over the boxes rather than as another box.
  *
- * Radius is not one number. The board's own rounding demo runs 4, 12, 24 and 48
- * as the box grows, so a control is 8 and a container is 24. Nothing draws a
- * line: the change of ground is the edge, the same as everywhere else.
+ * Under it, a block is TWO COLUMNS: a 500 rail against a 1504 field. All the
+ * words live in the rail; the field holds nothing but the things themselves,
+ * each in its own White container with a 24 radius. Frames in a row are sized
+ * to what they hold rather than shared out equally — 403, 341 and 736 in the
+ * spacing chapter — and a frame is far bigger than its content, which is what
+ * gives the board its air. The showcase frame there pads 144, three times the
+ * ordinary 48.
+ *
+ * A frame is named by a tag turned on its side in Dark Off-White, so naming it
+ * costs no height. Nothing is outlined anywhere: the change of ground is the
+ * edge, as everywhere else in the system.
  *
  * This is documentation furniture. An app panel still uses rayl-page.
  * ========================================================================== */
 
 body.rayl.rayl-doc{background:var(--rayl-doc-ground);padding:0;}
-.rayl-doc-page{max-width:960px;margin:0 auto;padding:12px;
+.rayl-doc-page{max-width:1440px;margin:0 auto;padding:12px;
   display:flex;flex-direction:column;gap:12px;}
 .rayl-chapter{padding:24px;margin:0;
   font-family:var(--rayl-font);font-size:8px;font-weight:500;
   letter-spacing:0.08em;text-transform:uppercase;
   color:var(--rayl-doc-chapter);}
+
+/* the block: a rail of words against a field of things */
+.rayl-block{display:grid;grid-template-columns:500fr 1504fr;gap:12px;
+  align-items:stretch;}
+.rayl-rail{background:var(--rayl-doc-container);border-radius:24px;padding:48px;
+  display:flex;flex-direction:column;gap:48px;}
+.rayl-rail-foot{margin-top:auto;}     /* the board pins its credit to the floor */
+.rayl-field{display:flex;flex-direction:column;gap:12px;min-width:0;}
+.rayl-field-row{display:flex;gap:12px;align-items:stretch;min-width:0;}
+
+/* a frame holds one thing, centred, with room around it */
+.rayl-frame{
+  --rayl-gap:24px;
+  position:relative;flex:1 1 0;min-width:0;
+  background:var(--rayl-doc-container);border-radius:24px;
+  padding:48px 48px 48px 72px;        /* the wider left is the tag's lane */
+  display:flex;flex-direction:column;justify-content:center;
+  gap:var(--rayl-gap);
+}
+.rayl-frame.is-wide{flex:2 1 0;}       /* the 736 against the 403 and the 341 */
+.rayl-frame.is-tall{padding:96px 96px 96px 120px;}
+.rayl-frame-tag{
+  position:absolute;left:24px;top:48px;
+  writing-mode:vertical-rl;transform:rotate(180deg);
+  font-family:var(--rayl-font);font-size:8px;font-weight:500;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--rayl-doc-tag);pointer-events:none;
+}
+/* the plain box, for a header or a footer that has no rail and no field */
 .rayl-container{
   --rayl-gap:24px;
   background:var(--rayl-doc-container);border-radius:24px;padding:48px;
   display:flex;flex-direction:column;gap:var(--rayl-gap);
 }
-/* the board's two-column block: a 500 side column against a 1504 main one */
-.rayl-doc-split{display:grid;grid-template-columns:500fr 1504fr;gap:12px;
-  align-items:start;}
-@media (max-width:720px){
-  .rayl-container{padding:24px;}
-  .rayl-doc-split{grid-template-columns:1fr;}
+
+@media (max-width:900px){
+  .rayl-block{grid-template-columns:1fr;}
+  .rayl-field-row{flex-direction:column;}
+  .rayl-frame{padding:24px;}
+  .rayl-frame.is-tall{padding:24px;}
+  .rayl-frame-tag{display:none;}
+  .rayl-rail,.rayl-container{padding:24px;}
 }
+
 /* ============================================================= the type === *
  * Seven sizes. Leading opens as the size drops and tracking tightens as it
  * grows — the two move against each other, which is what keeps a 96 headline

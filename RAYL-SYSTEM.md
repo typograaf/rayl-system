@@ -415,31 +415,53 @@ every gap in a section is the same, the section has no shape.
 
 ### Dividing a document
 
-A document is not a panel. The guidelines board divides itself with rounded
-containers on a coloured ground, and anything explaining the system — this repo's
-bench and dashboard included — is built the same way. Measured at `966:99`:
+A document is not a panel. The guidelines board has its own layout language, and
+anything explaining the system — this repo's bench and dashboard included — is
+built in it. Measured at `966:99`:
 
 | part | what |
 |---|---|
-| the ground | Off White, 12 of padding, blocks stacked **12** apart |
+| the ground | Off White, 12 of padding, everything on it **12** apart |
 | a chapter | an **8** label on the ground itself: 24 of padding, no fill |
-| a container | White, radius **24**, **48** of padding |
-| a split block | a **500** side column against a **1504** main one, 12 apart |
+| a block | two columns — a **500** rail against a **1504** field |
+| the rail | White, radius **24**, 48 of padding, its content 48 apart |
+| a frame | White, radius **24**, its content centred with room around it |
+| a showcase frame | the same, padding **144** — three times the ordinary 48 |
 
-The chapter label sits on the ground rather than inside a box, which is what
-makes it read as a heading over the containers instead of another container.
-Nothing is outlined; the change of ground is the edge, the same as everywhere
-else in the system.
+**All the words live in the rail. The field holds nothing but the things
+themselves.** That single split is what makes the board scannable: you read down
+the left edge to find the part you want, and never have to read to see one.
+
+**Frames are sized to what they hold, not shared out equally.** The spacing
+chapter runs 403, 341 and 736 across one row. A frame is also far bigger than
+its content — that air is the board's character, and tightening it is the
+fastest way to make a page stop looking like Rayl.
+
+**A frame is named by a tag turned on its side**, 8 uppercase in Dark Off-White
+down its left edge, so naming it costs no height and never competes with the
+thing it names.
+
+The chapter label sits on the ground rather than in a box, which is what makes
+it read as a heading over the blocks instead of another block.
 
 ```html
 <body class="rayl rayl-doc"><div class="rayl-doc-page">
-  <h2 class="rayl-chapter">Buttons</h2>
-  <div class="rayl-container"> ... </div>
+  <h2 class="rayl-chapter">Controls</h2>
+  <div class="rayl-block">
+    <div class="rayl-rail"><h3 class="rayl-24">Buttons</h3></div>
+    <div class="rayl-field">
+      <div class="rayl-frame is-tall">
+        <span class="rayl-frame-tag">On each ground</span>
+        ...
+      </div>
+      <div class="rayl-field-row"> ...two frames side by side... </div>
+    </div>
+  </div>
 </div></body>
 ```
 
-**A document is an overview, not an essay.** A label names the thing and the
-thing follows. Explanation lives here, in this file — a bench that explains
+**A document is an overview, not an essay.** The rail names the thing and the
+field shows it. Explanation lives here, in this file — a bench that explains
 itself stops being scannable, and the explanation goes stale where nobody is
 looking at it.
 

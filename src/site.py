@@ -5,9 +5,8 @@ guidelines board divides itself — a chapter label on the ground, and everythin
 under it inside a rounded container. Neither file is hand-edited.
 """
 import html, pathlib
-from parts import (ROOT, THEME_JS, head, chapter, container, block,
-                   buttons_section, groups_section, sliders_section,
-                   type_section, colour_section, ui_colour_section)
+from parts import (ROOT, THEME_JS, head, chapter, container, block, rail, frame,
+                   controls_section, type_section, colour_section)
 
 PASTE = html.escape((ROOT / "src/paste.txt").read_text())
 
@@ -25,12 +24,9 @@ TAIL = "\n</div>\n" + THEME_JS + "\n</body>\n</html>\n"
 
 bench = (
     head("Rayl Control Bench", "https://typograaf.github.io/rayl-system/rayl.js")
-    + buttons_section()
-    + groups_section()
-    + sliders_section()
+    + controls_section()
     + type_section()
     + colour_section()
-    + ui_colour_section()
     + FOOT + TAIL
 )
 (ROOT / "examples/bench.html").write_text(bench)
@@ -48,13 +44,16 @@ PASTE_CSS = """
     display:flex;flex-direction:column;gap:12px;align-items:flex-start;}
 """
 
-LINKS = chapter("Where everything is") + container(
-    block("Examples — read these, do not clone them",
+LINKS = chapter("Where everything is") + block(
+    rail("Everything else",
+         "The examples show the parts composed. Build the structure your brief "
+         "needs — cloning one gives you a page shaped like somebody else\u2019s problem."),
+    frame("The examples",
           '<div class="rayl-cluster">'
           '<a class="rayl-btn" href="examples/landing.html">A page</a>'
           '<a class="rayl-btn" href="examples/panel.html">A panel</a>'
           '<a class="rayl-btn" href="examples/bench.html">The bench</a></div>'),
-    block("The documents",
+    frame("The documents",
           '<div class="rayl-cluster">'
           '<a class="rayl-btn" href="RAYL-SYSTEM.md">The rules</a>'
           '<a class="rayl-btn" href="AUDIT.md">The audit</a>'
@@ -71,11 +70,13 @@ HERO = ('  <div class="rayl-container">\n'
         'paste it above whatever you are asking for.</p>\n'
         '  </div>\n')
 
-PASTE_BLOCK = chapter("Paste this at the top of your prompt") + container(
-    f'    <div class="paste">\n'
-    f'      <pre id="paste">{PASTE}</pre>\n'
-    f'      <button class="rayl-ibtn" data-icon="Document" id="copy">Copy</button>\n'
-    f'    </div>\n')
+PASTE_BLOCK = chapter("The block") + block(
+    rail("Paste this at the top of your prompt",
+         "It carries the tokens, the type scale, the layout primitives and every "
+         "control. You do not need to read any of it."),
+    frame(None,
+          f'<div class="paste"><pre id="paste">{PASTE}</pre>'
+          f'<button class="rayl-ibtn" data-icon="Document" id="copy">Copy</button></div>'))
 
 COPY_JS = '''<script>
   document.getElementById("copy").addEventListener("click",function(){
@@ -90,7 +91,6 @@ index = (
     + PASTE_BLOCK
     + type_section()
     + colour_section()
-    + ui_colour_section()
     + LINKS
     + FOOT
     + "\n</div>\n" + THEME_JS + "\n" + COPY_JS + "\n</body>\n</html>\n"
