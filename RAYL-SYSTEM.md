@@ -18,18 +18,25 @@ round it, do not pick something near it, do not substitute a colour that looks
 similar.
 
 **When this document does not cover something, say so and ask. Do not invent it.**
-That is the most important rule on this page. A guess that looks fine is worse
+That is the most important rule on this page. Section 9 is the list of what is
+missing — read it before you start, because it is shorter than finding out the
+hard way. A guess that looks fine is worse
 than a question, because it ships and then it spreads. Sections below marked
 NOT DECIDED are real gaps, not omissions to fill in with your best judgement.
 
-Rayl is light mode only for now. Do not produce a dark variant unless asked.
+Rayl has both modes. Light is the default and the one the approved panels were
+drawn in; dark is a full inversion of the same tokens, so a page built correctly
+is correct in both without a second set of decisions. Set it with
+`document.documentElement.dataset.theme = "dark"`, or leave it unset to follow
+the viewer's own setting.
 
 ---
 
 ## 0. Build with the parts
 
 One file carries the colour tokens, the type scale, the page ground and rhythm,
-the layout primitives, the button, the slider and the icons:
+the layout primitives, the button, the reveal button, the option group, the
+slider, the rolling line and the icons:
 
     https://typograaf.github.io/rayl-system/rayl.js
 
@@ -43,7 +50,7 @@ Put `class="rayl"` on the body and write markup:
           <button class="rayl-btn" aria-pressed="true">5:4</button>
           <button class="rayl-btn" data-icon="Save">Save</button>
         </div>
-        <div class="rayl-row"><span class="rayl-label">Count</span>
+        <div class="rayl-row"><span class="rayl-row-name">Count</span>
           <span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span>
         </div>
       </section>
@@ -53,13 +60,92 @@ Put `class="rayl"` on the body and write markup:
 not restyle them and do not rebuild them from the descriptions further down —
 several of those descriptions were wrong until the code was read.
 
-**Layout ships as primitives for the same reason.** For a panel: `rayl-page`,
-`rayl-section`, `rayl-stack`, `rayl-cluster`, `rayl-grid`, `rayl-head`,
-`rayl-card`, `rayl-label`, `rayl-hint`. For a page that has to breathe:
-`rayl-page is-wide`, `rayl-hero`, `rayl-band` (`is-ink` for full-bleed ink),
-`rayl-split` (`is-lead` for 3:2, `is-three` for three across, `is-centred`),
-`rayl-measure`, `rayl-media`. They carry the spacing hierarchy in section 4, so
-it is not re-decided every time.
+**Layout ships as primitives for the same reason.** They carry the spacing
+hierarchy in section 4, so it is not re-decided every time.
+
+### Everything the file ships
+
+Generated from the stylesheet. The build fails if a class exists in one and not
+the other, so if a part is not in this table it is not in the system.
+
+<!-- generated:inventory -->
+**Page**
+
+| class | what it is |
+|---|---|
+| `rayl-page` | the app or panel column: ground, 72 rhythm, 520 wide |
+| `rayl-page is-wide` | the same at 960, for a page that has to breathe |
+| `rayl-section` | a section of a page — gaps 24 |
+| `rayl-stack` | lines of one block — gaps 12 |
+| `rayl-cluster` | parts of one control — gaps 6 |
+| `rayl-grid` | an even grid of cards or swatches |
+| `rayl-head` | a header or footer row: mark on the left, controls right |
+| `rayl-card` | a panel that lifts off the ground |
+| `rayl-row` | a named control on one line |
+| `rayl-row-name` | the name in that row — 12, Medium, full ink, sentence case |
+| `rayl-label` | the 8 uppercase section label, and nothing else |
+| `rayl-hint` | a quiet line of explanation under a block |
+
+**Wide layout**
+
+| class | what it is |
+|---|---|
+| `rayl-hero` | the opening statement of a page |
+| `rayl-band` | a full-width band; is-ink for one in ink |
+| `rayl-split` | two columns; is-lead 3:2, is-three, is-centred |
+| `rayl-measure` | running text stopped at 62 characters |
+| `rayl-media` | a picture that follows the column beside it |
+
+**Document**
+
+| class | what it is |
+|---|---|
+| `rayl-doc` | on the body: the document ground rather than the app one |
+| `rayl-doc-page` | the document column — blocks 12 apart |
+| `rayl-chapter` | an 8 label on the ground, over the blocks under it |
+| `rayl-block` | a 500 rail against a 1504 field |
+| `rayl-rail` | the words of a block |
+| `rayl-rail-foot` | pinned to the floor of a rail |
+| `rayl-field` | the things of a block, stacked 12 apart |
+| `rayl-field-row` | frames side by side inside a field |
+| `rayl-frame` | one white box holding one thing; is-tall, is-wide |
+| `rayl-frame-tag` | names a frame, turned on its side, costing no height |
+| `rayl-container` | a plain white box for a header or footer |
+
+**Controls**
+
+| class | what it is |
+|---|---|
+| `rayl-btn` | the button; aria-pressed for on, data-icon for an icon |
+| `rayl-ibtn` | the reveal button: the label contracts, a circle irises open |
+| `rayl-seg` | the option group — exactly one on; is-joined, is-tight |
+| `rayl-seg-opt` | one cell of it; is-on, is-third |
+| `rayl-seg-name` | the name that opens a joined bar — never a disabled cell |
+| `rayl-slider` | the track: data-min, data-max, data-val, data-step |
+| `rayl-line` | a value on a line that rolls; data-label, data-swap |
+| `rayl-icon` | an icon on its own; data-icon |
+| `rayl-mark` | the logo mark, inline |
+
+**Type**
+
+| class | what it is |
+|---|---|
+| `rayl-96` | 96 / 110% / -4% |
+| `rayl-72` | 72 / 110% / -3% |
+| `rayl-48` | 48 / 110% / -2% |
+| `rayl-36` | 36 / 110% / -1% |
+| `rayl-24` | 24 / 115% / 0% |
+| `rayl-18` | 18 / 130% / +1% |
+| `rayl-12` | 12 / 140% / +2% |
+| `rayl-serif` | Concrette, on a size class from 24 up |
+
+Produced by `rayl.js` inside a component, never authored and never styled: `rayl-roll`, `rayl-ch`, `rayl-g`, `rayl-cur`, `rayl-nxt`, `rayl-reel`, `rayl-col`, `rayl-strip`, `rayl-digit`, `rayl-num`, `rayl-val`, `rayl-seg-fill`, `rayl-ibtn-body`, `rayl-ibtn-dot`, `rayl-ibtn-icon`.
+<!-- /generated:inventory -->
+
+Modifiers go on the class they belong to: `is-wide`, `is-lead`, `is-three`,
+`is-centred`, `is-ink`, `is-joined`, `is-tight`, `is-third`, `is-on`, `is-tall`,
+`is-square`. The rest — `is-rolled`, `is-instant`, `is-line`, `is-near`,
+`is-open` — are set by `rayl.js` while something is moving.
 
 **Pages do not ship.** A page's structure should come from what the page is for,
 and there is no arrangement of sections that is right for every brief.
@@ -95,9 +181,10 @@ Everything is generated from `src/` by `python3 src/build.py`:
     src/components.js  the label roll, the odometer reel, the icons
     src/slider.js      the track
     src/icons.json     the eighteen icons
-    src/parts.py       the palette, the UI tokens and the scale, once
-    src/site.py        the dashboard
-    ->  rayl.js, index.html, and dist/ copies of the examples with it inlined
+    src/parts.py       the palette, the tokens, the scale and the inventory, once
+    src/site.py        the bench and the dashboard, from parts.py
+    src/doc.py         writes the fact tables into this file, and checks them
+    ->  rayl.js, index.html, examples/bench.html, and dist/ copies with it inlined
 
 Edit `src/`. Never edit `rayl.js` — it is output, and it will be overwritten.
 
@@ -188,29 +275,40 @@ There is none.
 
 ## 2. Colour
 
-The palette is fourteen flat colours and two gradients. They live in the Rayl Figma
-file as styles under a `V2/` prefix, and those styles are the authority.
+The palette is fifteen flat colours and two gradients. **The authority is the
+approved frame `1083:9025`**, not the `V2/` paint styles in the file — those are
+an earlier round and still hold the pre-revision values (`#CFCFC4` for Porcelain,
+`#F7F7F2` for Off White, `#696963` for Light Concrete). Where a style and that
+frame disagree, the frame wins and the style is stale.
 
 The names are materials, not greys, and that is deliberate. The palette is drawn
 from the professional catering world — the look of porcelain and concrete, rigid
 materials given fluid, organic movement.
 
-| name | hex | RGB | CMYK | L* |
-|---|---|---|---|---|
-| White | `#FFFFFF` | 255 255 255 | 0 0 0 0 | 100.0 |
-| Paper | `#FBFBF6` | 251 251 246 | 0 0 2 2 | 98.5 |
-| Off White | `#F7F7EF` | 247 247 239 | 0 0 3 3 | 97.1 |
-| Bone | `#EDEDDF` | 237 237 223 | 0 0 6 7 | 93.3 |
-| Dark Off-White | `#E2E2D3` | 226 226 211 | 0 0 7 11 | 89.5 |
-| Porcelain | `#CFCFC1` | 207 207 193 | 0 0 7 19 | 82.8 |
-| Mid Porcelain | `#C3C3B6` | 195 195 182 | 0 0 7 24 | 78.5 |
-| Dark Porcelain | `#ACACA0` | 172 172 160 | 0 0 7 33 | 70.1 |
-| Pale Concrete | `#89897F` | 137 137 127 | 0 0 7 46 | 56.9 |
-| Light Concrete | `#696961` | 105 105 97 | 0 0 8 59 | 44.2 |
-| Dark Concrete | `#55554E` | 85 85 78 | 0 0 8 67 | 35.9 |
-| Off-Black | `#373732` | 55 55 50 | 0 0 9 78 | 22.9 |
-| Soft Black | `#262623` | 38 38 35 | 0 0 8 85 | 15.2 |
-| Black | `#1C1C1A` | 28 28 26 | 0 0 7 89 | 10.2 |
+<!-- generated:palette -->
+| name | hex | RGB | L\* |
+|---|---|---|---|
+| White | `#FFFFFF` | 255 255 255 | 100.0 |
+| Paper | `#FBFBF6` | 251 251 246 | 98.5 |
+| Off White | `#F7F7EF` | 247 247 239 | 97.1 |
+| Bone | `#EDEDDF` | 237 237 223 | 93.3 |
+| Dark Off-White | `#E2E2D3` | 226 226 211 | 89.5 |
+| Porcelain | `#CFCFC1` | 207 207 193 | 82.8 |
+| Mid Porcelain | `#C3C3B6` | 195 195 182 | 78.5 |
+| Dark Porcelain | `#ACACA0` | 172 172 160 | 70.1 |
+| Pale Concrete | `#89897F` | 137 137 127 | 56.9 |
+| Light Concrete | `#696961` | 105 105 97 | 44.2 |
+| Dark Concrete | `#55554E` | 85 85 78 | 35.9 |
+| Off-Black | `#373732` | 55 55 50 | 22.9 |
+| Soft Black | `#262623` | 38 38 35 | 15.2 |
+| Black | `#1C1C1A` | 28 28 26 | 10.2 |
+| Deep Black | `#11110F` | 17 17 15 | 5.0 |
+
+Fourteen of these are the approved system at `1083:9025`. **Deep Black**
+`#11110F` is the fifteenth and is not on that frame — it was added as the
+ground for dark mode, and it is the one colour in the table waiting on a
+decision.
+<!-- /generated:palette -->
 
 Every colour sits on one hue. In OKLCh they fall between 106.5 and 106.9 — a
 spread of less than half a degree. Only White is off it, because at maximum
@@ -222,19 +320,63 @@ only if it sits on that arc.
 
 **Gradients.** Both run top to bottom with the first stop at 0.349%.
 
-- **Porcelain Gradient** — `#CFCFC4` to `#F7F7F2`
-- **Concrete Gradient** — `#696963` to `#CFCFC4`
+- **Porcelain Gradient** — `#CFCFC1` to `#F7F7EF`
+- **Concrete Gradient** — `#696961` to `#CFCFC1`
+
+These are the `V2/` gradients re-struck on the revised palette. The styles in the
+file still hold the old stops, and a gradient running to a colour the palette no
+longer contains is the one place those old values would have survived.
 
 Note the swatch in the file labels the second one "Paper Gradient" while its
 style is named "Concrete Gradient". Use the style name.
+
+### The tokens
+
+Nothing in an interface names a colour from the table above. **It names a job**,
+and the job resolves to a different step in each mode. Change one of these and it
+changes everywhere at once, which is the whole reason they exist. Locked from the
+approved panels at `1083:9024`.
+
+<!-- generated:tokens -->
+| token | light | dark | job |
+|---|---|---|---|
+| `surface/ground` | White | Soft Black | The panel or page itself |
+| `surface/idle` | Paper | Deep Black | A control at rest |
+| `surface/idle-hover` | Off White | Black | Rest control, pointer over it |
+| `surface/idle-pressed` | Bone | Off-Black | Rest control, being pressed |
+| `surface/active` | Bone | Dark Concrete | A control that is on |
+| `surface/active-hover` | Dark Off-White | Light Concrete | On control, pointer over it |
+| `surface/active-pressed` | Porcelain | Off-Black | On control, being pressed |
+| `ink/primary` | Black | White | All text and icons |
+| `ink/on-active` | Black | White | Text on an active control |
+| `ink/disabled` | Dark Porcelain | Light Concrete | Unavailable text |
+| `line/track` | Dark Porcelain | Pale Concrete | Slider rails and small marks |
+| `fill/strong` | Black | White | A high-emphasis button |
+| `fill/strong-hover` | Soft Black | Off White | …with the pointer over it |
+| `ink/on-strong` | White | Soft Black | Text on one |
+<!-- /generated:tokens -->
+
+Four more are not on that frame and are explained where they are used:
+`--rayl-seg-press`, an unselected option cell being pressed (section 6), and the
+document grounds `--rayl-doc-ground`, `--rayl-doc-container` and
+`--rayl-doc-tag` (section 4).
+
+**Never write a hex in a build.** Every colour above resolves through a token, so
+a page that names tokens is right in both modes and a page that names hexes is
+right in neither.
 
 ### Ink and ground
 
 Ink is `#1C1C1A`. Never `#000000` — the palette has no pure black and the logo
 is not drawn in one.
 
-The ground is `#F7F7F2` on light. `#FFFFFF` is in the palette but is a distinct
-colour from the page, used for cards and panels that need to lift off it.
+The ground is a token, not a colour you pick, and which one depends on what you
+are building:
+
+- **An app or a panel** grounds on `surface/ground` — White on light, Soft Black
+  on dark — with its controls on `surface/idle` above it.
+- **A document** grounds on Off White with White containers on it, which is what
+  section 4 describes and what the guidelines board does.
 
 ### What existing builds get wrong
 
@@ -243,24 +385,24 @@ the file is right and the code is wrong:
 
 | build | uses | should be |
 |---|---|---|
-| rayl-ui paper | `#F0F0E5` | `#F7F7F2` |
-| rayl-ui sunk | `#E8E8D8` | `#E2E2D3` |
-| rayl-ui ink | `#000000` | `#1C1C1A` |
-| rayl-screen porcelain | `#CECEC5` | `#CFCFC4` |
-| rayl-screen black | `#3F3F3B` | `#55554E` |
-| rayl-screen grey dark | `#696963` | correct |
+| rayl-ui paper | `#F0F0E5` | `#F7F7EF` Off White |
+| rayl-ui sunk | `#E8E8D8` | `#E2E2D3` Dark Off-White |
+| rayl-ui ink | `#000000` | `#1C1C1A` Black |
+| rayl-screen porcelain | `#CECEC5` | `#CFCFC1` Porcelain |
+| rayl-screen black | `#3F3F3B` | `#55554E` Dark Concrete |
+| rayl-screen grey dark | `#696963` | `#696961` Light Concrete |
 
 ### What the palette does not yet cover
 
-Three things are genuinely missing rather than merely unwritten. Ask rather than
-filling them in.
+Two things are genuinely missing and two are known irregularities rather than
+gaps. Ask rather than filling any of them in.
 
 **There is no green.** The chapter's own prose promises "subtle touches of an
 organic green" and the app build carries a `#D8DEB9`; neither is the brand. The
 palette is the fifteen below and nothing else.
 
 - **White is the only colour off the system.** Every other colour sits between
-  hue 109.4 and 110.0. White is achromatic, so in a warm palette it reads cold.
+  hue 106.5 and 106.9. White is achromatic, so in a warm palette it reads cold.
   It also cannot carry the hue: at maximum lightness there is no room for any
   chroma at all. Keeping it pure is defensible — it is the true white, and Off
   White already does the warm job — but it is a deliberate exception, not a
@@ -276,7 +418,8 @@ palette is the fifteen below and nothing else.
 
 ## 3. Typography
 
-The typeface is **Azeret**. It ships with this system in `assets/fonts/`.
+There are two: **Azeret**, which sets nearly everything, and **Concrette**, a
+serif for titles from 24 up. Both ship with this system in `assets/fonts/`.
 
 These are the TRIAL cuts. They are fine for internal work and prototypes. Before
 anything goes public, the licensed files have to replace them.
@@ -304,6 +447,7 @@ design says, and nothing will line up with anything built correctly.
 
 Seven, and no others.
 
+<!-- generated:scale -->
 | size | leading | tracking, Azeret | tracking, Concrette |
 |---|---|---|---|
 | 96 | 110% | −4% | −5% |
@@ -313,8 +457,8 @@ Seven, and no others.
 | 24 | 115% | 0% | −2% |
 | 18 | 130% | +1% | — |
 | 12 | 140% | +2% | — |
-
-Plus **8**, uppercase at +8%, which is the section label and nothing else.
+| 8 | — | +8% uppercase | — |
+<!-- /generated:scale -->
 
 **Leading opens as the size drops and tracking tightens as it grows.** The two
 move against each other, and that is what makes a 96 headline and a 12 caption
@@ -341,7 +485,8 @@ stop looking like Rayl.
 So a headline may be either — that is a real choice each time, not a default.
 Everything under it is Azeret.
 
-Concrette sets one percent tighter than Azeret at every size they share. Add
+Concrette sets one percent tighter than Azeret at every size they share except
+**24**, which is two — the serif needs the extra at the size where it starts. Add
 `.rayl-serif` to a size class from 24 upward; below that the class is ignored on
 purpose and the text stays Azeret.
 
@@ -532,9 +677,14 @@ already in the palette. That is why the ladder has fourteen steps rather than
 ten — Paper, Bone, Mid Porcelain and Soft Black exist so that the states have
 somewhere to land.
 
-**The rule.** Hover is the palette colour nearest **5 L\*** away; pressed is the
-one nearest **10 L\***. Light grounds move down the ladder, dark fills move up,
-because they have nowhere darker to go.
+**Use the tokens in section 2 first.** They are what the shipped controls
+actually resolve to, and they cover every state a control has. The rule below is
+for deriving a state on a ground the tokens do not name — a swatch, a custom
+surface, a piece of art.
+
+**The rule**, from `1083:9025`. Hover is the palette colour nearest **5 L\***
+away; pressed is the one nearest **10 L\***. Light grounds move down the ladder,
+dark fills move up, because they have nowhere darker to go.
 
 | base | rest | hover | pressed |
 |---|---|---|---|
@@ -548,21 +698,16 @@ because they have nowhere darker to go.
 
 For a base not in this table, apply the rule. Do not invent a colour.
 
-### States that need no new colour either
+**Where the rule and the tokens disagree — NOT DECIDED.** The ladder gives a
+Paper base a hover of Bone, five steps away. `surface/idle-hover` is Off White,
+one step away. The panel's own tokens are the gentler of the two, and both are
+approved sources. The tokens are what ships, so build with them; but this is a
+real disagreement and not a rounding error, and it wants a decision rather than
+a preference. Section 6's option group ran into the consequence: the ladder's
+answer for a pressed cell is the same colour selection is painted in.
 
-| role | colour |
-|---|---|
-| ink / rest | Black `#1C1C1A` |
-| ink / secondary | Light Concrete `#696961` |
-| ink / disabled | Dark Porcelain `#ACACA0` |
-| ink / inverse, on dark fills | Off White `#F7F7EF` |
-| fill / disabled | Dark Off-White `#E2E2D3` |
-| fill / selected | Black `#1C1C1A`, ink Off White |
-| line / rest | Dark Porcelain `#ACACA0` |
-| line / hover | Pale Concrete `#89897F` |
-| line / focus | Black `#1C1C1A`, Off White on dark grounds |
-| control / track | Dark Off-White `#E2E2D3` |
-| control / fill | Black `#1C1C1A` |
+Every other role a state needs — disabled ink, the track, the strong fill and
+the ink on it — is a token in section 2, not a colour to look up here.
 
 ### The label roll
 
@@ -669,11 +814,15 @@ out, and the control stops looking like it can reach its own maximum.
 | rail | 2 tall through the middle, at y 5 to 7 |
 | rail end cap | radius 1, one pixel in from each edge |
 | fillet | radius 2 |
-| fillet cubic | offsets `1.10457, 0.8954` from the nub's corner |
 | value text | 8 |
 
-The fillet cubic is hand-fitted in the design, not derived. Copy it; do not
-recompute it.
+**The fillet is an arc in the shipped control, not the design's cubic.** The
+design hand-fits a cubic with offsets `1.10457, 0.8954` from the nub's corner,
+which is exact for a nub of exactly 12. The nub grows on hover, so `rayl.js`
+draws the join as an arc instead: at rest it is the same quarter-circle of radius
+2, and it stays tangent to both the nub and the rail at every size. Use the
+cubic when you are drawing a static one at 12; use the shipped control for
+anything interactive.
 
 **The track fills the width of its row and its geometry never scales.** Draw the
 path at real pixel width — the nub, corners and fillets stay 24, 3 and 2 however
@@ -687,8 +836,13 @@ is short, so arrow keys do the fine work — one step, ten with shift.
 
 ### Ink flip
 
-Dark ink down to Pale Concrete; Off White ink from Light Concrete down. Every
-pairing in this document clears 8:1.
+Dark ink down to Pale Concrete; Off White ink from Light Concrete down — the flip
+happens between L\* 56.9 and 44.2 because that is where each stops winning.
+
+The pairings this puts on a page clear 4.5:1, which is what body text needs. They
+do not all clear 7:1: Off White on Pale Concrete is about 3.6:1, so **that pair is
+for a swatch label or a large size, never for running text**. If you need small
+text on a mid tone, go two steps rather than one.
 
 ### Still not covered
 
@@ -1089,3 +1243,66 @@ there.
 Working reference code for this is NOT YET IN THIS REPO. Until it is, if you are
 asked for the Rayl look, say that the reference has not been added yet rather
 than approximating it.
+
+---
+
+## 9. What the system does not have
+
+Every gap in one place, because scattering them is how they get invented instead
+of asked about. **Nothing on this page is a licence to guess.** If a brief needs
+one of these, say which one and stop.
+
+### Controls nobody has designed
+
+The system has a button, a reveal button, an option group, a slider, a rolling
+line and eighteen icons. It has no:
+
+| missing | what a brief will ask for |
+|---|---|
+| **text and number input** | any form, any name field, any numeric entry |
+| **select** | a list too long for an option group |
+| **checkbox and toggle** | a setting that is on or off on its own |
+| **collapsible section** | the approved panel already draws one — every section label carries a `–` at its right and nothing implements it |
+| **modal, sheet, drawer** | a confirm, an export dialog, a settings panel |
+| **tooltip and popover** | a label on an icon button |
+| **tabs** | more than one view in a panel |
+| **table** | any list of records; the bench fakes one with local CSS |
+| **toast** | anything reporting that a background job finished |
+| **progress** | an export, an upload, a render |
+| **menu** | a right-click or an overflow |
+| **badge, chip, tag** | a count, a status, a filter |
+| **avatar** | anybody's face |
+| **scrollbar** | every panel taller than its frame |
+| **app shell** | a control panel beside a canvas — the shape `rayl-stack` actually is, and the only layout the system cannot express |
+
+The first four are the ones that block real work. **They are one design problem,
+not four:** in a system with no strokes, a control that accepts input has to read
+as enterable through a change of ground alone. That decision has to be made once,
+by you, and then all four follow.
+
+### States nobody has defined
+
+Loading, empty, error and skeleton. A tool without them is a demo.
+
+### Colour nobody has decided
+
+- **Semantic colour** — nothing means error, warning or success. The palette is
+  one hue, so any of these is the brand's first hue break.
+- **Deep Black `#11110F`** — it is in the code as the dark-mode ground and it is
+  not on `1083:9025`. Either it joins the palette or dark mode grounds on
+  something that is already in it.
+- **Hover: the ladder or the token.** Section 5. Two approved sources give a
+  Paper base two different hovers, five steps apart and one step apart.
+
+### Numbers off the scale
+
+**36** and **8** are in heavy use and on no scale. **144** and **96** are the
+document's showcase paddings and are 3x and 2x the 48 rather than members. Say
+whether the scale gains multiples or those values change.
+
+### The Rayl look
+
+Section 8. The layered gradient treatment is what makes something read as Rayl
+rather than as a competent light-mode app, and there is no reference for it in
+this repo. This is the largest single gap in the system: everything else here
+makes a build *correct*, and that makes it *Rayl*.

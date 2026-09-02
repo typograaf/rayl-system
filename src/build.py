@@ -94,6 +94,9 @@ print("rayl.js", len(header + body), "bytes")
 # artifact build reads them.
 import subprocess, sys
 subprocess.run([sys.executable, str(SRC/"site.py")], check=True, cwd=str(SRC))
+# and the guideline's fact tables, which fails the build if the document states
+# a value the stylesheet does not hold
+subprocess.run([sys.executable, str(SRC/"doc.py")], check=True, cwd=str(SRC))
 
 # ---------------------------------------------------------------------------
 # GitHub Pages serves rayl.js with max-age=600, so for ten minutes after a push

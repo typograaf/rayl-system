@@ -14,6 +14,10 @@ const PULL_RADIUS=104, PULL_STRENGTH=0.6, PULL_MAX=12;
 /* vertically the nub is welded to the rail, so it can only lean as far as the
    fillet allows before the join would invert — 0.7 of it leaves room to spare */
 const PULL_STRENGTH_Y=0.55, PULL_ROOM=0.7;
+/* how fast the lean catches the cursor, and how slowly it drifts home when the
+   cursor has gone. Time constants, not durations: after one tau it has covered
+   63% of the remaining distance, whatever the frame rate. */
+const PULL_TAU=48, PULL_TAU_HOME=140;
 const clamp=(v,lo,hi)=>Math.min(hi,Math.max(lo,v));
 const rnd=v=>Math.round(v*1000)/1000;
 const easeOut=t=>1-Math.pow(1-t,3);
@@ -58,8 +62,6 @@ function mountSlider(host){
   let scale=S_IDLE, pull=0, pullY=0, raf=0;
   let box={x:0,w:MIN_NUB,top:0,bot:H};     /* the nub as last drawn */
   const aS={from:S_IDLE,to:S_IDLE,t0:0,dur:0,done:true};
-  const aP={from:0,to:0,t0:0,dur:0,done:true};
-  const aY={from:0,to:0,t0:0,dur:0,done:true};
   const aV={from:0,to:0,t0:0,dur:0,done:true};
   const svg=document.createElementNS(NS,"svg");
   svg.setAttribute("height",String(VB));
@@ -110,11 +112,35 @@ function mountSlider(host){
     a.done=p>=1;
     return a.from+(a.to-a.from)*easeOut(p);
   }
+  /* THE LEAN IS A FOLLOWER, NOT A TWEEN. A tween has a start time and a
+     duration, and the cursor sets a new target on every pointermove — restarting
+     it sixty times a second leaves it forever in the first frame of its own
+     curve, which reads as the nub sticking and then jumping when a frame is
+     dropped. Chrome coalesces moves into the frame callback, so the restart and
+     the read can share a timestamp and the tween advances by nothing at all.
+
+     Exponential smoothing has no start time to reset. It converges on whatever
+     the target is now, at a rate that does not depend on how often the target
+     changes or on the frame rate. */
+  let pullTarget=0, pullYTarget=0, pullTau=PULL_TAU, last=0;
+  function follow(v,target,dt,tau){
+    return target + (v-target) * Math.exp(-dt/tau);
+  }
   function tick(now){
-    scale=read(aS,now); pull=read(aP,now); pullY=read(aY,now);
+    const dt=last?Math.min(now-last,64):16; last=now;
+    scale=read(aS,now);
+    if(REDUCED){ pull=pullTarget; pullY=pullYTarget; }
+    else {
+      pull=follow(pull,pullTarget,dt,pullTau);
+      pullY=follow(pullY,pullYTarget,dt,pullTau);
+    }
     if(!aV.done) shown=read(aV,now);
     render();
-    raf=(aS.done&&aP.done&&aY.done&&aV.done)?0:requestAnimationFrame(tick);
+    const settled=Math.abs(pull-pullTarget)<0.01&&Math.abs(pullY-pullYTarget)<0.01;
+    if(settled){ pull=pullTarget; pullY=pullYTarget; }
+    const done=aS.done&&aV.done&&settled;
+    raf=done?0:requestAnimationFrame(tick);
+    if(done) last=0;
   }
   function kick(){ if(!raf) raf=requestAnimationFrame(tick); }
   function run(a,target,ms,current){
@@ -127,14 +153,11 @@ function mountSlider(host){
     if(REDUCED){ scale=target; render(); return; }
     run(aS,target,ms,scale);
   }
-  function pullTo(target,ms){
-    if(REDUCED){ pull=target; render(); return; }
-    run(aP,target,ms,pull);
-  }
-  function pullYTo(target,ms){
-    if(REDUCED){ pullY=target; render(); return; }
-    run(aY,target,ms,pullY);
-  }
+  /* ms is kept in the calls below as an intent — near or far — and turned into
+     the follower's time constant, so a lean toward the cursor catches up quickly
+     and a drift home takes its time. */
+  function pullTo(target,ms){ pullTarget=target; pullTau=ms>200?PULL_TAU_HOME:PULL_TAU; kick(); }
+  function pullYTo(target,ms){ pullYTarget=target; pullTau=ms>200?PULL_TAU_HOME:PULL_TAU; kick(); }
   function leanRoom(s){                    /* how far the fillet lets it lean */
     return (H*s/2 - RAIL_H/2 - NUB_R*s)*PULL_ROOM;
   }
@@ -162,7 +185,10 @@ function mountSlider(host){
      colour through all of them. Magnetism already starts before the pointer
      reaches the nub, so the colour has to start there too — otherwise the thing
      leans toward you while still insisting it has not been touched. */
-  function engaged(){ host.classList.toggle("is-near", hovering||dragging||focused); }
+  function engaged(){
+    host.classList.toggle("is-near", hovering||dragging||focused);
+    host.classList.toggle("is-keyed", focused);   /* the ring, keyboard only */
+  }
   /* growth and magnetism share one range: the moment the nub starts leaning
      toward the cursor it is also allowed to grow. A little hysteresis on the
      boundary so a cursor resting exactly on it does not stutter. */

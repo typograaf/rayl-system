@@ -331,7 +331,13 @@
   overflow:hidden;pointer-events:none;font-family:var(--rayl-font);
   font-size:8px;font-weight:500;letter-spacing:0;color:var(--ink-primary);
   --rayl-cap:5.584px;--rayl-travel:12px;transform-origin:50% 50%;}
-.rayl-slider svg:focus-visible{outline:1px solid var(--ink-primary);outline-offset:3px;border-radius:2px;}
+/* The ring is driven by a class rather than :focus-visible. Safari raises
+   :focus-visible on an SVG that a CLICK focused, so grabbing the nub drew a hard
+   line above and below it — the svg is 24 tall inside a 12 box, so an outline on
+   it lands outside the row. rayl.js already knows whether a keyboard put the
+   focus there; this uses that answer. */
+.rayl-slider.is-keyed svg{outline:1px solid var(--ink-primary);outline-offset:3px;
+  border-radius:2px;}
 /* A row names its control in ORDINARY TYPE — 12, Medium, ink/primary, sentence
    case — not in the 8 uppercase label. The label names a section; a row names a
    thing you are about to touch, and the panel sets those the same size as the

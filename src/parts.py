@@ -283,3 +283,72 @@ DOC_CSS = """
     .bg5{--rayl-card-bg:var(--rayl-dark-concrete);}
   }
 """
+
+
+# ============================================================ the inventory ==
+# Every class the system ships, with the one line that says what it is for. The
+# build FAILS if core.css grows a class that is not in one of these two lists,
+# so a new part cannot reach anybody undocumented. That is the whole point of
+# the list: the drift this repo kept producing was always a value or a name that
+# existed in the code and nowhere else.
+
+INVENTORY = [
+ ("Page", [
+  ("rayl-page",       "the app or panel column: ground, 72 rhythm, 520 wide"),
+  ("rayl-page is-wide","the same at 960, for a page that has to breathe"),
+  ("rayl-section",    "a section of a page — gaps 24"),
+  ("rayl-stack",      "lines of one block — gaps 12"),
+  ("rayl-cluster",    "parts of one control — gaps 6"),
+  ("rayl-grid",       "an even grid of cards or swatches"),
+  ("rayl-head",       "a header or footer row: mark on the left, controls right"),
+  ("rayl-card",       "a panel that lifts off the ground"),
+  ("rayl-row",        "a named control on one line"),
+  ("rayl-row-name",   "the name in that row — 12, Medium, full ink, sentence case"),
+  ("rayl-label",      "the 8 uppercase section label, and nothing else"),
+  ("rayl-hint",       "a quiet line of explanation under a block"),
+ ]),
+ ("Wide layout", [
+  ("rayl-hero",       "the opening statement of a page"),
+  ("rayl-band",       "a full-width band; is-ink for one in ink"),
+  ("rayl-split",      "two columns; is-lead 3:2, is-three, is-centred"),
+  ("rayl-measure",    "running text stopped at 62 characters"),
+  ("rayl-media",      "a picture that follows the column beside it"),
+ ]),
+ ("Document", [
+  ("rayl-doc",        "on the body: the document ground rather than the app one"),
+  ("rayl-doc-page",   "the document column — blocks 12 apart"),
+  ("rayl-chapter",    "an 8 label on the ground, over the blocks under it"),
+  ("rayl-block",      "a 500 rail against a 1504 field"),
+  ("rayl-rail",       "the words of a block"),
+  ("rayl-rail-foot",  "pinned to the floor of a rail"),
+  ("rayl-field",      "the things of a block, stacked 12 apart"),
+  ("rayl-field-row",  "frames side by side inside a field"),
+  ("rayl-frame",      "one white box holding one thing; is-tall, is-wide"),
+  ("rayl-frame-tag",  "names a frame, turned on its side, costing no height"),
+  ("rayl-container",  "a plain white box for a header or footer"),
+ ]),
+ ("Controls", [
+  ("rayl-btn",        "the button; aria-pressed for on, data-icon for an icon"),
+  ("rayl-ibtn",       "the reveal button: the label contracts, a circle irises open"),
+  ("rayl-seg",        "the option group — exactly one on; is-joined, is-tight"),
+  ("rayl-seg-opt",    "one cell of it; is-on, is-third"),
+  ("rayl-seg-name",   "the name that opens a joined bar — never a disabled cell"),
+  ("rayl-slider",     "the track: data-min, data-max, data-val, data-step"),
+  ("rayl-line",       "a value on a line that rolls; data-label, data-swap"),
+  ("rayl-icon",       "an icon on its own; data-icon"),
+  ("rayl-mark",       "the logo mark, inline"),
+ ]),
+ ("Type", [
+  ("rayl-96",  "96 / 110% / -4%"), ("rayl-72", "72 / 110% / -3%"),
+  ("rayl-48",  "48 / 110% / -2%"), ("rayl-36", "36 / 110% / -1%"),
+  ("rayl-24",  "24 / 115% / 0%"),  ("rayl-18", "18 / 130% / +1%"),
+  ("rayl-12",  "12 / 140% / +2%"),
+  ("rayl-serif","Concrette, on a size class from 24 up"),
+ ]),
+]
+
+# Produced by rayl.js inside a component. Never authored, never styled.
+INTERNAL = ["rayl-roll", "rayl-ch", "rayl-g", "rayl-cur", "rayl-nxt",
+            "rayl-reel", "rayl-col", "rayl-strip", "rayl-digit", "rayl-num",
+            "rayl-val", "rayl-seg-fill", "rayl-ibtn-body", "rayl-ibtn-dot",
+            "rayl-ibtn-icon"]
