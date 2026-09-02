@@ -16,6 +16,7 @@ A fact has one home now, and the build fails rather than letting two drift.
 """
 import pathlib, re, sys
 from parts import (ROOT, PALETTE, STALE, UI, SCALE, INVENTORY, INTERNAL, SPACING,
+                   ARRAY_DOC,
                    GAP_CLASSES, HEADING_GAP, GAP_MEANING, RADIUS, FIGURES,
                    FIXED, MOTION, ICONS, MISSING, OPEN)
 
@@ -106,6 +107,39 @@ def icons_table():
             "you scale up, scale the frame — the path is built for that box.")
 
 
+def array_defaults():
+    """name -> the default, read straight out of array/src/look.js."""
+    look = (ROOT / "array/src/look.js").read_text()
+    pal = dict(re.findall(r'^\s*([A-Za-z]+):\s*"(#[0-9A-Fa-f]{6})"', look, re.M))
+    block = look[look.index("export const DEFAULTS"):]
+    block = block[:block.index("\n};")]
+    block = re.sub(r"/\*.*?\*/", " ", block, flags=re.S)      # its own comments
+    block = re.sub(r"//[^\n]*", " ", block)
+    out = {}
+    for m in re.finditer(r"^\s*([A-Za-z]+):\s*(\[[^\]]*\]|[^,\n]+)", block, re.M):
+        v = m.group(2).strip().rstrip(",").strip()
+        if v.startswith("PALETTE."):
+            v = pal.get(v.split(".", 1)[1], v)
+        elif v.startswith("["):
+            v = ",".join(x.strip() for x in v[1:-1].split(","))
+        elif v == "null":
+            v = "—"
+        v = v.strip('"').replace(" / ", "/")
+        out[m.group(1)] = v
+    return out
+
+
+def array_table():
+    d = array_defaults()
+    attr = lambda k: "data-" + re.sub(r"([A-Z])", lambda m: "-" + m.group(1).lower(), k)
+    rows = "\n".join(f"| `{attr(k)}` | {ARRAY_DOC[k]} | `{v}` |" for k, v in d.items())
+    return ("| setting | what it does | default |\n|---|---|---|\n" + rows +
+            "\n\nRead out of `array/src/look.js`. A light's position is three numbers —\n"
+            "along the row, across it, and towards you — in units of the row's own\n"
+            "radius, about its middle. Held that way a rig means the same thing\n"
+            "whichever way the row runs, which is why it is not x, y and z.")
+
+
 def inventory_table():
     out = []
     for group, items in INVENTORY:
@@ -139,6 +173,7 @@ BLOCKS = {
     "motion":    motion_table,
     "icons":     icons_table,
     "inventory": inventory_table,
+    "array":     array_table,
     "missing":   missing_table,
 }
 
@@ -277,6 +312,17 @@ def check():
     #     WebGL and cannot read a CSS custom property. A copy is allowed; a
     #     copy that drifts is not. This has now been wrong twice, both times
     #     taken from the V2 paint styles, which are the stale round.
+    if (ROOT / "array/src/look.js").exists():
+        have = set(array_defaults())
+        said = set(ARRAY_DOC)
+        if have - said:
+            raise SystemExit("array/src/look.js has settings nothing describes: "
+                             + ", ".join(sorted(have - said))
+                             + "\nAdd them to ARRAY_DOC in src/parts.py.")
+        if said - have:
+            raise SystemExit("ARRAY_DOC describes settings the array does not have: "
+                             + ", ".join(sorted(said - have)))
+
     look = ROOT / "array/src/look.js"
     if look.exists():
         known = {h.upper() for _, h, _ in PALETTE}

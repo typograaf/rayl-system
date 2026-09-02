@@ -1062,40 +1062,66 @@ attribute named after itself. **The value a layout gives is the right one until
 somebody says otherwise**, so reach for these to adjust a composition, not to
 build one.
 
-| setting | what it does |
-|---|---|
-| `data-count` | how many |
-| `data-spread` | the **air between one body and the next**, in bodies. Nought is touching; negative overlaps, which is most of what an array is for |
-| `data-direction` | `across` or `up` — the layout sets it, and setting it against the layout is how a composition gets broken |
-| `data-depth` | how thick a card is, against its own width |
-| `data-lean` | turns the whole rack, so the row recedes |
-| `data-spin` | turns the bodies without turning the row |
-| `data-tilt` | tips them towards you or away |
-| `data-motion` | `wave`, `still`, `scroll` or `pointer` — see below |
-| `data-wave` | how far a body is lifted out of the row, in bodies |
-| `data-brush` | how many bodies wide the crest is |
-| `data-peaks` | how many crests run at once |
-| `data-seconds` | how long one pass takes |
-| `data-at` | where the crest sits when nothing is driving it |
-| `data-colour` | what the bodies are made of |
-| `data-sheet` | `porcelain`, `concrete`, `none`, or two colours. `none` by default, so an array sits on whatever ground the page already has |
-| `data-key` `data-key-colour` `data-key-at` `data-key-size` | the big source, its colour, where it stands and how wide it is |
-| `data-fill` `data-fill-colour` `data-fill-at` `data-fill-size` | the cool fill |
-| `data-rim` `data-rim-colour` `data-rim-at` `data-rim-size` | the light behind, which is the only one the glow-through has to work with |
-| `data-ambient` | how much of the sheet reaches the bodies |
-| `data-translucency` `data-scatter` `data-wrap` `data-falloff` | how much light comes through a body, how far it spreads inside, how far round the form it bends and how sharply it falls off |
-| `data-roughness` `data-coat` | matte at 1; a clear layer over it, the way a fired glaze has one |
-| `data-occlusion` `data-bounce` | how much light the row loses to itself, and how much the bodies throw back at each other. The shadow a body casts on the one behind it follows the occlusion unless `data-shade` says otherwise |
-| `data-exposure` `data-contrast` | the picture |
-| `data-projection` | `lens` or `iso` — a real lens, or a parallel one. The plates and the cards are composed parallel, the baskets with a lens |
-| `data-aspect` `data-zoom` `data-pan` | the crop: the shape it was composed in, how much of the fit to take (under one is closer), and where the middle sits, in world units off the middle of the row |
-| `data-fov` | the lens, which the parallel projection ignores |
-| `data-art` | an image printed on the face of a card |
-| `data-dpr` | the most device pixels it may ask for |
+<!-- generated:array -->
+| setting | what it does | default |
+|---|---|---|
+| `data-body` | `plate`, `card` or `basket`. There is no fourth | `plate` |
+| `data-layout` | which approved composition to stand on: `horizontal`, `vertical`, or `none` for the bare defaults | `horizontal` |
+| `data-count` | how many | `14` |
+| `data-spread` | the **air between one body and the next**, in bodies. Nought is touching; negative overlaps, which is most of what an array is for | `-0.455` |
+| `data-direction` | `across` or `up` — the layout sets it, and setting it against the layout is how a composition gets broken | `across` |
+| `data-depth` | how thick a card is, against its own width. Cards only | `0.05` |
+| `data-lean` | turns the whole rack, so the row recedes | `0` |
+| `data-spin` | turns the bodies without turning the row | `24` |
+| `data-tilt` | tips them towards you or away | `-14` |
+| `data-motion` | `wave`, `still`, `scroll` or `pointer` — see below | `wave` |
+| `data-wave` | how far a body is lifted out of the row, in bodies | `0.62` |
+| `data-brush` | how many bodies wide the crest is | `2` |
+| `data-peaks` | how many crests run at once | `1` |
+| `data-seconds` | how long one pass takes | `6` |
+| `data-at` | where the crest sits when nothing is driving it | `0.35` |
+| `data-ease` | the curve the crest travels on — the app's own, not the system's | `0,0.593,1,0.28` |
+| `data-colour` | what the bodies are made of | `#F7F7EF` |
+| `data-key` | the big source | `1.55` |
+| `data-key-colour` | its colour | `#F7F7EF` |
+| `data-key-at` | where it stands | `0.3,0.75,0.85` |
+| `data-key-size` | and how wide it is | `0.75` |
+| `data-fill` | the cool fill | `0.3` |
+| `data-fill-colour` | its colour | `#E2E2D3` |
+| `data-fill-at` | where it stands | `-0.9,0.05,0.4` |
+| `data-fill-size` | and how wide it is | `1` |
+| `data-rim` | the light behind, the only one the glow-through has to work with | `0.8` |
+| `data-rim-colour` | its colour | `#F7F7EF` |
+| `data-rim-at` | where it stands | `0.2,0.35,-0.6` |
+| `data-rim-size` | and how wide it is | `0.4` |
+| `data-ambient` | how much of the sheet reaches the bodies | `1.4` |
+| `data-exposure` | the picture | `1.0` |
+| `data-contrast` | and its contrast | `1.05` |
+| `data-occlusion` | how much light the row loses to itself | `1.15` |
+| `data-shade` | how hard a body shadows the one behind. Unset, so it follows the occlusion the look asks for rather than a second number nobody set | `—` |
+| `data-translucency` | how much light comes through a body | `0.72` |
+| `data-scatter` | how far it spreads inside | `0.26` |
+| `data-wrap` | how far round the form it bends | `0.23` |
+| `data-falloff` | and how sharply it falls off | `3.3` |
+| `data-roughness` | matte at 1 | `1` |
+| `data-coat` | a clear layer over it, the way a fired glaze has one | `0` |
+| `data-sheet` | `porcelain`, `concrete`, `none`, or two colours. `none` by default, so an array sits on whatever ground the page already has | `none` |
+| `data-sky` | what an upward face sees. Unset, so it takes the sheet's top | `—` |
+| `data-ground` | and a downward one. Unset, so it takes the sheet's bottom | `—` |
+| `data-projection` | `lens` or `iso` — a real lens, or a parallel one. The plates and the cards are composed parallel, the baskets with a lens | `lens` |
+| `data-fov` | the lens, which the parallel projection ignores | `32` |
+| `data-aspect` | the crop: the shape the picture was composed in | `16/9` |
+| `data-zoom` | how much of the fit to take — under one is closer in | `1` |
+| `data-pan` | where the middle sits, in world units off the middle of the row | `0,0` |
+| `data-bounce` | how much light the bodies throw at each other | `1` |
+| `data-art` | an image printed on the face of a card | `—` |
+| `data-dpr` | the most device pixels it may ask for | `2` |
 
-A light's position is three numbers — along the row, across it, and towards you
-— in units of the row's own radius, about its middle. Held that way a rig means
-the same thing whichever way the row runs, which is why it is not x, y and z.
+Read out of `array/src/look.js`. A light's position is three numbers —
+along the row, across it, and towards you — in units of the row's own
+radius, about its middle. Held that way a rig means the same thing
+whichever way the row runs, which is why it is not x, y and z.
+<!-- /generated:array -->
 
 ### The four motions
 

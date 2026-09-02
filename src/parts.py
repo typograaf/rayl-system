@@ -594,3 +594,65 @@ MISSING = [
  ("scrollbar",             "every panel taller than its frame"),
  ("app shell",             "a control panel beside a canvas — the only layout the system cannot express"),
 ]
+
+
+# ============================================================== the array ====
+# The array's settings are the last table in the system that was kept by hand
+# against code — 26 rows against 47 entries in array/src/look.js. Names and
+# defaults are read out of that file now; only the sentence saying what a
+# setting does lives here, because no machine can write that. doc.py fails the
+# build if a setting exists with nothing said about it, or the other way round.
+
+ARRAY_DOC = {
+ "body":        "`plate`, `card` or `basket`. There is no fourth",
+ "layout":      "which approved composition to stand on: `horizontal`, `vertical`, or `none` for the bare defaults",
+ "count":       "how many",
+ "spread":      "the **air between one body and the next**, in bodies. Nought is touching; negative overlaps, which is most of what an array is for",
+ "direction":   "`across` or `up` — the layout sets it, and setting it against the layout is how a composition gets broken",
+ "depth":       "how thick a card is, against its own width. Cards only",
+ "lean":        "turns the whole rack, so the row recedes",
+ "spin":        "turns the bodies without turning the row",
+ "tilt":        "tips them towards you or away",
+ "motion":      "`wave`, `still`, `scroll` or `pointer` — see below",
+ "wave":        "how far a body is lifted out of the row, in bodies",
+ "brush":       "how many bodies wide the crest is",
+ "peaks":       "how many crests run at once",
+ "seconds":     "how long one pass takes",
+ "at":          "where the crest sits when nothing is driving it",
+ "ease":        "the curve the crest travels on — the app's own, not the system's",
+ "colour":      "what the bodies are made of",
+ "key":         "the big source",
+ "keyColour":   "its colour",
+ "keyAt":       "where it stands",
+ "keySize":     "and how wide it is",
+ "fill":        "the cool fill",
+ "fillColour":  "its colour",
+ "fillAt":      "where it stands",
+ "fillSize":    "and how wide it is",
+ "rim":         "the light behind, the only one the glow-through has to work with",
+ "rimColour":   "its colour",
+ "rimAt":       "where it stands",
+ "rimSize":     "and how wide it is",
+ "ambient":     "how much of the sheet reaches the bodies",
+ "exposure":    "the picture",
+ "contrast":    "and its contrast",
+ "occlusion":   "how much light the row loses to itself",
+ "shade":       "how hard a body shadows the one behind. Unset, so it follows the occlusion the look asks for rather than a second number nobody set",
+ "translucency":"how much light comes through a body",
+ "scatter":     "how far it spreads inside",
+ "wrap":        "how far round the form it bends",
+ "falloff":     "and how sharply it falls off",
+ "roughness":   "matte at 1",
+ "coat":        "a clear layer over it, the way a fired glaze has one",
+ "sheet":       "`porcelain`, `concrete`, `none`, or two colours. `none` by default, so an array sits on whatever ground the page already has",
+ "sky":         "what an upward face sees. Unset, so it takes the sheet's top",
+ "ground":      "and a downward one. Unset, so it takes the sheet's bottom",
+ "projection":  "`lens` or `iso` — a real lens, or a parallel one. The plates and the cards are composed parallel, the baskets with a lens",
+ "fov":         "the lens, which the parallel projection ignores",
+ "aspect":      "the crop: the shape the picture was composed in",
+ "zoom":        "how much of the fit to take — under one is closer in",
+ "pan":         "where the middle sits, in world units off the middle of the row",
+ "bounce":      "how much light the bodies throw at each other",
+ "art":         "an image printed on the face of a card",
+ "dpr":         "the most device pixels it may ask for",
+}
