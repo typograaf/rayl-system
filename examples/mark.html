@@ -16,50 +16,40 @@
    * on all four of its long faces, a circle is a circle on all six — so there
    * is never a blank face and never a shape cut in half.
    *
-   * There is no perspective and no light. Perspective would let the camera see
-   * a sliver down the side of every piece, which puts a hairline through a mark
-   * that is meant to be exact; without it a face is square to you or it is
-   * turning, and nothing else. So a turn reads as flat shapes moving rather
-   * than as an object being rendered.
+   * There is no perspective, no light and no background. Perspective would let
+   * the camera see a sliver down the side of every piece, which puts a hairline
+   * through a mark that is meant to be exact; light would put tones on it that
+   * are not on the ladder; and the back of the cube is simply not drawn. So a
+   * turn reads as flat shapes moving rather than as an object being rendered.
    *
    * Nothing here is a Rayl component. This is one page's own drawing.
    * ======================================================================== */
   .mark3d{
-    --tone-f:var(--ink-primary);          /* square to the camera: the mark */
-    --tone-b:var(--rayl-porcelain);
-    --tone-u:var(--rayl-dark-porcelain);  --tone-d:var(--rayl-pale-concrete);
-    --tone-r:var(--rayl-light-concrete);  --tone-l:var(--rayl-dark-concrete);
+    /* One colour. The mark is ink, so every face of every piece is ink and a
+       turn is read from the silhouette alone — no ladder, no shading, no
+       second tone anywhere. */
+    --tone-f:var(--ink-primary); --tone-b:var(--ink-primary);
+    --tone-u:var(--ink-primary); --tone-d:var(--ink-primary);
+    --tone-r:var(--ink-primary); --tone-l:var(--ink-primary);
     position:relative;
-  }
-  /* dark walks the ladder the other way, out of the ground rather than into it */
-  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .mark3d{
-    --tone-b:var(--rayl-dark-concrete);
-    --tone-u:var(--rayl-light-concrete);  --tone-d:var(--rayl-pale-concrete);
-    --tone-r:var(--rayl-dark-porcelain);  --tone-l:var(--rayl-porcelain);
-  } }
-  :root[data-theme="dark"] .mark3d{
-    --tone-b:var(--rayl-dark-concrete);
-    --tone-u:var(--rayl-light-concrete);  --tone-d:var(--rayl-pale-concrete);
-    --tone-r:var(--rayl-dark-porcelain);  --tone-l:var(--rayl-porcelain);
   }
   .mark3d .cube{position:absolute;inset:0;transform-style:preserve-3d;}
   .mark3d .piece{position:absolute;left:50%;top:50%;transform-style:preserve-3d;}
   /* a face is its shape and nothing else — no ground, no edge, no box */
   .mark3d .face{position:absolute;left:50%;top:50%;backface-visibility:hidden;}
   .mark3d .face svg{display:block;width:100%;height:100%;}
-  /* Depth is the one thing flat tone cannot say on its own: with no
-     perspective a piece at the back sits exactly behind a piece at the front,
-     and two different shapes stacked in the same two greys read as one blob.
-     So the further back a piece is, the further its tone is mixed into the
-     ground — a background cel, not a shadow. Every shape stays one flat
-     colour, and a piece square at the front is mixed with nothing at all. */
-  .mark3d .piece{--fade:0%;}
-  .mark3d .s-f svg{fill:color-mix(in oklab,var(--tone-f),var(--surface-idle) var(--fade));}
-  .mark3d .s-b svg{fill:color-mix(in oklab,var(--tone-b),var(--surface-idle) var(--fade));}
-  .mark3d .s-u svg{fill:color-mix(in oklab,var(--tone-u),var(--surface-idle) var(--fade));}
-  .mark3d .s-d svg{fill:color-mix(in oklab,var(--tone-d),var(--surface-idle) var(--fade));}
-  .mark3d .s-r svg{fill:color-mix(in oklab,var(--tone-r),var(--surface-idle) var(--fade));}
-  .mark3d .s-l svg{fill:color-mix(in oklab,var(--tone-l),var(--surface-idle) var(--fade));}
+  /* There is no background. A piece that has turned to the back is not drawn
+     at all, so what you see is only ever the front of the cube. It goes as it
+     crosses the middle — by then it is swung wide of the mark, and once it
+     settles at the back it is exactly behind the piece in front of it, so
+     there is nothing to see going. */
+  .mark3d .piece{--gone:0%;}
+  .mark3d .s-f svg{fill:color-mix(in oklab,var(--tone-f),transparent var(--gone));}
+  .mark3d .s-b svg{fill:color-mix(in oklab,var(--tone-b),transparent var(--gone));}
+  .mark3d .s-u svg{fill:color-mix(in oklab,var(--tone-u),transparent var(--gone));}
+  .mark3d .s-d svg{fill:color-mix(in oklab,var(--tone-d),transparent var(--gone));}
+  .mark3d .s-r svg{fill:color-mix(in oklab,var(--tone-r),transparent var(--gone));}
+  .mark3d .s-l svg{fill:color-mix(in oklab,var(--tone-l),transparent var(--gone));}
 
   /* the stage has to be bigger than the mark: a turning layer swings its far
      corner out to root two, well past the square it started in */
@@ -116,9 +106,10 @@
       <p class="rayl-12 rayl-measure">Every piece carries its own shape on every one
       of its faces — a bar is a bar on all four of its long faces and a circle on the
       two ends, the way a capsule sections — so nothing is ever cut and no face is
-      ever blank. What changes as a piece turns is the tone: square to you it is ink,
-      every other way it is a rung of the greyscale, and the further back it sits the
-      further that rung is mixed into the ground.</p>
+      ever blank. Everything is ink, so a turn is read from the silhouette alone,
+      and there is no background at all: a piece that has turned to the back is not
+      drawn. It goes while it is swung wide of the mark and comes back the same
+      way.</p>
       <div class="rayl-row">
         <span class="rayl-label">Motion</span>
         <div class="rayl-seg is-tight" id="run">
@@ -410,16 +401,30 @@ function matrix3d(m){
                        m[1] + "," + m[4] + "," + m[7] + ",0," +
                        m[2] + "," + m[5] + "," + m[8] + ",0,0,0,0,1)";
 }
-var FADE = 64;                       /* how far the back rung sits into the ground */
-function depth(c, spin){             /* where a piece is in z, turn included */
-  var z = c[2];
+/* how far forward a piece reaches, the turn it is in included: a bar lying
+   front to back is at the front even though its middle is not */
+var GO = 0.20, STAY = 0.80;          /* gone by here, all there by here */
+function reach(st, i, spin){
+  var cs = cells(st, i), best = -2, r, cos, sin, a;
   if (spin){
-    var r = spin.deg * Math.PI / 180, cs = Math.cos(r), sn = Math.sin(r);
-    var a = MOVES[spin.move].axis;
-    if (a === 0) z = sn*c[1] + cs*c[2];
-    else if (a === 1) z = cs*c[2] - sn*c[0];
+    r = spin.deg * Math.PI / 180; cos = Math.cos(r); sin = Math.sin(r);
+    a = MOVES[spin.move].axis;
   }
-  return z < -1 ? -1 : z > 1 ? 1 : z;
+  for (var k=0;k<cs.length;k++){
+    var c = cs[k], z = c[2];
+    if (spin){
+      if (a === 0) z = sin*c[1] + cos*c[2];
+      else if (a === 1) z = cos*c[2] - sin*c[0];
+    }
+    if (z > best) best = z;
+  }
+  return best;
+}
+function showing(v){                 /* eased so it neither pops nor lingers */
+  var t = (v - GO) / (STAY - GO);
+  if (t <= 0) return 0;
+  if (t >= 1) return 1;
+  return t*t*(3 - 2*t);
 }
 function paint(inst, st, spin){
   for (var i=0;i<HOME.length;i++){
@@ -434,8 +439,8 @@ function paint(inst, st, spin){
     }
     var el = inst.els[i];
     el.style.transform = t;
-    var fade = ((1 - depth(p.c, moving ? spin : null)) / 2 * FADE).toFixed(1) + "%";
-    if (el.__fade !== fade){ el.__fade = fade; el.style.setProperty("--fade", fade); }
+    var gone = ((1 - showing(reach(st, i, moving ? spin : null))) * 100).toFixed(1) + "%";
+    if (el.__gone !== gone){ el.__gone = gone; el.style.setProperty("--gone", gone); }
   }
 }
 
