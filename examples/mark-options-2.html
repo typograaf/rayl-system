@@ -77,13 +77,17 @@
 
   <section class="rayl-hero">
     <span class="rayl-label">The mark in motion</span>
-    <h1 class="rayl-72">Ten more, around the two that worked.</h1>
+    <h1 class="rayl-72">Smaller the further out it has gone.</h1>
     <p class="rayl-18 rayl-measure">Of <a href="mark-options.html">the first ten</a>,
-    Floor came closest but its hand-off jumps, and Pebble read well except that the
-    two pieces on their way out are always the same size as each other. These ten are
-    variations on those two: four ways of softening the drop, four ways of putting a
-    falloff into the shrink, and two that take from both. The timing below opens on
-    the curve and the pace you liked.</p>
+    Floor and Pebble were the two worth keeping. What both were missing is that the
+    pieces on their way out held the same size as each other the whole way. So the
+    size now follows the position rather than the clock: a piece sitting over its own
+    cell is full size, and the further a turn has pushed it past the edge of the
+    square, the smaller it is. The piece nearest the edge is always the smallest one,
+    the piece behind it is next, and the ones coming back in grow as they arrive —
+    nothing is the same size as anything else until everything is home. Below,
+    Floor and Pebble as they were, then each of them with the falloff at two
+    strengths and on a curve.</p>
   </section>
 
   <section class="rayl-section">
@@ -157,7 +161,7 @@
   </section>
 
   <section class="rayl-section">
-    <span class="rayl-label">One puzzle, ten answers</span>
+    <span class="rayl-label">One puzzle, eight ways of falling away</span>
     <div class="options" id="options"></div>
   </section>
 
@@ -498,23 +502,23 @@ function project(st, spin, v){
       var edge = 0;
       for (f=0;f<mine.length;f++){
         var q = mine[f];
-        var half = across ? q.tw/2 : q.th/2;
-        var mid = across ? q.x - 75 : q.y - 75;
-        var reach = Math.abs(mid) + half;
+        /* the drawing's own edge, not the tile it sits on — a piece standing
+           still already fills the square, and must not read as pushed out */
+        var uAcross = Math.abs(q.dir[0]) > 0.5;
+        var half = (across === uAcross) ? q.shape.w * q.sx / 2 : q.shape.h * q.sy / 2;
+        var reach = Math.abs(across ? q.x - 75 : q.y - 75) + half;
         if (reach > edge) edge = reach;
       }
       var over = (edge - 75) / 32;
       if (over > 0){
         if (over > 1) over = 1;
         if (v.curve) over = Math.pow(over, v.curve);
+        /* Only the drawing shrinks. The tile under it is the ground each piece
+           carries to hide the back of the cube, and the tiles have to keep
+           meeting edge to edge — shrink those and they stop covering, and start
+           cutting notches out of whatever is behind them. */
         var small = 1 - v.fall * over;
-        var px = C[0] + 75, py = C[1] + 75;
-        for (f=0;f<mine.length;f++){
-          var w = mine[f];
-          w.x = px + (w.x - px) * small;
-          w.y = py + (w.y - py) * small;
-          w.sx *= small; w.sy *= small; w.tw *= small; w.th *= small;
-        }
+        for (f=0;f<mine.length;f++){ mine[f].sx *= small; mine[f].sy *= small; }
       }
     }
     /* ---------------------------------------- what is left of the thinnest -- */
