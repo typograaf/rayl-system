@@ -34,11 +34,11 @@ UI = [
  ("ink/on-strong","White","Soft Black","Text on one")]
 
 SCALE = [
- (96,"110%","−4%","−5%","Schoonmaak"),
- (72,"110%","−3%","−4%","Schoonmaak"),
- (48,"110%","−2%","−3%","Schoonmaak Medewerker"),
- (36,"110%","−1%","−2%","Schoonmaak Medewerker"),
- (24,"115%","0%","−2%","Schoonmaak Medewerker"),
+ (96,"110%","−4%","−6%","Schoonmaak"),
+ (72,"110%","−3%","−5%","Schoonmaak"),
+ (48,"110%","−3%","−4%","Schoonmaak Medewerker"),
+ (36,"110%","−2%","−4%","Schoonmaak Medewerker"),
+ (24,"115%","−1%","−3%","Schoonmaak Medewerker"),
  (18,"130%","+1%","—","Schoonmaak Medewerker"),
  (12,"140%","+2%","—","Schoonmaak Medewerker")]
 
@@ -296,8 +296,8 @@ INVENTORY = [
  ("Page", [
   ("rayl-page",       "the app or panel column: ground, 72 rhythm, 520 wide"),
   ("rayl-page is-wide","the same at 960, for a page that has to breathe"),
-  ("rayl-section",    "a section of a page — gaps 24"),
-  ("rayl-stack",      "lines of one block — gaps 12"),
+  ("rayl-section",    "a section; its gap is derived the same way"),
+  ("rayl-stack",      "a group; its gap is what its largest text asks for"),
   ("rayl-cluster",    "parts of one control — gaps 6"),
   ("rayl-grid",       "an even grid of cards or swatches"),
   ("rayl-head",       "a header or footer row: mark on the left, controls right"),
@@ -306,6 +306,13 @@ INVENTORY = [
   ("rayl-row-name",   "the name in that row — 12, Medium, full ink, sentence case"),
   ("rayl-label",      "the 8 uppercase section label, and nothing else"),
   ("rayl-hint",       "a quiet line of explanation under a block"),
+  ("rayl-gap-6",      "set a group's gap when it has no heading to derive one"),
+  ("rayl-gap-12",     "the same, at 12"),
+  ("rayl-gap-24",     "the same, at 24"),
+  ("rayl-gap-36",     "the same, at 36"),
+  ("rayl-gap-48",     "the same, at 48"),
+  ("rayl-gap-60",     "the same, at 60"),
+  ("rayl-gap-72",     "the same, at 72"),
  ]),
  ("Wide layout", [
   ("rayl-hero",       "the opening statement of a page"),
@@ -340,8 +347,8 @@ INVENTORY = [
  ]),
  ("Type", [
   ("rayl-96",  "96 / 110% / -4%"), ("rayl-72", "72 / 110% / -3%"),
-  ("rayl-48",  "48 / 110% / -2%"), ("rayl-36", "36 / 110% / -1%"),
-  ("rayl-24",  "24 / 115% / 0%"),  ("rayl-18", "18 / 130% / +1%"),
+  ("rayl-48",  "48 / 110% / -3%"), ("rayl-36", "36 / 110% / -2%"),
+  ("rayl-24",  "24 / 115% / -1%"), ("rayl-18", "18 / 130% / +1%"),
   ("rayl-12",  "12 / 140% / +2%"),
   ("rayl-serif","Concrette, on a size class from 24 up"),
  ]),

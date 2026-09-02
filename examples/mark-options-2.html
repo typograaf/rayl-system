@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rayl Mark Options</title>
+<title>Rayl Mark Options, Closer</title>
 <script src="https://typograaf.github.io/rayl-system/rayl.js?v=1644bc76"></script>
 <style>
   /* ====================================================== the folding mark ==
@@ -77,14 +77,13 @@
 
   <section class="rayl-hero">
     <span class="rayl-label">The mark in motion</span>
-    <h1 class="rayl-72">Ten ways to keep a turn from going thin.</h1>
-    <p class="rayl-18 rayl-measure">The trouble with <a href="mark-cut.html">the cut
-    version</a> is the end of a turn: a face on its way to edge-on passes through
-    being a hairline, and a hairline looks like it might snap. Here is the same
-    puzzle driving ten answers to that at once, so they can be compared turn for
-    turn rather than described. The switch below also holds every one of them inside
-    the square, which none of them do on their own — a turn swings a piece half a
-    cell wider than the mark it belongs to.</p>
+    <h1 class="rayl-72">Ten more, around the two that worked.</h1>
+    <p class="rayl-18 rayl-measure">Of <a href="mark-options.html">the first ten</a>,
+    Floor came closest but its hand-off jumps, and Pebble read well except that the
+    two pieces on their way out are always the same size as each other. These ten are
+    variations on those two: four ways of softening the drop, four ways of putting a
+    falloff into the shrink, and two that take from both. The timing below opens on
+    the curve and the pace you liked.</p>
   </section>
 
   <section class="rayl-section">
@@ -128,7 +127,7 @@
         <div class="rayl-row">
           <span class="rayl-label">Easing</span>
           <input class="field is-curve" id="ease" spellcheck="false"
-                 value="cubic-bezier(0.65, 0, 0.35, 1)" aria-label="Easing">
+                 value="cubic-bezier(0.85, 0, 0.15, 1)" aria-label="Easing">
           <svg class="curve" id="curve" viewBox="-8 -8 116 116" aria-hidden="true">
             <line x1="0" y1="100" x2="100" y2="100"></line>
             <line x1="0" y1="0" x2="0" y2="100"></line>
@@ -138,20 +137,21 @@
         <span class="rayl-label" id="easenote">Anything CSS takes: cubic-bezier, linear, ease-in-out, steps</span>
         <div class="times">
           <label class="time"><span class="rayl-label">Turn</span>
-            <input class="field is-ms" id="t-turn" inputmode="numeric" value="420"></label>
+            <input class="field is-ms" id="t-turn" inputmode="numeric" value="1500"></label>
           <label class="time"><span class="rayl-label">Between turns</span>
-            <input class="field is-ms" id="t-gap" inputmode="numeric" value="120"></label>
+            <input class="field is-ms" id="t-gap" inputmode="numeric" value="1500"></label>
           <label class="time"><span class="rayl-label">Scramble turn</span>
-            <input class="field is-ms" id="t-fast" inputmode="numeric" value="300"></label>
+            <input class="field is-ms" id="t-fast" inputmode="numeric" value="1500"></label>
           <label class="time"><span class="rayl-label">Hold on the mark</span>
-            <input class="field is-ms" id="t-hold" inputmode="numeric" value="2600"></label>
+            <input class="field is-ms" id="t-hold" inputmode="numeric" value="1500"></label>
         </div>
       </div>
       <div class="rayl-section">
-        <p class="rayl-12 rayl-measure">Slower than the other pages by default, because
-        the thing being compared happens in the last third of a turn and goes past too
-        quickly to judge at three hundred milliseconds. Put it back to 300 to see them
-        at working speed.</p>
+        <p class="rayl-12 rayl-measure">Opens on cubic-bezier(0.85, 0, 0.15, 1) with
+        everything at 1500, which is where you left it. That curve holds still at both
+        ends and crosses the middle quickly, which is exactly the part of a turn these
+        ten differ in — worth putting back to 300 once you have picked one, to check it
+        still reads at speed.</p>
       </div>
     </div>
   </section>
@@ -405,27 +405,28 @@ function solve(st){
 var LAP = 2, GAP = 12;
 
 var VARIANTS = [
-  {key:"plain",  name:"As it is",
-   note:"The turn straight out of the projection, hairline and all."},
   {key:"floor",  name:"Floor", floor:9,
-   note:"A face thinner than nine units is not drawn at all. Its partner is nearly full width by then, so nothing is missing."},
-  {key:"hold",   name:"Hold", bend:1.8,
-   note:"The angle is bent so a face holds its width and then goes quickly. Same turn, less time spent thin."},
-  {key:"step",   name:"Stepped", steps:6,
-   note:"Six positions and nothing in between, so it is never drawn at a width nobody chose."},
-  {key:"join",   name:"Joined", joined:true,
-   note:"A piece showing two faces is drawn once across both. The pair is never narrower than the face started, so it swells and comes back instead of thinning."},
+   note:"Where we left it. A face thinner than nine units is dropped, and the drop is the thing that jumps."},
+  {key:"handed", name:"Handed over", floor:9, hand:true,
+   note:"The width the floor takes away is given to the face beside it, so the piece keeps its silhouette and nothing jumps at all."},
+  {key:"slid",   name:"Slid under", floor:9, slide:true,
+   note:"Held at nine units and slid behind its partner rather than dropped. It leaves by going somewhere."},
+  {key:"shrunk", name:"Shrunk out", floor:9, shrink:true,
+   note:"Held at nine units and scaled down to nothing over the last of the turn. It leaves by getting smaller."},
+  {key:"both",   name:"Handed and swayed", floor:9, hand:true, lead:11,
+   note:"The hand-over, with the sway below. The two answers do not fight each other."},
   {key:"pebble", name:"Pebble", pebble:0.34,
-   note:"Under a third of its width it starts losing height too, and leaves as a pebble rather than a needle."},
-  {key:"squat",  name:"Squat", squat:0.55,
-   note:"Height follows width the whole way, so a face is never much taller than it is wide."},
-  {key:"snap",   name:"Snap", snap:64,
-   note:"The last quarter of every turn is not drawn. It lands early and the thin part never happens."},
-  {key:"slab",   name:"Slab", depth:0.55,
-   note:"A shallower cube. The two faces share the width more evenly, and the swing stays nearer the square."},
-  {key:"slice",  name:"Slice", slice:true,
-   note:"Cut off by the fold instead of narrowed: the shape keeps its size and loses its edges."}
+   note:"Where we left it. Under a third of its width it loses height too — but both pieces do it in step."},
+  {key:"sway",   name:"Swayed", pebble:0.34, lead:11,
+   note:"The layer turns with a lean in it, eleven degrees at the middle of the turn and none at either end, so the two pieces are never the same size."},
+  {key:"reach",  name:"By reach", pebble:0.34, spread:0.6,
+   note:"No lean, but the far piece starts shrinking well before the near one. The layer stays rigid; only the falloff is staggered."},
+  {key:"late",   name:"Late", pebble:0.34, curve:2.4,
+   note:"The same shrink on a curve of its own: nothing for a while, then most of it at once."},
+  {key:"all",    name:"Swayed, late, floored", pebble:0.34, lead:11, curve:2.0, floor:6, hand:true,
+   note:"All of it together: the lean, the late shrink, and a small floor handed over at the end."}
 ];
+
 
 function spinAbout(axis, deg){
   var r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
@@ -647,8 +648,8 @@ function readEase(text){
   return null;
 }
 
-var TIME = {turn:420, gap:120, fast:300, hold:2600, think:400, doubt:520};
-var ease = readEase("cubic-bezier(0.65, 0, 0.35, 1)");
+var TIME = {turn:1500, gap:1500, fast:1500, hold:1500, think:600, doubt:900};
+var ease = readEase("cubic-bezier(0.85, 0, 0.15, 1)");
 
 /* ------------------------------------------------------------- the drive --*/
 var board = document.getElementById("options");

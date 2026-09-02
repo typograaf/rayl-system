@@ -75,8 +75,8 @@ the other, so if a part is not in this table it is not in the system.
 |---|---|
 | `rayl-page` | the app or panel column: ground, 72 rhythm, 520 wide |
 | `rayl-page is-wide` | the same at 960, for a page that has to breathe |
-| `rayl-section` | a section of a page — gaps 24 |
-| `rayl-stack` | lines of one block — gaps 12 |
+| `rayl-section` | a section; its gap is derived the same way |
+| `rayl-stack` | a group; its gap is what its largest text asks for |
 | `rayl-cluster` | parts of one control — gaps 6 |
 | `rayl-grid` | an even grid of cards or swatches |
 | `rayl-head` | a header or footer row: mark on the left, controls right |
@@ -85,6 +85,13 @@ the other, so if a part is not in this table it is not in the system.
 | `rayl-row-name` | the name in that row — 12, Medium, full ink, sentence case |
 | `rayl-label` | the 8 uppercase section label, and nothing else |
 | `rayl-hint` | a quiet line of explanation under a block |
+| `rayl-gap-6` | set a group's gap when it has no heading to derive one |
+| `rayl-gap-12` | the same, at 12 |
+| `rayl-gap-24` | the same, at 24 |
+| `rayl-gap-36` | the same, at 36 |
+| `rayl-gap-48` | the same, at 48 |
+| `rayl-gap-60` | the same, at 60 |
+| `rayl-gap-72` | the same, at 72 |
 
 **Wide layout**
 
@@ -132,9 +139,9 @@ the other, so if a part is not in this table it is not in the system.
 |---|---|
 | `rayl-96` | 96 / 110% / -4% |
 | `rayl-72` | 72 / 110% / -3% |
-| `rayl-48` | 48 / 110% / -2% |
-| `rayl-36` | 36 / 110% / -1% |
-| `rayl-24` | 24 / 115% / 0% |
+| `rayl-48` | 48 / 110% / -3% |
+| `rayl-36` | 36 / 110% / -2% |
+| `rayl-24` | 24 / 115% / -1% |
 | `rayl-18` | 18 / 130% / +1% |
 | `rayl-12` | 12 / 140% / +2% |
 | `rayl-serif` | Concrette, on a size class from 24 up |
@@ -450,11 +457,11 @@ Seven, and no others.
 <!-- generated:scale -->
 | size | leading | tracking, Azeret | tracking, Concrette |
 |---|---|---|---|
-| 96 | 110% | −4% | −5% |
-| 72 | 110% | −3% | −4% |
-| 48 | 110% | −2% | −3% |
-| 36 | 110% | −1% | −2% |
-| 24 | 115% | 0% | −2% |
+| 96 | 110% | −4% | −6% |
+| 72 | 110% | −3% | −5% |
+| 48 | 110% | −3% | −4% |
+| 36 | 110% | −2% | −4% |
+| 24 | 115% | −1% | −3% |
 | 18 | 130% | +1% | — |
 | 12 | 140% | +2% | — |
 | 8 | — | +8% uppercase | — |
@@ -485,12 +492,27 @@ stop looking like Rayl.
 So a headline may be either — that is a real choice each time, not a default.
 Everything under it is Azeret.
 
-Concrette sets one percent tighter than Azeret at every size they share except
-**24**, which is two — the serif needs the extra at the size where it starts. Add
+Concrette sets **two** percent tighter than Azeret at every size they share
+except **48**, which is one. Azeret also stalls at −3% across both 72 and 48
+rather than stepping. Both were put side by side on the board and chosen; if
+either looks like a typo in review, it is not. Add
 `.rayl-serif` to a size class from 24 upward; below that the class is ignored on
 purpose and the text stays Azeret.
 
 Both are TRIAL cuts and both need licensing before anything public.
+
+**The two faces do not share a cap height.** Azeret is 0.698 of its size,
+Concrette S is 0.708 — the serif is 1.4% taller in the cap. Everything is
+trimmed cap to baseline, so a Concrette line leaves slightly less white between
+its lines at the same size and leading. The `0.698` fallback line-height in
+`core.css` is **Azeret's number**, applied to both. Close enough to keep, and
+worth knowing whose it is.
+
+**Concrette is an optical-size family, and the system ships the small cut.** S,
+M and XL share a cap height and narrow as they go up: at 96, "Rostering" measures
+485 / 469 / 454px. S is drawn for small text and XL for display, and every
+Concrette headline here is set in S. That is a choice, not an oversight — the
+guidelines never mention the axis exists. Ask before changing the file.
 
 ### A control tracks 0
 
@@ -520,29 +542,48 @@ never drew. Emphasis comes from what the sentence says, or from a size.
 
 ## 4. Spacing and layout
 
-The scale is **6, 12, 24, 48, 72**. Use these numbers and no others.
+The scale is **6, 12, 24, 36, 48, 60, 72**. It steps by 12 rather than
+doubling. 36 and 60 are full members, not exceptions: every gap that read
+correctly on the board turned out to be a multiple of 12, and two of them had
+nowhere to land.
+
+**12 is still on the scale and nothing currently uses it.** If the
+label-and-line case does not want it either, it leaves — that is open.
 
 ### What each one means
 
-A gap is not a taste decision. **It says how related two things are**, and the
-scale is the vocabulary for saying it:
+**A gap is set by the largest text in the group, not by the kind of container
+it sits in.** That is the change: a group led by a 36 gaps 36 throughout, a group
+led by a 48 gaps 48 throughout, and the heading, its body copy and its buttons
+are all the same distance apart. See "Space under a heading" below for the
+mapping, which is now the group's gap rather than a margin under a heading.
+
+Where there is no text to derive from, the number still says how related two
+things are:
 
 | gap | between |
 |---|---|
 | **6** | parts of one control — buttons in a cluster, a stepper's digits |
-| **12** | lines of one block — a label and the line under it |
-| **24** | blocks in a section — a heading, its body, its actions |
-| **48** | columns of a split, groups inside a band |
-| **72** | sections of a page |
+| **12** | nothing, currently — see the scale above |
+| **24** | a group led by nothing larger than a 24 |
+| **36** | a group led by a 36; three columns of a split |
+| **48** | a group led by a 48 or a 72; two columns of a split |
+| **60** | a group led by a 96 |
+| **72** | — |
+| **96** | sections of a page |
 
-**A container pads one step below the gap it sits in.** A band inside the page's
-72 rhythm pads 48. A card inside a 12 rhythm pads 12. Padding equal to the gap
-around it is what makes a page feel like it is coming apart — the inside and the
-outside stop being distinguishable.
+Set one explicitly with `rayl-gap-6` … `rayl-gap-72` **on the group**. That is
+the escape hatch and the only way to set a gap that has no heading to derive
+from.
 
-The layout classes carry this so it is not re-decided each time:
-`rayl-cluster` gaps 6, `rayl-stack` 12, `rayl-section` 24, `rayl-split` 48,
-`rayl-page` 72.
+**A container pads one step below the gap it sits in — UNDER REVIEW.** It held
+when the page ran 72 and a band padded 48. The page runs 96 now and the band
+still pads 48, where the rule as written would say 72. Do not apply it to
+anything new until it is settled.
+
+The fixed ones: `rayl-cluster` gaps 6, `rayl-split` 48, `rayl-band` 36,
+`rayl-page` 96. `rayl-grid`, `rayl-card` and `rayl-head` were never tested on the
+board and are unchanged.
 
 ### Space under a heading
 
@@ -550,26 +591,31 @@ A flat gap cannot work across a range from 8 to 96. Twenty-four reads generous
 under a label and cramped under a 72 headline, and a page built on one number for
 everything looks uneven however carefully that number was chosen.
 
-| heading | space under it |
+| heading | the group's gap |
 |---|---|
-| 96 | 72 |
+| 96 | 60 |
 | 72, 48 | 48 |
-| 36, 24 | 24 |
-| 18 | 12 |
+| 36 | 36 |
+| 24, 18 | 24 |
+
+**The number covers the whole group, not just the space under the heading.** It
+was built as a heading, its body copy and its action buttons in one auto-layout
+stack, and the same number sits between all three. So this is the group's gap,
+and `rayl-stack`, `rayl-section` and `rayl-hero` derive it from the largest text
+they contain — nobody sets it at the call site.
 
 **This is a designed mapping, not a formula.** Half the size was tried first and
-is visibly too tight at the bottom: it gives a 24 heading only 12, and the
-heading lands on its own body copy. Ratios that look right at 72 are wrong at 24,
+is visibly too tight at the bottom. Ratios that look right at 72 are wrong at 24,
 which is why the table is the rule.
 
-The container's gap counts toward it, so it is a floor rather than an addition —
-a 36 heading in a 12 stack gets 12 more, and a container already wider keeps its
-own. `rayl-96` through `rayl-18` carry it, so nobody adds a margin at the call
-site.
+There is still a top-up margin under each heading, but only as a safety net for
+one dropped into a container carrying a smaller gap. In normal use every one of
+them resolves to 0.
 
-The consequence worth knowing: **the gap after a heading is always larger than
-the gap after the paragraph beneath it.** That difference is the hierarchy. If
-every gap in a section is the same, the section has no shape.
+**18 and 24 now take the same 24**, so at those two sizes a heading no longer
+gets more room than the lines beneath it. The whole group shares one number, and
+the hierarchy is carried by the size of the type rather than by the gaps around
+it.
 
 ### Dividing a document
 
