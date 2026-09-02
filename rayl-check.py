@@ -55,17 +55,20 @@ def load_inventory():
 # Run from src/ it imports parts.py instead and this is never used.
 BAKED_CLASSES = """
 rayl rayl-12 rayl-18 rayl-24 rayl-36 rayl-48 rayl-72 rayl-96 rayl-band
-rayl-block rayl-btn rayl-card rayl-ch rayl-chapter rayl-cluster rayl-col
-rayl-container rayl-cur rayl-digit rayl-doc rayl-doc-page rayl-field
-rayl-field-row rayl-frame rayl-frame-tag rayl-g rayl-gap-12 rayl-gap-24
-rayl-gap-36 rayl-gap-48 rayl-gap-6 rayl-gap-60 rayl-gap-72 rayl-grid
-rayl-head rayl-hero rayl-hint rayl-ibtn rayl-ibtn-body rayl-ibtn-dot
-rayl-ibtn-icon rayl-icon rayl-label rayl-line rayl-mark rayl-measure
-rayl-media rayl-num rayl-nxt rayl-page rayl-point rayl-rail rayl-rail-foot
-rayl-reel rayl-roll rayl-row rayl-row-name rayl-section rayl-seg
-rayl-seg-fill rayl-seg-name rayl-seg-opt rayl-serif rayl-sign rayl-slider
-rayl-solve rayl-solve-art rayl-solve-face rayl-solve-tile rayl-split
-rayl-stack rayl-strip rayl-type rayl-val
+rayl-block rayl-btn rayl-card rayl-ch rayl-chapter rayl-check rayl-check-box
+rayl-cluster rayl-col rayl-container rayl-cur rayl-digit rayl-doc
+rayl-doc-page rayl-empty rayl-field rayl-field-row rayl-fold rayl-fold-body
+rayl-frame rayl-frame-tag rayl-g rayl-gap-12 rayl-gap-24 rayl-gap-36
+rayl-gap-48 rayl-gap-6 rayl-gap-60 rayl-gap-72 rayl-grid rayl-head rayl-hero
+rayl-hint rayl-ibtn rayl-ibtn-body rayl-ibtn-dot rayl-ibtn-icon rayl-icon
+rayl-input rayl-label rayl-line rayl-mark rayl-measure rayl-media rayl-menu
+rayl-menu-opt rayl-modal rayl-num rayl-nxt rayl-page rayl-panel rayl-point
+rayl-popover rayl-rail rayl-rail-foot rayl-reel rayl-roll rayl-row
+rayl-row-name rayl-section rayl-seg rayl-seg-fill rayl-seg-name rayl-seg-opt
+rayl-select rayl-select-face rayl-serif rayl-sign rayl-skeleton
+rayl-skeleton-line rayl-slider rayl-solve rayl-solve-art rayl-solve-face
+rayl-solve-tile rayl-split rayl-stack rayl-strip rayl-table rayl-tabs
+rayl-tip rayl-toggle rayl-toggle-knob rayl-toggle-word rayl-type rayl-val
 """.split()
 # /generated:classes
 

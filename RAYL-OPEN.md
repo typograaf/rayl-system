@@ -21,11 +21,11 @@ There are three words and they mean different things:
 
 ---
 
-## Enterable surfaces
+## A check glyph
 
-**OPEN** — text input, select, checkbox and toggle, and the modal that holds them
+**OPEN** — the eighteen icons have none, so a ticked box and a failed panel show the same mark
 
-In a system with no strokes, a control that ACCEPTS input has to read as enterable through a change of ground alone. That is one decision and all four follow from it. Martijn is designing it. Until it lands there is no correct form in this system.
+ON is carried by the ground — the box turns Bone the way every selected thing does — and the mark inside it is Plus turned 45 degrees, because that is the only glyph in the set that reads as a mark rather than an instruction. The empty panel's error twin shows the same glyph at 24. Two opposite meanings on one drawing is a real weakness and it wants either a nineteenth icon or a decision that the ground alone is enough. Do not draw a tick.
 
 ## Semantic colour
 
@@ -51,12 +51,6 @@ It held when the page ran 72 and a band padded 48. The page runs 96 now and the 
 
 96 steps by 12 like every other member and is what rayl-page actually uses, so it is listed. Confirm it is a member rather than a page-only figure.
 
-## Component states
-
-**OPEN** — empty, error, skeleton
-
-Hover, pressed, disabled and focus are covered by the tokens, and loading is now the loading mark, rayl-solve. These three are not covered, and a tool without them is a demo.
-
 ## The Rayl look
 
 **OPEN** — the layered gradient treatment, and the largest single gap in the system
@@ -80,6 +74,24 @@ Fine for internal work and prototypes. The licensed files have to replace them b
 **OPEN** — the printed values are arithmetic, not a profile conversion
 
 Fine on screen, not fine at a printer.
+
+## Enterable surfaces
+
+**PROVISIONAL** — the field, the select, the checkbox, the toggle and the dialog that holds them
+
+This was the largest open item in the system and it is answered: a control that ACCEPTS input reads as enterable through a change of ground alone — surface/idle at cap + 24, rounding 8, padding 12, and the focus ring as the one stroke. Every measurement is read off the UI Control Blanks boards and all of it ships, so build with it rather than inventing. It is PROVISIONAL and not a RULE because Martijn has drawn it and has not yet seen it rendered. Do not write it into a document as settled until he has.
+
+## Component states
+
+**PROVISIONAL** — empty, error and skeleton now ship; loading was already the loading mark
+
+rayl-empty is a panel with nothing in it and an error is the same panel with different words, because nothing in the palette means error. rayl-skeleton is blocks where type will land and it does not move. Hover, pressed, disabled and focus were always covered by the tokens, and a wait is still rayl-solve. These are drawn rather than decided, so they move with the enterable surfaces above.
+
+## The scrim
+
+**PROVISIONAL** — the page behind a dialog, dimmed 20%
+
+20% is the figure on the board and it is what ships. The colour is the darkest ground the mode has — Black in light, Deep Black in dark — because a scrim is a shadow: taking ink/primary would flip it to White in dark mode and lighten the page instead of dimming it. Only the light value was drawn; the dark one follows from that reasoning and has not been looked at.
 
 ## Deep Black #11110F
 
@@ -110,27 +122,24 @@ Every documented movement is 280ms on cubic-bezier(0.65,0,0.35,1), and the guide
 ## Controls nobody has designed
 
 The system has a button, a reveal button, an option group, a slider, a
-rolling line and eighteen icons. It has no:
+rolling line, a field, a select, a menu, a checkbox, a toggle, a dialog, a
+tooltip, a popover, tabs, a collapsible section, a table, an empty panel, a
+skeleton, a loading mark and eighteen icons. It has no:
 
 | missing | what a brief will ask for |
 |---|---|
-| **text and number input** | any form, any name field, any numeric entry |
-| **select** | a list too long for an option group |
-| **checkbox and toggle** | a setting that is on or off on its own |
-| **modal, sheet, drawer** | a confirm, an export dialog, a settings panel |
-| **collapsible section** | the approved panel draws one — every section label carries a – and nothing implements it |
-| **tooltip and popover** | a label on an icon button |
-| **tabs** | more than one view in a panel |
-| **table** | any list of records |
+| **sheet and drawer** | a settings panel that comes in from an edge — the dialog ships, these do not |
 | **toast** | anything reporting that a background job finished |
-| **progress** | an export, an upload, a render |
-| **menu** | a right-click or an overflow |
+| **progress** | an export, an upload, a render — determinate, where the mark says nothing about how far |
+| **context menu** | a right-click or an overflow: rayl-menu is the list, nothing opens one at a pointer |
 | **badge, chip, tag** | a count, a status, a filter |
 | **avatar** | anybody's face |
 | **scrollbar** | every panel taller than its frame |
 | **app shell** | a control panel beside a canvas — the only layout the system cannot express |
 
-The first four are the ones that block real work, and **they are one
-design problem, not four**: in a system with no strokes, a control that
-accepts input has to read as enterable through a change of ground alone.
-That decision is Martijn's and it has not been made.
+The four that used to head this list — field, select, checkbox and
+toggle — were one design problem and not four: in a system with no
+strokes, a control that accepts input has to read as enterable through a
+change of ground alone. They ship, and they are PROVISIONAL rather than
+settled — see the open list. What is left in the table above is genuinely
+undrawn; ask rather than approximating one.

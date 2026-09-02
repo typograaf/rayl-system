@@ -181,6 +181,33 @@ the other, so if a part is not in this table it is not in the system.
 | `rayl-icon` | an icon on its own; data-icon |
 | `rayl-mark` | the logo mark, inline |
 | `rayl-solve` | the loading mark: data-size, data-play, data-ease and the timings |
+| `rayl-btn is-strong` | the one high-emphasis button — a dialog's confirm |
+
+**Enterable surfaces**
+
+| class | what it is |
+|---|---|
+| `rayl-input` | the field; is-multi for a textarea |
+| `rayl-select` | the select — author the options, it builds the rest |
+| `rayl-menu` | a list of items on its own ground |
+| `rayl-menu-opt` | one item of it; is-on for the chosen one |
+| `rayl-check` | the checkbox, carrying its own label; is-small for 12 |
+| `rayl-toggle` | the switch; data-on and data-off name its two states |
+
+**Surfaces and panels**
+
+| class | what it is |
+|---|---|
+| `rayl-modal` | a dialog; data-opens and data-closes name it by id |
+| `rayl-tip` | a tooltip — put data-tip on the thing it labels |
+| `rayl-popover` | a card that arrives: 264 across, padding 12 |
+| `rayl-tabs` | a rayl-seg bar over rayl-panel panels |
+| `rayl-panel` | the panel under a bar, or under anything |
+| `rayl-fold` | a collapsible section: a details, and a body |
+| `rayl-fold-body` | what it holds |
+| `rayl-table` | a list of records; every other row is banded |
+| `rayl-empty` | a panel with nothing in it — and the error panel too |
+| `rayl-skeleton` | blocks where type will land; data-lines |
 
 **Type**
 
@@ -195,14 +222,16 @@ the other, so if a part is not in this table it is not in the system.
 | `rayl-12` | 12 / 140% / +2% |
 | `rayl-serif` | Concrette, on a size class from 24 up |
 
-Produced by `rayl.js` inside a component, never authored and never styled: `rayl-solve-face`, `rayl-solve-tile`, `rayl-solve-art`, `rayl-roll`, `rayl-ch`, `rayl-g`, `rayl-cur`, `rayl-nxt`, `rayl-type`, `rayl-reel`, `rayl-col`, `rayl-strip`, `rayl-digit`, `rayl-num`, `rayl-val`, `rayl-sign`, `rayl-point`, `rayl-seg-fill`, `rayl-ibtn-body`, `rayl-ibtn-dot`, `rayl-ibtn-icon`.
+Produced by `rayl.js` inside a component, never authored and never styled: `rayl-solve-face`, `rayl-solve-tile`, `rayl-solve-art`, `rayl-roll`, `rayl-ch`, `rayl-g`, `rayl-cur`, `rayl-nxt`, `rayl-type`, `rayl-reel`, `rayl-col`, `rayl-strip`, `rayl-digit`, `rayl-num`, `rayl-val`, `rayl-sign`, `rayl-point`, `rayl-seg-fill`, `rayl-ibtn-body`, `rayl-ibtn-dot`, `rayl-ibtn-icon`, `rayl-select-face`, `rayl-check-box`, `rayl-toggle-knob`, `rayl-toggle-word`, `rayl-skeleton-line`.
 <!-- /generated:inventory -->
 
 Modifiers go on the class they belong to: `is-wide`, `is-lead`, `is-three`,
 `is-centred`, `is-ink`, `is-joined`, `is-tight`, `is-third`, `is-on`, `is-tall`,
-`is-square`. The rest — `is-rolled`, `is-instant`, `is-line`, `is-near`,
-`is-open`, and `is-landed`, `is-scrambling`, `is-solving`, `is-still` on the
-loading mark — are set by `rayl.js` while something is moving.
+`is-square`, `is-strong` on a button, `is-multi` on a field, `is-small` on a
+checkbox. The rest — `is-rolled`, `is-instant`, `is-line`, `is-near`, `is-open`
+on the reveal button and the select, and `is-landed`, `is-scrambling`,
+`is-solving`, `is-still` on the loading mark — are set by `rayl.js` while
+something is moving.
 
 A button's label is its own text; `data-label` is only needed when the label
 should differ from it. An active control takes `aria-pressed="true"`.
@@ -484,6 +513,14 @@ a heading, its body copy and its buttons are all the same distance apart.
 | `rayl-field` | gap 12px | frames in a field |
 | `rayl-card` | padding 12px | inside a card |
 | `rayl-rail` | padding 48px | inside a rail |
+| `rayl-modal` | padding 48px | inside a dialog |
+| `rayl-popover` | padding 12px | inside a popover |
+| `rayl-panel` | padding 12px | inside a panel |
+| `rayl-menu` | padding 6px | inside a menu |
+| `rayl-empty` | padding 48px | inside an empty panel |
+| `rayl-tabs` | gap 12px | a bar and its panel |
+| `rayl-fold` | gap 12px | a header and its body |
+| `rayl-skeleton` | gap 12px | lines of a skeleton |
 
 Set a group's gap explicitly with `rayl-gap-6` … `rayl-gap-72` **on the group**. That is the escape
 hatch and the only way to set a gap with no heading to derive from.
@@ -592,6 +629,10 @@ A media block in a split takes the height of the row rather than imposing one.
 | the tool panel | **300, padding 48, groups 48 apart** |
 | a reading measure | **62 characters** |
 | a showcase frame | **padding 144 — three times the ordinary 48** |
+| a dialog | **520, the panel column** |
+| a popover | **264** |
+| a toggle | **60 x 24, its knob 24 x 16** |
+| an empty panel | **180 tall** |
 <!-- /generated:figures -->
 
 A headline's measure is set in `ch` **on the headline itself**, never on a
@@ -884,9 +925,10 @@ wide the row gets.
 ### The loading mark
 
 **When something is loading, this is what you show.** `rayl-solve`. Not a
-spinner, not a bar, not three dots, not a skeleton — the mark solves itself and
-lands on the icon, so a wait ends on the brand rather than on a shape borrowed
-from somewhere else.
+spinner, not a bar, not three dots — the mark solves itself and lands on the
+icon, so a wait ends on the brand rather than on a shape borrowed from
+somewhere else. `rayl-skeleton` is not an alternative to it: a skeleton says
+where type will land, the mark says something is happening.
 
     <span class="rayl-solve" data-size="150" data-label="Loading"></span>
 
@@ -930,6 +972,212 @@ and never moves: no fade standing in for the turn.
 rather than buried here. Everything else in Rayl moves on 280ms and one curve;
 this runs at 480 on a curve of its own. Set the attributes above to put an
 instance back on the system's numbers.
+
+### The controls below are PROVISIONAL
+
+Everything from here to the row rule — the field, the select, the menu, the
+checkbox, the toggle, the dialog, the tooltip, the popover, tabs, the
+collapsible section, the table, the empty panel and the skeleton — is
+**PROVISIONAL**, not RULE. It is read off the UI Control Blanks boards and it
+ships, so build with it; it has not yet been seen rendered and any of it may
+still change. See `RAYL-OPEN.md`.
+
+### The field
+
+`rayl-input`, on a native `input`; `is-multi` on a `textarea`. Height is
+`cap + 24`, radius 8, padding 12 — the same as every other control, because a
+field is a control.
+
+**A field with something in it is the same Paper as an empty one.** What changes
+is the ink: `ink/disabled` for a placeholder, `ink/primary` for a value. Giving a
+filled field its own ground would say it was selected, which is what
+`surface/active` already says.
+
+| state | ground | ink |
+|---|---|---|
+| idle | `surface/idle` | `ink/disabled` placeholder |
+| hover | `surface/idle-hover` | — |
+| focus | `surface/idle` | the focus ring |
+| filled | `surface/idle` | `ink/primary` |
+| disabled | `surface/idle` | `ink/disabled` |
+
+**The focus ring is the one stroke the system draws** — 2 solid `ink/primary`,
+offset 2, the same ring the button and the option group use.
+
+In a row, `rayl-row-name` names it in ordinary type and the field fills what is
+left.
+
+```html
+<div class="rayl-row"><span class="rayl-row-name">Name</span>
+  <input class="rayl-input" placeholder="Placeholder"></div>
+<textarea class="rayl-input is-multi" rows="3"></textarea>
+```
+
+### The select and the menu
+
+**Author the options and nothing else.** `rayl-select` holds `rayl-menu-opt`
+buttons with `is-on` on the chosen one; the closed control and the menu around
+them are built by `rayl.js`. The selection belongs to the component for the same
+reason the option group's does — a host keeping two elements in step will
+eventually not.
+
+**Closed it is a button carrying its value, and the value rolls when it
+changes.** A select is a control whose label turns over, which is the movement
+the system already has; there is no second one for arriving in a list. Its icon
+is **Plus**, because there is no chevron in the eighteen and one is not invented.
+
+**Open, the menu is a Paper card of 6 padding** holding items at control height,
+and the chosen one is painted in `surface/active` — the same Bone every selection
+in the system is painted in. Hover is `surface/idle-hover` and a press steps one
+rung further out to `--rayl-seg-press`, because selection already owns Bone.
+
+`rayl-menu` and `rayl-menu-opt` are usable on their own wherever a list of
+actions is wanted. **What the system does not have is anything that opens one at
+a pointer** — a context or overflow menu is still on the missing list.
+
+Selecting fires `rayl:change` on the select, carrying `value` and `index`.
+
+```html
+<div class="rayl-select">
+  <button class="rayl-menu-opt">Item 1</button>
+  <button class="rayl-menu-opt is-on">Item 2</button>
+</div>
+```
+
+### The checkbox
+
+`rayl-check`. **It carries its own label**, because the box and the word are one
+target and a label wired to an input by id is a second thing to get wrong.
+
+**On is a ground change**: the box turns `surface/active`, the way everything
+selected in this system does. **There is no check glyph in the eighteen icons**,
+so the mark inside is Plus turned 45 degrees. That is on the open list — the
+error panel shows the same drawing — and it is not a licence to draw a tick.
+
+**Two footprints ship.** 24 rounding 8 is the default and is the only one that
+can hold a 12 icon; `is-small` is 12 at icon scale, rounding 4, for a dense row.
+The system fixes no square control, so both are correct.
+
+### The toggle
+
+`rayl-toggle`. 60 by 24, rounding half its height — **the one control in the
+system that reads as fully round**, because it is the one control whose whole job
+is that something travels from one end to the other. The knob is 24 by 16, White
+at rest and `fill/strong` when it is on.
+
+**It carries its own word, and the word rolls while the knob travels** — one
+movement on 280ms and the system's curve, not two effects landing near each
+other. `data-on` and `data-off` name the two states; they default to On and Off,
+and a switch that means something else should say so. Give it an `aria-label`:
+the word inside it is its state, not its name.
+
+### The dialog
+
+`rayl-modal`, on a native `dialog`, so the top layer, the focus trap and the
+Escape key are the browser's rather than ours. **It is a container**, so it rounds
+24 and pads 48, and its group is led by the 24 title — title, copy and buttons
+are all 24 apart.
+
+**The page behind it is dimmed 20%** in the darkest ground the mode has. A scrim
+is a shadow, so it darkens in dark mode too; taking `ink/primary` would flip it
+to White and lighten the page instead.
+
+**The actions sit at the right edge, the way out first and the answer last.** One
+button may take `is-strong` — `fill/strong` with `ink/on-strong` — and only one:
+two of them side by side would mean neither is the answer. `is-strong` exists for
+this and for nothing else.
+
+`data-opens` and `data-closes` name a dialog by id, the way `data-rolls` names a
+line.
+
+```html
+<button class="rayl-btn" data-opens="confirm">Delete</button>
+<dialog class="rayl-modal" id="confirm">
+  <h2 class="rayl-24">Title</h2>
+  <p class="rayl-12">Body copy.</p>
+  <div class="rayl-cluster">
+    <button class="rayl-btn" data-closes="confirm">Cancel</button>
+    <button class="rayl-btn is-strong" data-closes="confirm">Confirm</button>
+  </div>
+</dialog>
+```
+
+### The tooltip and the popover
+
+**No stroke, no arrow, no shadow.** What says a thing is in front is that it
+carries its own ground.
+
+`rayl-tip` is ink — `fill/strong`, label in `ink/on-strong` — because a Paper
+tooltip over a Paper panel has no edge and there is nothing to give it one. It is
+`cap + 12` tall, half a control's padding, since a tooltip is a label and not
+something you can press. Put **`data-tip`** on the thing it labels; it mounts on
+the body, so a control that clips its own contents cannot clip its own tooltip.
+It does not fade in — the system has one movement and appearing is not it.
+
+`rayl-popover` is a card that arrives: 264 across, 12 of padding, 12 inside. **A
+control on it takes the ground one rung out, not in** — the popover is already
+Paper, and a Paper control on a Paper card is not a control.
+
+### Tabs
+
+**The bar is the option group.** `rayl-seg` already is a set where exactly one is
+on, so nothing new is drawn for it and **a tab bar must never be built out of
+`rayl-btn`**. What `rayl-tabs` adds is what the selection means: the matching
+`rayl-panel` is shown and the rest are hidden.
+
+The panel is a change of ground 12 below the bar, with no rule between them.
+
+```html
+<div class="rayl-tabs">
+  <div class="rayl-seg">
+    <button class="rayl-seg-opt is-third is-on">Tab 1</button>
+    <button class="rayl-seg-opt is-third">Tab 2</button>
+  </div>
+  <div class="rayl-panel">…</div>
+  <div class="rayl-panel">…</div>
+</div>
+```
+
+### The collapsible section
+
+`rayl-fold`, on a native `details`, so open, closed and the keyboard are the
+browser's. The header is a control at control height carrying the 8 label, with
+**Plus when it is shut and Minus when it is open** — the pair the approved panel
+already draws on every section label. Open, the header takes
+`surface/idle-pressed`. The body is `rayl-fold-body`, a change of ground 12 under
+it, and there is no rule anywhere.
+
+### The table
+
+`rayl-table`. **No rules and no strokes.** Rows are separated by their padding and
+by ground: every other row takes `surface/idle` and rounds 8 at its ends, and
+that banding is the only thing dividing the list.
+
+The header is the 8 label and **has no ground of its own** — it names the
+columns, it is not a row. Cells are control height with 12 of padding, so a table
+row lines up with every control beside it.
+
+### Empty, and its twin error
+
+`rayl-empty`. A panel with nothing in it: an icon at 24, a line in
+`ink/disabled`, and the one thing to do about it, 24 below. **That button takes
+`surface/ground`**, the rung out, for the same reason a popover's does — the
+panel is already Paper, and a Paper control on a Paper panel is not a control.
+
+**An error is the same panel with different words.** Nothing in the palette means
+error, no red is borrowed to make one, and there is no second skin here — the
+sentence carries the meaning. That is not a gap being papered over; semantic
+colour is on the open list and this is what the system looks like until it is
+decided.
+
+### The skeleton
+
+`rayl-skeleton`, `data-lines`. Blocks at the height of the type they stand in for
+— 12 at its own 140% leading — on `surface/idle-pressed`, 12 apart.
+
+**It does not move.** A shimmer would be a second movement. And it is not an
+alternative to the loading mark: **a skeleton says where type will land, the mark
+says something is happening.** Use `rayl-solve` for the wait.
 
 ### A row names its control in ordinary type
 
@@ -1208,28 +1456,25 @@ provisional protocol in section 0 if you cannot stop and ask.
 
 <!-- generated:missing -->
 The system has a button, a reveal button, an option group, a slider, a
-rolling line and eighteen icons. It has no:
+rolling line, a field, a select, a menu, a checkbox, a toggle, a dialog, a
+tooltip, a popover, tabs, a collapsible section, a table, an empty panel, a
+skeleton, a loading mark and eighteen icons. It has no:
 
 | missing | what a brief will ask for |
 |---|---|
-| **text and number input** | any form, any name field, any numeric entry |
-| **select** | a list too long for an option group |
-| **checkbox and toggle** | a setting that is on or off on its own |
-| **modal, sheet, drawer** | a confirm, an export dialog, a settings panel |
-| **collapsible section** | the approved panel draws one — every section label carries a – and nothing implements it |
-| **tooltip and popover** | a label on an icon button |
-| **tabs** | more than one view in a panel |
-| **table** | any list of records |
+| **sheet and drawer** | a settings panel that comes in from an edge — the dialog ships, these do not |
 | **toast** | anything reporting that a background job finished |
-| **progress** | an export, an upload, a render |
-| **menu** | a right-click or an overflow |
+| **progress** | an export, an upload, a render — determinate, where the mark says nothing about how far |
+| **context menu** | a right-click or an overflow: rayl-menu is the list, nothing opens one at a pointer |
 | **badge, chip, tag** | a count, a status, a filter |
 | **avatar** | anybody's face |
 | **scrollbar** | every panel taller than its frame |
 | **app shell** | a control panel beside a canvas — the only layout the system cannot express |
 
-The first four are the ones that block real work, and **they are one
-design problem, not four**: in a system with no strokes, a control that
-accepts input has to read as enterable through a change of ground alone.
-That decision is Martijn's and it has not been made.
+The four that used to head this list — field, select, checkbox and
+toggle — were one design problem and not four: in a system with no
+strokes, a control that accepts input has to read as enterable through a
+change of ground alone. They ship, and they are PROVISIONAL rather than
+settled — see the open list. What is left in the table above is genuinely
+undrawn; ask rather than approximating one.
 <!-- /generated:missing -->

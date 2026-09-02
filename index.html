@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl System</title>
-<script src="rayl.js?v=e2ed2114"></script>
+<script src="rayl.js?v=f95afad0"></script>
 <style>
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
@@ -115,6 +115,10 @@ rebuild them:
     &lt;/div&gt;
     &lt;div class=&quot;rayl-row&quot;&gt;&lt;span class=&quot;rayl-row-name&quot;&gt;Count&lt;/span&gt;
       &lt;span class=&quot;rayl-slider&quot; data-min=&quot;1&quot; data-max=&quot;33&quot; data-val=&quot;12&quot; data-step=&quot;1&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+    &lt;div class=&quot;rayl-row&quot;&gt;&lt;span class=&quot;rayl-row-name&quot;&gt;Name&lt;/span&gt;
+      &lt;input class=&quot;rayl-input&quot; placeholder=&quot;Placeholder&quot;&gt;&lt;/div&gt;
+    &lt;button class=&quot;rayl-check&quot; aria-checked=&quot;true&quot;&gt;Snap to grid&lt;/button&gt;
+    &lt;button class=&quot;rayl-toggle&quot; aria-label=&quot;Show the rail&quot;&gt;&lt;/button&gt;
     &lt;p class=&quot;rayl-hint&quot;&gt;A quiet line of explanation.&lt;/p&gt;
   &lt;/section&gt;
 &lt;/div&gt;&lt;/body&gt;
@@ -185,6 +189,33 @@ of rayl-btn and aria-pressed. A value on a line rolls the same way a button
 label does: rayl-line with data-label and data-swap, and data-rolls on the
 control that changes it.
 
+FIELDS. rayl-input is the field; add is-multi for a textarea. rayl-select is
+authored as nothing but its rayl-menu-opt options with is-on on the chosen one
+— it builds the closed control and the menu itself, so never assemble one out
+of a button and a list. rayl-check is a checkbox that carries its own label,
+is-small for the 12 footprint; rayl-toggle is a switch that carries its own
+word, named with data-on and data-off. Every one of these is the same ground,
+height and corner as a button. A FIELD WITH SOMETHING IN IT IS THE SAME PAPER
+AS AN EMPTY ONE — what changes is the ink, because a ground change would say
+it was selected. The focus ring is the only stroke, on all of them.
+
+WHAT ARRIVES OVER SOMETHING ELSE has no stroke, no arrow and no shadow; what
+says it is in front is that it carries its own ground. rayl-modal is the
+native dialog — data-opens and data-closes name it by id — over a scrim of the
+mode&#x27;s darkest ground at 20%. rayl-tip is a tooltip: put data-tip on the thing
+it labels. rayl-popover is a 264 card. rayl-menu is a list of rayl-menu-opt
+items on its own ground. ONE BUTTON IN A DIALOG MAY TAKE is-strong, and only
+one.
+
+PANELS AND LISTS. rayl-tabs is a rayl-seg bar over rayl-panel panels — the bar
+IS the option group, so never build a second one out of buttons. rayl-fold is
+a collapsible section: a details, a summary and a rayl-fold-body. rayl-table
+draws no rules and no strokes; every other row takes a ground and that is the
+only thing dividing the list. rayl-empty is a panel with nothing in it, AND AN
+ERROR IS THE SAME PANEL WITH DIFFERENT WORDS — nothing in the palette means
+error, so do not borrow a red. rayl-skeleton makes blocks where type will land
+and DOES NOT MOVE; what says something is loading is still rayl-solve.
+
 ICONS: Profile, Image, Document, Save, Bookmark, Folder, Minus, Pause, Play,
 Plus, Upload, Download, ID, Bell, Broom, Stack, Cup, Organise. Every one is a
 12x12 filled path. There are no others; do not substitute one from a public
@@ -230,20 +261,30 @@ and do not substitute something that looks close. The open list is
 https://typograaf.github.io/rayl-system/RAYL-OPEN.md; these are the ones you
 are most likely to hit:
 
-  - Enterable surfaces — text input, select, checkbox and toggle, and the modal that holds them
+  - A check glyph — the eighteen icons have none, so a ticked box and a failed panel show the same mark
   - Semantic colour — nothing means error, warning, success or info
   - Hover: the ladder or the token — two approved sources give a Paper base two different hovers
   - A container&#x27;s padding — &quot;a container pads one step below the gap it sits in&quot;
   - 96 on the spacing scale — the page rhythm is 96 and the scale as written stops at 72
-  - Component states — empty, error, skeleton
   - The Rayl look — the layered gradient treatment, and the largest single gap in the system
   - The reveal button&#x27;s label — White #FFFFFF on the approved frame, Off White in the ink table
   - The fonts — Azeret and Concrette here are TRIAL cuts
   - CMYK — the printed values are arithmetic, not a profile conversion
 
-The system also has no text and number input, select, checkbox and toggle,
-modal, sheet, drawer, and no empty, error or skeleton state. If the brief
-needs one:
+SOME OF WHAT YOU HAVE JUST BEEN GIVEN IS PROVISIONAL. It ships, it works and
+it is what to build with — but it is not settled, so use it and do not restate
+it as a rule of the system:
+
+  - Enterable surfaces — the field, the select, the checkbox, the toggle and the dialog that holds them
+  - Component states — empty, error and skeleton now ship; loading was already the loading mark
+  - The scrim — the page behind a dialog, dimmed 20%
+  - Deep Black #11110F — the dark-mode ground, and the one palette colour not on the approved frame
+  - The 8 radius — every control rounds 8; the board&#x27;s own ladder is 4, 12, 24
+  - The loading mark&#x27;s timing — rayl-solve runs on numbers and a curve that are not the system&#x27;s
+  - A colour change runs 120ms — the ground under a button moves at 120ms ease-out, not on the system&#x27;s curve
+
+The system still has no sheet and drawer, toast, progress and context menu. If
+the brief needs one:
 
   1. Say which part is missing, in one line, before anything else.
   2. If you cannot stop and ask, build it — but mark every invented part with a

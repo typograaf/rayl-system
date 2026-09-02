@@ -154,13 +154,17 @@ def inventory_table():
 
 def missing_table():
     return ("The system has a button, a reveal button, an option group, a slider, a\n"
-            "rolling line and eighteen icons. It has no:\n\n"
+            "rolling line, a field, a select, a menu, a checkbox, a toggle, a dialog, a\n"
+            "tooltip, a popover, tabs, a collapsible section, a table, an empty panel, a\n"
+            "skeleton, a loading mark and eighteen icons. It has no:\n\n"
             "| missing | what a brief will ask for |\n|---|---|\n" +
             "\n".join(f"| **{c}** | {w} |" for c, w in MISSING) +
-            "\n\nThe first four are the ones that block real work, and **they are one\n"
-            "design problem, not four**: in a system with no strokes, a control that\n"
-            "accepts input has to read as enterable through a change of ground alone.\n"
-            "That decision is Martijn's and it has not been made.")
+            "\n\nThe four that used to head this list — field, select, checkbox and\n"
+            "toggle — were one design problem and not four: in a system with no\n"
+            "strokes, a control that accepts input has to read as enterable through a\n"
+            "change of ground alone. They ship, and they are PROVISIONAL rather than\n"
+            "settled — see the open list. What is left in the table above is genuinely\n"
+            "undrawn; ask rather than approximating one.")
 
 
 BLOCKS = {

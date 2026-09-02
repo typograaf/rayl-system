@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Control Bench</title>
-<script src="https://typograaf.github.io/rayl-system/rayl.js?v=e2ed2114"></script>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=f95afad0"></script>
 <style>
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
@@ -95,6 +95,63 @@
     <div class="rayl-rail"><h3 class="rayl-24">Sliders</h3></div>
     <div class="rayl-field">
       <div class="rayl-frame is-tall"><span class="rayl-frame-tag">Six at once</span><div class="rayl-stack"><div class="rayl-row"><span class="rayl-row-name">Count</span><span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span></div><div class="rayl-row"><span class="rayl-row-name">Tilt</span><span class="rayl-slider" data-min="0" data-max="90" data-val="62" data-step="1"></span></div><div class="rayl-row"><span class="rayl-row-name">Peaks</span><span class="rayl-slider" data-min="1" data-max="12" data-val="4" data-step="1"></span></div><div class="rayl-row"><span class="rayl-row-name">Wave</span><span class="rayl-slider" data-min="0" data-max="100" data-val="70" data-step="1"></span></div><div class="rayl-row"><span class="rayl-row-name">Duration</span><span class="rayl-slider" data-min="1" data-max="20" data-val="5" data-step="1"></span></div><div class="rayl-row"><span class="rayl-row-name">Frames</span><span class="rayl-slider" data-min="0" data-max="240" data-val="120" data-step="1"></span></div></div></div>
+    </div>
+  </div>
+  <h2 class="rayl-chapter">Fields</h2>
+  <div class="rayl-block">
+    <div class="rayl-rail"><h3 class="rayl-24">What accepts input</h3><p class="rayl-12">One ground, one height, one corner. A field with something in it is the same Paper as an empty one — what changes is the ink.</p></div>
+    <div class="rayl-field">
+      <div class="rayl-frame is-tall"><span class="rayl-frame-tag">The field</span><div class="rayl-stack rayl-gap-24"><div class="rayl-stack rayl-gap-12"><span class="rayl-label">Name</span><input class="rayl-input" placeholder="Placeholder"></div><div class="rayl-row"><span class="rayl-row-name">Label</span><input class="rayl-input" value="A value"></div><textarea class="rayl-input is-multi" rows="3" placeholder="Placeholder. Three lines of 12 at 140% leading, trimmed to cap height so the box measures cap to baseline."></textarea></div></div>
+    </div>
+  </div>
+  <div class="rayl-block">
+    <div class="rayl-rail"><h3 class="rayl-24">One of a list</h3></div>
+    <div class="rayl-field">
+      <div class="rayl-frame is-tall"><span class="rayl-frame-tag">The select, closed</span><div class="rayl-select" data-label="Selected value"><button class="rayl-menu-opt" type="button">Item 1</button><button class="rayl-menu-opt is-on" type="button">Item 2</button><button class="rayl-menu-opt" type="button">Item 3</button><button class="rayl-menu-opt" type="button">Item 4</button><button class="rayl-menu-opt" type="button" disabled>Item 5</button></div></div>
+      <div class="rayl-frame is-tall"><span class="rayl-frame-tag">The menu it opens</span><div class="rayl-menu"><button class="rayl-menu-opt" type="button">Item 1</button><button class="rayl-menu-opt is-on" type="button">Item 2</button><button class="rayl-menu-opt" type="button">Item 3</button><button class="rayl-menu-opt" type="button">Item 4</button><button class="rayl-menu-opt" type="button" disabled>Item 5</button></div></div>
+    </div>
+  </div>
+  <div class="rayl-block">
+    <div class="rayl-rail"><h3 class="rayl-24">On or off</h3></div>
+    <div class="rayl-field">
+      <div class="rayl-field-row">
+  <div class="rayl-frame"><span class="rayl-frame-tag">Checkbox, both footprints</span><div class="rayl-stack rayl-gap-12"><button class="rayl-check" type="button" aria-checked="true">Twenty-four</button><button class="rayl-check is-small" type="button">Twelve</button></div></div>
+  <div class="rayl-frame"><span class="rayl-frame-tag">Toggle</span><div class="rayl-cluster"><button class="rayl-toggle" type="button" aria-label="Snap to grid"></button><button class="rayl-toggle" type="button" aria-checked="true" aria-label="Show the rail"></button></div></div>
+      </div>
+    </div>
+  </div>
+  <h2 class="rayl-chapter">Surfaces</h2>
+  <div class="rayl-block">
+    <div class="rayl-rail"><h3 class="rayl-24">What arrives over something else</h3><p class="rayl-12">No stroke, no arrow, no shadow. What says a thing is in front is that it carries its own ground.</p></div>
+    <div class="rayl-field">
+      <div class="rayl-frame is-tall"><span class="rayl-frame-tag">The dialog</span><div class="rayl-cluster"><button class="rayl-btn" data-opens="bench-modal">Open the dialog</button></div><dialog class="rayl-modal" id="bench-modal"><h2 class="rayl-24">Title</h2><p class="rayl-12">Body copy at 12, 140% leading. A group led by a 24 gaps 24 throughout, so the title, this copy and the buttons are all the same distance apart.</p><div class="rayl-cluster"><button class="rayl-btn" data-closes="bench-modal">Cancel</button><button class="rayl-btn is-strong" data-closes="bench-modal">Confirm</button></div></dialog></div>
+      <div class="rayl-field-row">
+  <div class="rayl-frame"><span class="rayl-frame-tag">Tooltip — hover one</span><div class="rayl-cluster"><button class="rayl-btn" data-icon="Bell" data-tip="Notifications" aria-label="Notifications"></button><button class="rayl-btn" data-icon="Save" data-tip="Save" aria-label="Save"></button><button class="rayl-btn" data-icon="Download" data-tip="Export" aria-label="Export"></button></div></div>
+  <div class="rayl-frame"><span class="rayl-frame-tag">Popover</span><div class="rayl-popover"><p class="rayl-12">Body copy at 12. A popover pads 12 and the gap inside it is 12.</p><button class="rayl-menu-opt" type="button">Action</button></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="rayl-block">
+    <div class="rayl-rail"><h3 class="rayl-24">More than one thing at once</h3></div>
+    <div class="rayl-field">
+      <div class="rayl-frame is-tall"><span class="rayl-frame-tag">Tabs</span><div class="rayl-tabs"><div class="rayl-seg"><button class="rayl-seg-opt is-third is-on" type="button">Tab 1</button><button class="rayl-seg-opt is-third" type="button">Tab 2</button><button class="rayl-seg-opt is-third" type="button">Tab 3</button></div><div class="rayl-panel"><p class="rayl-12">Panel 1. A change of ground 12 under the bar, and no rule between them.</p></div><div class="rayl-panel"><p class="rayl-12">Panel 2. A change of ground 12 under the bar, and no rule between them.</p></div><div class="rayl-panel"><p class="rayl-12">Panel 3. A change of ground 12 under the bar, and no rule between them.</p></div></div></div>
+      <div class="rayl-frame"><span class="rayl-frame-tag">A collapsible section</span><details class="rayl-fold" open><summary>Section name</summary><div class="rayl-fold-body"><p class="rayl-12">The body is a change of ground 12 below the header. Shut, the header carries a Plus; open, a Minus — the pair the approved panel already draws.</p></div></details></div>
+    </div>
+  </div>
+  <div class="rayl-block">
+    <div class="rayl-rail"><h3 class="rayl-24">A list of records</h3><p class="rayl-12">No rules and no strokes: every other row takes a ground and that is the only thing dividing the list.</p></div>
+    <div class="rayl-field">
+      <div class="rayl-frame is-tall"><span class="rayl-frame-tag">The table</span><table class="rayl-table"><thead><tr><th>Name</th><th>Hours</th><th>State</th></tr></thead><tbody><tr><td>Morning shift</td><td>06:00 – 14:00</td><td>Filled</td></tr><tr><td>Afternoon shift</td><td>14:00 – 22:00</td><td>Filled</td></tr><tr><td>Night shift</td><td>22:00 – 06:00</td><td>Two open</td></tr><tr><td>Weekend, Saturday</td><td>08:00 – 16:00</td><td>Filled</td></tr><tr><td>Weekend, Sunday</td><td>08:00 – 16:00</td><td>One open</td></tr><tr><td>Holiday cover</td><td>on request</td><td>Not staffed</td></tr></tbody></table></div>
+    </div>
+  </div>
+  <div class="rayl-block">
+    <div class="rayl-rail"><h3 class="rayl-24">And when there is nothing to show</h3><p class="rayl-12">An error is the same panel with different words. Nothing in the palette means error and no red is borrowed to make one, so the sentence carries the meaning.</p></div>
+    <div class="rayl-field">
+      <div class="rayl-field-row">
+  <div class="rayl-frame"><span class="rayl-frame-tag">Empty</span><div class="rayl-empty"><div class="rayl-stack rayl-gap-12"><span class="rayl-icon" data-icon="Profile"></span><p class="rayl-12">Nothing here yet</p></div><button class="rayl-btn">Add one</button></div></div>
+  <div class="rayl-frame"><span class="rayl-frame-tag">Error</span><div class="rayl-empty"><div class="rayl-stack rayl-gap-12"><span class="rayl-icon" data-icon="Plus"></span><p class="rayl-12">Something went wrong</p></div><button class="rayl-btn">Retry</button></div></div>
+      </div>
+      <div class="rayl-frame"><span class="rayl-frame-tag">Skeleton</span><span class="rayl-skeleton" data-lines="4"></span></div>
     </div>
   </div>
   <h2 class="rayl-chapter">Loading</h2>

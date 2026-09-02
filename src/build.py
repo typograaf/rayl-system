@@ -73,6 +73,14 @@ function init(root){
   [].forEach.call(root.querySelectorAll(".rayl-btn"),upgradeButton);
   [].forEach.call(root.querySelectorAll(".rayl-ibtn"),upgradeIconButton);
   [].forEach.call(root.querySelectorAll(".rayl-seg"),upgradeSeg);
+  [].forEach.call(root.querySelectorAll(".rayl-tabs"),upgradeTabs);
+  [].forEach.call(root.querySelectorAll(".rayl-select"),upgradeSelect);
+  [].forEach.call(root.querySelectorAll(".rayl-check"),upgradeCheck);
+  [].forEach.call(root.querySelectorAll(".rayl-toggle"),upgradeToggle);
+  [].forEach.call(root.querySelectorAll(".rayl-fold"),upgradeFold);
+  [].forEach.call(root.querySelectorAll(".rayl-skeleton"),upgradeSkeleton);
+  [].forEach.call(root.querySelectorAll("[data-tip]"),upgradeTip);
+  wireModals(root);
   [].forEach.call(root.querySelectorAll(".rayl-line"),upgradeLine);
   wireRolls(root);
   [].forEach.call(root.querySelectorAll(".rayl-icon[data-icon]"),upgradeIcon);
@@ -89,7 +97,9 @@ else init();
 window.Rayl={init:init, icons:Object.keys(ICONS), upgrade:{
   button:upgradeButton, revealButton:upgradeIconButton, group:upgradeSeg,
   line:upgradeLine, slider:mountSlider, icon:upgradeIcon,
-  solve:raylSolve}};
+  solve:raylSolve, select:upgradeSelect, check:upgradeCheck,
+  toggle:upgradeToggle, tabs:upgradeTabs, fold:upgradeFold,
+  skeleton:upgradeSkeleton, tip:upgradeTip}};
 })();
 ''' % (json.dumps(icons, separators=(",", ":")),
        json.dumps(css.replace("HUB", HUB)),

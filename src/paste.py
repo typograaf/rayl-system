@@ -43,19 +43,18 @@ def gap_meanings():
     return "; ".join(f"{n} {what}" for n, what in GAP_MEANING if what != "—")
 
 
-def states():
-    """What is still undefined, straight off the open list, so this sentence
-    cannot go on claiming loading is missing after it stopped being."""
-    for name, _, what, _ in OPEN:
-        if name == "Component states":
-            parts = [w.strip() for w in what.split(",")]
-            return ", ".join(parts[:-1]) + " or " + parts[-1]
-    return "empty or error"
-
-
 def open_lines():
     return "\n".join(
         f"  - {name} — {what}" for name, status, what, _ in OPEN if status == "OPEN")
+
+
+def provisional_lines():
+    """PROVISIONAL is not OPEN and not RULE: it ships, it works, build with it —
+    but it has not been signed off, so a document must not restate it as
+    settled. The controls added off the UI Control Blanks boards are all here."""
+    return "\n".join(
+        f"  - {name} — {what}" for name, status, what, _ in OPEN
+        if status == "PROVISIONAL")
 
 
 BLOCK = f"""Build this to the Rayl design system.
@@ -92,6 +91,10 @@ rebuild them:
     </div>
     <div class="rayl-row"><span class="rayl-row-name">Count</span>
       <span class="rayl-slider" data-min="1" data-max="33" data-val="12" data-step="1"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Name</span>
+      <input class="rayl-input" placeholder="Placeholder"></div>
+    <button class="rayl-check" aria-checked="true">Snap to grid</button>
+    <button class="rayl-toggle" aria-label="Show the rail"></button>
     <p class="rayl-hint">A quiet line of explanation.</p>
   </section>
 </div></body>
@@ -156,6 +159,32 @@ rayl-btn and aria-pressed. A value on a line rolls the same way a button label
 does: rayl-line with data-label and data-swap, and data-rolls on the control
 that changes it.
 
+FIELDS. rayl-input is the field; add is-multi for a textarea. rayl-select is
+authored as nothing but its rayl-menu-opt options with is-on on the chosen one —
+it builds the closed control and the menu itself, so never assemble one out of a
+button and a list. rayl-check is a checkbox that carries its own label, is-small
+for the 12 footprint; rayl-toggle is a switch that carries its own word, named
+with data-on and data-off. Every one of these is the same ground, height and
+corner as a button. A FIELD WITH SOMETHING IN IT IS THE SAME PAPER AS AN EMPTY
+ONE — what changes is the ink, because a ground change would say it was
+selected. The focus ring is the only stroke, on all of them.
+
+WHAT ARRIVES OVER SOMETHING ELSE has no stroke, no arrow and no shadow; what
+says it is in front is that it carries its own ground. rayl-modal is the native
+dialog — data-opens and data-closes name it by id — over a scrim of the mode's
+darkest ground at 20%. rayl-tip is a tooltip: put data-tip on the thing it
+labels. rayl-popover is a 264 card. rayl-menu is a list of rayl-menu-opt items
+on its own ground. ONE BUTTON IN A DIALOG MAY TAKE is-strong, and only one.
+
+PANELS AND LISTS. rayl-tabs is a rayl-seg bar over rayl-panel panels — the bar
+IS the option group, so never build a second one out of buttons. rayl-fold is a
+collapsible section: a details, a summary and a rayl-fold-body. rayl-table draws
+no rules and no strokes; every other row takes a ground and that is the only
+thing dividing the list. rayl-empty is a panel with nothing in it, AND AN ERROR
+IS THE SAME PANEL WITH DIFFERENT WORDS — nothing in the palette means error, so
+do not borrow a red. rayl-skeleton makes blocks where type will land and DOES
+NOT MOVE; what says something is loading is still rayl-solve.
+
 ICONS: {", ".join(ICONS)}. Every one is a 12x12 filled path.
 There are no others; do not substitute one from a public set.
 
@@ -199,8 +228,14 @@ do not substitute something that looks close. The open list is
 
 {open_lines()}
 
-The system also has no {", ".join(m for m, _ in MISSING[:4])}, and no {states()}
-state. If the brief needs one:
+SOME OF WHAT YOU HAVE JUST BEEN GIVEN IS PROVISIONAL. It ships, it works and it
+is what to build with — but it is not settled, so use it and do not restate it
+as a rule of the system:
+
+{provisional_lines()}
+
+The system still has no {commas([m for m, _ in MISSING[:4]])}. If the brief
+needs one:
 
   1. Say which part is missing, in one line, before anything else.
   2. If you cannot stop and ask, build it — but mark every invented part with a

@@ -321,6 +321,67 @@ Measured at `997:7711` — the row is 264 by 32.376 with the name and the contro
 
 ---
 
+## The controls, and where their form came from
+
+The eleven parts added in one go — field, select, menu, checkbox, toggle, dialog,
+tooltip, popover, tabs, collapsible section, table, empty panel and skeleton —
+are not designed here. They are read off the **UI Control Blanks** page of the
+Figma file, board by board. Every measurement below is on a layer name there, and
+where the file and this repo disagreed, the layer name was taken as the spec:
+the file draws a focus ring in `line/track` and names it `ink/primary`, and
+`ink/primary` is what ships, because that is the ring every other control in the
+system already draws.
+
+**The first four were one decision and not four.** In a system with no strokes, a
+control that ACCEPTS input has to read as enterable through a change of ground
+alone. That was the largest open item in the system and it blocked the other
+three; once the field had a ground, a height and a corner, the select, the
+checkbox and the toggle followed from it without another choice being made.
+
+**Figma rounds a text node to whole pixels**, so an auto-layout hug reports 32
+where the system says 32.376. Every control here is pinned to `cap + 24`, and the
+32 on the table's header row in the file is that rounding, not a second height.
+
+Two boards offered a second candidate rather than a decision, and both were
+settled by asking:
+
+- **The checkbox footprint.** 24 rounding 8, and 12 rounding 4 at icon scale.
+  Both ship — 24 is the default, `is-small` is the dense row — because the system
+  fixes no square control and the file called both candidates.
+- **The tooltip's ground.** `fill/strong` and `surface/idle` were drawn side by
+  side. Ink won: a tooltip floats over a panel, panels are already Paper, and a
+  Paper tooltip on a Paper panel has no edge and nothing in this system to give
+  it one.
+
+**The scrim is 20%**, which is the figure on the board. Only the light value was
+drawn. The colour is the darkest ground the mode has rather than `ink/primary`,
+because `ink/primary` flips to White in dark mode and a scrim that lightens the
+page behind it is not a scrim. That inference is on the open list as
+PROVISIONAL.
+
+**There is no check glyph in the eighteen icons**, so ON is carried by the ground
+— the box turns Bone like everything else selected — and the mark inside it is
+Plus turned 45 degrees, which is what the board draws. The error panel shows the
+same glyph at 24. One drawing carrying two opposite meanings is a real weakness
+and it is on the open list rather than quietly fixed by drawing a tick.
+
+**The error panel is the empty panel with different words.** Nothing in the
+palette means error and no red was borrowed to make one; semantic colour is still
+open and this is what the system honestly looks like until it is decided.
+
+**The skeleton narrowed a rule rather than breaking it.** Section 8 said a wait
+shows the mark and "not a skeleton". It still does: `rayl-skeleton` says where
+type will land, `rayl-solve` says something is happening, and the sentence now
+distinguishes them instead of forbidding one of them. The skeleton does not move,
+because a shimmer would be a second movement in a system whose whole argument is
+that there is one.
+
+**Two grounds went the other way from section 5.** A control on a popover and the
+action in an empty panel take `surface/ground` — one rung OUT — because both
+surfaces are themselves `surface/idle`, and a Paper control on a Paper card is
+not a control. That is drawn on both boards and it is the same reasoning the
+option group already uses when selection owns the rung a hover would want.
+
 ## Why the components ship as code
 
 Several of the descriptions in this repo were wrong until the code was read. A

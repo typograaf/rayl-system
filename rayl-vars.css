@@ -35,6 +35,10 @@
      is painted in, so the press would read as a selection and the circle would
      then open Bone on Bone. One rung further out. */
   --rayl-seg-press:var(--rayl-dark-off-white);
+  /* The page behind a dialog, dimmed. 20% is what it is drawn at, and the
+     colour is the darkest ground the mode has — a scrim is a shadow, so it
+     darkens in dark mode too rather than flipping to ink and lightening. */
+  --rayl-scrim:color-mix(in srgb, var(--rayl-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-off-white);
   --rayl-doc-container:var(--rayl-white);
   --rayl-doc-chapter:var(--rayl-dark-concrete);
@@ -71,6 +75,7 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  --rayl-scrim:color-mix(in srgb, var(--rayl-deep-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);
   --rayl-doc-chapter:var(--rayl-pale-concrete);
@@ -93,6 +98,7 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  --rayl-scrim:color-mix(in srgb, var(--rayl-deep-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);
   --rayl-doc-chapter:var(--rayl-pale-concrete);

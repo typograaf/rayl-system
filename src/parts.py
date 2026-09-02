@@ -182,6 +182,141 @@ def controls_section():
                 frame("Six at once", f'<div class="rayl-stack">{sliders}</div>', "is-tall"))
     )
 
+TABLE = [("Morning shift", "06:00 – 14:00", "Filled"),
+         ("Afternoon shift", "14:00 – 22:00", "Filled"),
+         ("Night shift", "22:00 – 06:00", "Two open"),
+         ("Weekend, Saturday", "08:00 – 16:00", "Filled"),
+         ("Weekend, Sunday", "08:00 – 16:00", "One open"),
+         ("Holiday cover", "on request", "Not staffed")]
+
+
+def fields_section():
+    """The four that were one decision. They are shown together because that is
+    what they are: one ground, one height, one corner, one focus ring."""
+    field = ('<div class="rayl-stack rayl-gap-12">'
+             '<span class="rayl-label">Name</span>'
+             '<input class="rayl-input" placeholder="Placeholder">'
+             '</div>'
+             '<div class="rayl-row"><span class="rayl-row-name">Label</span>'
+             '<input class="rayl-input" value="A value"></div>'
+             '<textarea class="rayl-input is-multi" rows="3" placeholder="Placeholder. '
+             'Three lines of 12 at 140% leading, trimmed to cap height so the box '
+             'measures cap to baseline."></textarea>')
+    select = ('<div class="rayl-select" data-label="Selected value">'
+              + "".join('<button class="rayl-menu-opt%s" type="button">%s</button>'
+                        % (" is-on" if n == "Item 2" else "", n)
+                        for n in ("Item 1", "Item 2", "Item 3", "Item 4"))
+              + '<button class="rayl-menu-opt" type="button" disabled>Item 5</button>'
+              '</div>')
+    checks = ('<div class="rayl-stack rayl-gap-12">'
+              '<button class="rayl-check" type="button" aria-checked="true">Twenty-four</button>'
+              '<button class="rayl-check is-small" type="button">Twelve</button>'
+              '</div>')
+    toggles = ('<div class="rayl-cluster">'
+               '<button class="rayl-toggle" type="button" aria-label="Snap to grid"></button>'
+               '<button class="rayl-toggle" type="button" aria-checked="true"'
+               ' aria-label="Show the rail"></button>'
+               '</div>')
+    return (
+        chapter("Fields")
+        + block(rail("What accepts input",
+                     "One ground, one height, one corner. A field with something "
+                     "in it is the same Paper as an empty one \u2014 what changes is "
+                     "the ink."),
+                frame("The field", f'<div class="rayl-stack rayl-gap-24">{field}</div>', "is-tall"))
+        + block(rail("One of a list"),
+                frame("The select, closed", select, "is-tall"),
+                frame("The menu it opens",
+                      '<div class="rayl-menu">'
+                      + "".join('<button class="rayl-menu-opt%s" type="button">%s</button>'
+                                % (" is-on" if n == "Item 2" else "", n)
+                                for n in ("Item 1", "Item 2", "Item 3", "Item 4"))
+                      + '<button class="rayl-menu-opt" type="button" disabled>Item 5</button>'
+                      '</div>', "is-tall"))
+        + block(rail("On or off"),
+                row(frame("Checkbox, both footprints", checks),
+                    frame("Toggle", toggles)))
+    )
+
+
+def surfaces_section():
+    """What arrives over something else, and what a panel does when it is
+    holding more than one thing \u2014 or nothing at all."""
+    modal = ('<div class="rayl-cluster">'
+             '<button class="rayl-btn" data-opens="bench-modal">Open the dialog</button>'
+             '</div>'
+             '<dialog class="rayl-modal" id="bench-modal">'
+             '<h2 class="rayl-24">Title</h2>'
+             '<p class="rayl-12">Body copy at 12, 140% leading. A group led by a 24 '
+             'gaps 24 throughout, so the title, this copy and the buttons are all the '
+             'same distance apart.</p>'
+             '<div class="rayl-cluster">'
+             '<button class="rayl-btn" data-closes="bench-modal">Cancel</button>'
+             '<button class="rayl-btn is-strong" data-closes="bench-modal">Confirm</button>'
+             '</div></dialog>')
+    tips = ('<div class="rayl-cluster">'
+            + "".join('<button class="rayl-btn" data-icon="%s" data-tip="%s" '
+                      'aria-label="%s"></button>' % (i, w, w)
+                      for i, w in (("Bell", "Notifications"), ("Save", "Save"),
+                                   ("Download", "Export")))
+            + '</div>')
+    pop = ('<div class="rayl-popover">'
+           '<p class="rayl-12">Body copy at 12. A popover pads 12 and the gap '
+           'inside it is 12.</p>'
+           '<button class="rayl-menu-opt" type="button">Action</button></div>')
+    tabs = ('<div class="rayl-tabs">'
+            '<div class="rayl-seg">'
+            + "".join('<button class="rayl-seg-opt is-third%s" type="button">%s</button>'
+                      % (" is-on" if n == 1 else "", f"Tab {n}") for n in (1, 2, 3))
+            + '</div>'
+            + "".join(f'<div class="rayl-panel"><p class="rayl-12">Panel {n}. A change '
+                      'of ground 12 under the bar, and no rule between them.</p></div>'
+                      for n in (1, 2, 3))
+            + '</div>')
+    fold = ('<details class="rayl-fold" open><summary>Section name</summary>'
+            '<div class="rayl-fold-body"><p class="rayl-12">The body is a change of '
+            'ground 12 below the header. Shut, the header carries a Plus; open, a '
+            'Minus \u2014 the pair the approved panel already draws.</p></div>'
+            '</details>')
+    table = ('<table class="rayl-table">'
+             '<thead><tr><th>Name</th><th>Hours</th><th>State</th></tr></thead><tbody>'
+             + "".join(f'<tr><td>{n}</td><td>{v}</td><td>{s}</td></tr>' for n, v, s in TABLE)
+             + '</tbody></table>')
+    empty = ('<div class="rayl-empty">'
+             '<div class="rayl-stack rayl-gap-12">'
+             '<span class="rayl-icon" data-icon="Profile"></span>'
+             '<p class="rayl-12">Nothing here yet</p></div>'
+             '<button class="rayl-btn">Add one</button></div>')
+    error = ('<div class="rayl-empty">'
+             '<div class="rayl-stack rayl-gap-12">'
+             '<span class="rayl-icon" data-icon="Plus"></span>'
+             '<p class="rayl-12">Something went wrong</p></div>'
+             '<button class="rayl-btn">Retry</button></div>')
+    skel = '<span class="rayl-skeleton" data-lines="4"></span>'
+    return (
+        chapter("Surfaces")
+        + block(rail("What arrives over something else",
+                     "No stroke, no arrow, no shadow. What says a thing is in "
+                     "front is that it carries its own ground."),
+                frame("The dialog", modal, "is-tall"),
+                row(frame("Tooltip \u2014 hover one", tips),
+                    frame("Popover", pop)))
+        + block(rail("More than one thing at once"),
+                frame("Tabs", tabs, "is-tall"),
+                frame("A collapsible section", fold))
+        + block(rail("A list of records",
+                     "No rules and no strokes: every other row takes a ground "
+                     "and that is the only thing dividing the list."),
+                frame("The table", table, "is-tall"))
+        + block(rail("And when there is nothing to show",
+                     "An error is the same panel with different words. Nothing "
+                     "in the palette means error and no red is borrowed to make "
+                     "one, so the sentence carries the meaning."),
+                row(frame("Empty", empty), frame("Error", error)),
+                frame("Skeleton", skel))
+    )
+
+
 def loading_section():
     """The bench shows a part at the size it ships at, with nothing between the
     label and the thing. A loader is the one part you have to watch, so it gets
@@ -384,6 +519,27 @@ INVENTORY = [
   ("rayl-icon",       "an icon on its own; data-icon"),
   ("rayl-mark",       "the logo mark, inline"),
   ("rayl-solve",      "the loading mark: data-size, data-play, data-ease and the timings"),
+  ("rayl-btn is-strong","the one high-emphasis button — a dialog's confirm"),
+ ]),
+ ("Enterable surfaces", [
+  ("rayl-input",      "the field; is-multi for a textarea"),
+  ("rayl-select",     "the select — author the options, it builds the rest"),
+  ("rayl-menu",       "a list of items on its own ground"),
+  ("rayl-menu-opt",   "one item of it; is-on for the chosen one"),
+  ("rayl-check",      "the checkbox, carrying its own label; is-small for 12"),
+  ("rayl-toggle",     "the switch; data-on and data-off name its two states"),
+ ]),
+ ("Surfaces and panels", [
+  ("rayl-modal",      "a dialog; data-opens and data-closes name it by id"),
+  ("rayl-tip",        "a tooltip — put data-tip on the thing it labels"),
+  ("rayl-popover",    "a card that arrives: 264 across, padding 12"),
+  ("rayl-tabs",       "a rayl-seg bar over rayl-panel panels"),
+  ("rayl-panel",      "the panel under a bar, or under anything"),
+  ("rayl-fold",       "a collapsible section: a details, and a body"),
+  ("rayl-fold-body",  "what it holds"),
+  ("rayl-table",      "a list of records; every other row is banded"),
+  ("rayl-empty",      "a panel with nothing in it — and the error panel too"),
+  ("rayl-skeleton",   "blocks where type will land; data-lines"),
  ]),
  ("Type", [
   ("rayl-96",  "96 / 110% / -4%"), ("rayl-72", "72 / 110% / -3%"),
@@ -398,7 +554,8 @@ INVENTORY = [
 INTERNAL = ["rayl-solve-face", "rayl-solve-tile", "rayl-solve-art", "rayl-roll", "rayl-ch", "rayl-g", "rayl-cur", "rayl-nxt", "rayl-type",
             "rayl-reel", "rayl-col", "rayl-strip", "rayl-digit", "rayl-num",
             "rayl-val", "rayl-sign", "rayl-point", "rayl-seg-fill", "rayl-ibtn-body", "rayl-ibtn-dot",
-            "rayl-ibtn-icon"]
+            "rayl-ibtn-icon", "rayl-select-face", "rayl-check-box", "rayl-toggle-knob",
+            "rayl-toggle-word", "rayl-skeleton-line"]
 
 
 # =========================================================== the spacing ====
@@ -443,6 +600,10 @@ FIGURES = [
  ("the tool panel",       "300, padding 48, groups 48 apart"),
  ("a reading measure",    "62 characters"),
  ("a showcase frame",     "padding 144 — three times the ordinary 48"),
+ ("a dialog",             "520, the panel column"),
+ ("a popover",            "264"),
+ ("a toggle",             "60 x 24, its knob 24 x 16"),
+ ("an empty panel",       "180 tall"),
 ]
 
 # What the containers fix, asserted against core.css by doc.py. Nothing here is
@@ -457,6 +618,14 @@ FIXED = [
  (".rayl-field",   "gap",     "12px", "frames in a field"),
  (".rayl-card",    "padding", "12px", "inside a card"),
  (".rayl-rail",    "padding", "48px", "inside a rail"),
+ (".rayl-modal",   "padding", "48px", "inside a dialog"),
+ (".rayl-popover", "padding", "12px", "inside a popover"),
+ (".rayl-panel",   "padding", "12px", "inside a panel"),
+ (".rayl-menu",    "padding", "6px",  "inside a menu"),
+ (".rayl-empty",   "padding", "48px", "inside an empty panel"),
+ (".rayl-tabs",    "gap",     "12px", "a bar and its panel"),
+ (".rayl-fold",    "gap",     "12px", "a header and its body"),
+ (".rayl-skeleton","gap",     "12px", "lines of a skeleton"),
 ]
 
 # ============================================================= the motion ====
@@ -485,12 +654,44 @@ MOTION = [
 # because RAYL-OPEN.md is generated from this list and nothing else.
 
 OPEN = [
- ("Enterable surfaces", "OPEN",
-  "text input, select, checkbox and toggle, and the modal that holds them",
-  "In a system with no strokes, a control that ACCEPTS input has to read as "
-  "enterable through a change of ground alone. That is one decision and all "
-  "four follow from it. Martijn is designing it. Until it lands there is no "
-  "correct form in this system."),
+ ("Enterable surfaces", "PROVISIONAL",
+  "the field, the select, the checkbox, the toggle and the dialog that holds "
+  "them",
+  "This was the largest open item in the system and it is answered: a control "
+  "that ACCEPTS input reads as enterable through a change of ground alone — "
+  "surface/idle at cap + 24, rounding 8, padding 12, and the focus ring as the "
+  "one stroke. Every measurement is read off the UI Control Blanks boards and "
+  "all of it ships, so build with it rather than inventing. It is PROVISIONAL "
+  "and not a RULE because Martijn has drawn it and has not yet seen it "
+  "rendered. Do not write it into a document as settled until he has."),
+
+ ("Component states", "PROVISIONAL",
+  "empty, error and skeleton now ship; loading was already the loading mark",
+  "rayl-empty is a panel with nothing in it and an error is the same panel with "
+  "different words, because nothing in the palette means error. rayl-skeleton "
+  "is blocks where type will land and it does not move. Hover, pressed, "
+  "disabled and focus were always covered by the tokens, and a wait is still "
+  "rayl-solve. These are drawn rather than decided, so they move with the "
+  "enterable surfaces above."),
+
+ ("A check glyph", "OPEN",
+  "the eighteen icons have none, so a ticked box and a failed panel show the "
+  "same mark",
+  "ON is carried by the ground — the box turns Bone the way every selected "
+  "thing does — and the mark inside it is Plus turned 45 degrees, because that "
+  "is the only glyph in the set that reads as a mark rather than an "
+  "instruction. The empty panel's error twin shows the same glyph at 24. Two "
+  "opposite meanings on one drawing is a real weakness and it wants either a "
+  "nineteenth icon or a decision that the ground alone is enough. Do not draw "
+  "a tick."),
+
+ ("The scrim", "PROVISIONAL",
+  "the page behind a dialog, dimmed 20%",
+  "20% is the figure on the board and it is what ships. The colour is the "
+  "darkest ground the mode has — Black in light, Deep Black in dark — because "
+  "a scrim is a shadow: taking ink/primary would flip it to White in dark mode "
+  "and lighten the page instead of dimming it. Only the light value was drawn; "
+  "the dark one follows from that reasoning and has not been looked at."),
 
  ("Semantic colour", "OPEN",
   "nothing means error, warning, success or info",
@@ -524,12 +725,6 @@ OPEN = [
   "every control rounds 8; the board's own ladder is 4, 12, 24",
   "8 is measured off the approved UI rather than the demo, and where the two "
   "disagree the UI wins. Worth confirming the ladder gains an 8."),
-
- ("Component states", "OPEN",
-  "empty, error, skeleton",
-  "Hover, pressed, disabled and focus are covered by the tokens, and loading "
-  "is now the loading mark, rayl-solve. These three are not covered, and a "
-  "tool without them is a demo."),
 
  ("The Rayl look", "OPEN",
   "the layered gradient treatment, and the largest single gap in the system",
@@ -578,21 +773,14 @@ OPEN = [
 # Controls the system does not have. A brief that needs one of these has hit a
 # gap, not a thing to design on the spot.
 MISSING = [
- ("text and number input", "any form, any name field, any numeric entry"),
- ("select",                "a list too long for an option group"),
- ("checkbox and toggle",   "a setting that is on or off on its own"),
- ("modal, sheet, drawer",  "a confirm, an export dialog, a settings panel"),
- ("collapsible section",   "the approved panel draws one — every section label carries a – and nothing implements it"),
- ("tooltip and popover",   "a label on an icon button"),
- ("tabs",                  "more than one view in a panel"),
- ("table",                 "any list of records"),
- ("toast",                 "anything reporting that a background job finished"),
- ("progress",              "an export, an upload, a render"),
- ("menu",                  "a right-click or an overflow"),
- ("badge, chip, tag",      "a count, a status, a filter"),
- ("avatar",                "anybody's face"),
- ("scrollbar",             "every panel taller than its frame"),
- ("app shell",             "a control panel beside a canvas — the only layout the system cannot express"),
+ ("sheet and drawer",  "a settings panel that comes in from an edge — the dialog ships, these do not"),
+ ("toast",             "anything reporting that a background job finished"),
+ ("progress",          "an export, an upload, a render — determinate, where the mark says nothing about how far"),
+ ("context menu",      "a right-click or an overflow: rayl-menu is the list, nothing opens one at a pointer"),
+ ("badge, chip, tag",  "a count, a status, a filter"),
+ ("avatar",            "anybody's face"),
+ ("scrollbar",         "every panel taller than its frame"),
+ ("app shell",         "a control panel beside a canvas — the only layout the system cannot express"),
 ]
 
 

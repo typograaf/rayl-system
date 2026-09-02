@@ -24,6 +24,10 @@
      is painted in, so the press would read as a selection and the circle would
      then open Bone on Bone. One rung further out. */
   --rayl-seg-press:var(--rayl-dark-off-white);
+  /* The page behind a dialog, dimmed. 20% is what it is drawn at, and the
+     colour is the darkest ground the mode has — a scrim is a shadow, so it
+     darkens in dark mode too rather than flipping to ink and lightening. */
+  --rayl-scrim:color-mix(in srgb, var(--rayl-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-off-white);
   --rayl-doc-container:var(--rayl-white);
   --rayl-doc-chapter:var(--rayl-dark-concrete);
@@ -60,6 +64,7 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  --rayl-scrim:color-mix(in srgb, var(--rayl-deep-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);
   --rayl-doc-chapter:var(--rayl-pale-concrete);
@@ -82,6 +87,7 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  --rayl-scrim:color-mix(in srgb, var(--rayl-deep-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);
   --rayl-doc-chapter:var(--rayl-pale-concrete);
@@ -125,6 +131,13 @@
 .rayl-btn[aria-pressed="true"]:active:not(:disabled){background:var(--surface-active-pressed);}
 .rayl-btn:disabled{color:var(--ink-disabled);cursor:default;background:var(--surface-idle);}
 .rayl-btn:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
+/* ONE BUTTON IN A SET CAN BE STRONG — the confirm in a dialog, and that is
+   what it is for. It is the only place ink becomes a ground for a control, and
+   two of them side by side would mean neither is the answer. */
+.rayl-btn.is-strong{background:var(--fill-strong);color:var(--ink-on-strong);}
+.rayl-btn.is-strong:hover{background:var(--fill-strong-hover);}
+.rayl-btn.is-strong:active:not(:disabled){background:var(--fill-strong-hover);}
+.rayl-btn.is-strong:disabled{background:var(--surface-idle);color:var(--ink-disabled);}
 
 /* THE ROLL DOES NOT DECLARE ITS OWN TRAVEL.
    It used to say --rayl-travel:var(--rayl-btn-h), which reads well until the
@@ -391,6 +404,335 @@
 @media (prefers-reduced-motion:reduce){
   .rayl-g,.rayl-ch,.rayl-btn{transition-duration:1ms !important;transition-delay:0ms !important;}
 }
+
+/* ==================================================== ENTERABLE SURFACES ====
+ * A control that ACCEPTS input has to read as enterable through a change of
+ * ground alone, because there is no stroke to draw round it. That was one open
+ * decision and all of these followed from it: the field, the select, the
+ * checkbox, the toggle and the dialog that holds them are the same ground at
+ * the same height with the same corner.
+ *
+ *   height   cap + 24 = 32.376, the height of every other control
+ *   radius   8, because a control rounds 8
+ *   padding  12
+ *   rest     surface/idle          hover  surface/idle-hover
+ *   pressed  surface/idle-pressed  on     surface/active
+ *
+ * FILLED IS NOT A GROUND. A field with something in it is the same Paper as an
+ * empty one; what changes is the ink — ink/disabled for a placeholder,
+ * ink/primary for a value. Giving a filled field its own ground would say it
+ * was selected, which is what surface/active already says.
+ *
+ * The focus ring is the one stroke the system draws, and it is the same ring
+ * every other control uses: 2 solid ink/primary, offset 2.
+ * ========================================================================== */
+
+.rayl-input{
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0;line-height:1.2;
+  height:calc(var(--rayl-cap) + 24px);
+  width:100%;padding:0 12px;
+  border:0;border-radius:var(--rayl-radius);
+  background:var(--surface-idle);color:var(--ink-primary);
+  transition:background 120ms ease-out;
+}
+.rayl-input::placeholder{color:var(--ink-disabled);opacity:1;}
+.rayl-input:hover:enabled{background:var(--surface-idle-hover);}
+.rayl-input:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;
+  background:var(--surface-idle);}
+.rayl-input:disabled{color:var(--ink-disabled);cursor:default;background:var(--surface-idle);}
+/* The multi-line field is the same field with the height taken off it. 12 of
+   padding all round and the 12's own 140% leading, so the box measures cap to
+   baseline exactly as a paragraph does. */
+.rayl-input.is-multi{height:auto;min-height:calc(var(--rayl-cap) + 24px);
+  padding:12px;line-height:1.4;resize:vertical;}
+.rayl-row > .rayl-input,.rayl-row > .rayl-select{flex:1 1 auto;width:auto;min-width:0;}
+
+/* ------------------------------------------------------------- the select */
+/* Closed, it is a button carrying its value; the icon is Plus, because there
+   is no chevron in the eighteen and one is not invented here. Open, the menu
+   is a Paper card of items at control height and the selection is painted in
+   Bone, the same ground selection is painted in everywhere else.
+   The value rolls when it changes — a select is a control whose label turns
+   over, which is the movement the system already has. */
+.rayl-select{position:relative;display:block;width:100%;
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0;line-height:1.2;}
+.rayl-select-face{
+  width:100%;height:calc(var(--rayl-cap) + 24px);
+  display:flex;align-items:center;gap:12px;
+  font:inherit;letter-spacing:inherit;text-align:left;
+  padding:0 12px;border:0;border-radius:var(--rayl-radius);
+  background:var(--surface-idle);color:var(--ink-primary);cursor:pointer;
+  overflow:hidden;                       /* the clip is the control's shape */
+  transition:background 120ms ease-out;
+}
+.rayl-select-face .rayl-roll{flex:1 1 auto;--rayl-travel:calc(var(--rayl-cap) + 24px);}
+.rayl-select-face .rayl-icon{flex:0 0 auto;margin-left:auto;}
+.rayl-select-face:hover{background:var(--surface-idle-hover);}
+.rayl-select-face:active,.rayl-select.is-open .rayl-select-face{
+  background:var(--surface-idle-pressed);}
+.rayl-select-face:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
+.rayl-select-face:disabled{color:var(--ink-disabled);cursor:default;
+  background:var(--surface-idle);}
+/* the menu floats over what is under it, so the field below does not jump */
+.rayl-select > .rayl-menu{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:10;}
+.rayl-select:not(.is-open) > .rayl-menu{display:none;}
+
+/* --------------------------------------------------------------- the menu */
+/* A list of items on its own ground: 6 of padding, and each item a control at
+   control height. Nothing is outlined and nothing is ruled off — the items are
+   separated by the ground they sit on, as everywhere else. */
+.rayl-menu{
+  display:flex;flex-direction:column;
+  padding:6px;border-radius:var(--rayl-radius);
+  background:var(--surface-idle);
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0;line-height:1.2;
+}
+.rayl-menu-opt{
+  height:calc(var(--rayl-cap) + 24px);
+  display:flex;align-items:center;justify-content:flex-start;
+  font:inherit;letter-spacing:inherit;text-align:left;
+  padding:0 12px;border:0;border-radius:var(--rayl-radius);
+  background:transparent;color:var(--ink-primary);cursor:pointer;
+  transition:background 120ms ease-out;
+}
+.rayl-menu-opt:hover:enabled{background:var(--surface-idle-hover);}
+/* one rung further out than the hover, for the same reason the option group
+   steps out: selection owns Bone, so a press must not land on it */
+.rayl-menu-opt:active:enabled{background:var(--rayl-seg-press);}
+.rayl-menu-opt.is-on{background:var(--surface-active);color:var(--ink-on-active);}
+.rayl-menu-opt:disabled{color:var(--ink-disabled);cursor:default;background:transparent;}
+.rayl-menu-opt:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
+
+/* ----------------------------------------------------------- the checkbox */
+/* ON IS A GROUND CHANGE. There is no check glyph in the eighteen icons, so the
+   box turns Bone the way every other selected thing in the system does, and
+   the mark inside it is Plus turned 45 degrees — the one glyph the set has
+   that reads as a mark rather than as an instruction.
+   Two footprints ship because the system fixes no square control: 24 rounds 8
+   like every other control, and is-small is 12 at icon scale, rounding 4. */
+.rayl-check{
+  display:inline-flex;align-items:center;gap:12px;
+  width:fit-content;               /* the box and its word, not the row */
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0;line-height:1.2;
+  padding:0;border:0;background:none;color:var(--ink-primary);cursor:pointer;
+}
+.rayl-check-box{
+  flex:0 0 auto;width:24px;height:24px;border-radius:var(--rayl-radius);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface-idle);
+  transition:background 120ms ease-out;
+}
+.rayl-check-box .rayl-icon{transform:rotate(45deg);opacity:0;
+  transition:opacity 120ms ease-out;}
+.rayl-check[aria-checked="true"] .rayl-check-box{background:var(--surface-active);}
+.rayl-check[aria-checked="true"] .rayl-check-box .rayl-icon{opacity:1;}
+.rayl-check:hover:enabled .rayl-check-box{background:var(--surface-idle-hover);}
+.rayl-check[aria-checked="true"]:hover:enabled .rayl-check-box{background:var(--surface-active-hover);}
+.rayl-check:active:enabled .rayl-check-box{background:var(--rayl-seg-press);}
+.rayl-check[aria-checked="true"]:active:enabled .rayl-check-box{background:var(--surface-active-pressed);}
+.rayl-check:disabled{color:var(--ink-disabled);cursor:default;}
+.rayl-check:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;
+  border-radius:var(--rayl-radius);}
+.rayl-check.is-small .rayl-check-box{width:12px;height:12px;border-radius:4px;}
+.rayl-check.is-small .rayl-check-box .rayl-icon{width:6px;height:6px;}
+
+/* ------------------------------------------------------------- the toggle */
+/* The one control in the system that reads as fully round, because it is the
+   one control whose whole job is that something moves from one end to the
+   other. It carries its own word, and the word ROLLS while the knob travels —
+   one movement, on the system's duration and curve, not two effects.
+   The knob is White at rest and ink when it is on: the only thing in the
+   system that goes to full ink at 24 across. */
+.rayl-toggle{
+  --tog-w:60px;--tog-h:24px;--tog-kw:24px;--tog-kh:16px;
+  --tog-pad:calc((var(--tog-h) - var(--tog-kh)) / 2);
+  --tog-travel:calc(var(--tog-w) - var(--tog-kw) - var(--tog-pad) * 2);
+  --rayl-travel:var(--tog-h);
+  position:relative;display:inline-flex;align-items:center;
+  width:var(--tog-w);height:var(--tog-h);
+  padding:0;border:0;border-radius:calc(var(--tog-h) / 2);
+  background:var(--surface-idle);cursor:pointer;
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0;line-height:1.2;color:var(--ink-disabled);
+  overflow:hidden;                 /* the track is the roll's own clip */
+  transition:background 120ms ease-out;
+}
+.rayl-toggle-knob{
+  position:absolute;left:var(--tog-pad);top:var(--tog-pad);
+  width:var(--tog-kw);height:var(--tog-kh);
+  border-radius:calc(var(--tog-kh) / 2);
+  background:var(--surface-ground);
+  transition:transform var(--rayl-dur) var(--rayl-ease),
+             background 120ms ease-out;
+}
+/* the word sits in the half the knob is not in, so it shifts by half a knob */
+.rayl-toggle-word{
+  position:absolute;left:0;right:0;
+  display:flex;align-items:center;justify-content:center;
+  transform:translateX(calc(var(--tog-kw) / 2));
+  transition:transform var(--rayl-dur) var(--rayl-ease);
+}
+.rayl-toggle[aria-checked="true"]{background:var(--surface-active);color:var(--ink-on-active);}
+.rayl-toggle[aria-checked="true"] .rayl-toggle-knob{
+  background:var(--fill-strong);transform:translateX(var(--tog-travel));}
+.rayl-toggle[aria-checked="true"] .rayl-toggle-word{
+  transform:translateX(calc(var(--tog-kw) / -2));}
+.rayl-toggle:hover:enabled{background:var(--surface-idle-hover);}
+.rayl-toggle[aria-checked="true"]:hover:enabled{background:var(--surface-active-hover);}
+.rayl-toggle:disabled{color:var(--ink-disabled);cursor:default;}
+.rayl-toggle:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
+
+/* ================================================== SURFACES THAT ARRIVE ====
+ * A dialog, a menu, a tooltip and a popover all appear over something else.
+ * None of them is outlined, none has an arrow and none has a shadow: what says
+ * "this is in front" is that it carries its own ground, and in the dialog's
+ * case that the page behind it is dimmed.
+ * ========================================================================== */
+
+/* -------------------------------------------------------------- the modal */
+/* A container, so it rounds 24 and pads 48, and its group is led by the 24
+   title so everything inside it is 24 apart. It is the native dialog: the
+   focus trap, the Escape key and the top layer are the browser's, not ours. */
+.rayl-modal{
+  width:520px;max-width:calc(100vw - 48px);
+  padding:48px;border:0;border-radius:24px;
+  background:var(--surface-ground);color:var(--ink-primary);
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  line-height:1.40;letter-spacing:0.02em;
+  gap:24px;
+}
+.rayl-modal[open]{display:flex;flex-direction:column;}
+.rayl-modal::backdrop{background:var(--rayl-scrim);}
+/* A dialog's actions sit at its right edge, in the order the answer is given:
+   the way out first, the answer last. */
+.rayl-modal .rayl-cluster{justify-content:flex-end;}
+
+/* ------------------------------------------------------------ the tooltip */
+/* Ink, and the label on it in ink/on-strong. A Paper tooltip over a Paper
+   panel has no edge, and there is no stroke to give it one. Height is cap + 12
+   — half a control's padding, because a tooltip is a label and not a thing you
+   can press. */
+.rayl-tip{
+  position:absolute;z-index:20;
+  height:calc(var(--rayl-cap) + 12px);
+  display:inline-flex;align-items:center;
+  padding:0 12px;border-radius:var(--rayl-radius);
+  background:var(--fill-strong);color:var(--ink-on-strong);
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0;line-height:1.2;
+  white-space:nowrap;pointer-events:none;
+}
+.rayl-tip[hidden]{display:none;}
+
+/* ------------------------------------------------------------ the popover */
+/* A card that arrives: 264 across, 12 of padding, 12 inside. A control on it
+   takes the ground one rung OUT rather than one rung in — the popover is
+   already Paper, and a Paper control on a Paper card is not a control. */
+.rayl-popover{
+  width:264px;
+  padding:12px;border-radius:var(--rayl-radius);
+  background:var(--surface-idle);color:var(--ink-primary);
+  display:flex;flex-direction:column;gap:12px;
+}
+
+/* ======================================================== PANELS AND LISTS ==
+ * The three shapes a tool needs to hold more than one thing at once, and the
+ * two it needs when it is holding nothing yet.
+ * ========================================================================== */
+
+/* ------------------------------------------------------- the tabs and panel */
+/* THE BAR IS THE OPTION GROUP. Tabs are a set where exactly one is on, which
+   is what rayl-seg already is, so nothing new is drawn for it. What is new is
+   the panel under it: a change of ground 12 below the bar, with no rule
+   between them. */
+.rayl-tabs{display:flex;flex-direction:column;gap:12px;}
+.rayl-panel{padding:12px;border-radius:var(--rayl-radius);background:var(--surface-idle);}
+.rayl-panel[hidden]{display:none;}
+
+/* -------------------------------------------------- the collapsible section */
+/* The approved panel draws one on every section label and nothing implemented
+   it. The header is a control at control height carrying the 8 label, Plus
+   when it is shut and Minus when it is open; the body is a change of ground 12
+   under it, and there is no rule anywhere. */
+.rayl-fold{display:flex;flex-direction:column;gap:12px;}
+.rayl-fold > summary{
+  height:calc(var(--rayl-cap) + 24px);
+  display:flex;align-items:center;gap:12px;
+  padding:0 12px;border-radius:var(--rayl-radius);
+  background:var(--surface-idle);color:var(--ink-primary);
+  font-size:8px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
+  cursor:pointer;list-style:none;
+  transition:background 120ms ease-out;
+}
+.rayl-fold > summary::-webkit-details-marker{display:none;}
+.rayl-fold > summary:hover{background:var(--surface-idle-hover);}
+.rayl-fold[open] > summary{background:var(--surface-idle-pressed);}
+.rayl-fold > summary .rayl-icon{margin-left:auto;}
+.rayl-fold > summary:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
+.rayl-fold-body{padding:12px;border-radius:var(--rayl-radius);background:var(--surface-idle);}
+
+/* -------------------------------------------------------------- the table */
+/* NO RULES AND NO STROKES. Rows are separated by their padding and by ground:
+   every other row takes surface/idle and rounds 8 at its ends, so the banding
+   is the only thing dividing a list. The header is the 8 label and has no
+   ground of its own — it names the columns, it is not a row. */
+.rayl-table{
+  width:100%;border-collapse:separate;border-spacing:0;
+  font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
+  letter-spacing:0;line-height:1.2;color:var(--ink-primary);
+}
+.rayl-table th{
+  height:calc(var(--rayl-cap) + 24px);padding:0 12px;
+  text-align:left;vertical-align:middle;
+  font-size:8px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
+  opacity:.62;
+}
+.rayl-table td{
+  height:calc(var(--rayl-cap) + 24px);padding:0 12px;vertical-align:middle;
+}
+.rayl-table tbody tr:nth-child(even) td{background:var(--surface-idle);}
+.rayl-table tbody tr:nth-child(even) td:first-child{
+  border-radius:var(--rayl-radius) 0 0 var(--rayl-radius);}
+.rayl-table tbody tr:nth-child(even) td:last-child{
+  border-radius:0 var(--rayl-radius) var(--rayl-radius) 0;}
+
+/* ------------------------------------------------ empty, and its twin error */
+/* A panel with nothing in it: an icon at 24, a line in ink/disabled, and the
+   one thing to do about it. An ERROR IS THE SAME PANEL WITH DIFFERENT WORDS —
+   nothing in the palette means error and no red is borrowed to make one, so
+   there is no second skin here and the sentence carries the meaning. */
+.rayl-empty{
+  padding:48px;border-radius:var(--rayl-radius);
+  background:var(--surface-idle);color:var(--ink-disabled);
+  min-height:180px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:24px;
+}
+.rayl-empty .rayl-stack{align-items:center;}
+.rayl-empty .rayl-icon{width:24px;height:24px;}
+
+/* A CONTROL ON A PAPER SURFACE TAKES THE GROUND ONE RUNG OUT, not one in. The
+   popover and the empty panel are themselves surface/idle, and a Paper control
+   on a Paper card is not a control — there is no stroke to give it an edge, so
+   the only thing that can is a ground of its own. */
+.rayl-popover > .rayl-menu-opt,.rayl-popover > .rayl-btn,
+.rayl-empty > .rayl-btn{background:var(--surface-ground);}
+.rayl-popover > .rayl-menu-opt:hover:enabled,.rayl-popover > .rayl-btn:hover:enabled,
+.rayl-empty > .rayl-btn:hover:enabled{background:var(--surface-idle-hover);}
+
+/* ----------------------------------------------------------- the skeleton */
+/* Blocks at the height of the type they stand in for — 12 at its own 140%
+   leading — on the pressed ground, 12 apart. IT DOES NOT MOVE. A shimmer would
+   be a second movement, and what says a page is loading is the mark solving
+   itself; a skeleton only says where the type will land. */
+.rayl-skeleton{display:flex;flex-direction:column;gap:12px;}
+.rayl-skeleton-line{display:block;border-radius:4px;
+  height:calc(var(--rayl-size) * 1.4);
+  background:var(--surface-idle-pressed);}
 
 /* ========================================================== the container ===
  * How the board lays a document out, measured at 966:99.

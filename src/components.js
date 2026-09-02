@@ -416,18 +416,299 @@ function upgradeSeg(seg){
 
 
 /* ------------------------------------------------------------- the icons */
+function setIcon(span, name){
+  var d = ICONS[name];
+  if (d) span.innerHTML = '<svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">'+d+'</svg>';
+}
 function makeIcon(name){
   var span = document.createElement("span");
   span.className = "rayl-icon";
   span.setAttribute("aria-hidden","true");
-  var d = ICONS[name];
-  if (d) span.innerHTML = '<svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">'+d+'</svg>';
+  setIcon(span, name);
   return span;
 }
 function upgradeIcon(el){
   if (el.__rayl) return;
-  var d = ICONS[el.dataset.icon];
-  if (d) el.innerHTML = '<svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">'+d+'</svg>';
+  setIcon(el, el.dataset.icon);
   el.setAttribute("aria-hidden","true");
   el.__rayl = true;
+}
+
+
+/* ==================================================== ENTERABLE SURFACES == */
+/* The four that were one decision: a control that ACCEPTS input reads as
+   enterable through a change of ground alone. The field and the multi-line
+   field need no script at all — they are CSS on a native input — so what is
+   here is the three that have a state to keep and a movement to run. */
+
+/* ----------------------------------------------------------- the checkbox */
+/* A button that carries its own label, because the box and the word are one
+   target: clicking the word has to tick the box, and a label wired to an input
+   by id is a second thing to get wrong. ON is the ground; the mark inside is
+   the Plus glyph turned 45 degrees, which is what CSS does to it. */
+function upgradeCheck(box){
+  if (box.__rayl) return box.__rayl;
+  box.__rayl = true;
+  var label = box.dataset.label || box.textContent.trim();
+  box.textContent = "";
+  var square = document.createElement("span");
+  square.className = "rayl-check-box";
+  square.appendChild(makeIcon("Plus"));
+  box.appendChild(square);
+  if (label){
+    var word = document.createElement("span");
+    word.textContent = label;
+    box.appendChild(word);
+  }
+  box.setAttribute("role", "checkbox");
+  if (!box.hasAttribute("aria-checked")) box.setAttribute("aria-checked", "false");
+  if (box.disabled) return box;
+  box.addEventListener("click", function(){
+    var on = box.getAttribute("aria-checked") !== "true";
+    box.setAttribute("aria-checked", on ? "true" : "false");
+    box.dispatchEvent(new CustomEvent("rayl:change", {bubbles:true, detail:{checked:on}}));
+  });
+  return box;
+}
+
+/* ------------------------------------------------------------- the toggle */
+/* The word inside the track rolls while the knob travels — the same duration
+   and the same curve, so it is one movement and not two effects landing near
+   each other. data-on and data-off name the two states; they default to On and
+   Off and a control that means something else should say so. */
+function upgradeToggle(tog){
+  if (tog.__rayl) return tog.__rayl;
+  var on = tog.getAttribute("aria-checked") === "true";
+  var says = {on: tog.dataset.on || "On", off: tog.dataset.off || "Off"};
+  tog.textContent = "";
+  var word = document.createElement("span");
+  word.className = "rayl-toggle-word";
+  word.dataset.label = on ? says.on : says.off;
+  var knob = document.createElement("span");
+  knob.className = "rayl-toggle-knob";
+  tog.appendChild(word);
+  tog.appendChild(knob);
+  tog.__raylNamed = tog.hasAttribute("aria-label");
+  var r = new Roll(word, tog);
+  tog.__rayl = r;
+  tog.setAttribute("role", "switch");
+  tog.setAttribute("aria-checked", on ? "true" : "false");
+  if (tog.disabled) return r;
+  tog.addEventListener("click", function(){
+    var next = tog.getAttribute("aria-checked") !== "true";
+    tog.setAttribute("aria-checked", next ? "true" : "false");
+    r.to(next ? says.on : says.off);
+    tog.dispatchEvent(new CustomEvent("rayl:change", {bubbles:true, detail:{checked:next}}));
+  });
+  return r;
+}
+
+/* ------------------------------------------------------------- the select */
+/* Authored as nothing but its options. The closed control and the menu around
+   them are built here, for the same reason the option group builds its own
+   fill: the selection belongs to the component, and a host that has to keep
+   two elements in step will eventually not.
+
+   The value ROLLS when it changes. A select is a control whose label turns
+   over, which is the movement the system already has — there is no second one
+   for arriving in a list. */
+function upgradeSelect(sel){
+  if (sel.__rayl) return sel.__rayl;
+  sel.__rayl = true;
+  var opts = [].slice.call(sel.querySelectorAll(".rayl-menu-opt"));
+  var menu = document.createElement("div");
+  menu.className = "rayl-menu";
+  menu.setAttribute("role", "listbox");
+  opts.forEach(function(o){
+    menu.appendChild(o);
+    o.setAttribute("role", "option");
+    o.setAttribute("aria-selected", o.classList.contains("is-on") ? "true" : "false");
+    o.tabIndex = -1;
+  });
+
+  var face = document.createElement("button");
+  face.type = "button";
+  face.className = "rayl-select-face";
+  var host = document.createElement("span");
+  var chosen = sel.querySelector(".rayl-menu-opt.is-on");
+  host.dataset.label = sel.dataset.label ||
+                       (chosen ? chosen.textContent.trim() : (opts[0] ? opts[0].textContent.trim() : ""));
+  face.appendChild(host);
+  face.appendChild(makeIcon("Plus"));
+  sel.insertBefore(face, sel.firstChild);
+  sel.appendChild(menu);
+
+  face.__raylNamed = face.hasAttribute("aria-label");
+  var r = new Roll(host, face);
+  face.setAttribute("aria-haspopup", "listbox");
+  face.setAttribute("aria-expanded", "false");
+  sel.__rayl = r;
+
+  function open(next){
+    if (next === sel.classList.contains("is-open")) return;
+    sel.classList.toggle("is-open", next);
+    face.setAttribute("aria-expanded", next ? "true" : "false");
+    if (next){
+      var cur = sel.querySelector(".rayl-menu-opt.is-on") ||
+                sel.querySelector(".rayl-menu-opt:enabled");
+      if (cur) cur.focus();
+    }
+  }
+  function select(o){
+    if (!o || o.disabled) return;
+    opts.forEach(function(x){
+      x.classList.toggle("is-on", x === o);
+      x.setAttribute("aria-selected", x === o ? "true" : "false");
+    });
+    r.to(o.textContent.trim());
+    sel.dispatchEvent(new CustomEvent("rayl:change", {bubbles:true, detail:{
+      value: o.textContent.trim(), index: opts.indexOf(o), option: o}}));
+  }
+  sel.select = select;
+  sel.open = open;
+
+  if (face.disabled) return r;
+  face.addEventListener("click", function(){ open(!sel.classList.contains("is-open")); });
+  opts.forEach(function(o){
+    if (o.disabled) return;
+    o.addEventListener("click", function(){ select(o); open(false); face.focus(); });
+  });
+  /* one key list for the whole control: the arrows walk the options, Escape
+     puts the focus back where it came from, and nothing here traps a Tab */
+  sel.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && sel.classList.contains("is-open")){
+      e.preventDefault(); open(false); face.focus(); return;
+    }
+    var d = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
+    if (!d) return;
+    e.preventDefault();
+    if (!sel.classList.contains("is-open")){ open(true); return; }
+    var here = opts.indexOf(document.activeElement);
+    for (var n = 0; n < opts.length; n++){
+      here = (here + d + opts.length) % opts.length;
+      if (!opts[here].disabled){ opts[here].focus(); return; }
+    }
+  });
+  document.addEventListener("pointerdown", function(e){
+    if (!sel.contains(e.target)) open(false);
+  });
+  return r;
+}
+
+
+/* ================================================== SURFACES THAT ARRIVE == */
+
+/* ------------------------------------------------------------ the tooltip */
+/* data-tip on the thing it labels. It goes on the body rather than inside the
+   control, so a control that clips its own contents — every button in this
+   system does — cannot clip its own tooltip. It does not fade in: the system
+   has one movement and appearing is not it. */
+var tipN = 0;
+function upgradeTip(host){
+  if (host.__raylTip) return host.__raylTip;
+  var tip = document.createElement("span");
+  tip.className = "rayl-tip";
+  tip.id = "rayl-tip-" + (++tipN);
+  tip.setAttribute("role", "tooltip");
+  tip.textContent = host.dataset.tip;
+  tip.hidden = true;
+  document.body.appendChild(tip);
+  host.__raylTip = tip;
+  host.setAttribute("aria-describedby", tip.id);
+
+  function show(){
+    tip.hidden = false;
+    var h = host.getBoundingClientRect(), t = tip.getBoundingClientRect();
+    var x = h.left + h.width / 2 - t.width / 2 + window.scrollX;
+    var y = h.top - t.height - 6 + window.scrollY;      /* 6, a cluster's gap */
+    tip.style.left = Math.max(6, Math.round(x)) + "px";
+    tip.style.top = Math.round(y) + "px";
+  }
+  function hide(){ tip.hidden = true; }
+  host.addEventListener("pointerenter", show);
+  host.addEventListener("focus", show);
+  host.addEventListener("pointerleave", hide);
+  host.addEventListener("blur", hide);
+  return tip;
+}
+
+/* -------------------------------------------------------------- the modal */
+/* Native dialog, so the top layer, the focus trap and Escape are the
+   browser's. data-opens and data-closes name it by id, the way data-rolls
+   names a line. */
+function wireModals(root){
+  function wire(attr, act){
+    [].forEach.call(root.querySelectorAll("[" + attr + "]"), function(btn){
+      var key = "__rayl" + attr;
+      if (btn[key]) return;
+      btn[key] = true;
+      btn.addEventListener("click", function(){
+        var d = document.getElementById(btn.getAttribute(attr));
+        if (d && d[act]) d[act]();
+      });
+    });
+  }
+  wire("data-opens", "showModal");
+  wire("data-closes", "close");
+}
+
+
+/* ======================================================== PANELS AND LISTS = */
+
+/* --------------------------------------------------------------- the tabs */
+/* The bar IS the option group, so nothing is rewired here: the group owns the
+   selection and says so, and this only decides what that means. */
+function upgradeTabs(tabs){
+  if (tabs.__rayl) return tabs.__rayl;
+  tabs.__rayl = true;
+  var seg = tabs.querySelector(".rayl-seg");
+  var panels = [].slice.call(tabs.querySelectorAll(".rayl-panel"));
+  if (!seg || !panels.length) return tabs;
+  upgradeSeg(seg);
+  var opts = [].slice.call(seg.querySelectorAll(".rayl-seg-opt"));
+  function show(i){
+    panels.forEach(function(p, n){ p.hidden = n !== i; });
+  }
+  show(Math.max(0, opts.indexOf(seg.querySelector(".rayl-seg-opt.is-on"))));
+  seg.addEventListener("rayl:change", function(e){ show(e.detail.index); });
+  return tabs;
+}
+
+/* ------------------------------------------------- the collapsible section */
+/* Native details, so open, closed and the keyboard are the browser's. The one
+   thing added is the glyph: Plus when it is shut, Minus when it is open — the
+   pair the approved panel already draws on every section label. */
+function upgradeFold(fold){
+  if (fold.__rayl) return fold.__rayl;
+  fold.__rayl = true;
+  var sum = fold.querySelector("summary");
+  if (!sum) return fold;
+  var icon = sum.querySelector(".rayl-icon");
+  if (!icon){ icon = makeIcon("Plus"); sum.appendChild(icon); }
+  function mark(){ setIcon(icon, fold.open ? "Minus" : "Plus"); }
+  mark();
+  fold.addEventListener("toggle", mark);
+  return fold;
+}
+
+/* ----------------------------------------------------------- the skeleton */
+/* Blocks where the type will land, at the height the type will be. The widths
+   are the board's own four and they repeat: a skeleton that measured the text
+   it is standing in for would need the text, which is the thing that has not
+   arrived. It is hidden from the accessibility tree — there is nothing there
+   to read yet, and announcing four empty blocks is worse than silence. */
+var SKELETON = [100, 72, 86, 40];
+function upgradeSkeleton(sk){
+  if (sk.__rayl) return sk.__rayl;
+  sk.__rayl = true;
+  var n = parseInt(sk.dataset.lines, 10) || SKELETON.length;
+  sk.textContent = "";
+  for (var i = 0; i < n; i++){
+    var line = document.createElement("span");
+    line.className = "rayl-skeleton-line";
+    line.style.width = SKELETON[i % SKELETON.length] + "%";
+    sk.appendChild(line);
+  }
+  sk.setAttribute("aria-hidden", "true");
+  return sk;
 }

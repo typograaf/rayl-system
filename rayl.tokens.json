@@ -6,9 +6,27 @@
   "open": [
     {
       "name": "Enterable surfaces",
+      "status": "PROVISIONAL",
+      "what": "the field, the select, the checkbox, the toggle and the dialog that holds them",
+      "detail": "This was the largest open item in the system and it is answered: a control that ACCEPTS input reads as enterable through a change of ground alone — surface/idle at cap + 24, rounding 8, padding 12, and the focus ring as the one stroke. Every measurement is read off the UI Control Blanks boards and all of it ships, so build with it rather than inventing. It is PROVISIONAL and not a RULE because Martijn has drawn it and has not yet seen it rendered. Do not write it into a document as settled until he has."
+    },
+    {
+      "name": "Component states",
+      "status": "PROVISIONAL",
+      "what": "empty, error and skeleton now ship; loading was already the loading mark",
+      "detail": "rayl-empty is a panel with nothing in it and an error is the same panel with different words, because nothing in the palette means error. rayl-skeleton is blocks where type will land and it does not move. Hover, pressed, disabled and focus were always covered by the tokens, and a wait is still rayl-solve. These are drawn rather than decided, so they move with the enterable surfaces above."
+    },
+    {
+      "name": "A check glyph",
       "status": "OPEN",
-      "what": "text input, select, checkbox and toggle, and the modal that holds them",
-      "detail": "In a system with no strokes, a control that ACCEPTS input has to read as enterable through a change of ground alone. That is one decision and all four follow from it. Martijn is designing it. Until it lands there is no correct form in this system."
+      "what": "the eighteen icons have none, so a ticked box and a failed panel show the same mark",
+      "detail": "ON is carried by the ground — the box turns Bone the way every selected thing does — and the mark inside it is Plus turned 45 degrees, because that is the only glyph in the set that reads as a mark rather than an instruction. The empty panel's error twin shows the same glyph at 24. Two opposite meanings on one drawing is a real weakness and it wants either a nineteenth icon or a decision that the ground alone is enough. Do not draw a tick."
+    },
+    {
+      "name": "The scrim",
+      "status": "PROVISIONAL",
+      "what": "the page behind a dialog, dimmed 20%",
+      "detail": "20% is the figure on the board and it is what ships. The colour is the darkest ground the mode has — Black in light, Deep Black in dark — because a scrim is a shadow: taking ink/primary would flip it to White in dark mode and lighten the page instead of dimming it. Only the light value was drawn; the dark one follows from that reasoning and has not been looked at."
     },
     {
       "name": "Semantic colour",
@@ -45,12 +63,6 @@
       "status": "PROVISIONAL",
       "what": "every control rounds 8; the board's own ladder is 4, 12, 24",
       "detail": "8 is measured off the approved UI rather than the demo, and where the two disagree the UI wins. Worth confirming the ladder gains an 8."
-    },
-    {
-      "name": "Component states",
-      "status": "OPEN",
-      "what": "empty, error, skeleton",
-      "detail": "Hover, pressed, disabled and focus are covered by the tokens, and loading is now the loading mark, rayl-solve. These three are not covered, and a tool without them is a demo."
     },
     {
       "name": "The Rayl look",
@@ -473,6 +485,54 @@
         "property": "padding",
         "value": "48px",
         "what": "inside a rail"
+      },
+      {
+        "class": "rayl-modal",
+        "property": "padding",
+        "value": "48px",
+        "what": "inside a dialog"
+      },
+      {
+        "class": "rayl-popover",
+        "property": "padding",
+        "value": "12px",
+        "what": "inside a popover"
+      },
+      {
+        "class": "rayl-panel",
+        "property": "padding",
+        "value": "12px",
+        "what": "inside a panel"
+      },
+      {
+        "class": "rayl-menu",
+        "property": "padding",
+        "value": "6px",
+        "what": "inside a menu"
+      },
+      {
+        "class": "rayl-empty",
+        "property": "padding",
+        "value": "48px",
+        "what": "inside an empty panel"
+      },
+      {
+        "class": "rayl-tabs",
+        "property": "gap",
+        "value": "12px",
+        "what": "a bar and its panel"
+      },
+      {
+        "class": "rayl-fold",
+        "property": "gap",
+        "value": "12px",
+        "what": "a header and its body"
+      },
+      {
+        "class": "rayl-skeleton",
+        "property": "gap",
+        "value": "12px",
+        "what": "lines of a skeleton"
       }
     ],
     "figures": {
@@ -481,7 +541,11 @@
       "the document field": "1440",
       "the tool panel": "300, padding 48, groups 48 apart",
       "a reading measure": "62 characters",
-      "a showcase frame": "padding 144 — three times the ordinary 48"
+      "a showcase frame": "padding 144 — three times the ordinary 48",
+      "a dialog": "520, the panel column",
+      "a popover": "264",
+      "a toggle": "60 x 24, its knob 24 x 16",
+      "an empty panel": "180 tall"
     }
   },
   "radius": {
@@ -618,7 +682,28 @@
       "rayl-line": "a value on a line that rolls; data-label, data-swap",
       "rayl-icon": "an icon on its own; data-icon",
       "rayl-mark": "the logo mark, inline",
-      "rayl-solve": "the loading mark: data-size, data-play, data-ease and the timings"
+      "rayl-solve": "the loading mark: data-size, data-play, data-ease and the timings",
+      "rayl-btn is-strong": "the one high-emphasis button — a dialog's confirm"
+    },
+    "Enterable surfaces": {
+      "rayl-input": "the field; is-multi for a textarea",
+      "rayl-select": "the select — author the options, it builds the rest",
+      "rayl-menu": "a list of items on its own ground",
+      "rayl-menu-opt": "one item of it; is-on for the chosen one",
+      "rayl-check": "the checkbox, carrying its own label; is-small for 12",
+      "rayl-toggle": "the switch; data-on and data-off name its two states"
+    },
+    "Surfaces and panels": {
+      "rayl-modal": "a dialog; data-opens and data-closes name it by id",
+      "rayl-tip": "a tooltip — put data-tip on the thing it labels",
+      "rayl-popover": "a card that arrives: 264 across, padding 12",
+      "rayl-tabs": "a rayl-seg bar over rayl-panel panels",
+      "rayl-panel": "the panel under a bar, or under anything",
+      "rayl-fold": "a collapsible section: a details, and a body",
+      "rayl-fold-body": "what it holds",
+      "rayl-table": "a list of records; every other row is banded",
+      "rayl-empty": "a panel with nothing in it — and the error panel too",
+      "rayl-skeleton": "blocks where type will land; data-lines"
     },
     "Type": {
       "rayl-96": "96 / 110% / -4%",
@@ -652,40 +737,17 @@
     "rayl-seg-fill",
     "rayl-ibtn-body",
     "rayl-ibtn-dot",
-    "rayl-ibtn-icon"
+    "rayl-ibtn-icon",
+    "rayl-select-face",
+    "rayl-check-box",
+    "rayl-toggle-knob",
+    "rayl-toggle-word",
+    "rayl-skeleton-line"
   ],
   "missing": [
     {
-      "control": "text and number input",
-      "a brief will ask for": "any form, any name field, any numeric entry"
-    },
-    {
-      "control": "select",
-      "a brief will ask for": "a list too long for an option group"
-    },
-    {
-      "control": "checkbox and toggle",
-      "a brief will ask for": "a setting that is on or off on its own"
-    },
-    {
-      "control": "modal, sheet, drawer",
-      "a brief will ask for": "a confirm, an export dialog, a settings panel"
-    },
-    {
-      "control": "collapsible section",
-      "a brief will ask for": "the approved panel draws one — every section label carries a – and nothing implements it"
-    },
-    {
-      "control": "tooltip and popover",
-      "a brief will ask for": "a label on an icon button"
-    },
-    {
-      "control": "tabs",
-      "a brief will ask for": "more than one view in a panel"
-    },
-    {
-      "control": "table",
-      "a brief will ask for": "any list of records"
+      "control": "sheet and drawer",
+      "a brief will ask for": "a settings panel that comes in from an edge — the dialog ships, these do not"
     },
     {
       "control": "toast",
@@ -693,11 +755,11 @@
     },
     {
       "control": "progress",
-      "a brief will ask for": "an export, an upload, a render"
+      "a brief will ask for": "an export, an upload, a render — determinate, where the mark says nothing about how far"
     },
     {
-      "control": "menu",
-      "a brief will ask for": "a right-click or an overflow"
+      "control": "context menu",
+      "a brief will ask for": "a right-click or an overflow: rayl-menu is the list, nothing opens one at a pointer"
     },
     {
       "control": "badge, chip, tag",
