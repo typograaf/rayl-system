@@ -337,6 +337,17 @@
   height:var(--rayl-travel);
   transition:width var(--rayl-dur) var(--rayl-ease);}
 .rayl-strip{display:block;will-change:transform;}
+/* The sign and the point sit beside the columns and do not roll — a number
+   crossing zero has not counted round to its minus, and a decimal point does
+   not move at all. */
+.rayl-sign,.rayl-point{
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;flex:0 0 auto;height:var(--rayl-travel);
+  transition:width var(--rayl-dur) var(--rayl-ease);}
+/* Centred on the digits' own box rather than trimmed to a cap: a minus sits at
+   the middle of the em and a full stop at the bottom, so trimming either to a
+   cap height puts it where the letter would be instead of where the mark goes. */
+.rayl-sign > span,.rayl-point > span{display:block;line-height:1;text-box-trim:none;}
 .rayl-digit{display:flex;align-items:center;justify-content:center;
   height:var(--rayl-travel);}
 /* the glyph is centred on its cap box, not its em box — an em box reserves

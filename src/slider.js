@@ -73,14 +73,21 @@ function mountSlider(host){
   const path=document.createElementNS(NS,"path");
   svg.append(path); host.append(svg);
 
-  const snap=v=>clamp(Math.round((v-min)/step)*step+min,min,max);
-  const readout=()=>String(snap(shown));
+  /* Rounded to the precision the step can actually reach. Without it a step of
+     0.01 hands back 0.2699999999999999, which is the number float arithmetic
+     landed on rather than the one anybody chose. */
+  const snap=v=>{
+    const q=clamp(Math.round((v-min)/step)*step+min,min,max);
+    return Math.round(q*1e6)/1e6;
+  };
+  const dp=(()=>{const t=String(step),d=t.indexOf(".");return d<0?0:Math.min(3,t.length-d-1);})();
+  const readout=()=>snap(shown).toFixed(dp);
   /* the readout is a real element riding the nub — SVG text cannot carry a
      per-digit reel, and a number being dragged wants a reel, not a swap */
   const val=document.createElement("span");
   val.className="rayl-val";
   host.append(val);
-  const reel=new Reel(val,max);
+  const reel=new Reel(val,max,step,min);
   /* The same number, as a field. Read-only until a click without a drag asks
      for it, so the nub is a handle first and a text box only when told. */
   const type=document.createElement("input");

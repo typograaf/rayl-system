@@ -138,19 +138,43 @@ Roll.prototype.turn = function(){ this.to(this.showing, true); };
    dragging spins it; every column above it holds still until the one below is
    about to wrap, then carries over quickly — an odometer, so the number stays
    readable at speed instead of sitting between two digits. */
-function Reel(host, max){
+/* How many decimals a step asks for: 0.01 wants two, 0.5 wants one, 1 wants
+   none. Read off the step rather than guessed, so a control shows exactly the
+   precision it can actually reach. */
+function decimalsOf(step){
+  var t = String(step);
+  var dot = t.indexOf(".");
+  return dot < 0 ? 0 : Math.min(3, t.length - dot - 1);
+}
+
+function Reel(host, max, step, min){
   this.host = host;
   host.classList.add("rayl-reel");
   host.textContent = "";
-  this.places = String(Math.max(1, Math.round(max))).length;
+  this.dp = decimalsOf(step == null ? 1 : step);
+  var span = Math.max(Math.abs(max || 1), Math.abs(min || 0), 1);
+  this.places = String(Math.max(1, Math.floor(span))).length;
+  this.signed = (min != null && min < 0);
   var cs = getComputedStyle(host);
   var font = cs.fontStyle+" "+cs.fontWeight+" "+cs.fontSize+"/"+cs.fontSize+" "+cs.fontFamily;
   this.w = advance("0", font, cs.letterSpacing);
   this.cols = [];
-  for (var p = this.places - 1; p >= 0; p--){
+
+  /* A minus is not a digit and does not roll: it appears and goes, because a
+     number crossing zero has not counted round to its sign. */
+  if (this.signed){
+    this.sign = document.createElement("span");
+    this.sign.className = "rayl-sign";
+    this.sign.innerHTML = "<span>\u2212</span>";
+    host.appendChild(this.sign);
+    this.signW = advance("\u2212", font, cs.letterSpacing);
+  }
+
+  var self = this;
+  function column(place){
     var col = document.createElement("span");
     col.className = "rayl-col";
-    col.style.width = this.w + "px";
+    col.style.width = self.w + "px";
     var strip = document.createElement("span");
     strip.className = "rayl-strip";
     for (var d = 0; d <= 10; d++){          /* 0..9 then 0 again, so 9 wraps up */
@@ -164,22 +188,40 @@ function Reel(host, max){
     }
     col.appendChild(strip);
     host.appendChild(col);
-    this.cols.push({ el: col, strip: strip, place: p });
+    self.cols.push({ el: col, strip: strip, place: place });
+  }
+
+  for (var p = this.places - 1; p >= 0; p--) column(p);
+  if (this.dp){
+    var dot = document.createElement("span");
+    dot.className = "rayl-point";
+    dot.innerHTML = "<span>.</span>";
+    host.appendChild(dot);
+    this.dotW = advance(".", font, cs.letterSpacing);
+    for (var q = 1; q <= this.dp; q++) column(-q);
   }
 }
 Reel.prototype.set = function(v){
   var cell = parseFloat(getComputedStyle(this.host).getPropertyValue("--rayl-travel")) || 12;
-  v = Math.max(0, v);
+  var neg = v < 0;
+  var a = Math.abs(v);
+  if (this.sign) this.sign.style.width = (neg ? this.signW : 0) + "px";
   for (var i = 0; i < this.cols.length; i++){
     var c = this.cols[i];
     var unit = Math.pow(10, c.place);
-    var raw = v / unit;
-    var whole = Math.floor(raw);
+    var raw = a / unit;
+    var whole = Math.floor(raw + 1e-9);
     var frac = raw - whole;
-    /* the units column runs free; the rest only move as the one below wraps */
-    var pos = (whole % 10) + (c.place === 0 ? frac : (frac > 0.9 ? (frac - 0.9) / 0.1 : 0));
+    /* The lowest column runs free; every column above it holds still until the
+       one below is about to wrap. With decimals the lowest is the last one, not
+       the units — which is what keeps a hundredth spinning while the whole
+       number stands still. */
+    var lowest = -this.dp;
+    var pos = (whole % 10) + (c.place === lowest ? frac : (frac > 0.9 ? (frac - 0.9) / 0.1 : 0));
     c.strip.style.transform = "translateY(" + (-pos * cell) + "px)";
-    var needed = c.place === 0 || v >= unit;
+    /* A leading zero collapses; a decimal one never does, because 0.5 is not 5
+       and .50 is not a number anybody writes. */
+    var needed = c.place <= 0 || a >= unit;
     c.el.style.width = (needed ? this.w : 0) + "px";
   }
 };

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Mark Options, Closer</title>
-<script src="https://typograaf.github.io/rayl-system/rayl.js?v=93b16556"></script>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=fa54d23a"></script>
 <style>
   /* ====================================================== the folding mark ==
    * The same puzzle as the other one, drawn without a third dimension. A turn
@@ -499,17 +499,19 @@ function project(st, spin, v){
      * one, the piece behind it is next, and the ones coming back in grow as
      * they arrive — nothing matches until everything is home.               */
     if (v.fall && mine.length){
-      var edge = 0;
-      for (f=0;f<mine.length;f++){
-        var q = mine[f];
-        /* the drawing's own edge, not the tile it sits on — a piece standing
-           still already fills the square, and must not read as pushed out */
-        var uAcross = Math.abs(q.dir[0]) > 0.5;
-        var half = (across === uAcross) ? q.shape.w * q.sx / 2 : q.shape.h * q.sy / 2;
-        var reach = Math.abs(across ? q.x - 75 : q.y - 75) + half;
-        if (reach > edge) edge = reach;
-      }
-      var over = (edge - 75) / 32;
+      /* How far this piece reaches past the square, worked out from the piece
+         itself rather than from the faces that happen to be showing. A face
+         turning out of view is a step change; the piece's own reach is not, and
+         it is the same number whether one face is showing or two. That is the
+         difference between a falloff and a piece that pops when its partner
+         goes. It is nothing at all when the piece is home, because a shape at
+         rest reaches exactly to the edge of the square and no further. */
+      var row = across ? 0 : 1;
+      var wide = piece.long ? LONG/2 : SIDE/2;
+      var half = Math.abs(T[row*3])   * wide +
+                 Math.abs(T[row*3+1]) * SIDE/2 +
+                 Math.abs(T[row*3+2]) * SIDE/2;
+      var over = (Math.abs(across ? C[0] : C[1]) + half - 75) / 32;
       if (over > 0){
         if (over > 1) over = 1;
         if (v.curve) over = Math.pow(over, v.curve);

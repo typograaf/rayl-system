@@ -146,7 +146,7 @@ the other, so if a part is not in this table it is not in the system.
 | `rayl-12` | 12 / 140% / +2% |
 | `rayl-serif` | Concrette, on a size class from 24 up |
 
-Produced by `rayl.js` inside a component, never authored and never styled: `rayl-roll`, `rayl-ch`, `rayl-g`, `rayl-cur`, `rayl-nxt`, `rayl-type`, `rayl-reel`, `rayl-col`, `rayl-strip`, `rayl-digit`, `rayl-num`, `rayl-val`, `rayl-seg-fill`, `rayl-ibtn-body`, `rayl-ibtn-dot`, `rayl-ibtn-icon`.
+Produced by `rayl.js` inside a component, never authored and never styled: `rayl-roll`, `rayl-ch`, `rayl-g`, `rayl-cur`, `rayl-nxt`, `rayl-type`, `rayl-reel`, `rayl-col`, `rayl-strip`, `rayl-digit`, `rayl-num`, `rayl-val`, `rayl-sign`, `rayl-point`, `rayl-seg-fill`, `rayl-ibtn-body`, `rayl-ibtn-dot`, `rayl-ibtn-icon`.
 <!-- /generated:inventory -->
 
 Modifiers go on the class they belong to: `is-wide`, `is-lead`, `is-three`,
