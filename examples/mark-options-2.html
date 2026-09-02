@@ -77,18 +77,17 @@
 
   <section class="rayl-hero">
     <span class="rayl-label">The mark in motion</span>
-    <h1 class="rayl-72">A cell apart, whatever size it has got to.</h1>
-    <p class="rayl-18 rayl-measure">The spacing was the thing. A turn puts its four
-    pieces on a circle and shows you that circle from the side, so what you see of
-    their spacing is the projection of four equal arcs — it closes up and opens out as
-    the turn goes round, which is why they bunch. Sliding holds the pitch instead: the
-    four move along one line, always a cell apart, one cell per quarter turn, the far
-    one coming back round to the near side. Each piece still turns on its own centre,
-    which is what changes the shape it shows you and takes a bar round to its end, but
-    where it stands no longer comes from that turn. On top of that the size is read
-    off the position — full over the middle, gone by the edge — so the far piece
-    shrinks first and the one behind it shrinks as it reaches the same place. Spacing
-    is spacing at every moment, whatever size anything has got to.</p>
+    <h1 class="rayl-72">Pebble, with the spacing and the sizing fixed.</h1>
+    <p class="rayl-18 rayl-measure">Pebble was the one to keep, so this is Pebble with
+    the two things fixed and nothing else touched. <b>Spacing:</b> the pieces of a
+    turning lane now slide along one line, always a cell apart, one cell per quarter
+    turn — a turn puts them on a circle and shows you that circle from the side, so
+    what you saw of their spacing closed up and opened out as it went round.
+    <b>Size:</b> it is read off the position — full anywhere a piece could be at home,
+    falling away over the cell beyond that, and gone exactly where the next place
+    along would be. So the piece nearest the edge is the smallest, the one behind it
+    shrinks as it reaches the same place, and nothing matches until everything is
+    home. Both references are here unchanged to compare against.</p>
   </section>
 
   <section class="rayl-section">
@@ -514,6 +513,17 @@ function project(st, spin, v){
         dir: [uD[0]/lu, uD[1]/lu], up: [vD[0]/lv, vD[1]/lv]
       });
     }
+    /* A piece part way round shows two faces, and together they measure half
+       again as wide as the piece is. That is fine where the turn also closes
+       the spacing up to make room for it, but at a fixed pitch they run into
+       the pieces either side and everything fuses. So on a slide, only the face
+       most nearly square to you is drawn: one shape, never wider than its cell,
+       nothing to collide with and nothing to hide. */
+    if (v.slide && mine.length > 1){
+      var front = mine[0];
+      for (f=1;f<mine.length;f++) if (mine[f].z > front.z) front = mine[f];
+      mine = [front];
+    }
     /* ------------------------------------------------------- the falloff -- *
      * Size follows position, not time. A piece sitting over its own cell is
      * full size; the further a turn has pushed it past the edge of the square,
@@ -545,6 +555,17 @@ function project(st, spin, v){
         if (k2.shape.w * k2.sx >= v.floor && k2.shape.h * k2.sy >= v.floor) keep.push(k2);
       }
       mine = keep;
+    }
+    /* A piece part way round shows two faces, and together they measure half
+       again as wide as the piece is. That is fine where the turn also closes
+       the spacing up to make room for it, but at a fixed pitch they run into
+       the pieces either side and everything fuses. So on a slide, only the face
+       most nearly square to you is drawn: one shape, never wider than its cell,
+       nothing to collide with and nothing to hide. */
+    if (v.slide && mine.length > 1){
+      var front = mine[0];
+      for (f=1;f<mine.length;f++) if (mine[f].z > front.z) front = mine[f];
+      mine = [front];
     }
     /* ------------------------------------------------------- the falloff -- *
      * Last, and only a multiplier. How far this piece reaches past the square,
