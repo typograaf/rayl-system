@@ -180,6 +180,7 @@ the other, so if a part is not in this table it is not in the system.
 | `rayl-line` | a value on a line that rolls; data-label, data-swap |
 | `rayl-icon` | an icon on its own; data-icon |
 | `rayl-mark` | the logo mark, inline |
+| `rayl-solve` | the loading mark: data-size, data-play, data-ease and the timings |
 
 **Type**
 
@@ -194,13 +195,14 @@ the other, so if a part is not in this table it is not in the system.
 | `rayl-12` | 12 / 140% / +2% |
 | `rayl-serif` | Concrette, on a size class from 24 up |
 
-Produced by `rayl.js` inside a component, never authored and never styled: `rayl-roll`, `rayl-ch`, `rayl-g`, `rayl-cur`, `rayl-nxt`, `rayl-type`, `rayl-reel`, `rayl-col`, `rayl-strip`, `rayl-digit`, `rayl-num`, `rayl-val`, `rayl-sign`, `rayl-point`, `rayl-seg-fill`, `rayl-ibtn-body`, `rayl-ibtn-dot`, `rayl-ibtn-icon`.
+Produced by `rayl.js` inside a component, never authored and never styled: `rayl-solve-face`, `rayl-solve-tile`, `rayl-solve-art`, `rayl-roll`, `rayl-ch`, `rayl-g`, `rayl-cur`, `rayl-nxt`, `rayl-type`, `rayl-reel`, `rayl-col`, `rayl-strip`, `rayl-digit`, `rayl-num`, `rayl-val`, `rayl-sign`, `rayl-point`, `rayl-seg-fill`, `rayl-ibtn-body`, `rayl-ibtn-dot`, `rayl-ibtn-icon`.
 <!-- /generated:inventory -->
 
 Modifiers go on the class they belong to: `is-wide`, `is-lead`, `is-three`,
 `is-centred`, `is-ink`, `is-joined`, `is-tight`, `is-third`, `is-on`, `is-tall`,
 `is-square`. The rest — `is-rolled`, `is-instant`, `is-line`, `is-near`,
-`is-open` — are set by `rayl.js` while something is moving.
+`is-open`, and `is-landed`, `is-scrambling`, `is-solving`, `is-still` on the
+loading mark — are set by `rayl.js` while something is moving.
 
 A button's label is its own text; `data-label` is only needed when the label
 should differ from it. An active control takes `aria-pressed="true"`.
@@ -243,6 +245,18 @@ lockup gets **its own full height** on every side. Both scale with the logo, so
 there is nothing to recompute when it is placed larger or smaller.
 
 **Minimum size.** There is none.
+
+### The mark may move, in one place only
+
+**`rayl-solve` is the exception to everything below**, and it is the only one.
+The loading mark is a rebuilt mark — it has to be, or the pieces could not
+turn — and its solved state is the icon. Inside that component the mark may be
+rebuilt from its own geometry, and its parts may turn.
+
+Nowhere else. A static placement is always the file, never a redraw, and nothing
+outside `rayl-solve` rotates, turns or animates the mark. If you find yourself
+rebuilding the mark for any other reason, you are doing the thing this section
+forbids.
 
 ### Never
 
@@ -314,8 +328,9 @@ and the job resolves to a different step in each mode.
 | `ink/on-strong` | White | Soft Black | Text on one |
 <!-- /generated:tokens -->
 
-Four more are not on the approved frame and are explained where they are used:
-`--rayl-seg-press`, an unselected option cell being pressed (section 8), and the
+Five more are not on the approved frame and are explained where they are used:
+`--rayl-seg-press`, an unselected option cell being pressed (section 8);
+`--rayl-solve-ground`, what the loading mark is standing on (section 8); and the
 document grounds `--rayl-doc-ground`, `--rayl-doc-container` and
 `--rayl-doc-tag` (section 5).
 
@@ -865,6 +880,56 @@ wide the row gets.
 **The control reports what it holds.** `rayl:input` while it moves and
 `rayl:change` when it lands, both carrying `detail.value`. `el.value` reads it;
 `el.setValue(n)` moves the nub without an event.
+
+### The loading mark
+
+**When something is loading, this is what you show.** `rayl-solve`. Not a
+spinner, not a bar, not three dots, not a skeleton — the mark solves itself and
+lands on the icon, so a wait ends on the brand rather than on a shape borrowed
+from somewhere else.
+
+    <span class="rayl-solve" data-size="150" data-label="Loading"></span>
+
+It is a bandaged 2x2 whose solved state is the icon. The camera never moves —
+face-on is the only view the mark is allowed to be seen from — and nothing is
+shaded, so a mechanism that is genuinely three-dimensional arrives as flat
+drawing.
+
+**Tell it what it is standing on.** Every face carries an opaque tile in the
+ground colour, which is what keeps the mark solid and is why nothing ever fades.
+It assumes `surface/ground`. On any other ground, set `--rayl-solve-ground` to
+that token, or the tiles will show.
+
+**When the thing has loaded, call `el.solve()`.** It sends the mark home from
+wherever it is and fires `rayl:change` with `phase: "landed"`, so the wait ends
+on the mark instead of being cut off mid-turn. `el.play(false)` stops it where it
+stands, which is what you want only if the loader is being removed at the same
+moment.
+
+| attribute | what |
+|---|---|
+| `data-size` | px, default 150 |
+| `data-play="still"` | mount it solved and leave it there |
+| `data-label` | its accessible name; give a loader `"Loading"` |
+| `data-turn`, `data-gap`, `data-scramble`, `data-beat`, `data-think`, `data-hold` | the timings, in ms |
+| `data-ease` | the curve |
+
+| method | what |
+|---|---|
+| `el.play(false)` | stop it where it stands; `true` starts it again |
+| `el.scramble()` | throw it out and start over |
+| `el.solve()` | send it home from wherever it is |
+
+It reports itself with `rayl:change`, bubbling, carrying `detail.phase` —
+`landed`, `scrambling`, `solving` or `still` — and the same words appear on the
+root as `is-landed`, `is-scrambling`, `is-solving`, `is-still`. It stops drawing
+when it scrolls out of view, and under `prefers-reduced-motion` it sits solved
+and never moves: no fade standing in for the turn.
+
+**Its timings and its curve are not the system's**, and that is on the open list
+rather than buried here. Everything else in Rayl moves on 280ms and one curve;
+this runs at 480 on a curve of its own. Set the attributes above to put an
+instance back on the system's numbers.
 
 ### A row names its control in ordinary type
 

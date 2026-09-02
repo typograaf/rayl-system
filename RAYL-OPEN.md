@@ -53,9 +53,9 @@ It held when the page ran 72 and a band padded 48. The page runs 96 now and the 
 
 ## Component states
 
-**OPEN** — loading, empty, error, skeleton
+**OPEN** — empty, error, skeleton
 
-Hover, pressed, disabled and focus are covered by the tokens. These four are not, and a tool without them is a demo.
+Hover, pressed, disabled and focus are covered by the tokens, and loading is now the loading mark, rayl-solve. These three are not covered, and a tool without them is a demo.
 
 ## The Rayl look
 
@@ -92,6 +92,12 @@ It ships and it works. Either it joins the palette or dark mode grounds on a col
 **PROVISIONAL** — every control rounds 8; the board's own ladder is 4, 12, 24
 
 8 is measured off the approved UI rather than the demo, and where the two disagree the UI wins. Worth confirming the ladder gains an 8.
+
+## The loading mark's timing
+
+**PROVISIONAL** — rayl-solve runs on numbers and a curve that are not the system's
+
+A turn is 480ms with no beat between turns, a scramble turn 480ms, and it sits on the solved mark for 960ms — where the system's numbers are 280, 90, 220 and 2400. The curve is cubic-bezier(0.5, 0.14, 0.36, 0.79) where the system's one curve is cubic-bezier(0.65, 0, 0.35, 1). Every value was picked by Martijn on the bench, watching whole turns; no reason is recorded beyond that, and none is invented here. The component runs correctly on the system's numbers — set data-turn, data-gap, data-scramble, data-hold and data-ease to put any instance back on them. This is the second easing in the system, and the whole argument of section 7 is that there is one. It is on this list rather than hidden in a stylesheet.
 
 ## A colour change runs 120ms
 

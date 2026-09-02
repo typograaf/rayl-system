@@ -49,8 +49,8 @@
     {
       "name": "Component states",
       "status": "OPEN",
-      "what": "loading, empty, error, skeleton",
-      "detail": "Hover, pressed, disabled and focus are covered by the tokens. These four are not, and a tool without them is a demo."
+      "what": "empty, error, skeleton",
+      "detail": "Hover, pressed, disabled and focus are covered by the tokens, and loading is now the loading mark, rayl-solve. These three are not covered, and a tool without them is a demo."
     },
     {
       "name": "The Rayl look",
@@ -63,6 +63,12 @@
       "status": "OPEN",
       "what": "White #FFFFFF on the approved frame, Off White in the ink table",
       "detail": "One value, two approved sources. Ask before using either."
+    },
+    {
+      "name": "The loading mark's timing",
+      "status": "PROVISIONAL",
+      "what": "rayl-solve runs on numbers and a curve that are not the system's",
+      "detail": "A turn is 480ms with no beat between turns, a scramble turn 480ms, and it sits on the solved mark for 960ms — where the system's numbers are 280, 90, 220 and 2400. The curve is cubic-bezier(0.5, 0.14, 0.36, 0.79) where the system's one curve is cubic-bezier(0.65, 0, 0.35, 1). Every value was picked by Martijn on the bench, watching whole turns; no reason is recorded beyond that, and none is invented here. The component runs correctly on the system's numbers — set data-turn, data-gap, data-scramble, data-hold and data-ease to put any instance back on them. This is the second easing in the system, and the whole argument of section 7 is that there is one. It is on this list rather than hidden in a stylesheet."
     },
     {
       "name": "A colour change runs 120ms",
@@ -611,7 +617,8 @@
       "rayl-slider": "the track: data-min, data-max, data-val, data-step",
       "rayl-line": "a value on a line that rolls; data-label, data-swap",
       "rayl-icon": "an icon on its own; data-icon",
-      "rayl-mark": "the logo mark, inline"
+      "rayl-mark": "the logo mark, inline",
+      "rayl-solve": "the loading mark: data-size, data-play, data-ease and the timings"
     },
     "Type": {
       "rayl-96": "96 / 110% / -4%",
@@ -625,6 +632,9 @@
     }
   },
   "internal classes": [
+    "rayl-solve-face",
+    "rayl-solve-tile",
+    "rayl-solve-art",
     "rayl-roll",
     "rayl-ch",
     "rayl-g",

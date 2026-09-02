@@ -167,6 +167,24 @@ def controls_section():
                 frame("Six at once", f'<div class="rayl-stack">{sliders}</div>', "is-tall"))
     )
 
+def loading_section():
+    """The bench shows a part at the size it ships at, with nothing between the
+    label and the thing. A loader is the one part you have to watch, so it gets
+    a frame of its own with the phase named beside it."""
+    marks = ('<div class="rayl-grid">' + "".join(
+        f'<div class="rayl-stack rayl-gap-12">'
+        f'<span class="rayl-solve" data-size="{size}"{extra}></span>'
+        f'<span class="rayl-label">{name}</span></div>'
+        for name, size, extra in (("Running", 150, ""),
+                                  ("Still", 150, ' data-play="still"'),
+                                  ("At sixty", 60, ""))) + '</div>')
+    return chapter("Loading") + block(
+        rail("The mark solves itself",
+             "What Rayl shows while something is loading. Call solve() when the "
+             "thing has arrived and the wait ends on the mark."),
+        frame("At three sizes and stopped", marks, "is-tall"))
+
+
 def type_section():
     return chapter("Typography") + block(
         rail("The scale"),
@@ -350,6 +368,7 @@ INVENTORY = [
   ("rayl-line",       "a value on a line that rolls; data-label, data-swap"),
   ("rayl-icon",       "an icon on its own; data-icon"),
   ("rayl-mark",       "the logo mark, inline"),
+  ("rayl-solve",      "the loading mark: data-size, data-play, data-ease and the timings"),
  ]),
  ("Type", [
   ("rayl-96",  "96 / 110% / -4%"), ("rayl-72", "72 / 110% / -3%"),
@@ -361,7 +380,7 @@ INVENTORY = [
 ]
 
 # Produced by rayl.js inside a component. Never authored, never styled.
-INTERNAL = ["rayl-roll", "rayl-ch", "rayl-g", "rayl-cur", "rayl-nxt", "rayl-type",
+INTERNAL = ["rayl-solve-face", "rayl-solve-tile", "rayl-solve-art", "rayl-roll", "rayl-ch", "rayl-g", "rayl-cur", "rayl-nxt", "rayl-type",
             "rayl-reel", "rayl-col", "rayl-strip", "rayl-digit", "rayl-num",
             "rayl-val", "rayl-sign", "rayl-point", "rayl-seg-fill", "rayl-ibtn-body", "rayl-ibtn-dot",
             "rayl-ibtn-icon"]
@@ -492,9 +511,10 @@ OPEN = [
   "disagree the UI wins. Worth confirming the ladder gains an 8."),
 
  ("Component states", "OPEN",
-  "loading, empty, error, skeleton",
-  "Hover, pressed, disabled and focus are covered by the tokens. These four "
-  "are not, and a tool without them is a demo."),
+  "empty, error, skeleton",
+  "Hover, pressed, disabled and focus are covered by the tokens, and loading "
+  "is now the loading mark, rayl-solve. These three are not covered, and a "
+  "tool without them is a demo."),
 
  ("The Rayl look", "OPEN",
   "the layered gradient treatment, and the largest single gap in the system",
@@ -507,6 +527,19 @@ OPEN = [
  ("The reveal button's label", "OPEN",
   "White #FFFFFF on the approved frame, Off White in the ink table",
   "One value, two approved sources. Ask before using either."),
+
+ ("The loading mark's timing", "PROVISIONAL",
+  "rayl-solve runs on numbers and a curve that are not the system's",
+  "A turn is 480ms with no beat between turns, a scramble turn 480ms, and it "
+  "sits on the solved mark for 960ms — where the system's numbers are 280, 90, "
+  "220 and 2400. The curve is cubic-bezier(0.5, 0.14, 0.36, 0.79) where the "
+  "system's one curve is cubic-bezier(0.65, 0, 0.35, 1). Every value was picked "
+  "by Martijn on the bench, watching whole turns; no reason is recorded beyond "
+  "that, and none is invented here. The component runs correctly on the "
+  "system's numbers — set data-turn, data-gap, data-scramble, data-hold and "
+  "data-ease to put any instance back on them. This is the second easing in the "
+  "system, and the whole argument of section 7 is that there is one. It is on "
+  "this list rather than hidden in a stylesheet."),
 
  ("A colour change runs 120ms", "PROVISIONAL",
   "the ground under a button moves at 120ms ease-out, not on the system's curve",

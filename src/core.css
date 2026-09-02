@@ -651,3 +651,24 @@ body.rayl strong,body.rayl b,.rayl-page strong,.rayl-page b{font-weight:inherit;
 
 .rayl-mark{display:block;width:32px;height:auto;}
 .rayl-mark path{fill:var(--ink-primary);}
+
+/* ================================================= THE LOADING MARK ==
+ * Three rules, two of them a token. Adopted from examples/rayl-solve.html.
+ * ======================================================================= */
+/* ------------------------------------------------------- the component -- *
+ * Three rules. The art is ink, the tile behind each face is the ground the
+ * mark is standing on, and the box does not clip: a layer swings outside its
+ * own square on the way round.
+ *
+ * The tile is what keeps the mark opaque. Every face carries the ground with
+ * it, so the inside of the solid never shows through and nothing ever fades.
+ * That means the component has to be told what it is standing on when it is
+ * not standing on the page ground.                                          */
+.rayl-solve{ --rayl-solve-ground:var(--surface-ground);
+  display:block; overflow:visible; }
+/* The drawing is a block, not a word. Left inline it sits on a baseline that
+   the cap-height trim has already moved, and the mark ends up a hundred and
+   forty pixels above its own box. */
+.rayl-solve svg{ display:block; overflow:visible; }
+.rayl-solve-tile{ fill:var(--rayl-solve-ground); }
+.rayl-solve-art { fill:var(--ink-primary); }

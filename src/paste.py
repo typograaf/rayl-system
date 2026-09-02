@@ -43,6 +43,16 @@ def gap_meanings():
     return "; ".join(f"{n} {what}" for n, what in GAP_MEANING if what != "—")
 
 
+def states():
+    """What is still undefined, straight off the open list, so this sentence
+    cannot go on claiming loading is missing after it stopped being."""
+    for name, _, what, _ in OPEN:
+        if name == "Component states":
+            parts = [w.strip() for w in what.split(",")]
+            return ", ".join(parts[:-1]) + " or " + parts[-1]
+    return "empty or error"
+
+
 def open_lines():
     return "\n".join(
         f"  - {name} — {what}" for name, status, what, _ in OPEN if status == "OPEN")
@@ -52,7 +62,7 @@ BLOCK = f"""Build this to the Rayl design system.
 
 Include one file. It carries the colour tokens, the type scale, the page ground
 and rhythm, the layout primitives, the button, the reveal button, the option
-group, the slider, the rolling line and the icons:
+group, the slider, the rolling line, the loading mark and the icons:
 
 <script src="{HUB}/rayl.js"></script>
 
@@ -130,6 +140,12 @@ rayl-frame-tag. Give every frame far more room than its content needs; that air
 is the whole look. Name the thing and show it — never write a paragraph
 explaining it.
 
+WHILE SOMETHING IS LOADING, show the mark solving itself — not a spinner, not a
+bar, not three dots: <span class="rayl-solve" data-size="150" data-label="Loading"></span>
+Call el.solve() when the thing has arrived, so the wait ends on the mark rather
+than being cut off. On any ground other than surface/ground, set
+--rayl-solve-ground to that token or its tiles will show.
+
 CONTROLS. An active control takes aria-pressed="true". Where exactly one of a
 set is on, use rayl-seg with rayl-seg-opt cells and put is-on on the one that
 is — the group owns the selection, so never wire that up yourself. Cells are
@@ -178,8 +194,8 @@ do not substitute something that looks close. The open list is
 
 {open_lines()}
 
-The system also has no {", ".join(m for m, _ in MISSING[:4])}, and no loading,
-empty or error state. If the brief needs one:
+The system also has no {", ".join(m for m, _ in MISSING[:4])}, and no {states()}
+state. If the brief needs one:
 
   1. Say which part is missing, in one line, before anything else.
   2. If you cannot stop and ask, build it — but mark every invented part with a

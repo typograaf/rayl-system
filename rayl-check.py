@@ -50,17 +50,24 @@ def load_inventory():
         return set(BAKED_CLASSES)
 
 
-BAKED_CLASSES = """rayl rayl-page rayl-section rayl-stack rayl-cluster rayl-grid
-rayl-head rayl-card rayl-row rayl-row-name rayl-label rayl-hint rayl-gap-6
-rayl-gap-12 rayl-gap-24 rayl-gap-36 rayl-gap-48 rayl-gap-60 rayl-gap-72
-rayl-hero rayl-band rayl-split rayl-measure rayl-media rayl-doc rayl-doc-page
-rayl-chapter rayl-block rayl-rail rayl-rail-foot rayl-field rayl-field-row
-rayl-frame rayl-frame-tag rayl-container rayl-btn rayl-ibtn rayl-seg
-rayl-seg-opt rayl-seg-name rayl-slider rayl-line rayl-icon rayl-mark rayl-96
-rayl-72 rayl-48 rayl-36 rayl-24 rayl-18 rayl-12 rayl-serif rayl-roll rayl-ch
-rayl-g rayl-cur rayl-nxt rayl-type rayl-reel rayl-col rayl-strip rayl-digit
-rayl-num rayl-val rayl-sign rayl-point rayl-seg-fill rayl-ibtn-body
-rayl-ibtn-dot rayl-ibtn-icon""".split()
+# generated:classes — build.py writes this list when it copies this file to
+# rayl-check.py, so the published checker cannot fall behind the system.
+# Run from src/ it imports parts.py instead and this is never used.
+BAKED_CLASSES = """
+rayl rayl-12 rayl-18 rayl-24 rayl-36 rayl-48 rayl-72 rayl-96 rayl-band
+rayl-block rayl-btn rayl-card rayl-ch rayl-chapter rayl-cluster rayl-col
+rayl-container rayl-cur rayl-digit rayl-doc rayl-doc-page rayl-field
+rayl-field-row rayl-frame rayl-frame-tag rayl-g rayl-gap-12 rayl-gap-24
+rayl-gap-36 rayl-gap-48 rayl-gap-6 rayl-gap-60 rayl-gap-72 rayl-grid
+rayl-head rayl-hero rayl-hint rayl-ibtn rayl-ibtn-body rayl-ibtn-dot
+rayl-ibtn-icon rayl-icon rayl-label rayl-line rayl-mark rayl-measure
+rayl-media rayl-num rayl-nxt rayl-page rayl-point rayl-rail rayl-rail-foot
+rayl-reel rayl-roll rayl-row rayl-row-name rayl-section rayl-seg
+rayl-seg-fill rayl-seg-name rayl-seg-opt rayl-serif rayl-sign rayl-slider
+rayl-solve rayl-solve-art rayl-solve-face rayl-solve-tile rayl-split
+rayl-stack rayl-strip rayl-type rayl-val
+""".split()
+# /generated:classes
 
 KNOWN = load_inventory()
 

@@ -14,6 +14,7 @@ HUB  = "https://typograaf.github.io/rayl-system"
 css   = (SRC / "core.css").read_text()
 comp  = (SRC / "components.js").read_text()
 slid  = (SRC / "slider.js").read_text()
+solv  = (SRC / "solve.js").read_text()
 icons = json.loads((SRC / "icons.json").read_text())
 names = ", ".join(sorted(icons))
 
@@ -65,6 +66,8 @@ if(!document.getElementById("rayl-style")){
 
 %s
 
+%s
+
 function init(root){
   root=root||document;
   [].forEach.call(root.querySelectorAll(".rayl-btn"),upgradeButton);
@@ -74,6 +77,7 @@ function init(root){
   wireRolls(root);
   [].forEach.call(root.querySelectorAll(".rayl-icon[data-icon]"),upgradeIcon);
   [].forEach.call(root.querySelectorAll(".rayl-slider"),mountSlider);
+  [].forEach.call(root.querySelectorAll(".rayl-solve"),raylSolve);
 }
 if(document.readyState==="loading")
   document.addEventListener("DOMContentLoaded",function(){init();});
@@ -84,11 +88,12 @@ else init();
    element keeps its own colours; only the movement comes from here. */
 window.Rayl={init:init, icons:Object.keys(ICONS), upgrade:{
   button:upgradeButton, revealButton:upgradeIconButton, group:upgradeSeg,
-  line:upgradeLine, slider:mountSlider, icon:upgradeIcon}};
+  line:upgradeLine, slider:mountSlider, icon:upgradeIcon,
+  solve:raylSolve}};
 })();
 ''' % (json.dumps(icons, separators=(",", ":")),
        json.dumps(css.replace("HUB", HUB)),
-       comp, slid)
+       comp, slid, solv)
 
 (ROOT / "rayl.js").write_text(header + body)
 print("rayl.js", len(header + body), "bytes")
@@ -113,8 +118,26 @@ run("paste.py")
 # the values, for anything that cannot include this file
 run("tokens.py")
 
-# the checker, published at the root so it can be fetched on its own
-shutil.copy(SRC / "check.py", ROOT / "rayl-check.py")
+# The checker, published at the root so it can be fetched on its own. Fetched
+# alone it has no parts.py to import, so the class list is written into it here
+# rather than kept by hand — the hand-kept one went stale the first time a
+# component was added.
+import textwrap
+sys.path.insert(0, str(SRC))
+from parts import INVENTORY as _INV, INTERNAL as _INT
+_classes = ["rayl"] + sorted({c.split()[0] for _, items in _INV for c, _ in items}
+                             | set(_INT))
+_check = (SRC / "check.py").read_text()
+_open, _shut = 'BAKED_CLASSES = """', '""".split()'
+if _open not in _check:
+    raise SystemExit("src/check.py has no BAKED_CLASSES block to fill in")
+_a = _check.index(_open) + len(_open)
+_b = _check.index(_shut, _a)
+# break_on_hyphens would split rayl-container into "rayl-" and "container",
+# and .split() would then believe both were class names
+_check = _check[:_a] + "\n" + textwrap.fill(" ".join(_classes), 76,
+    break_on_hyphens=False, break_long_words=False) + "\n" + _check[_b:]
+(ROOT / "rayl-check.py").write_text(_check)
 print("rayl-check.py", (ROOT / "rayl-check.py").stat().st_size, "bytes")
 
 # the two generated documents, which must exist before the artifact build reads

@@ -24,7 +24,7 @@ CSS   = (ROOT / "src/core.css").read_text()
 # every source that can make a class real: a stylesheet rule, a component that
 # builds one, or the upgrade list in build.py that finds it in the markup
 JS    = "".join((ROOT / "src" / f).read_text()
-                for f in ("components.js", "slider.js", "build.py"))
+                for f in ("components.js", "slider.js", "solve.js", "build.py"))
 HUB   = "https://typograaf.github.io/rayl-system"
 
 
