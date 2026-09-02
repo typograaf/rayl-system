@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Mark Options, Closer</title>
-<script src="https://typograaf.github.io/rayl-system/rayl.js?v=fa54d23a"></script>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=1e165025"></script>
 <style>
   /* ====================================================== the folding mark ==
    * The same puzzle as the other one, drawn without a third dimension. A turn
@@ -77,18 +77,18 @@
 
   <section class="rayl-hero">
     <span class="rayl-label">The mark in motion</span>
-    <h1 class="rayl-72">Smaller the further out it has gone.</h1>
-    <p class="rayl-18 rayl-measure">Of <a href="mark-options.html">the first ten</a>,
-    Floor and Pebble were the two worth keeping. What both were missing is a falloff.
-    So there is now a field standing still in the square: full size over the middle,
-    smaller the further out a thing stands, nothing at all where a piece is at home.
-    Size depends on where a thing is and on nothing else. A piece moving out shrinks
-    as it goes and the piece behind it shrinks when it reaches the same place, which
-    is the stagger — it falls out of the spacing rather than being added to it.
-    Nothing moves any differently and nothing leaves any later: the gaps between the
-    pieces are the same as they ever were, whatever size the pieces have got to.
-    Below, Floor and Pebble as they were, then each of them in the field at two
-    strengths and on a curve.</p>
+    <h1 class="rayl-72">A cell apart, whatever size it has got to.</h1>
+    <p class="rayl-18 rayl-measure">The spacing was the thing. A turn puts its four
+    pieces on a circle and shows you that circle from the side, so what you see of
+    their spacing is the projection of four equal arcs — it closes up and opens out as
+    the turn goes round, which is why they bunch. Sliding holds the pitch instead: the
+    four move along one line, always a cell apart, one cell per quarter turn, the far
+    one coming back round to the near side. Each piece still turns on its own centre,
+    which is what changes the shape it shows you and takes a bar round to its end, but
+    where it stands no longer comes from that turn. On top of that the size is read
+    off the position — full over the middle, gone by the edge — so the far piece
+    shrinks first and the one behind it shrinks as it reaches the same place. Spacing
+    is spacing at every moment, whatever size anything has got to.</p>
   </section>
 
   <section class="rayl-section">
@@ -404,22 +404,23 @@ var LAP = 2, GAP = 12;
 
 var VARIANTS = [
   {key:"floor",  name:"Floor", floor:9,
-   note:"Where we left it, for comparison. The two on their way out are the same size the whole way."},
-  {key:"fall1",  name:"Floor, falling", floor:9, fall:0.22,
-   note:"In the field, gently. The piece furthest out is the smallest, the one behind it shrinks as it reaches the same place, and the spacing between them never changes."},
-  {key:"fall2",  name:"Floor, falling far", floor:9, fall:0.42,
-   note:"The same field, deeper: down to well under two thirds at the far edge."},
-  {key:"fall3",  name:"Floor, falling late", floor:9, fall:0.42, curve:2.2,
-   note:"The same field on a curve: full size while a piece is still over the square, and most of the falling off once it is properly out."},
+   note:"Where we left it, for comparison. The pieces stand where the turn puts them, so their spacing closes up and opens out as it goes round."},
   {key:"pebble", name:"Pebble", pebble:0.34,
-   note:"Where we left it, for comparison. Thin faces round off, but again both at once."},
-  {key:"fall4",  name:"Pebble, falling", pebble:0.34, fall:0.22,
-   note:"The falloff with the rounding: it shrinks as it travels out, and rounds off once the face itself has gone thin."},
-  {key:"fall5",  name:"Pebble, falling far", pebble:0.34, fall:0.42,
-   note:"The same, further."},
-  {key:"fall6",  name:"Pebble, falling late", pebble:0.34, fall:0.42, curve:2.2,
-   note:"The same, on a curve."}
+   note:"The other one worth keeping, and the same spacing as above."},
+  {key:"slide",  name:"Sliding", slide:true, fall:1,
+   note:"A cell apart the whole way and a cell along per quarter turn, with the size read off the position: full over the middle, gone by the edge. The far piece shrinks first, the one behind it as it reaches the same place."},
+  {key:"late",   name:"Sliding, late", slide:true, fall:1, curve:2,
+   note:"The same, holding its size while it is still over the square and losing it once it is properly out."},
+  {key:"early",  name:"Sliding, early", slide:true, fall:1, curve:0.6,
+   note:"The same, letting go sooner, so the difference between the pieces shows up earlier in the turn."},
+  {key:"sround", name:"Sliding, rounded", slide:true, fall:1, curve:1.4, pebble:0.34,
+   note:"Sliding, with the rounding on the faces that have gone thin."},
+  {key:"sfloor", name:"Sliding, floored", slide:true, fall:1, curve:1.4, floor:9,
+   note:"Sliding, with the floor under the faces that have gone thin."},
+  {key:"place",  name:"Falling in place", floor:9, fall:0.42,
+   note:"The last attempt, kept to compare: the size falls off the same way, but the pieces still stand where the turn puts them rather than a cell apart."}
 ];
+
 
 
 
@@ -466,6 +467,34 @@ function project(st, spin, v){
     var T = moving ? mul(R, M) : M;
     var C = [c[0]*HALF, c[1]*HALF, c[2]*HALF];
     if (moving) C = turn(R, C);
+    /* ------------------------------------------------- where a piece sits -- *
+     * A turn puts its four pieces on a circle and shows you that circle from
+     * the side, so their spacing is the projection of four equal arcs: it
+     * closes up and opens out as the turn goes round. That is why they bunch.
+     *
+     * Sliding instead holds the pitch: the four move along one line, always a
+     * cell apart, one cell per quarter turn, the far one coming back round to
+     * the near side. The piece still turns on its own centre — that is what
+     * changes the shape it shows you and takes a bar round to its end — but
+     * where it stands no longer comes from that turn. Spacing is spacing at
+     * every moment, whatever size anything has got to.                      */
+    var slid = 0, ran = false;
+    if (moving && v.slide && mv.axis !== 2){
+      var lane = mv.axis === 1 ? 0 : 1;              /* across, or up and down */
+      var cs = cells(st, i), ring = 0;
+      for (var q=0;q<cs.length;q++){
+        var one = cs[q], side = one[lane] < 0, front = one[2] > 0;
+        ring += side ? (front ? 1 : 0) : (front ? 2 : 3);
+      }
+      ring = ring / cs.length;
+      var way = mv.axis === 1 ? 1 : -1;
+      var step = ring - 1.5 + way * (base / 90);
+      while (step >= 2) step -= 4;
+      while (step < -2) step += 4;
+      slid = step * CELL;
+      C[lane] = slid;
+      ran = true;
+    }
     var h = [piece.long ? CELL : HALF, HALF, HALF];
     var mine = [], f;
     for (f=0;f<6;f++){
@@ -542,8 +571,13 @@ function project(st, spin, v){
         reach[ax] = Math.abs(T[ax*3])   * wide +
                     Math.abs(T[ax*3+1]) * SIDE/2 +
                     Math.abs(T[ax*3+2]) * SIDE/2;
-      var out1 = (Math.abs(C[0]) + reach[0] - 75) / 32;
-      var out2 = (Math.abs(C[1]) + reach[1] - 75) / 32;
+      /* A sliding piece has to be gone by the time it reaches the far side,
+         or it would still be there when it comes back round the other one.
+         So its field runs out over its own width: full while its leading edge
+         is still inside the square, nothing once its trailing edge has left. */
+      var span0 = v.slide ? 2 * reach[0] : 32, span1 = v.slide ? 2 * reach[1] : 32;
+      var out1 = (Math.abs(C[0]) + reach[0] - 75) / span0;
+      var out2 = (Math.abs(C[1]) + reach[1] - 75) / span1;
       var over = out1 > out2 ? out1 : out2;
       if (over > 0){
         if (over > 1) over = 1;
@@ -552,7 +586,10 @@ function project(st, spin, v){
            the back of the cube, and they have to keep meeting edge to edge.
            The piece does not move either — the spacing is the spacing. */
         var small = 1 - v.fall * over;
-        for (f=0;f<mine.length;f++){ mine[f].sx *= small; mine[f].sy *= small; }
+        /* once it has gone, it is gone: a piece kept on at no size still
+           carries its ground tile, and that tile goes on painting */
+        if (small < 0.02) mine.length = 0;
+        else for (f=0;f<mine.length;f++){ mine[f].sx *= small; mine[f].sy *= small; }
       }
     }
     for (f=0;f<mine.length;f++) out.push(mine[f]);
@@ -593,7 +630,9 @@ function paint(inst, st, spin){
   }
   inst.fit.setAttribute("transform", room > 1.001
     ? "translate(75 75) scale(" + num(1/room) + ") translate(-75 -75)" : "");
-  inst.host.classList.toggle("is-locked", HELD === 2);
+  /* a sliding piece travels a whole cell past the square before it is gone,
+     and takes its ground with it, so that version keeps to its own box */
+  inst.host.classList.toggle("is-locked", HELD === 2 || !!v.slide);
   for (i=0; i<inst.cells.length; i++){
     var cell = inst.cells[i];
     if (i >= faces.length){ cell.g.setAttribute("display", "none"); continue; }
