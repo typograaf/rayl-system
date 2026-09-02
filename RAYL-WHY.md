@@ -220,6 +220,22 @@ Inside an app column nothing currently uses it.
 
 ## Motion
 
+### Why hover stopped turning labels
+
+It used to. A button rolled its label over into itself as the pointer arrived,
+and the argument was that this made the button read as a material that can turn
+rather than as a message that has arrived. That argument was about one button
+being looked at.
+
+In a panel the pointer crosses a dozen controls to reach the one it wants, and
+every crossing turned a label. The movement stopped meaning anything, because
+the thing it means — something happened — had not. The ground change already
+says which control is under the pointer, and it says it without moving.
+
+So the turn belongs to the click, and to any text that changes on its own. The
+shipped app reached the same conclusion independently, in `rayl-stack`: nothing
+turns on hover, the turn belongs to the click.
+
 ### Why the roll and nothing else
 
 Three builds each had their own easing file and none of them shared a name or a

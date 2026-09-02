@@ -275,14 +275,16 @@ Reel.prototype.set = function(v){
   }
 };
 
-/* WHEN a label rolls is the control's to choose, not a constant.
-     hover  the label turns as the pointer arrives — the default, and what makes
-            a button read as a material that can turn
-     press  it turns when the button is clicked, and not before. For a panel
-            where the pointer crosses a dozen controls on the way to one, a turn
-            on every crossing is noise; the colour is enough to say "this one".
+/* WHEN a label rolls, and it is not hover.
+     press  it turns when the button is clicked. The default and very nearly the
+            only answer: the movement means something happened, and crossing a
+            control on the way to another one is not something happening.
      none   never on its own. The host calls turn() when its own state says so —
-            an option group whose selection is decided elsewhere. */
+            an option group whose selection is decided elsewhere.
+   A turn used to fire on pointerenter and on focus. In a panel the pointer
+   crosses a dozen controls to reach one and every crossing turned a label, so
+   the movement stopped meaning anything; the ground change already says which
+   control is under the pointer. */
 function upgradeButton(btn, opts){
   if (btn.__rayl) return btn.__rayl;
   var host = document.createElement("span");
@@ -296,13 +298,8 @@ function upgradeButton(btn, opts){
   var r = new Roll(host, btn);
   btn.__rayl = r;
   if (btn.disabled) return r;
-  var when = (opts && opts.roll) || btn.dataset.roll || "hover";
-  if (when === "hover"){
-    btn.addEventListener("pointerenter", function(){ r.turn(); });
-    btn.addEventListener("focus", function(){ r.turn(); });
-  } else if (when === "press"){
-    btn.addEventListener("click", function(){ r.turn(); });
-  }
+  var when = (opts && opts.roll) || btn.dataset.roll || "press";
+  if (when === "press") btn.addEventListener("click", function(){ r.turn(); });
   if (btn.dataset.swap) btn.addEventListener("click", function(){
     if (r.busy) return;
     var back = r.showing === r.text;
@@ -351,8 +348,9 @@ function upgradeIconButton(btn){
   });
 
   if (btn.disabled) return r;
-  btn.addEventListener("pointerenter", function(){ r.turn(); });
-  btn.addEventListener("focus", function(){ r.turn(); });
+  /* The body divides and the icon rides up on hover — neither is text. The
+     label turns on the click, like every other label. */
+  btn.addEventListener("click", function(){ r.turn(); });
   return r;
 }
 
@@ -446,7 +444,6 @@ function upgradeSeg(seg){
 
   opts.forEach(function(o){
     if (o.disabled) return;
-    o.addEventListener("pointerenter", function(){ o.__roll.turn(); });
     o.addEventListener("click", function(){ select(o); });
     o.addEventListener("keydown", function(e){
       var d = (e.key === "ArrowRight" || e.key === "ArrowDown") ?  1

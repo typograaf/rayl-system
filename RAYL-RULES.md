@@ -726,10 +726,9 @@ A roll takes `duration + (characters - 1) x stagger`. The stagger holds at 20ms
 while that fits inside 400ms and compresses beyond it, so a long label arrives
 with the button rather than long after it.
 
-Only characters that actually change roll. A button hovering rolls its whole
-label — that is the effect — but a label going from one word to a similar one
-moves only what differs. `turn()` forces every character; `to()` moves what
-changed.
+Only characters that actually change roll. A label going from one word to a
+similar one moves only what differs. `turn()` forces every character; `to()`
+moves what changed.
 
 ### The travel is the clip, not a value
 
@@ -753,10 +752,15 @@ curve as the turn it belongs to. Skip it and the whole label jumps at the end.
 
 ### When it rolls
 
+**Hover does not roll anything.** The movement means something happened, and
+crossing a control on the way to another one is not something happening. In a
+panel the pointer passes a dozen controls to reach one; a turn on every crossing
+is noise, and the ground change already says which one is under the pointer.
+
 | trigger | what happens |
 |---|---|
-| hover | the label rolls over into itself — the same word on the far side |
-| press | the label rolls into the next word: Copy into Copied |
+| hover | nothing turns. The ground steps one rung, and that is all |
+| click | the label rolls — into itself, or into the next word: Copy into Copied |
 | a value changing | a line rolls into its new value with no interaction at all |
 | disabled | never rolls |
 | `prefers-reduced-motion` | the text changes without turning; no fade substitute |
@@ -840,12 +844,13 @@ selection moves between them. The group owns the selection, so turning one on
 turns the last one off. **A row of `rayl-btn` with `aria-pressed` is not an
 option group** — it looks like one and behaves like a set of unrelated toggles.
 
-**Two beats, and in each one a surface and its type move at the same instant.**
+**The hover is a ground change and nothing else. The turn belongs to the
+selection.**
 
 | | ground | label |
 |---|---|---|
-| hover | steps one rung | turns over |
-| click | a circle opens from the centre of the cell | turns over again |
+| hover | steps one rung | nothing |
+| click | a circle opens from the centre of the cell | turns over |
 
 **The circle is the selection.** One element, filled `surface/active`, clipped
 from `circle(0)` to `circle(70.71%)` — half the diagonal of a square, so it
