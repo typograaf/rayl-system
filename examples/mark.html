@@ -473,7 +473,16 @@ document.getElementById("tempo").addEventListener("rayl:change", function(e){
   tempo = [1.7, 1, 0.6][e.detail.index];
 });
 function resume(){
-  if (REDUCED) return;
+  /* asked for less motion: the buttons still do what they say, they just
+     arrive there rather than travel there */
+  if (REDUCED){
+    while (queue.length){
+      var s = queue.shift();
+      if (s.move !== undefined) state = play(state, s.move);
+    }
+    step = null; show(null);
+    return;
+  }
   running = true;
   run.select(runOpts[0]);
   start();
