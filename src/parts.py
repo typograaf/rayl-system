@@ -17,6 +17,21 @@ PALETTE = [
  ("Dark Concrete","#55554E",35.9),("Off-Black","#373732",22.9),
  ("Soft Black","#262623",15.2),("Black","#1C1C1A",10.2),("Deep Black","#11110F",5.0)]
 
+# Values that are NOT the palette and keep coming back. Three are the V2 paint
+# styles, which are an earlier round; the rest are hand-mixed approximations
+# from older builds. doc.py refuses to publish anything containing one.
+STALE = {
+ "#F7F7F2": "Off White — the V2 style. Use #F7F7EF",
+ "#CFCFC4": "Porcelain — the V2 style. Use #CFCFC1",
+ "#696963": "Light Concrete — the V2 style. Use #696961",
+ "#F0F0E5": "rayl-ui paper. Use #F7F7EF Off White",
+ "#E8E8D8": "rayl-ui sunk. Use #E2E2D3 Dark Off-White",
+ "#CECEC5": "rayl-screen porcelain. Use #CFCFC1",
+ "#3F3F3B": "rayl-screen black. Use #55554E Dark Concrete",
+ "#D8DEB9": "the green that is not the brand. There is no green",
+ "#000000": "pure black. The palette has none; ink is #1C1C1A",
+}
+
 UI = [
  ("surface/ground","White","Soft Black","The panel or page itself"),
  ("surface/idle","Paper","Deep Black","A control at rest"),

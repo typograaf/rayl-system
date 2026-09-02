@@ -4,17 +4,21 @@ import { LAYOUTS } from "../baked/layouts.js";
  * What an array is, as numbers.
  *
  * The names are the app's names, so a look composed in the tool can be read
- * straight off its own settings string. The values are the system's — the
- * palette here is the one in the Figma styles, not the slightly-off one every
- * code build drifted into.
+ * straight off its own settings string.
+ *
+ * The values are the approved frame 1083:9025, NOT the V2 paint styles. Those
+ * styles are an earlier round and three of them are stale — this file carried
+ * all three, with a comment saying the styles were the right source, which is
+ * the drift RAYL-WHY.md is a list of. doc.py now checks every hex below
+ * against src/parts.py and fails the build if one of them wanders again.
  */
 
 export const PALETTE = {
   white: "#FFFFFF",
-  offWhite: "#F7F7F2",
+  offWhite: "#F7F7EF",
   darkOffWhite: "#E2E2D3",
-  porcelain: "#CFCFC4",
-  lightConcrete: "#696963",
+  porcelain: "#CFCFC1",
+  lightConcrete: "#696961",
   darkConcrete: "#55554E",
   black: "#1C1C1A",
 };

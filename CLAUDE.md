@@ -18,10 +18,20 @@ Run that after any change. It regenerates everything, asserts every documented
 fact against `core.css`, and runs the checker over every page. If it stops, it
 says why, and nothing was published.
 
+**The one thing it does not build is the array.** `assets/array/rayl-array.js`
+comes from `array/src/` through Vite, and Python does not run it:
+
+    cd array && npm run build
+
+`src/build.py` cannot rebuild it, so it checks it instead — the bundle has to
+carry every colour `array/src/look.js` declares, and neither may hold a value off
+the drift list. Change `array/src/` and you must rebuild, or the build stops.
+
 ### Never edit these — they are output
 
     rayl.js  rayl-vars.css  rayl.tokens.json  rayl-check.py  RAYL-OPEN.md
     index.html  examples/bench.html  src/paste.txt  dist/
+    assets/array/rayl-array.js
 
 Editing `rayl.js` or `src/paste.txt` is the most common mistake and it is
 invisible: the next build silently overwrites it.
@@ -49,6 +59,9 @@ Each of these caught a real bug and none is cosmetic:
 
 - a class in `core.css` with no `INVENTORY` row in `parts.py`, or an inventory
   row nothing ships
+- a colour anywhere that is on the drift list in `parts.py` — the array carried
+  three of the V2 paint styles for two commits, with a comment saying they were
+  right, and every build passed
 - a heading gap, container gap, radius, type size, motion figure or palette hex
   in `parts.py` that `core.css` does not agree with
 - `src/paste.txt` that is not what `paste.py` renders

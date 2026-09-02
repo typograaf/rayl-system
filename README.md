@@ -36,7 +36,9 @@ system had stopped using. One copy, generated, is the fix.
 | `assets/` | the logo files and the two typefaces |
 
 `RAYL-SYSTEM.md` and `AUDIT.md` are stubs kept so that older links still land
-somewhere useful.
+somewhere useful. `colour.html` and `colour-proposal.svg` are gone: they were
+working files from the first day, linked from nothing, and they published the
+pre-revision palette to anybody who found them.
 
 ## Where this is up to
 

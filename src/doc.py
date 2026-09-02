@@ -15,7 +15,7 @@ cover spacing, nobody was sent on to the document that was right.
 A fact has one home now, and the build fails rather than letting two drift.
 """
 import pathlib, re, sys
-from parts import (ROOT, PALETTE, UI, SCALE, INVENTORY, INTERNAL, SPACING,
+from parts import (ROOT, PALETTE, STALE, UI, SCALE, INVENTORY, INTERNAL, SPACING,
                    GAP_CLASSES, HEADING_GAP, GAP_MEANING, RADIUS, FIGURES,
                    FIXED, MOTION, ICONS, MISSING, OPEN)
 
@@ -273,7 +273,49 @@ def check():
         raise SystemExit("src/paste.txt is not what src/paste.py renders — run "
                          "python3 src/paste.py. Never edit paste.txt by hand.")
 
-    # 11. every "section N" in the rules points at a section that exists and
+    # 11. The array keeps its own copy of the palette, because it renders in
+    #     WebGL and cannot read a CSS custom property. A copy is allowed; a
+    #     copy that drifts is not. This has now been wrong twice, both times
+    #     taken from the V2 paint styles, which are the stale round.
+    look = ROOT / "array/src/look.js"
+    if look.exists():
+        known = {h.upper() for _, h, _ in PALETTE}
+        for m in re.finditer(r"^\s*([A-Za-z]+):\s*\"(#[0-9A-Fa-f]{6})\"",
+                             look.read_text(), re.M):
+            if m.group(2).upper() not in known:
+                raise SystemExit(
+                    f"array/src/look.js has {m.group(1)} = {m.group(2)}, which is "
+                    "not in the palette. The V2 paint styles are the stale round; "
+                    "the values are in src/parts.py.")
+
+        bundle = ROOT / "assets/array/rayl-array.js"
+        if bundle.exists():
+            baked = bundle.read_text()
+            for m in re.finditer(r"^\s*[A-Za-z]+:\s*\"(#[0-9A-Fa-f]{6})\"",
+                                 look.read_text(), re.M):
+                if m.group(1) not in baked:
+                    raise SystemExit(
+                        f"array/src/look.js declares {m.group(1)} and the shipped "
+                        "bundle does not carry it. Rebuild: cd array && npm run build")
+
+    # and nothing anybody publishes carries a value off the drift list. The
+    # bundle is three.js as well as ours, so it is checked against what is known
+    # to be wrong rather than against what is known to be right.
+    for f in [ROOT / "assets/array/rayl-array.js"] + \
+             sorted((ROOT / "array/src").glob("*.js")) + \
+             sorted(ROOT.glob("*.md")) + sorted((ROOT / "examples").glob("*.html")):
+        if not f.exists() or f.name in ("RAYL-WHY.md", "AUDIT.md"):
+            continue          # the drift table is a list OF these
+        for i, line in enumerate(f.read_text().splitlines(), 1):
+            # prose that forbids a value has to be allowed to name it
+            if "never" in line.lower() or "not the brand" in line.lower():
+                continue
+            for bad, why in STALE.items():
+                if bad.lower() in line.lower():
+                    raise SystemExit(
+                        f"{f.relative_to(ROOT)}:{i} carries {bad} — {why}")
+
+    # 12. every "section N" in the rules points at a section that exists and
     #     carries what the sentence says it does. Renumbering by hand is how
     #     three of these came to point at the wrong chapter.
     rules = RULES.read_text()
@@ -284,7 +326,7 @@ def check():
             raise SystemExit(f"RAYL-RULES.md points at section {m.group(1)}, "
                              f"which does not exist. Sections are {sorted(heads)}.")
 
-    # 12. the scale that used to be wrong is nowhere in any published document.
+    # 13. the scale that used to be wrong is nowhere in any published document.
     #     A regression guard on the one bug that mattered most.
     stale = "6, 12, 24, 48, 72"
     for f in sorted(ROOT.glob("*.md")) + [ROOT / "src/paste.txt"]:

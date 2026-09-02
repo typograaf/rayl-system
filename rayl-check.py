@@ -238,6 +238,14 @@ def check_html(text, r):
                    "aria-pressed side by side — if exactly one is on, that is a "
                    "rayl-seg, and the group owns the selection.")
 
+    # A colour in an attribute is still a colour. The array shipped three stale
+    # palette values in data-colour for two commits and every build passed,
+    # because this checker only ever read CSS.
+    for m in re.finditer(r"""\b([a-zA-Z-]+)=["'][^"']*?(#[0-9a-fA-F]{6}|#[0-9a-fA-F]{3})\b""", text):
+        r.error("hex", lineno(text, m.start()),
+                f'{m.group(1)}="…{m.group(2)}…" — name a token, never a hex. '
+                "A value in an attribute drifts the same way one in a stylesheet does.")
+
     prov = re.findall(r"""data-rayl-provisional=["']([^"']*)["']""", text)
     for p in prov:
         r.note("provisional", 1, f"provisional, not Rayl yet: {p}")
@@ -250,6 +258,14 @@ def check(path):
     for m in re.finditer(r"rayl-check:\s*allow\s+(.+?)\s*(?:-->|\*/|\n)", text):
         allowed |= {a.strip() for a in m.group(1).split(",") if a.strip()}
     r = Report(path, allowed)
+    if path.endswith(".js"):
+        # A script cannot be read for layout, but it can be read for colour,
+        # which is where a hand-mixed approximation of the palette hides.
+        for m in re.finditer(r"[\"'](#[0-9a-fA-F]{6})[\"']", text):
+            r.warn("hex", lineno(text, m.start()),
+                   f"{m.group(1)} — a colour in a script is still a colour. If it "
+                   "cannot read a token, it must be a value from the palette.")
+        return r
     is_css = path.endswith(".css")
     check_css(text if is_css else strip_svg(text), r, is_css)
     if not is_css:

@@ -39,7 +39,7 @@ export function mount(root = document) {
  * Names are the same as the settings, in the dashed form an attribute wants —
  * `data-key-colour`, `data-key-at`. A number is a number, a list of numbers is
  * a list, and anything else is left as text, so `data-sheet="porcelain"` and
- * `data-sheet="#CFCFC4,#F7F7F2"` both mean what they look like.
+ * `data-sheet="#CFCFC1,#F7F7EF"` both mean what they look like.
  */
 function fromAttributes(element) {
   const look = {};
