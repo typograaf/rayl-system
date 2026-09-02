@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rayl Array</title>
+<script src="../rayl.js?v=efc7905b"></script>
+<script type="module" src="../assets/array/rayl-array.js"></script>
+<style>
+  .frame { height: 380px; }
+  .frame.is-tall { height: 520px; }
+  .strip { height: 200px; }
+  .markup {
+    font: inherit;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+  }
+</style>
+</head>
+<body class="rayl">
+<div class="rayl-page">
+
+  <header class="rayl-head">
+    <svg class="rayl-mark" viewBox="0 0 151 150" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M141.065 98.6391C135.909 98.6391 132.144 94.7512 132.144 89.7173C132.144 84.8061 135.909 81 141.065 81C146.099 81 149.905 84.7243 149.905 89.7173C149.905 94.7512 146.181 98.6391 141.065 98.6391ZM141.025 97.084C145.035 97.084 148.228 93.9326 148.228 89.7173C148.228 85.5428 144.994 82.4733 141.025 82.4733C137.055 82.4733 133.862 85.5428 133.862 89.7173C133.862 93.9326 136.973 97.084 141.025 97.084ZM137.873 94.4647V85.1335H141.638C143.767 85.1335 145.076 86.3204 145.076 88.0393C145.076 89.3898 144.299 90.3721 142.948 90.8223C144.135 91.8454 144.749 93.0732 145.076 94.4647H143.357C143.03 93.2778 142.621 92.091 141.065 91.0269H139.633V94.4647H137.873ZM139.633 89.5126H141.72C142.662 89.5126 143.316 88.8987 143.316 88.0393C143.316 87.2617 142.662 86.6887 141.802 86.6887H139.633V89.5126Z"/><path d="M34.5 81C53.5538 81 69 96.4462 69 115.5C69 134.554 53.5538 150 34.5 150C15.4462 150 4.12351e-06 134.554 0 115.5C0 96.4462 15.4462 81 34.5 81Z"/><path d="M81 98.249C81 82.6584 99.8496 74.8502 110.874 85.874L145.126 120.126C156.15 131.15 148.342 150 132.751 150H98.5C88.835 150 81 142.165 81 132.5V98.249Z"/><path d="M115.5 0C134.554 0 150 15.4462 150 34.5C150 53.5538 134.554 69 115.5 69H17.5C7.83502 69 0 61.165 0 51.5V17.5C0 7.83502 7.83502 0 17.5 0H115.5Z"/></svg>
+  </header>
+
+  <section class="rayl-section">
+    <span class="rayl-label">The array, live</span>
+    <div class="frame is-tall" id="stage" data-rayl-array="plate" data-sheet="porcelain"></div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Body</span>
+    <div class="rayl-seg" id="body">
+      <button class="rayl-seg-opt is-third is-on" type="button">Plate</button>
+      <button class="rayl-seg-opt is-third" type="button">Card</button>
+      <button class="rayl-seg-opt is-third" type="button">Basket</button>
+    </div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Array</span>
+    <div class="rayl-row"><span class="rayl-row-name">Count</span><span class="rayl-slider" id="count" data-min="1" data-max="33" data-val="14" data-step="1"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Spread</span><span class="rayl-slider" id="spread" data-min="-0.9" data-max="1" data-val="-0.455" data-step="0.005"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Spin</span><span class="rayl-slider" id="spin" data-min="-90" data-max="90" data-val="24" data-step="1"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Tilt</span><span class="rayl-slider" id="tilt" data-min="-90" data-max="90" data-val="-14" data-step="1"></span></div>
+    <div class="rayl-seg" id="direction">
+      <button class="rayl-seg-opt is-on" type="button">Across</button>
+      <button class="rayl-seg-opt" type="button">Up</button>
+    </div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Motion</span>
+    <div class="rayl-seg" id="motion">
+      <button class="rayl-seg-opt is-on" type="button">Wave</button>
+      <button class="rayl-seg-opt" type="button">Still</button>
+      <button class="rayl-seg-opt" type="button">Scroll</button>
+      <button class="rayl-seg-opt" type="button">Pointer</button>
+    </div>
+    <div class="rayl-row"><span class="rayl-row-name">Wave</span><span class="rayl-slider" id="wave" data-min="0" data-max="2" data-val="0.62" data-step="0.01"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Seconds</span><span class="rayl-slider" id="seconds" data-min="1" data-max="20" data-val="6" data-step="0.5"></span></div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">The markup for what is above</span>
+    <pre class="markup" id="markup"></pre>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">A row that follows the page</span>
+    <div class="strip" data-rayl-array="card" data-motion="scroll" data-count="11"
+         data-spread="-0.28" data-spin="30" data-tilt="-6" data-wave="0.9"></div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">A row that follows the cursor</span>
+    <div class="strip" data-rayl-array="plate" data-motion="pointer" data-count="16"
+         data-spread="-0.42" data-spin="18" data-tilt="-10" data-wave="0.8"></div>
+  </section>
+
+</div>
+
+<script type="module">
+  const stage = document.getElementById("stage");
+  const look = { body: "plate", count: 14, spread: -0.455, spin: 24, tilt: -14,
+                 direction: "across", motion: "wave", wave: 0.62, seconds: 6 };
+
+  const show = () => {
+    const markup = Object.entries(look)
+      .map(([k, v]) => `  data-${k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase())}="${v}"`)
+      .join("\n");
+    document.getElementById("markup").textContent =
+      `<div style="height: 520px"\n  data-rayl-array="${look.body}"\n${markup}></div>`;
+  };
+
+  const set = (change) => {
+    Object.assign(look, change);
+    stage.raylArray?.set(change);
+    show();
+  };
+
+  for (const name of ["count", "spread", "spin", "tilt", "wave", "seconds"]) {
+    document.getElementById(name).addEventListener("rayl:input", (e) =>
+      set({ [name]: e.detail.value }),
+    );
+  }
+  for (const name of ["body", "direction", "motion"]) {
+    document.getElementById(name).addEventListener("rayl:change", (e) =>
+      set({ [name]: String(e.detail.value).toLowerCase() }),
+    );
+  }
+  show();
+</script>
+</body>
+</html>

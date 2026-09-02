@@ -916,7 +916,153 @@ look, say the reference has not been added yet rather than approximating it.
 
 ---
 
-## 11. What the system does not have
+## 11. The array
+
+An array is a row of one body repeated — a plate, a card or a basket — evenly
+spaced along a rail, all turned the same way, on a soft gradient sheet, with a
+crest that travels along the row. It is the thing every Rayl film and still is
+made of, and it is the one picture the brand owns.
+
+**There is a live one. Use it — do not draw an approximation.** A row of
+overlapping ellipses in CSS is not an array; what makes an array read is the
+translucency, the soft fall across each body, and the shadow each one lays on
+its neighbour. Those need a renderer, and there is one:
+
+```html
+<script type="module"
+  src="https://typograaf.github.io/rayl-system/assets/array/rayl-array.js">
+</script>
+
+<div data-rayl-array="plate" style="height: 380px"></div>
+```
+
+That is the whole of it. Every element carrying `data-rayl-array` on the page is
+found and started, sized to whatever box you give it — so **give it a height**,
+since a `div` with nothing in it has none. Nothing else needs including: three
+is inside the file, and the plate and the card are described rather than
+downloaded.
+
+Working example, with every control live:
+[examples/array.html](https://typograaf.github.io/rayl-system/examples/array.html).
+
+### The three bodies
+
+| body | what it is | what it costs |
+|---|---|---|
+| `plate` | the dinner plate — the signature array | nothing; it is turned from an outline in the file |
+| `card` | the rounded card from the app | nothing; it is built from the design's three numbers |
+| `basket` | the slotted crate | a 247K fetch, and only if a page asks for one |
+
+There is no fourth. The app also has a ring, and it is **not** in the web
+version — if a brief needs one, say so rather than substituting a plate.
+
+### Every setting
+
+Each is a `data-` attribute named after itself, and the same name in code.
+
+| setting | what it does | default |
+|---|---|---|
+| `data-count` | how many | `14` |
+| `data-spread` | the **air between one body and the next**, in bodies. Nought is touching; negative overlaps, which is most of what an array is for | `-0.455` |
+| `data-direction` | `across` or `up` | `across` |
+| `data-depth` | how thick a card is, against its own width. Cards only | `0.05` |
+| `data-lean` | turns the whole rack, so the row recedes | `0` |
+| `data-spin` | turns the bodies without turning the row | `24` |
+| `data-tilt` | tips them towards you or away | `-14` |
+| `data-motion` | `wave`, `still`, `scroll` or `pointer` — see below | `wave` |
+| `data-wave` | how far a body is lifted out of the row, in bodies | `0.62` |
+| `data-brush` | how many bodies wide the crest is | `2` |
+| `data-peaks` | how many crests run at once | `1` |
+| `data-seconds` | how long one pass takes | `6` |
+| `data-at` | where the crest sits when nothing is driving it | `0.35` |
+| `data-colour` | what the bodies are made of | `#F7F7F2` |
+| `data-sheet` | `porcelain`, `concrete`, `none`, or two colours | `none` |
+| `data-key` `data-key-colour` `data-key-at` `data-key-size` | the big source, its colour, where it stands and how wide it is | `1.55` `#F7F7F2` `0.3,0.75,0.85` `0.75` |
+| `data-fill` `data-fill-colour` `data-fill-at` `data-fill-size` | the cool fill | `0.3` `#E2E2D3` `-0.9,0.05,0.4` `1` |
+| `data-rim` `data-rim-colour` `data-rim-at` `data-rim-size` | the light behind, which is the only one the glow-through has to work with | `0.8` `#F7F7F2` `0.2,0.35,-0.6` `0.4` |
+| `data-ambient` | how much of the sheet reaches the bodies | `1.4` |
+| `data-translucency` `data-scatter` `data-wrap` `data-falloff` | how much light comes through a body, how far it spreads inside, how far round the form it bends and how sharply it falls off | `0.72` `0.26` `0.23` `3.3` |
+| `data-roughness` `data-coat` | matte at 1; a clear layer over it, the way a fired glaze has one | `1` `0` |
+| `data-shade` `data-occlusion` | how hard a body shadows the one behind, and how much light the row loses to itself | `1` `1.15` |
+| `data-exposure` `data-contrast` | the picture | `1` `1.05` |
+| `data-fov` `data-zoom` `data-pan` | the lens, closer in above one, and where the middle sits in frames | `32` `1` `0,0` |
+| `data-art` | an image printed on the face of a card | none |
+| `data-dpr` | the most device pixels it may ask for | `2` |
+
+A light's position is three numbers — along the row, across it, and towards you
+— in units of the row's own radius, about its middle. Held that way a rig means
+the same thing whichever way the row runs, which is why it is not x, y and z.
+
+### The four motions
+
+- **`wave`** — a crest travelling the length of the row and out the far end,
+  looping. What the films do, and the default.
+- **`still`** — one composed frame with the crest parked where `data-at` says.
+  The right choice for a header or a background.
+- **`scroll`** — the crest crosses the row once per screenful as the page moves.
+- **`pointer`** — the crest follows the cursor along the row and goes back to
+  `data-at` when it leaves.
+
+`wave` stops on its own under `prefers-reduced-motion`, off screen, and in a
+background tab. Do not add your own animation on top of an array, and do not
+animate the element it lives in.
+
+### Pasting a look out of the app
+
+A look is composed in **Rayl Stack**, where there are sliders and a picture, and
+the link it produces is understood as it stands:
+
+```html
+<div data-rayl-array
+     data-look="object=0&count=14&spread=0.46&spin=24&tilt=-14&…&v=3"
+     style="height: 380px"></div>
+```
+
+Everything about the row, the rig and the surface comes across. Two things do
+not, deliberately: **which crest shape** the tool was running, and **the tool's
+own framing** — a page's box is not the tool's window, so the fit is made
+against the element it is in. Set `data-motion` and, if you need it,
+`data-zoom` and `data-pan` here.
+
+### From code
+
+```js
+import { RaylArray } from "https://typograaf.github.io/rayl-system/assets/array/rayl-array.js";
+
+const array = new RaylArray(element, { body: "card", motion: "scroll" });
+await array.set({ count: 20, spread: -0.3 });
+array.destroy();
+```
+
+`element.raylArray` is the one that was started for you from the markup, so a
+page can drive an array it did not construct. `mount()` starts any that have
+been added since.
+
+### The rules
+
+- **Give the element a height.** Everything else fits itself to the box.
+- **The sheet belongs to the page, not the canvas.** `data-sheet` paints the
+  element behind a transparent canvas; leave it `none` and the array sits on
+  whatever ground the page already has. A sheet does not move when a light does.
+- **One array is one canvas.** Three on a page is three renderers; put one
+  behind a whole section rather than one per card.
+- **Do not restyle it and do not filter it.** No `filter`, no `mix-blend-mode`,
+  no CSS shadow on the element. The picture is the picture.
+- **It costs 187K gzipped**, plus the basket if you ask for one. That is a
+  renderer; if a page cannot afford it, use a still image of an array rather
+  than a hand-drawn imitation.
+
+### What it does not do
+
+The app it is taken from does more, and these are the differences rather than
+faults to fix: no ring body, no printed card designs (an image through
+`data-art` is as far as it goes), no card swing when a column opens, no bloom,
+no export, and no dragging a body out of the row. If a brief needs one of them,
+say which, and use the app.
+
+---
+
+## 12. What the system does not have
 
 Every gap is in
 [RAYL-OPEN.md](https://typograaf.github.io/rayl-system/RAYL-OPEN.md), generated

@@ -106,6 +106,19 @@ https://typograaf.github.io/rayl-system/assets/logo/Lockup.svg It is #1C1C1A
 on light and #FFFFFF on dark — the same as text. Clear space around it is its
 own height, half that for the icon alone. There is no minimum size.
 
+THE ARRAY is the row of plates, cards or baskets the brand is made of, and it
+is a live renderer rather than something to approximate. One tag and one box:
+
+<script type="module" src="https://typograaf.github.io/rayl-system/assets/array/rayl-array.js"></script>
+<div data-rayl-array="plate" style="height: 380px"></div>
+
+Give the element a height; everything fits itself to the box. Bodies are
+plate, card and basket and there is no fourth. Motion is wave, still, scroll
+or pointer. A look composed in the Rayl Stack app pastes in whole as data-
+look. Never draw an array by hand out of CSS shapes — read section 11 of RAYL-
+RULES.md before using it, and say so rather than imitating it if a page cannot
+carry it.
+
 These examples show the parts composed. Read them if you are unsure how things
 go together — but do not clone one and change the words, or you inherit a
 structure built for a different problem:

@@ -55,7 +55,8 @@ LINKS = chapter("Where everything is") + block(
           '<div class="rayl-cluster">'
           '<a class="rayl-btn" href="examples/landing.html">A page</a>'
           '<a class="rayl-btn" href="examples/panel.html">A panel</a>'
-          '<a class="rayl-btn" href="examples/bench.html">The bench</a></div>'),
+          '<a class="rayl-btn" href="examples/bench.html">The bench</a>'
+          '<a class="rayl-btn" href="examples/array.html">The array</a></div>'),
     frame("The documents",
           '<div class="rayl-cluster">'
           '<a class="rayl-btn" href="RAYL-RULES.md">The rules</a>'

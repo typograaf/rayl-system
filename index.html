@@ -189,6 +189,19 @@ https://typograaf.github.io/rayl-system/assets/logo/Lockup.svg It is #1C1C1A
 on light and #FFFFFF on dark — the same as text. Clear space around it is its
 own height, half that for the icon alone. There is no minimum size.
 
+THE ARRAY is the row of plates, cards or baskets the brand is made of, and it
+is a live renderer rather than something to approximate. One tag and one box:
+
+&lt;script type=&quot;module&quot; src=&quot;https://typograaf.github.io/rayl-system/assets/array/rayl-array.js&quot;&gt;&lt;/script&gt;
+&lt;div data-rayl-array=&quot;plate&quot; style=&quot;height: 380px&quot;&gt;&lt;/div&gt;
+
+Give the element a height; everything fits itself to the box. Bodies are
+plate, card and basket and there is no fourth. Motion is wave, still, scroll
+or pointer. A look composed in the Rayl Stack app pastes in whole as data-
+look. Never draw an array by hand out of CSS shapes — read section 11 of RAYL-
+RULES.md before using it, and say so rather than imitating it if a page cannot
+carry it.
+
 These examples show the parts composed. Read them if you are unsure how things
 go together — but do not clone one and change the words, or you inherit a
 structure built for a different problem:
@@ -275,7 +288,7 @@ file if you can execute one: python3 rayl-check.py yourpage.html</pre><button cl
   <div class="rayl-block">
     <div class="rayl-rail"><h3 class="rayl-24">Everything else</h3><p class="rayl-12">The examples show the parts composed. Build the structure your brief needs — cloning one gives you a page shaped like somebody else’s problem.</p></div>
     <div class="rayl-field">
-      <div class="rayl-frame"><span class="rayl-frame-tag">The examples</span><div class="rayl-cluster"><a class="rayl-btn" href="examples/landing.html">A page</a><a class="rayl-btn" href="examples/panel.html">A panel</a><a class="rayl-btn" href="examples/bench.html">The bench</a></div></div>
+      <div class="rayl-frame"><span class="rayl-frame-tag">The examples</span><div class="rayl-cluster"><a class="rayl-btn" href="examples/landing.html">A page</a><a class="rayl-btn" href="examples/panel.html">A panel</a><a class="rayl-btn" href="examples/bench.html">The bench</a><a class="rayl-btn" href="examples/array.html">The array</a></div></div>
       <div class="rayl-frame"><span class="rayl-frame-tag">The documents</span><div class="rayl-cluster"><a class="rayl-btn" href="RAYL-RULES.md">The rules</a><a class="rayl-btn" href="RAYL-WHY.md">Why</a><a class="rayl-btn" href="RAYL-OPEN.md">What is open</a></div></div>
       <div class="rayl-frame"><span class="rayl-frame-tag">The files</span><div class="rayl-cluster"><a class="rayl-btn" href="rayl.js">rayl.js</a><a class="rayl-btn" href="rayl-vars.css">rayl-vars.css</a><a class="rayl-btn" href="rayl.tokens.json">tokens.json</a><a class="rayl-btn" href="rayl-check.py">rayl-check.py</a><a class="rayl-btn" href="assets/logo/Lockup.svg">Lockup</a></div></div>
     </div>

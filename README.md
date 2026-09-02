@@ -30,6 +30,8 @@ system had stopped using. One copy, generated, is the fix.
 | `rayl.tokens.json` | the same values as data |
 | `rayl-check.py` | reads a page and says where it leaves the system |
 | `examples/` | the parts composed. Evidence, not templates |
+| `assets/array/` | the live array renderer, and the basket it fetches |
+| `array/` | its source. Edit this, never `assets/array/` |
 | `eval/` | fixed briefs to run the system against |
 | `assets/` | the logo files and the two typefaces |
 

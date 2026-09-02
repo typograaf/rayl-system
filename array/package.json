@@ -1,0 +1,22 @@
+{
+  "name": "rayl-array",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "The Rayl array, rendered live in a page.",
+  "scripts": {
+    "bake": "node tools/bake.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "shot": "node tools/shot.mjs",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6",
+    "puppeteer-core": "^25.7.0",
+    "vite": "^5.4.0"
+  },
+  "dependencies": {
+    "three": "^0.185.1"
+  }
+}
