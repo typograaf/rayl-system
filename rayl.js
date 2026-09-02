@@ -687,5 +687,10 @@ if(document.readyState==="loading")
   document.addEventListener("DOMContentLoaded",function(){init();});
 else init();
 
-window.Rayl={init:init, icons:Object.keys(ICONS)};
+/* A host with its own markup can borrow a behaviour without taking the class:
+   an app that already has its own buttons still wants the label to roll. The
+   element keeps its own colours; only the movement comes from here. */
+window.Rayl={init:init, icons:Object.keys(ICONS), upgrade:{
+  button:upgradeButton, revealButton:upgradeIconButton, group:upgradeSeg,
+  line:upgradeLine, slider:mountSlider, icon:upgradeIcon}};
 })();
