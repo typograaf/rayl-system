@@ -104,20 +104,12 @@ HERO = ('  <div class="rayl-container">\n'
         '    </div>\n'
         '  </div>\n')
 
-PASTE_BLOCK = chapter("The block", "the-block") + block(
-    rail("What you are pasting",
-         "Every colour token, the type scale, the spacing hierarchy, every "
-         "control, and the logo and the typefaces by URL.",
-         "It also tells the model what the system does NOT have, what to do "
-         "when it hits one of those, and how to check its own work before it "
-         "answers.",
-         "Generated from src/parts.py and asserted against the stylesheet, so "
-         "it cannot drift from the system it describes."),
-    frame(None,
-          '<details class="rayl-fold">'
-          '<summary>Read it first</summary>'
-          f'<div class="rayl-fold-body"><pre id="paste">{PASTE}</pre></div>'
-          '</details>'))
+# The block itself is not on the page. Its only job is to reach a clipboard,
+# and a reader deciding whether to paste it wants the hero's sentence, not nine
+# thousand characters. It lives here as the copy button's source and nothing
+# else; src/paste.txt is the same bytes at a URL for anybody who wants to read
+# them.
+PASTE_SOURCE = f'  <pre id="paste" hidden>{PASTE}</pre>\n'
 
 COPY_JS = '''<script>
   /* The button is in the hero and the text is in the fold, so the copy does not
@@ -155,6 +147,7 @@ LINKS = chapter("Where everything is") + block(
           '<a class="rayl-btn" href="rayl-vars.css">rayl-vars.css</a>'
           '<a class="rayl-btn" href="rayl.tokens.json">tokens.json</a>'
           '<a class="rayl-btn" href="rayl-check.py">rayl-check.py</a>'
+          '<a class="rayl-btn" href="src/paste.txt">The block, as text</a>'
           '<a class="rayl-btn" href="assets/logo/Lockup.svg">Lockup</a></div>'
           '</div>'))
 
@@ -162,9 +155,9 @@ LINKS = chapter("Where everything is") + block(
 index = (
     head("Rayl System", "rayl.js", PASTE_CSS)
     + HERO
-    + PASTE_BLOCK
     + LINKS
     + FOOT
+    + PASTE_SOURCE
     + "\n</div>\n" + THEME_JS + "\n" + COPY_JS + "\n</body>\n</html>\n"
 )
 (ROOT / "index.html").write_text(index)
