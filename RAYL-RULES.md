@@ -777,9 +777,14 @@ behaviour with the weld taken off, on the nub's own range and strength.
 | | |
 |---|---|
 | range | **104** — nothing past it |
-| strength | **0.6** of the distance to the cursor |
-| cap | **6**, a cluster's gap, however close it gets |
-| falloff | nothing at the centre, nothing at the edge, most in between |
+| most | **6** at half the range, a cluster's gap |
+| falloff | nothing at the centre, most at **52**, nothing at the edge |
+
+**The falloff is the whole shape, not a clamp on a bigger one.** It was written
+as a strength times the distance with a cap on top, and the cap caught across
+78% of the range — the button snapped to its full lean the moment you came near
+and sat there, which is a hard edge rather than an attraction. The curve peaks
+at exactly 6, at exactly half the range, and returns to nothing at both ends.
 
 **Only one at a time.** A panel where every control leans at the pointer as it
 passes is a panel of things all asking to be clicked, which says nothing about
@@ -793,6 +798,10 @@ The lean is drawn and never stored: it moves the button, not anything the button
 means. It composes with the press rather than replacing it, so a button held
 while leaning does both. It is off under `prefers-reduced-motion` and on
 anything without a hover pointer.
+
+**A button keeps the lean until another is closer by more than 6.** Along the
+line between two of them the nearer one changes with every pixel, and without
+that band they trade the lean back and forth and both jump.
 
 ### The press
 

@@ -152,6 +152,7 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(function()
     r.render(r.showing);
     if (r.onremeasure) r.onremeasure();
   }
+  leanRects = null;              /* every button just changed width */
 });
 
 
@@ -767,8 +768,24 @@ function upgradeSkeleton(sk){
  * ========================================================================== */
 var LEAN_RANGE = 104, LEAN_STRENGTH = 0.6, LEAN_MAX = 6;
 var leanEls = [], leanRects = null, leanFrame = 0, leanPointer = null;
+var leanObserver = null, leanWinner = null;
 
-function leanRegister(el){ if (leanEls.indexOf(el) < 0) leanEls.push(el); }
+function leanRegister(el){
+  if (leanEls.indexOf(el) < 0){
+    leanEls.push(el);
+    /* A button's width is its label's width, and its label is re-measured when
+       the real face lands — so the centre this cache holds is the FALLBACK
+       face's centre until something drops it. That was the bug: on load the
+       pull came from left of the button, because that is where its centre was
+       when it was narrower. */
+    if (window.ResizeObserver){
+      if (!leanObserver) leanObserver = new ResizeObserver(function(){
+        leanRects = null; leanSchedule();
+      });
+      leanObserver.observe(el);
+    }
+  }
+}
 
 function leanMeasure(){
   leanRects = leanEls.map(function(el){
@@ -780,15 +797,25 @@ function leanMeasure(){
 function leanApply(){
   leanFrame = 0;
   if (!leanRects) leanMeasure();
-  var p = leanPointer, near = null, best = LEAN_RANGE, i, it;
+  var p = leanPointer, near = null, best = LEAN_RANGE, i, it, d;
 
-  /* find the one, then move only it */
   if (p) for (i = 0; i < leanRects.length; i++){
     it = leanRects[i];
     if (it.el.disabled || !it.el.isConnected) continue;
-    var d = Math.hypot(p.x - it.x, p.y - it.y);
+    d = Math.hypot(p.x - it.x, p.y - it.y);
     if (d < best){ best = d; near = it; }
   }
+
+  /* HYSTERESIS. Along the line between two buttons the nearer one changes with
+     every pixel, and without this they trade the lean back and forth and both
+     jump. A button keeps the lean until another is closer by more than the
+     largest lean there is, so it never loses while it is still visibly leaning
+     toward you. */
+  if (leanWinner && near && leanWinner !== near && leanWinner.el.isConnected){
+    var dw = Math.hypot(p.x - leanWinner.x, p.y - leanWinner.y);
+    if (dw <= LEAN_RANGE && dw - best < LEAN_MAX){ near = leanWinner; best = dw; }
+  }
+  leanWinner = near;
 
   for (i = 0; i < leanRects.length; i++){
     it = leanRects[i];
@@ -801,12 +828,18 @@ function leanApply(){
       }
       continue;
     }
-    var dx = p.x - it.x, dy = p.y - it.y;
-    var fall = 1 - best / LEAN_RANGE;   /* nothing at the centre, nothing at the edge */
-    var cap = function(v){ return Math.max(-LEAN_MAX, Math.min(LEAN_MAX, v)); };
+    /* THE FALLOFF IS THE WHOLE SHAPE. It used to be a strength times the
+       distance, clamped — and the clamp caught across 78% of the range, so the
+       button snapped to its full lean the moment you came near and sat there.
+       That is the hard edge. This peaks at exactly the cap, at half the range,
+       and returns to nothing at both ends, which is what the falloff always
+       claimed to do. */
+    var u = best / LEAN_RANGE;
+    var shape = 4 * u * (1 - u);            /* 0 at the centre, 1 at R/2, 0 at R */
+    var pull = best > 0.01 ? LEAN_MAX * shape / best : 0;
     el.classList.add("is-near");
-    el.style.setProperty("--lean-x", cap(dx * LEAN_STRENGTH * fall).toFixed(2) + "px");
-    el.style.setProperty("--lean-y", cap(dy * LEAN_STRENGTH * fall).toFixed(2) + "px");
+    el.style.setProperty("--lean-x", ((p.x - it.x) * pull).toFixed(2) + "px");
+    el.style.setProperty("--lean-y", ((p.y - it.y) * pull).toFixed(2) + "px");
   }
 }
 
@@ -820,9 +853,12 @@ if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
     leanPointer = {x:e.clientX, y:e.clientY};
     leanSchedule();
   }, {passive:true});
-  document.addEventListener("pointerleave", function(){
+  /* pointerleave on document does not fire in every browser; the root element
+     and a window blur between them do. */
+  document.documentElement.addEventListener("pointerleave", function(){
     leanPointer = null; leanSchedule();
   });
+  addEventListener("blur", function(){ leanPointer = null; leanSchedule(); });
   addEventListener("scroll", function(){ leanRects = null; leanSchedule(); },
                    {passive:true, capture:true});
   addEventListener("resize", function(){ leanRects = null; leanSchedule(); });
