@@ -54,7 +54,7 @@
     .bg5{background:var(--rayl-dark-concrete);}
   }
 
-  pre{margin:0;font:inherit;font-size:12px;line-height:1.5;white-space:pre-wrap;
+  pre{margin:0;font:inherit;font-size:12px;line-height:1.4;white-space:pre-wrap;
     word-break:break-word;}
 </style>
 </head>
@@ -77,9 +77,9 @@
         <h1 class="rayl-48">Hand this to an AI and what it builds comes out looking like Rayl.</h1>
       </div>
       <div class="rayl-stack">
-        <p class="rayl-18">Including the parts nobody has designed yet. You do not need to read any code to use it — copy the block below and paste it above whatever you are asking for.</p>
+        <p class="rayl-18">Including the parts nobody has designed yet. Copy the block, paste it above whatever you are asking for. You do not need to read any of it, or any code.</p>
         <div class="rayl-cluster">
-          <a class="rayl-btn" href="#the-block">The block</a>
+          <button class="rayl-ibtn" data-icon="Document" id="copy">Copy the block</button>
           <a class="rayl-btn" href="RAYL-RULES.md">The rules</a>
           <a class="rayl-btn" href="examples/bench.html">The bench</a>
         </div>
@@ -88,9 +88,9 @@
   </div>
   <h2 class="rayl-chapter" id="the-block">The block</h2>
   <div class="rayl-block">
-    <div class="rayl-rail"><h3 class="rayl-24">Paste this at the top of your prompt</h3><p class="rayl-12">It carries the tokens, the type scale, the layout primitives and every control. You do not need to read any of it.</p><p class="rayl-12">It also tells the model what the system does NOT have, what to do when it hits one of those, and how to check its own work before it answers.</p><div class="rayl-rail-foot rayl-stack rayl-gap-12"><button class="rayl-ibtn" data-icon="Document" id="copy">Copy the block</button><span class="rayl-label">Generated from src/parts.py</span></div></div>
+    <div class="rayl-rail"><h3 class="rayl-24">What you are pasting</h3><p class="rayl-12">Every colour token, the type scale, the spacing hierarchy, every control, and the logo and the typefaces by URL.</p><p class="rayl-12">It also tells the model what the system does NOT have, what to do when it hits one of those, and how to check its own work before it answers.</p><p class="rayl-12">Generated from src/parts.py and asserted against the stylesheet, so it cannot drift from the system it describes.</p></div>
     <div class="rayl-field">
-      <div class="rayl-frame"><pre id="paste">Build this to the Rayl design system.
+      <div class="rayl-frame"><details class="rayl-fold"><summary>Read it first</summary><div class="rayl-fold-body"><pre id="paste">Build this to the Rayl design system.
 
 Include one file. It carries the colour tokens, the type scale, the page
 ground and rhythm, the layout primitives, the button, the reveal button, the
@@ -352,38 +352,14 @@ you checked:
   - every provisional part marked and listed
 
 https://typograaf.github.io/rayl-system/rayl-check.py runs those checks over a
-file if you can execute one: python3 rayl-check.py yourpage.html</pre></div>
-    </div>
-  </div>
-  <h2 class="rayl-chapter">Typography</h2>
-  <div class="rayl-block">
-    <div class="rayl-rail"><h3 class="rayl-24">The scale</h3></div>
-    <div class="rayl-field">
-      <div class="rayl-frame is-tall"><div class="spec"><span class="rayl-12 dim">96 · 110% · Azeret −4% · Concrette −6%</span><p class="rayl-96">Schoonmaak</p><p class="rayl-96 rayl-serif">Schoonmaak</p></div><div class="spec"><span class="rayl-12 dim">72 · 110% · Azeret −3% · Concrette −5%</span><p class="rayl-72">Schoonmaak</p><p class="rayl-72 rayl-serif">Schoonmaak</p></div><div class="spec"><span class="rayl-12 dim">48 · 110% · Azeret −3% · Concrette −4%</span><p class="rayl-48">Schoonmaak Medewerker</p><p class="rayl-48 rayl-serif">Schoonmaak Medewerker</p></div><div class="spec"><span class="rayl-12 dim">36 · 110% · Azeret −2% · Concrette −4%</span><p class="rayl-36">Schoonmaak Medewerker</p><p class="rayl-36 rayl-serif">Schoonmaak Medewerker</p></div><div class="spec"><span class="rayl-12 dim">24 · 115% · Azeret −1% · Concrette −3%</span><p class="rayl-24">Schoonmaak Medewerker</p><p class="rayl-24 rayl-serif">Schoonmaak Medewerker</p></div><div class="spec"><span class="rayl-12 dim">18 · 130% · Azeret +1%</span><p class="rayl-18">Schoonmaak Medewerker</p></div><div class="spec"><span class="rayl-12 dim">12 · 140% · Azeret +2%</span><p class="rayl-12">Schoonmaak Medewerker</p></div></div>
-      <div class="rayl-frame"><span class="rayl-label">Aspect ratio</span></div>
-    </div>
-  </div>
-  <h2 class="rayl-chapter">Colour</h2>
-  <div class="rayl-block">
-    <div class="rayl-rail"><h3 class="rayl-24">The palette</h3></div>
-    <div class="rayl-field">
-      <div class="rayl-frame is-tall"><div class="rayl-grid"><div class="sw" style="background:#FFFFFF;color:#1C1C1A"><span>White</span><span class="mono" style="opacity:.62">#FFFFFF</span><span class="mono" style="opacity:.62">L* 100.0</span></div><div class="sw" style="background:#FBFBF6;color:#1C1C1A"><span>Paper</span><span class="mono" style="opacity:.62">#FBFBF6</span><span class="mono" style="opacity:.62">L* 98.5</span></div><div class="sw" style="background:#F7F7EF;color:#1C1C1A"><span>Off White</span><span class="mono" style="opacity:.62">#F7F7EF</span><span class="mono" style="opacity:.62">L* 97.1</span></div><div class="sw" style="background:#EDEDDF;color:#1C1C1A"><span>Bone</span><span class="mono" style="opacity:.62">#EDEDDF</span><span class="mono" style="opacity:.62">L* 93.3</span></div><div class="sw" style="background:#E2E2D3;color:#1C1C1A"><span>Dark Off-White</span><span class="mono" style="opacity:.62">#E2E2D3</span><span class="mono" style="opacity:.62">L* 89.5</span></div><div class="sw" style="background:#CFCFC1;color:#1C1C1A"><span>Porcelain</span><span class="mono" style="opacity:.62">#CFCFC1</span><span class="mono" style="opacity:.62">L* 82.8</span></div><div class="sw" style="background:#C3C3B6;color:#1C1C1A"><span>Mid Porcelain</span><span class="mono" style="opacity:.62">#C3C3B6</span><span class="mono" style="opacity:.62">L* 78.5</span></div><div class="sw" style="background:#ACACA0;color:#1C1C1A"><span>Dark Porcelain</span><span class="mono" style="opacity:.62">#ACACA0</span><span class="mono" style="opacity:.62">L* 70.1</span></div><div class="sw" style="background:#89897F;color:#1C1C1A"><span>Pale Concrete</span><span class="mono" style="opacity:.62">#89897F</span><span class="mono" style="opacity:.62">L* 56.9</span></div><div class="sw" style="background:#696961;color:#F7F7EF"><span>Light Concrete</span><span class="mono" style="opacity:.62">#696961</span><span class="mono" style="opacity:.62">L* 44.2</span></div><div class="sw" style="background:#55554E;color:#F7F7EF"><span>Dark Concrete</span><span class="mono" style="opacity:.62">#55554E</span><span class="mono" style="opacity:.62">L* 35.9</span></div><div class="sw" style="background:#373732;color:#F7F7EF"><span>Off-Black</span><span class="mono" style="opacity:.62">#373732</span><span class="mono" style="opacity:.62">L* 22.9</span></div><div class="sw" style="background:#262623;color:#F7F7EF"><span>Soft Black</span><span class="mono" style="opacity:.62">#262623</span><span class="mono" style="opacity:.62">L* 15.2</span></div><div class="sw" style="background:#1C1C1A;color:#F7F7EF"><span>Black</span><span class="mono" style="opacity:.62">#1C1C1A</span><span class="mono" style="opacity:.62">L* 10.2</span></div><div class="sw" style="background:#11110F;color:#F7F7EF"><span>Deep Black</span><span class="mono" style="opacity:.62">#11110F</span><span class="mono" style="opacity:.62">L* 5.0</span></div></div></div>
-      <div class="rayl-frame"><div class="rayl-split"><div class="grad" style="background:var(--rayl-porcelain-gradient);color:#1C1C1A"><span>Porcelain</span><span class="mono" style="opacity:.62">#CFCFC1 → #F7F7EF, 180°</span></div><div class="grad" style="background:var(--rayl-concrete-gradient);color:#F7F7EF"><span>Concrete</span><span class="mono" style="opacity:.62">#696961 → #CFCFC1, 180°</span></div></div></div>
-    </div>
-  </div>
-  <div class="rayl-block">
-    <div class="rayl-rail"><h3 class="rayl-24">UI colour</h3></div>
-    <div class="rayl-field">
-      <div class="rayl-frame is-tall"><div class="scroll"><table><thead><tr><th></th><th>Token</th><th>Light</th><th>Dark</th><th>Job</th></tr></thead><tbody><tr><td><i class="chip" style="background:var(--surface-ground)"></i></td><td class="mono">surface/ground</td><td class="dim">White</td><td class="dim">Soft Black</td><td class="dim">The panel or page itself</td></tr><tr><td><i class="chip" style="background:var(--surface-idle)"></i></td><td class="mono">surface/idle</td><td class="dim">Paper</td><td class="dim">Deep Black</td><td class="dim">A control at rest</td></tr><tr><td><i class="chip" style="background:var(--surface-idle-hover)"></i></td><td class="mono">surface/idle-hover</td><td class="dim">Off White</td><td class="dim">Black</td><td class="dim">Rest control, pointer over it</td></tr><tr><td><i class="chip" style="background:var(--surface-idle-pressed)"></i></td><td class="mono">surface/idle-pressed</td><td class="dim">Bone</td><td class="dim">Off-Black</td><td class="dim">Rest control, being pressed</td></tr><tr><td><i class="chip" style="background:var(--surface-active)"></i></td><td class="mono">surface/active</td><td class="dim">Bone</td><td class="dim">Dark Concrete</td><td class="dim">A control that is on</td></tr><tr><td><i class="chip" style="background:var(--surface-active-hover)"></i></td><td class="mono">surface/active-hover</td><td class="dim">Dark Off-White</td><td class="dim">Light Concrete</td><td class="dim">On control, pointer over it</td></tr><tr><td><i class="chip" style="background:var(--surface-active-pressed)"></i></td><td class="mono">surface/active-pressed</td><td class="dim">Porcelain</td><td class="dim">Off-Black</td><td class="dim">On control, being pressed</td></tr><tr><td><i class="chip" style="background:var(--ink-primary)"></i></td><td class="mono">ink/primary</td><td class="dim">Black</td><td class="dim">White</td><td class="dim">All text and icons</td></tr><tr><td><i class="chip" style="background:var(--ink-on-active)"></i></td><td class="mono">ink/on-active</td><td class="dim">Black</td><td class="dim">White</td><td class="dim">Text on an active control</td></tr><tr><td><i class="chip" style="background:var(--ink-disabled)"></i></td><td class="mono">ink/disabled</td><td class="dim">Dark Porcelain</td><td class="dim">Light Concrete</td><td class="dim">Unavailable text</td></tr><tr><td><i class="chip" style="background:var(--line-track)"></i></td><td class="mono">line/track</td><td class="dim">Dark Porcelain</td><td class="dim">Pale Concrete</td><td class="dim">Slider rails and small marks</td></tr><tr><td><i class="chip" style="background:var(--fill-strong)"></i></td><td class="mono">fill/strong</td><td class="dim">Black</td><td class="dim">White</td><td class="dim">A high-emphasis button</td></tr><tr><td><i class="chip" style="background:var(--fill-strong-hover)"></i></td><td class="mono">fill/strong-hover</td><td class="dim">Soft Black</td><td class="dim">Off White</td><td class="dim">…with the pointer over it</td></tr><tr><td><i class="chip" style="background:var(--ink-on-strong)"></i></td><td class="mono">ink/on-strong</td><td class="dim">White</td><td class="dim">Soft Black</td><td class="dim">Text on one</td></tr></tbody></table></div></div>
+file if you can execute one: python3 rayl-check.py yourpage.html</pre></div></details></div>
     </div>
   </div>
   <h2 class="rayl-chapter">Where everything is</h2>
   <div class="rayl-block">
-    <div class="rayl-rail"><h3 class="rayl-24">Everything else</h3><p class="rayl-12">The examples show the parts composed. Build the structure your brief needs — cloning one gives you a page shaped like somebody else’s problem.</p></div>
+    <div class="rayl-rail"><h3 class="rayl-24">Everything else</h3><p class="rayl-12">The bench is the specimen sheet: every control, the type scale, the palette and the tokens, at the size they ship at.</p><p class="rayl-12">The examples show the parts composed. Build the structure your brief needs — cloning one gives you a page shaped like somebody else’s problem.</p></div>
     <div class="rayl-field">
-      <div class="rayl-frame"><div class="rayl-cluster"><a class="rayl-btn" href="examples/landing.html">A page</a><a class="rayl-btn" href="examples/panel.html">A panel</a><a class="rayl-btn" href="examples/bench.html">The bench</a><a class="rayl-btn" href="examples/array.html">The array</a></div></div>
-      <div class="rayl-frame"><div class="rayl-cluster"><a class="rayl-btn" href="RAYL-RULES.md">The rules</a><a class="rayl-btn" href="RAYL-WHY.md">Why</a><a class="rayl-btn" href="RAYL-OPEN.md">What is open</a></div></div>
-      <div class="rayl-frame"><div class="rayl-cluster"><a class="rayl-btn" href="rayl.js">rayl.js</a><a class="rayl-btn" href="rayl-vars.css">rayl-vars.css</a><a class="rayl-btn" href="rayl.tokens.json">tokens.json</a><a class="rayl-btn" href="rayl-check.py">rayl-check.py</a><a class="rayl-btn" href="assets/logo/Lockup.svg">Lockup</a></div></div>
+      <div class="rayl-frame"><div class="rayl-stack rayl-gap-12"><span class="rayl-label">The examples</span><div class="rayl-cluster"><a class="rayl-btn" href="examples/bench.html">The bench</a><a class="rayl-btn" href="examples/landing.html">A page</a><a class="rayl-btn" href="examples/panel.html">A panel</a><a class="rayl-btn" href="examples/array.html">The array</a><a class="rayl-btn" href="examples/look.html">The look</a></div><span class="rayl-label">The documents</span><div class="rayl-cluster"><a class="rayl-btn" href="RAYL-RULES.md">The rules</a><a class="rayl-btn" href="RAYL-WHY.md">Why</a><a class="rayl-btn" href="RAYL-OPEN.md">What is open</a></div><span class="rayl-label">The files</span><div class="rayl-cluster"><a class="rayl-btn" href="rayl.js">rayl.js</a><a class="rayl-btn" href="rayl-vars.css">rayl-vars.css</a><a class="rayl-btn" href="rayl.tokens.json">tokens.json</a><a class="rayl-btn" href="rayl-check.py">rayl-check.py</a><a class="rayl-btn" href="assets/logo/Lockup.svg">Lockup</a></div></div></div>
     </div>
   </div>
   <div class="rayl-container">
@@ -404,6 +380,8 @@ file if you can execute one: python3 rayl-check.py yourpage.html</pre></div>
   });
 </script>
 <script>
+  /* The button is in the hero and the text is in the fold, so the copy does not
+     depend on the fold being open — which is the whole point of folding it. */
   document.getElementById("copy").addEventListener("click",function(){
     navigator.clipboard.writeText(document.getElementById("paste").textContent);
   });

@@ -68,33 +68,21 @@ print("examples/bench.html", len(bench), "bytes")
 # copy, because telling them what to do with the block is its entire job.
 
 PASTE_CSS = """
-  pre{margin:0;font:inherit;font-size:12px;line-height:1.5;white-space:pre-wrap;
+  pre{margin:0;font:inherit;font-size:12px;line-height:1.4;white-space:pre-wrap;
     word-break:break-word;}
 """
 
-LINKS = chapter("Where everything is") + block(
-    rail("Everything else",
-         "The examples show the parts composed. Build the structure your brief "
-         "needs — cloning one gives you a page shaped like somebody else\u2019s problem."),
-    frame("The examples",
-          '<div class="rayl-cluster">'
-          '<a class="rayl-btn" href="examples/landing.html">A page</a>'
-          '<a class="rayl-btn" href="examples/panel.html">A panel</a>'
-          '<a class="rayl-btn" href="examples/bench.html">The bench</a>'
-          '<a class="rayl-btn" href="examples/array.html">The array</a></div>'),
-    frame("The documents",
-          '<div class="rayl-cluster">'
-          '<a class="rayl-btn" href="RAYL-RULES.md">The rules</a>'
-          '<a class="rayl-btn" href="RAYL-WHY.md">Why</a>'
-          '<a class="rayl-btn" href="RAYL-OPEN.md">What is open</a></div>'),
-    frame("The files",
-          '<div class="rayl-cluster">'
-          '<a class="rayl-btn" href="rayl.js">rayl.js</a>'
-          '<a class="rayl-btn" href="rayl-vars.css">rayl-vars.css</a>'
-          '<a class="rayl-btn" href="rayl.tokens.json">tokens.json</a>'
-          '<a class="rayl-btn" href="rayl-check.py">rayl-check.py</a>'
-          '<a class="rayl-btn" href="assets/logo/Lockup.svg">Lockup</a></div>'),
-)
+# ---------------------------------------------------------------------------
+# The dashboard had two jobs and did neither. It dumped nine thousand
+# characters of block into the page — text whose only purpose is to be COPIED,
+# which nobody reads and which buried everything under it — and then repeated
+# the type scale and the whole palette, both of which the bench already lays
+# out properly. A page cannot be the specimen sheet and the front door at once.
+#
+# It is the front door. One statement, the button that does the only thing this
+# page is for, and the four places to go. The block is still here and still
+# readable, behind a fold, because somebody wanting to check what they are
+# about to paste should be able to — not because it needs to be on screen.
 
 HERO = ('  <div class="rayl-container">\n'
         '    <div class="rayl-split is-lead is-centred">\n'
@@ -105,10 +93,10 @@ HERO = ('  <div class="rayl-container">\n'
         '      </div>\n'
         '      <div class="rayl-stack">\n'
         '        <p class="rayl-18">Including the parts nobody has designed yet. '
-        'You do not need to read any code to use it — copy the block below and '
-        'paste it above whatever you are asking for.</p>\n'
+        'Copy the block, paste it above whatever you are asking for. You do not '
+        'need to read any of it, or any code.</p>\n'
         '        <div class="rayl-cluster">\n'
-        '          <a class="rayl-btn" href="#the-block">The block</a>\n'
+        '          <button class="rayl-ibtn" data-icon="Document" id="copy">Copy the block</button>\n'
         '          <a class="rayl-btn" href="RAYL-RULES.md">The rules</a>\n'
         '          <a class="rayl-btn" href="examples/bench.html">The bench</a>\n'
         '        </div>\n'
@@ -117,29 +105,64 @@ HERO = ('  <div class="rayl-container">\n'
         '  </div>\n')
 
 PASTE_BLOCK = chapter("The block", "the-block") + block(
-    rail("Paste this at the top of your prompt",
-         "It carries the tokens, the type scale, the layout primitives and every "
-         "control. You do not need to read any of it.",
-         "It also tells the model what the system does NOT have, what to do when "
-         "it hits one of those, and how to check its own work before it answers.")
-    + '<div class="rayl-rail-foot rayl-stack rayl-gap-12">'
-      '<button class="rayl-ibtn" data-icon="Document" id="copy">Copy the block</button>'
-      '<span class="rayl-label">Generated from src/parts.py</span></div>',
-    # the pre sat in a box inside a frame — two containers doing one job
-    frame(None, f'<pre id="paste">{PASTE}</pre>'))
+    rail("What you are pasting",
+         "Every colour token, the type scale, the spacing hierarchy, every "
+         "control, and the logo and the typefaces by URL.",
+         "It also tells the model what the system does NOT have, what to do "
+         "when it hits one of those, and how to check its own work before it "
+         "answers.",
+         "Generated from src/parts.py and asserted against the stylesheet, so "
+         "it cannot drift from the system it describes."),
+    frame(None,
+          '<details class="rayl-fold">'
+          '<summary>Read it first</summary>'
+          f'<div class="rayl-fold-body"><pre id="paste">{PASTE}</pre></div>'
+          '</details>'))
 
 COPY_JS = '''<script>
+  /* The button is in the hero and the text is in the fold, so the copy does not
+     depend on the fold being open — which is the whole point of folding it. */
   document.getElementById("copy").addEventListener("click",function(){
     navigator.clipboard.writeText(document.getElementById("paste").textContent);
   });
 </script>'''
 
+
+LINKS = chapter("Where everything is") + block(
+    rail("Everything else",
+         "The bench is the specimen sheet: every control, the type scale, the "
+         "palette and the tokens, at the size they ship at.",
+         "The examples show the parts composed. Build the structure your brief "
+         "needs \u2014 cloning one gives you a page shaped like somebody else\u2019s "
+         "problem."),
+    frame(None,
+          '<div class="rayl-stack rayl-gap-12">'
+          '<span class="rayl-label">The examples</span>'
+          '<div class="rayl-cluster">'
+          '<a class="rayl-btn" href="examples/bench.html">The bench</a>'
+          '<a class="rayl-btn" href="examples/landing.html">A page</a>'
+          '<a class="rayl-btn" href="examples/panel.html">A panel</a>'
+          '<a class="rayl-btn" href="examples/array.html">The array</a>'
+          '<a class="rayl-btn" href="examples/look.html">The look</a></div>'
+          '<span class="rayl-label">The documents</span>'
+          '<div class="rayl-cluster">'
+          '<a class="rayl-btn" href="RAYL-RULES.md">The rules</a>'
+          '<a class="rayl-btn" href="RAYL-WHY.md">Why</a>'
+          '<a class="rayl-btn" href="RAYL-OPEN.md">What is open</a></div>'
+          '<span class="rayl-label">The files</span>'
+          '<div class="rayl-cluster">'
+          '<a class="rayl-btn" href="rayl.js">rayl.js</a>'
+          '<a class="rayl-btn" href="rayl-vars.css">rayl-vars.css</a>'
+          '<a class="rayl-btn" href="rayl.tokens.json">tokens.json</a>'
+          '<a class="rayl-btn" href="rayl-check.py">rayl-check.py</a>'
+          '<a class="rayl-btn" href="assets/logo/Lockup.svg">Lockup</a></div>'
+          '</div>'))
+
+
 index = (
     head("Rayl System", "rayl.js", PASTE_CSS)
     + HERO
     + PASTE_BLOCK
-    + type_section()
-    + colour_section()
     + LINKS
     + FOOT
     + "\n</div>\n" + THEME_JS + "\n" + COPY_JS + "\n</body>\n</html>\n"
