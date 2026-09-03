@@ -1,6 +1,6 @@
 /* --------------------------------------------------------- the label roll */
 var reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-var ruler = null, advCache = Object.create(null);
+var ruler = null, advCache = Object.create(null), ROLLS = [];
 function advance(ch, font, track){
   var key = font + "|" + track + "|" + ch;
   if (advCache[key] !== undefined) return advCache[key];
@@ -38,6 +38,7 @@ function Roll(host, owner){
   this.track = cs.letterSpacing;
   this.render(this.text);
   this.name();
+  ROLLS.push(this);
 }
 /* An owner that came with a name of its own keeps it — an icon-only button is
    labelled for what it does, not for the nothing it has written on it. */
@@ -131,6 +132,27 @@ Roll.prototype.to = function(next, force){
   }, ms + (moving.length - 1) * st + 40);
 };
 Roll.prototype.turn = function(){ this.to(this.showing, true); };
+
+/* ------------------------------------------------- when the face arrives ---
+ * Every character box is sized from a measured glyph advance, and the faces
+ * load with font-display:swap — so the first measurement is taken against the
+ * fallback and every box on the page is the wrong width until something forces
+ * a re-render. That is why a label came up badly spaced and fixed itself the
+ * moment it was pressed.
+ *
+ * The cache cannot spot this on its own: its key is built from the COMPUTED
+ * font-family, which already says Azeret while the fallback is what is
+ * actually drawing. So the cache is thrown away wholesale and every live roll
+ * re-renders, once, when the real faces land.
+ * ------------------------------------------------------------------------- */
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){
+  advCache = Object.create(null);
+  for (var i = 0; i < ROLLS.length; i++){
+    var r = ROLLS[i];
+    r.render(r.showing);
+    if (r.onremeasure) r.onremeasure();
+  }
+});
 
 
 /* ------------------------------------------------------------- the counter */
@@ -294,9 +316,7 @@ function upgradeIconButton(btn){
     btn.style.setProperty("--w", (w + 24 + 6 + h) + "px");
   }
   size();
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){
-    advCache = Object.create(null); r.render(r.showing); size();
-  });
+  r.onremeasure = size;
 
   if (btn.disabled) return r;
   /* The body divides and the icon rides up on hover — neither is text. The
@@ -720,4 +740,77 @@ function upgradeSkeleton(sk){
   }
   sk.setAttribute("aria-hidden", "true");
   return sk;
+}
+
+/* ================================================================ MAGNETISM ==
+ * A button leans toward a cursor that has not arrived yet, exactly the way the
+ * slider's nub does — same range, same strength, same cap, same falloff. It is
+ * not a second movement: the mechanism already existed, it was welded to one
+ * control, and this only takes the weld off.
+ *
+ * The numbers are the slider's, unchanged:
+ *   range 104   nothing past it
+ *   strength .6 of the distance to the cursor
+ *   cap 12      however close it gets
+ *   falloff     nothing at the centre, nothing at the edge, most in between
+ *
+ * One document listener for every button on the page, read once per frame.
+ * Rects are cached and thrown away on scroll or resize, because measuring a
+ * panel's worth of controls on every pointer event is how a page starts
+ * dropping frames.
+ * ========================================================================== */
+var LEAN_RANGE = 104, LEAN_STRENGTH = 0.6, LEAN_MAX = 12;
+var leanEls = [], leanRects = null, leanFrame = 0, leanPointer = null;
+
+function leanRegister(el){ if (leanEls.indexOf(el) < 0) leanEls.push(el); }
+
+function leanMeasure(){
+  leanRects = leanEls.map(function(el){
+    var r = el.getBoundingClientRect();
+    return {el:el, x:r.left + r.width/2, y:r.top + r.height/2};
+  });
+}
+
+function leanApply(){
+  leanFrame = 0;
+  if (!leanRects) leanMeasure();
+  var p = leanPointer;
+  for (var i = 0; i < leanRects.length; i++){
+    var it = leanRects[i], el = it.el;
+    if (el.disabled || !el.isConnected){ continue; }
+    var dx = p ? p.x - it.x : 0, dy = p ? p.y - it.y : 0;
+    var dist = Math.hypot(dx, dy);
+    if (!p || dist > LEAN_RANGE){
+      if (el.classList.contains("is-near")){
+        el.classList.remove("is-near");
+        el.style.setProperty("--lean-x", "0px");
+        el.style.setProperty("--lean-y", "0px");
+      }
+      continue;
+    }
+    /* nothing at the centre, nothing at the edge, most in between */
+    var fall = 1 - dist / LEAN_RANGE;
+    var cap = function(v){ return Math.max(-LEAN_MAX, Math.min(LEAN_MAX, v)); };
+    el.classList.add("is-near");
+    el.style.setProperty("--lean-x", cap(dx * LEAN_STRENGTH * fall).toFixed(2) + "px");
+    el.style.setProperty("--lean-y", cap(dy * LEAN_STRENGTH * fall).toFixed(2) + "px");
+  }
+}
+
+function leanSchedule(){
+  if (!leanFrame) leanFrame = requestAnimationFrame(leanApply);
+}
+
+if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+    window.matchMedia("(hover: hover)").matches){
+  document.addEventListener("pointermove", function(e){
+    leanPointer = {x:e.clientX, y:e.clientY};
+    leanSchedule();
+  }, {passive:true});
+  document.addEventListener("pointerleave", function(){
+    leanPointer = null; leanSchedule();
+  });
+  addEventListener("scroll", function(){ leanRects = null; leanSchedule(); },
+                   {passive:true, capture:true});
+  addEventListener("resize", function(){ leanRects = null; leanSchedule(); });
 }

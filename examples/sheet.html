@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Sheet</title>
-<script src="../rayl.js?v=f2c94dc7"></script>
+<script src="../rayl.js?v=85273708"></script>
 <script type="module" src="../assets/sheet/rayl-sheet.js"></script>
 <style>
   .short { height: 220px; border-radius: 8px; }
@@ -39,8 +39,8 @@
 -->
 <body class="rayl" style="background: transparent">
 
-<div id="ground" data-rayl-sheet="deep" data-place="page"
-     data-rayl-provisional="a sheet as the ground of a page (the layering item in RAYL-OPEN.md), and deep, a dark gradient the system does not name"></div>
+<div id="ground" data-rayl-sheet="concrete" data-place="page"
+     data-rayl-provisional="a sheet as the ground of a page — the layering item in RAYL-OPEN.md"></div>
 
 <div class="rayl-page" style="background: transparent">
 
@@ -68,21 +68,16 @@
     on the page: time at one a second, amplitude 1, blend 0.5, the disc
     reaching 0.6 of the frame and taking the colour 30 per cent and the alpha
     50. The pointer is not smoothed, because theirs is not.</p>
-    <p class="rayl-hint">Two things are not theirs. The colours are palette
-    steps through tokens — the ramp, the floor the curtain falls to and the
-    disc are all steps of the gradient the sheet is named after, so the whole
-    picture stays inside it. And one line: theirs multiplies the ramp by the
-    intensity, which runs the curtain down to black and off the palette
-    everywhere but its brightest edge; this crosses from the gradient's dark
-    stop to the ramp instead.</p>
-    <p class="rayl-hint">Deep, which this page opens on, is a dark gradient the
-    system does not name, and it is the only ground the reference's picture can
-    stand on: theirs is a bright haze over near-black, and both approved Rayl
-    gradients are light. Its four colours are palette steps and two of them are
-    the grounds dark mode already ships. Switch to Porcelain or Concrete and
-    the same shader, the same motion and the same disc are all still there —
-    the picture just stops reading as light and starts reading as shadow. That
-    is the trade, and it is the one decision this component is waiting on.</p>
+    <p class="rayl-hint">One thing is not theirs, and it is the whole of what
+    makes this Rayl. Their ramp, their curtain and their cursor disc all carry
+    colours, and they composite over a ground through an alpha; here every one
+    of them carries a level between nought and one instead, and the colour is
+    named once at the end. Nought is the gradient's dark stop and one is its
+    light stop, and the number cannot leave that range — so the brightest pixel
+    on a sheet is the brightest colour the gradient has, the darkest is its
+    darkest, and there is nothing outside it to blow out. The canvas is opaque:
+    the ground is inside the shader as a number rather than under a translucent
+    layer, so nothing here is drawn at part strength either.</p>
     <p class="rayl-hint">Section 7 says gradients are flat art and stay flat.
     This drifts on its own and answers the pointer. The canvas carries alpha
     and composites over the ground, the way the reference does, which is the
@@ -94,9 +89,8 @@
   <section class="rayl-section">
     <span class="rayl-label">Which gradient</span>
     <div class="rayl-seg" id="sheet">
-      <button class="rayl-seg-opt is-third" type="button">Porcelain</button>
-      <button class="rayl-seg-opt is-third" type="button">Concrete</button>
-      <button class="rayl-seg-opt is-third is-on" type="button">Deep</button>
+      <button class="rayl-seg-opt" type="button">Porcelain</button>
+      <button class="rayl-seg-opt is-on" type="button">Concrete</button>
     </div>
     <span class="rayl-label">What drives it</span>
     <div class="rayl-seg" id="motion">
@@ -168,7 +162,7 @@
 
 <script type="module">
   const ground = document.getElementById("ground");
-  const said = { sheet: "deep", motion: "pointer" };
+  const said = { sheet: "concrete", motion: "pointer" };
   const OVER = ["amplitude", "blend", "speed", "glow", "tint", "veil"];
 
   const show = () => {
@@ -197,26 +191,11 @@
     }
   }
   for (const name of ["sheet", "motion"]) {
-    document.getElementById(name).addEventListener("rayl:change", (e) => {
-      const value = String(e.detail.value).toLowerCase();
-      set({ [name]: value });
-      if (name === "sheet") ink(value);
-    });
+    document.getElementById(name).addEventListener("rayl:change", (e) =>
+      set({ [name]: String(e.detail.value).toLowerCase() }),
+    );
   }
 
-  /* Hand-rolled, and it is the open item: nothing in the system says what ink
-     does over a sheet, so this page flips its own theme when the ground goes
-     dark. The component does not touch ink. */
-  const ink = (which) => {
-    const want = which === "deep" ? "dark" : "light";
-    const seg = document.getElementById("theme");
-    document.documentElement.dataset.theme = want;
-    const say = () => seg.select?.(seg.querySelector(`[data-mode="${want}"]`));
-    if (document.readyState === "loading")
-      document.addEventListener("DOMContentLoaded", say, { once: true });
-    else say();
-  };
-  ink("deep");
   show();
 </script>
 <script>

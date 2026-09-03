@@ -147,20 +147,27 @@
   border:0;border-radius:var(--rayl-radius);
   background:var(--surface-idle);color:var(--ink-primary);
   cursor:pointer;overflow:hidden;              /* the clip is the button shape */
-  transform:scale(1);
+  --lean-x:0px; --lean-y:0px; --rayl-scale:1;
+  transform:translate(var(--lean-x),var(--lean-y)) scale(var(--rayl-scale));
   /* out is slower than in, so it presses crisply and returns without snapping */
   transition:background 120ms ease-out, transform 220ms var(--rayl-ease);
 }
 .rayl-btn:hover{background:var(--surface-idle-hover);}
 .rayl-btn:active:not(:disabled){
   background:var(--surface-idle-pressed);
-  transform:scale(var(--rayl-press));
+  --rayl-scale:var(--rayl-press);
   transition:background 120ms ease-out, transform 90ms var(--rayl-ease);
 }
 .rayl-btn[aria-pressed="true"]{background:var(--surface-active);color:var(--ink-on-active);}
 .rayl-btn[aria-pressed="true"]:hover{background:var(--surface-active-hover);}
 .rayl-btn[aria-pressed="true"]:active:not(:disabled){background:var(--surface-active-pressed);}
 .rayl-btn:disabled{color:var(--ink-disabled);cursor:default;background:var(--surface-idle);}
+/* MAGNETISM. The same treatment the slider's nub has: the button leans toward
+   a cursor that has not arrived yet, by at most 12, and drifts home when it
+   goes. rayl.js writes --lean-x and --lean-y; the transition is short catching
+   the cursor and long letting go, which is what makes it read as attraction
+   rather than as a thing sliding about. */
+.rayl-btn.is-near{transition:background 120ms ease-out, transform 90ms linear;}
 .rayl-btn:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
 /* ONE BUTTON IN A SET CAN BE STRONG — the confirm in a dialog, and that is
    what it is for. It is the only place ink becomes a ground for a control, and

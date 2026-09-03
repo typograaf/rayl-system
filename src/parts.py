@@ -794,6 +794,17 @@ OPEN = [
   "it is the system's second easing in practice. Either it joins the system as "
   "the value a ground moves on, or every one of the eleven changes."),
 
+ ("Magnetism on buttons", "PROVISIONAL",
+  "the slider's lean, applied to every button",
+  "The nub has leaned toward an approaching cursor since it was built, and "
+  "nothing else did. Buttons do now, on the slider's own numbers — range 104, "
+  "strength 0.6, cap 12 — so no value was invented and it is one mechanism "
+  "rather than two. What is worth watching: a cluster gaps 6 and the cap is 12, "
+  "so two buttons leaning at the same cursor can close most of the gap between "
+  "them. Section 7 says ask before adding a second movement; this was asked "
+  "for, and it is an existing movement reaching further rather than a new one, "
+  "but it is the first time anything in Rayl moves without being touched."),
+
  ("Transparency", "OPEN",
   "the scrim behind a dialog is the first thing in Rayl drawn at part strength",
   "Everything else in the system is flat and opaque — it is why the loading "

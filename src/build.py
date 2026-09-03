@@ -79,7 +79,8 @@ if(!document.getElementById("rayl-style")){
 
 function init(root){
   root=root||document;
-  [].forEach.call(root.querySelectorAll(".rayl-btn"),upgradeButton);
+  [].forEach.call(root.querySelectorAll(".rayl-btn"),function(b){
+    upgradeButton(b); leanRegister(b); });
   [].forEach.call(root.querySelectorAll(".rayl-ibtn"),upgradeIconButton);
   [].forEach.call(root.querySelectorAll(".rayl-seg"),upgradeSeg);
   [].forEach.call(root.querySelectorAll(".rayl-tabs"),upgradeTabs);

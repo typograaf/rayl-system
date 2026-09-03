@@ -170,7 +170,8 @@ bar and its first cell can be a rayl-seg-name carrying the set's name in full
 ink, is-tight sizes it to its own content. Never build a one-of-many row out of
 rayl-btn and aria-pressed. A value on a line rolls the same way a button label
 does: rayl-line with data-label and data-swap, and data-rolls on the control
-that changes it. HOVER TURNS NOTHING — a label rolls on a click, or when the text it holds changes on its own. The ground stepping one rung is the whole of what hover does; adding a turn to it makes the movement mean nothing.
+that changes it. BUTTONS LEAN toward a cursor that has not arrived yet — rayl.js does it, do not
+write your own. HOVER TURNS NOTHING — a label rolls on a click, or when the text it holds changes on its own. The ground stepping one rung is the whole of what hover does; adding a turn to it makes the movement mean nothing.
 
 FIELDS. rayl-input is the field; add is-multi for a textarea. rayl-select is
 authored as nothing but its rayl-menu-opt options with is-on on the chosen one —

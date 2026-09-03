@@ -60,7 +60,7 @@ export const DEFAULTS = {
   /* Which approved gradient the ground underneath is, and which palette
      colours the curtain is made of. `concrete` is the one that matches the
      reference: its three stops sit at the same lightnesses theirs do. */
-  sheet: "concrete", // porcelain | concrete | deep (provisional)
+  sheet: "concrete", // porcelain | concrete
 
   /* pointer — the reference: the curtain drifts and the cursor carries a disc.
      scroll  — the disc crosses as the element crosses the screen.
@@ -100,37 +100,8 @@ export const DEFAULTS = {
  * Tokens, not colour: a page that names hexes is right in neither mode.
  */
 const SHEETS = {
-  porcelain: {
-    ground: ["var(--rayl-porcelain)", "var(--rayl-off-white)"],
-    stops: [
-      "var(--rayl-dark-off-white)",
-      "var(--rayl-white)",
-      "var(--rayl-off-white)",
-    ],
-    glow: "var(--rayl-white)",
-  },
-  concrete: {
-    ground: ["var(--rayl-light-concrete)", "var(--rayl-porcelain)"],
-    stops: [
-      "var(--rayl-pale-concrete)",
-      "var(--rayl-porcelain)",
-      "var(--rayl-dark-porcelain)",
-    ],
-    glow: "var(--rayl-off-white)",
-  },
-  /* PROVISIONAL — a third pair, and the only one the reference's picture can
-     stand on. Its four colours are palette steps and two of them are the
-     grounds dark mode already ships, but the system names two gradients and
-     both are light. */
-  deep: {
-    ground: ["var(--rayl-soft-black)", "var(--rayl-deep-black)"],
-    stops: [
-      "var(--rayl-light-concrete)",
-      "var(--rayl-deep-black)",
-      "var(--rayl-dark-concrete)",
-    ],
-    glow: "var(--rayl-porcelain)",
-  },
+  porcelain: ["var(--rayl-porcelain)", "var(--rayl-off-white)"],
+  concrete: ["var(--rayl-light-concrete)", "var(--rayl-porcelain)"],
 };
 
 const STYLE_ID = "rayl-sheet-css";
@@ -147,33 +118,17 @@ const CSS = `
     var(--rayl-sheet-b));
   --rayl-sheet-a:var(--rayl-light-concrete);
   --rayl-sheet-b:var(--rayl-porcelain);
-  --rayl-sheet-1:var(--rayl-pale-concrete);
-  --rayl-sheet-2:var(--rayl-porcelain);
-  --rayl-sheet-3:var(--rayl-dark-porcelain);
-  --rayl-sheet-glow:var(--rayl-off-white);
-}
-[data-rayl-sheet="deep"]{
-  --rayl-sheet-a:var(--rayl-soft-black);
-  --rayl-sheet-b:var(--rayl-deep-black);
-  --rayl-sheet-1:var(--rayl-light-concrete);
-  --rayl-sheet-2:var(--rayl-deep-black);
-  --rayl-sheet-3:var(--rayl-dark-concrete);
-  --rayl-sheet-glow:var(--rayl-porcelain);
 }
 [data-rayl-sheet="porcelain"]{
   --rayl-sheet-a:var(--rayl-porcelain);
   --rayl-sheet-b:var(--rayl-off-white);
-  --rayl-sheet-1:var(--rayl-dark-off-white);
-  --rayl-sheet-2:var(--rayl-white);
-  --rayl-sheet-3:var(--rayl-off-white);
-  --rayl-sheet-glow:var(--rayl-white);
 }
 [data-rayl-sheet] > canvas{
   position:absolute;inset:0;display:block;width:100%;height:100%;
   border-radius:inherit;
   pointer-events:none;
 }
-/* A ground never takes the pointer. Safari will hit-test a fixed, full-frame
+/* A ground never takes the pointer. Safari hit-tests a fixed, full-frame
    element ahead of the static content over it, which put every control on the
    page behind a sheet; the reference's own overlay carries the same rule. The
    sheet listens on the window, so it loses nothing. */
@@ -202,15 +157,15 @@ precision highp float;
 
 uniform float uTime;
 uniform float uAmplitude;
-uniform vec3 uColorStops[3];
+uniform vec3 uLevels;
 uniform vec2 uResolution;
 uniform float uBlend;
 uniform vec2 uMouse;
-uniform vec3 uGlowColor;
-uniform vec3 uFloor;
 uniform float uGlow;
 uniform float uTint;
 uniform float uVeil;
+uniform vec3 uDark;
+uniform vec3 uLight;
 
 out vec4 fragColor;
 
@@ -258,23 +213,22 @@ float snoise(vec2 v){
   return 130.0 * dot(m, g);
 }
 
-struct ColorStop {
-  vec3 color;
-  float position;
-};
+/* Their three-stop ramp across the frame, carrying a level rather than a
+   colour: nought is the gradient's dark stop and one is its light stop. */
+float ramp3(vec3 levels, float at) {
+  return at < 0.5
+    ? mix(levels.x, levels.y, at / 0.5)
+    : mix(levels.y, levels.z, (at - 0.5) / 0.5);
+}
 
-#define COLOR_RAMP(colors, factor, finalColor) {                int index = 0;                                              for (int i = 0; i < 2; i++) {                                    ColorStop currentColor = colors[i];                         bool isInBetween = currentColor.position <= factor;         index = int(mix(float(index), float(i), float(isInBetween)));   }                                                           ColorStop currentColor = colors[index];                     ColorStop nextColor = colors[index + 1];                    float range = nextColor.position - currentColor.position;   float lerpFactor = (factor - currentColor.position) / range;   finalColor = mix(currentColor.color, nextColor.color, lerpFactor); }
+float hash(vec2 p) {
+  return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453123);
+}
 
 void main() {
   vec2 uv = gl_FragCoord.xy / uResolution;
 
-  ColorStop colors[3];
-  colors[0] = ColorStop(uColorStops[0], 0.0);
-  colors[1] = ColorStop(uColorStops[1], 0.5);
-  colors[2] = ColorStop(uColorStops[2], 1.0);
-
-  vec3 rampColor;
-  COLOR_RAMP(colors, uv.x, rampColor);
+  float level = ramp3(uLevels, uv.x);
 
   float height = snoise(vec2(uv.x * 2.0 + uTime * 0.1, uTime * 0.25)) * 0.5 * uAmplitude;
   height = exp(height);
@@ -283,31 +237,44 @@ void main() {
 
   float midPoint = 0.20;
   float auroraAlpha = smoothstep(midPoint - uBlend * 0.5, midPoint + uBlend * 0.5, intensity);
-  /*
-   * Theirs is intensity * rampColor, which runs the curtain down to black
-   * and takes it off the palette everywhere but its brightest edge. This
-   * crosses from the gradient's own dark stop to the ramp instead, so every
-   * pixel of the curtain is between two palette steps of the gradient it
-   * belongs to. It is the one line of their shader that is not theirs.
-   */
-  vec3 auroraColor = mix(uFloor, rampColor, clamp(intensity, 0.0, 1.0));
+  float aurora = clamp(intensity, 0.0, 1.0) * level;
 
   // Cursor effect (glow) — works even if auroraAlpha is zero
   vec2 mouseUV = uMouse / uResolution;
   float dist = distance(uv, mouseUV);
   float cursorEffect = smoothstep(uGlow, 0.0, dist);
 
-  vec3 finalColor = mix(auroraColor, uGlowColor, cursorEffect * uTint);
-  float finalAlpha = max(auroraAlpha, cursorEffect * uVeil);
+  /* Their two composites, run on the level instead of on a colour. The disc
+     goes to one, which is the light stop, so the brightest thing on a sheet
+     is the brightest colour the gradient has and nothing is above it. */
+  float lit = mix(aurora, 1.0, cursorEffect * uTint);
+  float cover = max(auroraAlpha, cursorEffect * uVeil);
 
-  fragColor = vec4(finalColor, finalAlpha);
+  /* The ground it is over: the approved gradient, first stop at 0.349%. */
+  float ground = clamp((uv.y - 0.00349) / 0.99651, 0.0, 1.0);
+
+  /* One number, and it cannot leave nought to one — so no pixel of a sheet is
+     lighter than the gradient's light stop or darker than its dark one. */
+  float t = clamp(mix(ground, lit, cover), 0.0, 1.0);
+
+  /* Two neighbouring palette steps can be forty levels apart, so a field this
+     wide bands. Half a level of noise, under what eight bits can hold. */
+  vec3 col = mix(uDark, uLight, t) + (hash(gl_FragCoord.xy) - 0.5) / 255.0;
+  /* Held inside the two stops, so the half level of dither cannot push a
+     pixel past either end of the gradient. */
+  col = clamp(col, min(uDark, uLight), max(uDark, uLight));
+  fragColor = vec4(col, 1.0);
 }
 `;
 
 const UNIFORMS = [
-  "uTime", "uAmplitude", "uColorStops", "uResolution", "uBlend", "uMouse",
-  "uGlowColor", "uFloor", "uGlow", "uTint", "uVeil",
+  "uTime", "uAmplitude", "uLevels", "uResolution", "uBlend", "uMouse",
+  "uGlow", "uTint", "uVeil", "uDark", "uLight",
 ];
+
+/* Their three ramp stops, as levels off their own three colours: bright at one
+   edge, near the dark stop in the middle, most of the way back at the other. */
+const LEVELS = [1, 0.05, 0.75];
 
 function styles() {
   if (typeof document === "undefined") return;
@@ -343,15 +310,13 @@ export class RaylSheet {
     const known = Object.hasOwn(SHEETS, this.look.sheet);
     this.element.dataset.raylSheet = known ? this.look.sheet : "concrete";
     this.element.dataset.place = this.look.place;
-    /* An invention you can see is a decision waiting to be made. */
-    const said = [
-      this.look.place === "page" &&
-        "a sheet as a page ground — layering is open",
-      this.look.sheet === "deep" &&
-        "a dark gradient — the system names two and both are light",
-    ].filter(Boolean);
-    if (said.length) this.element.dataset.raylProvisional = said.join("; ");
-    else delete this.element.dataset.raylProvisional;
+    if (this.look.place === "page") {
+      /* An invention you can see is a decision waiting to be made. */
+      this.element.dataset.raylProvisional =
+        "a sheet as a page ground — layering is open";
+    } else {
+      delete this.element.dataset.raylProvisional;
+    }
     if (this.lit()) this.build();
     else this.tear();
     this.colours();
@@ -362,18 +327,13 @@ export class RaylSheet {
     return this.look.motion !== "still" && !reduced();
   }
 
-  /** The four colours, off the tokens, so the shader never names one. */
+  /** The gradient's two stops, off the tokens, and nothing else. Every pixel
+      of a sheet is between them. */
   colours() {
     if (!this.gl) return;
     const style = getComputedStyle(this.element);
-    const at = (name) => rgb(style.getPropertyValue(name));
-    this.stops = [
-      ...at("--rayl-sheet-1"),
-      ...at("--rayl-sheet-2"),
-      ...at("--rayl-sheet-3"),
-    ];
-    this.glow = at("--rayl-sheet-glow");
-    this.floor = at("--rayl-sheet-a");
+    this.dark = rgb(style.getPropertyValue("--rayl-sheet-a"));
+    this.light = rgb(style.getPropertyValue("--rayl-sheet-b"));
   }
 
   /* -------------------------------------------------------------- gl ---- */
@@ -382,18 +342,12 @@ export class RaylSheet {
     if (this.gl) return;
     const canvas = document.createElement("canvas");
     canvas.setAttribute("aria-hidden", "true");
-    /* Theirs: an alpha canvas, not premultiplied, cleared to nothing, so the
-       ground shows through wherever the curtain does not reach. */
-    const gl = canvas.getContext("webgl2", {
-      alpha: true,
-      premultipliedAlpha: false,
-      antialias: false,
-    });
+    /* Opaque. The ground is inside the shader as a number rather than under a
+       translucent canvas, so nothing here is drawn at part strength. */
+    const gl = canvas.getContext("webgl2", { alpha: false, antialias: false });
     /* No WebGL2 is not a failure: the CSS underneath is the approved gradient,
        which is what the rules ask for anyway. */
     if (!gl) return;
-    gl.clearColor(0, 0, 0, 0);
-
     const program = gl.createProgram();
     for (const [kind, source] of [
       [gl.VERTEX_SHADER, VERTEX],
@@ -414,8 +368,6 @@ export class RaylSheet {
       return;
     }
     gl.useProgram(program);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     /* One triangle over the whole frame. */
     const seat = gl.getAttribLocation(program, "position");
@@ -468,18 +420,17 @@ export class RaylSheet {
 
     gl.uniform1f(u.uTime, seconds * this.look.speed);
     gl.uniform1f(u.uAmplitude, this.look.amplitude);
-    gl.uniform3fv(u.uColorStops, this.stops ?? new Array(9).fill(0));
+    gl.uniform3fv(u.uLevels, LEVELS);
     gl.uniform2f(u.uResolution, w, h);
     gl.uniform1f(u.uBlend, this.look.blend);
     /* Theirs: canvas pixels, y from the bottom. */
     gl.uniform2f(u.uMouse, mouse[0] * w, (1 - mouse[1]) * h);
-    gl.uniform3fv(u.uGlowColor, this.glow ?? [1, 1, 1]);
-    gl.uniform3fv(u.uFloor, this.floor ?? [0, 0, 0]);
+    gl.uniform3fv(u.uDark, this.dark ?? [0, 0, 0]);
+    gl.uniform3fv(u.uLight, this.light ?? [1, 1, 1]);
     gl.uniform1f(u.uGlow, this.look.glow);
     gl.uniform1f(u.uTint, this.look.tint);
     gl.uniform1f(u.uVeil, this.look.veil);
 
-    gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 

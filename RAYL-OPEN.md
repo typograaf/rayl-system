@@ -137,6 +137,12 @@ A turn is 480ms with no beat between turns, a scramble turn 480ms, and it sits o
 
 Every documented movement is 280ms on cubic-bezier(0.65,0,0.35,1), and section 7 says both surfaces move together on the same duration and curve. The shipped controls do not: a hover's colour change is 120ms ease-out while the label rolls at 280ms. It was in two places when it was first written down. The thirteen controls took it as the house value and it is now in eleven, which is worth knowing before deciding: this is no longer a stray, it is the system's second easing in practice. Either it joins the system as the value a ground moves on, or every one of the eleven changes.
 
+## Magnetism on buttons
+
+**PROVISIONAL** — the slider's lean, applied to every button
+
+The nub has leaned toward an approaching cursor since it was built, and nothing else did. Buttons do now, on the slider's own numbers — range 104, strength 0.6, cap 12 — so no value was invented and it is one mechanism rather than two. What is worth watching: a cluster gaps 6 and the cap is 12, so two buttons leaning at the same cursor can close most of the gap between them. Section 7 says ask before adding a second movement; this was asked for, and it is an existing movement reaching further rather than a new one, but it is the first time anything in Rayl moves without being touched.
+
 ---
 
 ## Controls nobody has designed

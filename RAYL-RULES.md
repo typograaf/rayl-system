@@ -768,6 +768,29 @@ is noise, and the ground change already says which one is under the pointer.
 A disabled control stays still because the movement means something happened, and
 nothing did.
 
+### Magnetism
+
+**A button leans toward a cursor that has not arrived yet**, and drifts home
+when it goes. It is the slider nub's behaviour with the weld taken off — the
+same range, strength, cap and falloff, not a second mechanism and not new
+numbers.
+
+| | |
+|---|---|
+| range | **104** — nothing past it |
+| strength | **0.6** of the distance to the cursor |
+| cap | **12**, however close it gets |
+| falloff | nothing at the centre, nothing at the edge, most in between |
+
+The lean is drawn and never stored: it moves the button, not anything the button
+means. It composes with the press rather than replacing it, so a button being
+held while leaning does both. It is off under `prefers-reduced-motion` and on
+anything without a hover pointer.
+
+A cluster gaps 6 and the cap is 12, so two buttons can lean toward the same
+cursor and close most of the gap between them. That is the behaviour, not a
+bug — but it is why the cap is a cap.
+
 ### The press
 
 Every button sinks to **0.96** while held: 90ms down, 220ms back. The two
