@@ -1300,8 +1300,17 @@ everything that happens to be a card.
 | class | what |
 |---|---|
 | `is-look` | the treatment: the gradient, three inner shadows, radius 24 |
-| `is-look is-inset` | the same shadow on a solid ground at the control radius — a row inside a card |
 | `is-look is-deep` | the fourth inner shadow switched on. Off by default |
+
+**It is the card treatment and there is no smaller one.** The look goes on the
+container and nothing else. The file uses it at a second scale as well, on the
+20-tall rows inside a card; Rayl does not.
+
+**Never nest it, and whatever sits on a looked card is flat.** A pressed surface
+inside a pressed surface reads as two materials arguing and neither of them
+reads as depth. The card is the thing with a shape; its contents are drawn on
+it. A nested `is-look` is stripped by the stylesheet rather than trusted to
+nobody writing one.
 
 **One elliptical radial gradient under three inner shadows.** Two whites lifting
 the bottom edge, one grey pressing in from the bottom-right. No outer shadow —

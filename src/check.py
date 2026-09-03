@@ -235,6 +235,29 @@ def check_html(text, r):
                 f'{m.group(1)}="…{m.group(2)}…" — name a token, never a hex. '
                 "A value in an attribute drifts the same way one in a stylesheet does.")
 
+    # The look goes on the card and nothing inside it. The stylesheet strips a
+    # nested one so it cannot be seen, which means it can only be found here.
+    depth, stack = 0, []
+    for m in re.finditer(r"<(/?)([a-zA-Z][a-zA-Z0-9-]*)([^>]*)>", text):
+        closing, tag, attrs = m.group(1), m.group(2).lower(), m.group(3)
+        if tag in ("br", "img", "input", "meta", "link", "hr", "source"):
+            continue
+        if closing:
+            if stack:
+                if stack.pop(): depth -= 1
+            continue
+        if attrs.rstrip().endswith("/"):
+            continue
+        looks = bool(re.search(r"""class=["'][^"']*\bis-look\b""", attrs)) or \
+                "data-look" in attrs
+        if looks and depth:
+            r.error("nested-look", lineno(text, m.start()),
+                    "is-look inside is-look — the look goes on the card and what "
+                    "sits on it is flat. Two pressed surfaces read as two "
+                    "materials arguing and neither reads as depth.")
+        stack.append(looks)
+        if looks: depth += 1
+
     prov = re.findall(r"""data-rayl-provisional=["']([^"']*)["']""", text)
     for p in prov:
         r.note("provisional", 1, f"provisional, not Rayl yet: {p}")

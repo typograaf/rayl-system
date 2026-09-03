@@ -172,7 +172,16 @@ grey darkens the bottom to L\* 80 and leaves the top-left at 88. The two white
 glows lift the bottom edge, and after the reversal they sit over the grey at the
 rim.
 
-### It is used at two scales, and the two behave differently
+### It is used at two scales, and Rayl takes one
+
+**The system uses the card treatment only.** The second scale is in the file and
+is not in Rayl: a pressed surface inside a pressed surface reads as two
+materials arguing, and neither of them reads as depth. Whatever sits on a looked
+card is flat, and the stylesheet strips a nested one rather than trusting nobody
+to write it. What follows is what the file does, recorded because the geometry
+of the two scales is the reason the shadow is fixed pixels.
+
+### How the file uses the two
 
 114 nodes carry the style. Six are the cards — the frame appears twice on the
 page. The other **108 are the 20-tall rows inside them**: ground `#EAEAE5`,

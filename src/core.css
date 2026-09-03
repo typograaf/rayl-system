@@ -1107,6 +1107,9 @@ body.rayl strong,body.rayl b,.rayl-page strong,.rayl-page b{font-weight:inherit;
     inset -5px -5px 14px 5px color-mix(in srgb,var(--look-press) var(--look-press-a),transparent),
     inset -10px -16px 34px 0 color-mix(in srgb,var(--look-press) var(--look-deep-a),transparent);
 }
-/* the second scale: a row inside a card. Solid ground, the same shadow
-   unscaled, and the radius on the control ladder rather than the file's 6. */
-.is-look.is-inset{background:var(--look-inset);border-radius:var(--rayl-radius);}
+/* THE LOOK IS NEVER NESTED. A pressed surface inside a pressed surface reads as
+   two materials arguing, and neither of them reads as depth. Whatever sits on a
+   card is FLAT — the card is the thing with a shape, and its contents are drawn
+   on it. The file uses the treatment at a second scale, on the 20-tall rows
+   inside a card; Rayl does not. */
+.is-look .is-look{background:none;box-shadow:none;}

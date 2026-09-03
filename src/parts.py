@@ -336,19 +336,19 @@ def loading_section():
 
 
 def look_section():
-    """The look on the two things it is drawn on: a card, and a row inside one."""
+    """The look on the one thing it goes on: a card. What sits on it is flat,
+    which is the rule, so the bench has to be the example of it."""
     card = ('<div class="rayl-card is-look" style="padding:24px">'
             '<span class="rayl-label">Schoonmaak</span>'
-            '<div class="rayl-stack rayl-gap-6">'
-            '<div class="is-look is-inset" style="height:20px"></div>'
-            '<div class="is-look is-inset" style="height:20px"></div>'
-            '<div class="is-look is-inset" style="height:20px"></div>'
-            '</div></div>')
+            '<p class="rayl-18">Medewerker</p>'
+            '<div class="rayl-row"><span class="rayl-row-name">10:00 — 15:30</span>'
+            '<span class="rayl-line" data-label="5u30min"></span></div>'
+            '</div>')
     return chapter("The look") + block(
         rail("What makes it Rayl",
-             "A gradient under three inner shadows, opt-in. The gradient is "
-             "proportional and the shadow is fixed pixels, because the file uses "
-             "it at two scales."),
+             "A gradient under three inner shadows, opt-in, on the card and "
+             "nothing inside it. The gradient is proportional and the shadow is "
+             "fixed pixels, because the file uses it at two sizes."),
         frame(None, card, "is-tall"))
 
 
@@ -744,7 +744,9 @@ OPEN = [
 
  ("The Rayl look", "PROVISIONAL",
   "it ships as is-look; dark mode and one alpha in it are not drawn",
-  "Measured at 966:2041, re-struck on the palette and shipped opt-in. What is "
+  "Measured at 966:2041, re-struck on the palette and shipped opt-in, on the "
+  "card and nothing inside it — the file's second scale, the 20-tall rows, is "
+  "deliberately not in Rayl. What is "
   "provisional is dark: nobody drew it. The rim and the lift survive by "
   "changing colour rather than alpha, but the press does not — light darkens "
   "its corner by about 12 L* and dark has 5.2 of headroom in total, so the "
