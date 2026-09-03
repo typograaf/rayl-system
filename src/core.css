@@ -234,11 +234,13 @@
   letter-spacing:0;
   position:relative;display:block;width:var(--w,126px);height:var(--h);
   padding:0;border:0;background:none;cursor:pointer;color:var(--ink-on-strong);
-  transform:scale(1);
+  --lean-x:0px; --lean-y:0px; --rayl-scale:1;
+  transform:translate(var(--lean-x),var(--lean-y)) scale(var(--rayl-scale));
   transition:transform 220ms var(--rayl-ease);
 }
+.rayl-ibtn.is-near{transition:transform 90ms linear;}
 .rayl-ibtn:active:not(:disabled){
-  transform:scale(var(--rayl-press));
+  --rayl-scale:var(--rayl-press);
   transition:transform 90ms var(--rayl-ease);
 }
 .rayl-ibtn:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;}
@@ -295,7 +297,15 @@
   font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
   letter-spacing:0;line-height:1.2;
 }
-.rayl-seg.is-joined{gap:0;border-radius:var(--rayl-radius);overflow:hidden;}
+/* A JOINED BAR LEANS AS ONE BODY. Its cells sit at gap 0 inside a clip, so a
+   cell that moved would tear out of the bar or be cut off by it. The bar is the
+   object here, the way the group is the thing that owns the selection. */
+.rayl-seg.is-joined{gap:0;border-radius:var(--rayl-radius);overflow:hidden;
+  --lean-x:0px; --lean-y:0px;
+  transform:translate(var(--lean-x),var(--lean-y));
+  transition:transform 220ms var(--rayl-ease);}
+.rayl-seg.is-joined.is-near{transition:transform 90ms linear;}
+.rayl-seg.is-joined .rayl-seg-opt{transform:none;}
 .rayl-seg-opt{
   position:relative;flex:1 1 calc(50% - 6px);min-width:0;
   height:var(--seg-h);
@@ -305,8 +315,13 @@
   background:var(--surface-idle);color:var(--ink-primary);
   border-radius:var(--rayl-radius);
   overflow:hidden;                    /* every cell clips its own contents... */
-  transition:background var(--rayl-dur) var(--rayl-ease);
+  --lean-x:0px; --lean-y:0px;
+  transform:translate(var(--lean-x),var(--lean-y));
+  transition:background var(--rayl-dur) var(--rayl-ease),
+             transform 220ms var(--rayl-ease);
 }
+.rayl-seg-opt.is-near{transition:background var(--rayl-dur) var(--rayl-ease),
+                                transform 90ms linear;}
 .rayl-seg-opt.is-third{flex:1 1 calc(33.333% - 8px);}
 .rayl-seg.is-joined .rayl-seg-opt,
 .rayl-seg.is-joined .rayl-seg-name{flex:5 1 0;border-radius:0;}

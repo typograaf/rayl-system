@@ -118,10 +118,12 @@ ink, is-tight sizes it to its own content. Never build a one-of-many row out
 of rayl-btn and aria-pressed. A value on a line rolls the same way a button
 label does: rayl-line with data-label and data-swap, and data-rolls on the
 control that changes it. BUTTONS LEAN toward a cursor that has not arrived yet
-— rayl.js does it, do not write your own. HOVER TURNS NOTHING — a label rolls
-on a click, or when the text it holds changes on its own. The ground stepping
-one rung is the whole of what hover does; adding a turn to it makes the
-movement mean nothing.
+— rayl.js does it, do not write your own. It reaches rayl-btn, rayl-ibtn and
+rayl-seg-opt, and a joined bar leans as one body. A checkbox, a toggle, a menu
+item and a select face do not lean: a setting is not a thing you reach for.
+HOVER TURNS NOTHING — a label rolls on a click, or when the text it holds
+changes on its own. The ground stepping one rung is the whole of what hover
+does; adding a turn to it makes the movement mean nothing.
 
 FIELDS. rayl-input is the field; add is-multi for a textarea. rayl-select is
 authored as nothing but its rayl-menu-opt options with is-on on the chosen one
@@ -219,7 +221,7 @@ it as a rule of the system:
   - The Rayl look — it ships as is-look; dark mode and one alpha in it are not drawn
   - The loading mark's timing — rayl-solve runs on numbers and a curve that are not the system's
   - A colour change runs 120ms — the ground under a control moves at 120ms ease-out, not on the system's curve
-  - Magnetism on buttons — the slider's lean, applied to the nearest button and only that one
+  - Magnetism on buttons — the slider's lean, on buttons, reveal buttons and option cells
 
 The system still has no sheet and drawer, toast, progress and context menu. If
 the brief needs one:

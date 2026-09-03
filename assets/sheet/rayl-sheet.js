@@ -214,11 +214,23 @@ float snoise(vec2 v){
 }
 
 /* Their three-stop ramp across the frame, carrying a level rather than a
-   colour: nought is the gradient's dark stop and one is its light stop. */
+   colour: nought is the gradient's dark stop and one is its light stop.
+
+   The two halves are eased rather than straight. Two straight segments meet
+   in the middle on the same value but on different slopes — with these levels,
+   -1.9 arriving and +1.4 leaving — and a slope that turns over in one pixel
+   reads as a line. It was a Mach band down the centre of every sheet, and it
+   was static, because the ramp is the one part of this shader with no time in
+   it. It is worse here than in the reference: theirs interpolates colours and
+   composites them over a ground through an alpha, and this carries a level
+   across a two-colour gradient whose ends can be forty levels apart, so the
+   same kink sits on a much longer lever. Easing each half puts the slope at
+   nought on both sides of the join without moving any of the three levels or
+   where they sit. */
 float ramp3(vec3 levels, float at) {
-  return at < 0.5
-    ? mix(levels.x, levels.y, at / 0.5)
-    : mix(levels.y, levels.z, (at - 0.5) / 0.5);
+  float h = at < 0.5 ? at / 0.5 : (at - 0.5) / 0.5;
+  h = h * h * (3.0 - 2.0 * h);
+  return at < 0.5 ? mix(levels.x, levels.y, h) : mix(levels.y, levels.z, h);
 }
 
 float hash(vec2 p) {

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Sheet</title>
-<script src="../rayl.js?v=fd0e2689"></script>
+<script src="../rayl.js?v=3e0244c4"></script>
 <script type="module" src="../assets/sheet/rayl-sheet.js"></script>
 <style>
   .short { height: 220px; border-radius: 8px; }
@@ -103,10 +103,16 @@
 
   <section class="rayl-section">
     <span class="rayl-label">The same thing in a box, and in a small one</span>
-    <div class="short lit lead" data-rayl-sheet="concrete"></div>
+    <div class="short lit lead" data-rayl-sheet="concrete" data-motion="pointer"
+         data-amplitude="1.1" data-blend="0.72" data-veil="0" data-tint="0.71"
+         data-glow="1.09"></div>
     <div class="pair">
-      <div class="tiny lit" data-rayl-sheet="concrete"></div>
-      <div class="tiny lit" data-rayl-sheet="porcelain"></div>
+      <div class="tiny lit" data-rayl-sheet="concrete" data-motion="pointer"
+           data-amplitude="1.1" data-blend="0.72" data-veil="0" data-tint="0.71"
+           data-glow="1.09"></div>
+      <div class="tiny lit" data-rayl-sheet="porcelain" data-motion="pointer"
+           data-amplitude="1.1" data-blend="0.72" data-veil="0" data-tint="0.71"
+           data-glow="1.09"></div>
     </div>
     <p class="rayl-hint">Everything in the shader is in fractions of the box it
     is in, so a 96 high strip reads the way a full screen does. All three follow

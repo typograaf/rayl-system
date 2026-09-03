@@ -81,8 +81,14 @@ function init(root){
   root=root||document;
   [].forEach.call(root.querySelectorAll(".rayl-btn"),function(b){
     upgradeButton(b); leanRegister(b); });
-  [].forEach.call(root.querySelectorAll(".rayl-ibtn"),upgradeIconButton);
-  [].forEach.call(root.querySelectorAll(".rayl-seg"),upgradeSeg);
+  [].forEach.call(root.querySelectorAll(".rayl-ibtn"),function(b){
+    upgradeIconButton(b); leanRegister(b); });
+  [].forEach.call(root.querySelectorAll(".rayl-seg"),function(g){
+    upgradeSeg(g);
+    /* joined: the bar is the body. Otherwise every cell is its own. */
+    if (g.classList.contains("is-joined")) leanRegister(g);
+    else [].forEach.call(g.querySelectorAll(".rayl-seg-opt"),leanRegister);
+  });
   [].forEach.call(root.querySelectorAll(".rayl-tabs"),upgradeTabs);
   [].forEach.call(root.querySelectorAll(".rayl-select"),upgradeSelect);
   [].forEach.call(root.querySelectorAll(".rayl-check"),upgradeCheck);

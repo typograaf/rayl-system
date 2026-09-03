@@ -795,7 +795,7 @@ OPEN = [
   "the value a ground moves on, or every one of the eleven changes."),
 
  ("Magnetism on buttons", "PROVISIONAL",
-  "the slider's lean, applied to the nearest button and only that one",
+  "the slider's lean, on buttons, reveal buttons and option cells",
   "The nub has leaned toward an approaching cursor since it was built and "
   "nothing else did. Buttons do now, on the nub's own range and strength — 104 "
   "and 0.6 — so no value was invented there.\n\n"
@@ -813,6 +813,11 @@ OPEN = [
   "wider, so on load the pull came from left of the button. And two buttons "
   "traded the lean pixel by pixel along the line between them, so a 6 band of "
   "hysteresis holds it.\n\n"
+  "It reaches the reveal button and the option group too: a cell leans one at a "
+  "time, and a JOINED bar leans as one body, because its cells sit at gap 0 "
+  "inside a clip and a cell that moved would tear out of it. A checkbox, a "
+  "toggle, a menu item and a select face do not lean — a setting is not a thing "
+  "you reach for.\n\n"
   "Still provisional because it is the first thing in Rayl that moves without "
   "being touched, and section 7 is one movement."),
 
