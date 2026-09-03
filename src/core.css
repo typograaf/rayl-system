@@ -580,8 +580,9 @@
   transform:translate(var(--lean-x),var(--lean-y));
   display:flex;align-items:center;justify-content:center;
   background:var(--surface-idle);
-  transition:background 120ms ease-out;
+  transition:background 120ms ease-out, transform 220ms var(--rayl-ease);
 }
+.rayl-check-box.is-near{transition:background 120ms ease-out, transform 90ms linear;}
 /* The mark is Plus turned 45 degrees, measured at 1194:412 — a 9.93 square
    whose rotated bounding box is 14.04. Not a tick: the set has no tick and the
    approved frame does not use one. */

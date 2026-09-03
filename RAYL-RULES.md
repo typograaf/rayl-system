@@ -813,9 +813,15 @@ opened it, and the list is a block in the same way the bar is.
 An unjoined group gaps 12 and the lean is at most 4.5, so a cell never comes
 close to reaching its neighbour.
 
-**A checkbox leans its box and not its word.** The box is the button; the word
-beside it is a label, and a label that slides at an approaching cursor is text
-coming loose from the thing it names.
+**The lean moves the shape.** Text inside the shape goes with it — a button's
+label, a cell's label, the word inside a toggle's track are all part of the
+thing that is moving. Text outside it stays put: a checkbox leans its box and
+its word does not follow, because the word is a label sitting beside the button
+rather than anything drawn on it, and a label that slides at an approaching
+cursor is text coming loose from the thing it names.
+
+That is the whole rule, and it is why the registered element is the box on a
+checkbox and the control itself everywhere else.
 
 **The cap is a cluster's gap on purpose.** At 6 a button can never close the
 distance to its neighbour, so a row of them cannot collapse toward the cursor.
