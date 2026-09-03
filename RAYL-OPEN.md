@@ -143,7 +143,7 @@ Every documented movement is 280ms on cubic-bezier(0.65,0,0.35,1), and section 7
 
 The nub has leaned toward an approaching cursor since it was built and nothing else did. Buttons do now, on the nub's own range and strength — 104 and 0.6 — so no value was invented there.
 
-Two things were changed after seeing it: every button in range leaned at once, which made a panel read as a row of things all asking to be clicked, and it moved too far. Now the nearest button in range leans and every other one lets go, and it moves at most 6 rather than 12. Six is a cluster's own gap, so a button can never close the distance to its neighbour; the nub keeps 12 because it has nothing beside it.
+Two things were changed after seeing it: every button in range leaned at once, which made a panel read as a row of things all asking to be clicked, and it moved too far. Now the nearest button in range leans and every other one lets go, and it moves at most 4.5 rather than 12 — three quarters of a cluster's gap, so a control never comes close to reaching its neighbour. The nub keeps 12 because it has nothing beside it.
 
 Then three bugs, all found by measuring rather than by looking. The cap was a clamp on a bigger curve and it caught across 78% of the range, so the button jumped to its full lean on approach and sat there — the falloff is the shape itself now, peaking at 6 at half the range. The cached centres were never dropped when the real face landed and every button re-rendered wider, so on load the pull came from left of the button. And two buttons traded the lean pixel by pixel along the line between them, so a 6 band of hysteresis holds it.
 

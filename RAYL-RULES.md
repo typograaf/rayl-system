@@ -777,14 +777,14 @@ behaviour with the weld taken off, on the nub's own range and strength.
 | | |
 |---|---|
 | range | **104** — nothing past it |
-| most | **6** at half the range, a cluster's gap |
+| most | **4.5** at half the range — three quarters of a cluster's gap |
 | falloff | nothing at the centre, most at **52**, nothing at the edge |
 
 **The falloff is the whole shape, not a clamp on a bigger one.** It was written
 as a strength times the distance with a cap on top, and the cap caught across
 78% of the range — the button snapped to its full lean the moment you came near
 and sat there, which is a hard edge rather than an attraction. The curve peaks
-at exactly 6, at exactly half the range, and returns to nothing at both ends.
+at exactly 4.5, at exactly half the range, and returns to nothing at both ends.
 
 **Only one at a time.** A panel where every control leans at the pointer as it
 passes is a panel of things all asking to be clicked, which says nothing about
@@ -810,8 +810,12 @@ lean on their own; this is the one arrangement where nothing does.
 **A menu item does not lean** — it is one of a list that already arrived when you
 opened it, and the list is a block in the same way the bar is.
 
-An unjoined group gaps 12 and the lean is at most 6, so a cell can never reach
-its neighbour.
+An unjoined group gaps 12 and the lean is at most 4.5, so a cell never comes
+close to reaching its neighbour.
+
+**A checkbox leans its box and not its word.** The box is the button; the word
+beside it is a label, and a label that slides at an approaching cursor is text
+coming loose from the thing it names.
 
 **The cap is a cluster's gap on purpose.** At 6 a button can never close the
 distance to its neighbour, so a row of them cannot collapse toward the cursor.
@@ -822,7 +826,7 @@ means. It composes with the press rather than replacing it, so a button held
 while leaning does both. It is off under `prefers-reduced-motion` and on
 anything without a hover pointer.
 
-**A button keeps the lean until another is closer by more than 6.** Along the
+**A button keeps the lean until another is closer by more than 4.5.** Along the
 line between two of them the nearer one changes with every pixel, and without
 that band they trade the lean back and forth and both jump.
 

@@ -751,9 +751,9 @@ function upgradeSkeleton(sk){
  *
  * The numbers are the slider's, unchanged:
  *   range 104   nothing past it — the slider's own
- *   strength .6 of the distance to the cursor — the slider's own
- *   cap 6       a cluster's gap, so a button can never close the distance to
- *               its neighbour. The nub caps at 12; it has nothing beside it.
+ *   most 4.5    three quarters of a cluster's gap, so a control never comes
+ *               close to reaching its neighbour. The nub travels 12; it has
+ *               nothing beside it.
  *   falloff     nothing at the centre, nothing at the edge, most in between
  *
  * ONE AT A TIME. The nearest button in range leans and every other one lets go.
@@ -766,9 +766,16 @@ function upgradeSkeleton(sk){
  * panel's worth of controls on every pointer event is how a page starts
  * dropping frames.
  * ========================================================================== */
-var LEAN_RANGE = 104, LEAN_STRENGTH = 0.6, LEAN_MAX = 6;
+var LEAN_RANGE = 104, LEAN_MAX = 4.5;   /* three quarters of a cluster's gap */
 var leanEls = [], leanRects = null, leanFrame = 0, leanPointer = null;
 var leanObserver = null, leanWinner = null;
+
+/* the registered element is sometimes a part of the control rather than the
+   control — the checkbox leans its box — so ask the control, not the part */
+function leanOff(el){
+  var c = el.closest ? el.closest("button,[aria-disabled]") : null;
+  return !!(el.disabled || (c && (c.disabled || c.getAttribute("aria-disabled") === "true")));
+}
 
 function leanRegister(el){
   if (leanEls.indexOf(el) < 0){
@@ -801,7 +808,7 @@ function leanApply(){
 
   if (p) for (i = 0; i < leanRects.length; i++){
     it = leanRects[i];
-    if (it.el.disabled || !it.el.isConnected) continue;
+    if (leanOff(it.el) || !it.el.isConnected) continue;
     d = Math.hypot(p.x - it.x, p.y - it.y);
     if (d < best){ best = d; near = it; }
   }

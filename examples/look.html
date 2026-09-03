@@ -9,7 +9,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Rayl look</title>
-<script src="https://typograaf.github.io/rayl-system/rayl.js?v=8536ea40"></script>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=e4a81658"></script>
 <style>
   /* ========================================================= THE LOOK ==
    * One elliptical radial gradient under a named effect style, card shadow
@@ -24,104 +24,18 @@
    * treatment names that step. The table further down says which and why.
    * ====================================================================== */
 
-  /* ---------------------------------------------------- the five colours --
-   * Declared per theme rather than inline, the way --rayl-seg-press is,
-   * because the look does not fall out of the surface tokens: in light its
-   * centre is surface/active-pressed and its rim is surface/active, and in
-   * dark the same two steps would be a card lighter than the page it sits
-   * on. It needs its own five. */
-  :root{
-    --look-centre:var(--rayl-porcelain);      /* Porcelain      */
-    --look-rim:var(--rayl-bone);              /* Bone           */
-    --look-press:var(--rayl-pale-concrete);   /* Pale Concrete  */
-    --look-lift:var(--rayl-white);            /* White          */
-    --look-inset:var(--rayl-bone);            /* Bone           */
-    /* The four alphas are measured. Do not tune them here — they are the
-       transparency this treatment is asking the system for. */
-    --look-centre-a:70%;
-    --look-press-a:30%;
-    --look-lift-a:85%;
-    --look-deep-a:40%;
-  }
-
-  /* -------------------------------------------------------- the gradient --
-   * The frame's fill is one radial gradient. Its transform is normalised,
-   * not pinned to pixels: the same fill sits on all three cards at 240, 176
-   * and 129 tall and stretches with each. Inverting it gives radii of
-   * 34.655% of the width and 49.826% of the height, which on the 129 card
-   * comes out at exactly the 114.36 x 64.275 that was measured. So the
-   * percentages are the rule and the pixels were one instance of it.
+  /* ------------------------------------------------- WHERE THE TREATMENT IS --
+   * Not here. `is-look`, `is-deep`, the five --look-* colours, the four
+   * alphas and the dark values are all in core.css and arrive with rayl.js.
+   * This page used to carry its own copy of every one of them, which is two
+   * homes for one value and exactly the drift this repo exists to stop — the
+   * checker does not catch it, because nothing compares a page's stylesheet
+   * against the system's.
    *
-   * The centre stop is the darker colour and it is 70% through, so the
-   * ground shows in the middle of the card. That is deliberate and it is why
-   * the look reads differently on White than it does on the board's own
-   * sheet — see the note under the specimen. */
-  .is-look{
-    background:radial-gradient(ellipse 34.66% 49.83% at 50% 50%,
-      color-mix(in srgb,var(--look-centre) var(--look-centre-a),transparent) 0%,
-      var(--look-rim) 100%);
-    /* Three inner shadows, no outer shadow. Figma lists four and the first is
-       switched off in the style itself — see is-deep.
-       THE LIST IS REVERSED. Figma paints its effect array later-over-earlier;
-       CSS paints the first box-shadow on top. Copying the array straight down
-       puts the grey over the white and the bottom edge comes out dark instead
-       of lifted — which is what it did, until it was rendered beside the frame
-       and compared. Read the style bottom-up.
-       The offsets are negative, so the grey presses in from the BOTTOM-RIGHT,
-       not the top-left: isolated, it darkens the bottom edge to L* 80 and
-       leaves the top-left at 88. The white then covers the bottom, so what
-       survives is a press on the right and a lift along the bottom. */
-    box-shadow:
-      inset 0 -3px 7px 3px color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
-      inset 0 -2px 1px 0 color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
-      inset -5px -5px 14px 5px color-mix(in srgb,var(--look-press) var(--look-press-a),transparent);
-    border-radius:24px;
-  }
-
-  /* The fourth shadow, the one the file draws and does not show. Switching it
-     on is a decision, not a fix — it is off on all six cards that use the
-     style and on all 108 rows. */
-  .is-look.is-deep{
-    box-shadow:
-      inset 0 -3px 7px 3px color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
-      inset 0 -2px 1px 0 color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
-      inset -5px -5px 14px 5px color-mix(in srgb,var(--look-press) var(--look-press-a),transparent),
-      inset -10px -16px 34px 0 color-mix(in srgb,var(--look-press) var(--look-deep-a),transparent);
-  }
-
-  /* The same effect style at the other scale it is actually used at: the 20
-     tall rows inside the cards, 108 of them on the board. Those carry a solid
-     ground instead of the gradient — an ellipse 20px tall is not a bowl — and
-     the shadow is not scaled down for them, it is the same style. The file
-     rounds them 6, which is not on the radius ladder; 8 is, and 8 is what
-     every control in the system rounds. */
-  .is-look.is-inset{
-    background:var(--look-inset);
-    border-radius:8px;
-  }
-
-  /* --------------------------------------------------------- dark, PROPOSED --
-   * There is no reference for this. Two white glows lifting a bottom edge do
-   * not inverse mechanically and the palette's dark end is compressed, so
-   * these were chosen by matching each effect's L* delta rather than by
-   * flipping a token. What each one gives up is written under the proposal
-   * below. Marked, not settled. */
-  :root[data-theme="dark"]{
-    --look-centre:var(--rayl-deep-black);
-    --look-rim:var(--rayl-black);
-    --look-press:var(--rayl-deep-black);
-    --look-lift:var(--rayl-soft-black);
-    --look-inset:var(--rayl-black);
-    --look-press-a:70%;
-  }
-  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
-    --look-centre:var(--rayl-deep-black);
-    --look-rim:var(--rayl-black);
-    --look-press:var(--rayl-deep-black);
-    --look-lift:var(--rayl-soft-black);
-    --look-inset:var(--rayl-black);
-    --look-press-a:70%;
-  } }
+   * So what is left below is the specimen furniture and the option overrides.
+   * An option is a re-strike, and a re-strike is a change of token, so each
+   * one sets tokens and never touches the rule.
+   * ========================================================================= */
 
   /* ================================================= the page's own furniture ==
    * Nothing below here is the treatment. It is the specimen this page is
@@ -185,32 +99,26 @@
 
   .ground-swap{background:var(--rayl-off-white);padding:24px;border-radius:24px;}
 
-  /* The dark specimen has to show dark inside a light page, and both the
-     system's tokens and the look's are declared on :root — which a div cannot
-     be. So the stage re-declares locally exactly what the proposal above
-     declares globally, plus the two system tokens the specimen reads. This is
-     a demonstration device and nothing else; the proposal is the block above,
-     and that is what would be copied. */
-  .dark-stage{
-    background:var(--rayl-soft-black);padding:24px;border-radius:24px;
-    --ink-primary:var(--rayl-white);
-    --surface-ground:var(--rayl-soft-black);
-    --look-centre:var(--rayl-deep-black);
-    --look-rim:var(--rayl-black);
-    --look-press:var(--rayl-deep-black);
-    --look-lift:var(--rayl-soft-black);
-    --look-inset:var(--rayl-black);
-    --look-press-a:70%;
-    color:var(--ink-primary);
-  }
+  /* The dark specimen is the page itself, switched. There is no local copy of
+     the dark values here: they are on :root in core.css, a div cannot be
+     :root, and re-declaring them on a stage would have put five colours and an
+     alpha in a second home. The toggle is the demonstration device instead. */
+  .theme{margin-left:auto;}
 </style>
 </head>
 <body class="rayl">
 <main class="rayl-page is-wide">
 
+  <header class="rayl-head">
+    <p class="rayl-label">The Rayl look</p>
+    <div class="rayl-seg is-tight theme" id="theme">
+      <button class="rayl-seg-opt" type="button" data-mode="light">Light</button>
+      <button class="rayl-seg-opt" type="button" data-mode="dark">Dark</button>
+    </div>
+  </header>
+
   <section class="rayl-section">
     <div class="rayl-stack">
-      <p class="rayl-label">The Rayl look</p>
       <h1 class="rayl-48 rayl-serif">A treatment, not a component</h1>
       <p class="rayl-18 rayl-measure">One elliptical radial gradient under a named
       effect style, applied as a modifier so that it can go on a card, a panel or
@@ -444,10 +352,12 @@
       and two of the three deltas cannot be matched, because the palette's dark
       end is compressed: below surface/ground there are two steps, where above it
       in light there are six.</p>
+      <p class="rayl-12 rayl-hint">Put the page in dark with the control at the
+      top to see it. These are the shipped values rather than a copy of them —
+      the cards below are the same two cards in both modes.</p>
     </div>
-    <div class="dark-stage" data-theme="dark"
+    <div class="cards"
          data-rayl-provisional="the dark mode of the look — proposed, no reference">
-      <div class="cards">
         <div class="card is-look is-short">
           <p class="rayl-label">Dark, proposed</p>
           <p class="rayl-24">Deep Black centre,<br>Black rim</p>
@@ -460,7 +370,6 @@
             <div class="row rayl-12">And another</div>
           </div>
         </div>
-      </div>
     </div>
     <div class="rayl-stack">
       <p class="rayl-18 rayl-measure"><b>The rim holds.</b> In light the card sits
@@ -493,16 +402,20 @@
         <tr><th>class</th><th>what</th></tr>
         <tr><td>is-look</td><td>the treatment: the gradient, three inner shadows,
           rounding 24. Goes on anything.</td></tr>
-        <tr><td>is-look is-inset</td><td>the same shadow on a solid ground,
-          rounding 8 — the small row inside a card</td></tr>
         <tr><td>is-look is-deep</td><td>the fourth inner shadow switched on. Off
           everywhere in the file; a decision, not a fix.</td></tr>
       </table>
+      <p class="rayl-12 rayl-hint">Two classes, and there is no third. The file
+      uses the treatment at a second scale on the 20-tall rows inside a card and
+      Rayl does not: a pressed surface inside a pressed surface reads as two
+      materials arguing and neither of them reads as depth. core.css strips a
+      nested one rather than trusting nobody to write it, which is why the rows
+      on the cards above are flat.</p>
       <p class="rayl-12 rayl-hint">A modifier rather than a component, and named
       the way every other modifier in the system is named — is-strong, is-joined,
       is-tight. It is what lets rayl-card, rayl-panel, rayl-frame and a bare div
-      all take it without any of them being restyled, and it is what lets the
-      opt-in and the blanket answer both be expressible.</p>
+      all take it without any of them being restyled, and it is what lets it be
+      opt-in.</p>
     </div>
   </section>
 
@@ -541,6 +454,20 @@ window.Rayl.look = function look(root, options){
   }
   return touched;
 };
+</script>
+<script>
+  /* The group owns the selection — this only says what a selection means. It
+     sets the page's own theme, so the dark specimen further down resolves
+     through core.css rather than through a copy of core.css. */
+  var root = document.documentElement, seg = document.getElementById("theme");
+  var mode = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  root.dataset.theme = mode;
+  seg.querySelectorAll(".rayl-seg-opt").forEach(function (o) {
+    o.classList.toggle("is-on", o.dataset.mode === mode);
+  });
+  seg.addEventListener("rayl:change", function (e) {
+    root.dataset.theme = e.detail.option.dataset.mode;
+  });
 </script>
 </body>
 </html>

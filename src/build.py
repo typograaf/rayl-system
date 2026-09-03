@@ -92,7 +92,10 @@ function init(root){
   [].forEach.call(root.querySelectorAll(".rayl-tabs"),upgradeTabs);
   [].forEach.call(root.querySelectorAll(".rayl-select"),upgradeSelect);
   [].forEach.call(root.querySelectorAll(".rayl-check"),function(b){
-    upgradeCheck(b); leanRegister(b); });
+    upgradeCheck(b);
+    var box = b.querySelector(".rayl-check-box");
+    if (box) leanRegister(box);           /* the box leans, not the label */
+  });
   [].forEach.call(root.querySelectorAll(".rayl-toggle"),function(b){
     upgradeToggle(b); leanRegister(b); });
   [].forEach.call(root.querySelectorAll(".rayl-fold"),upgradeFold);

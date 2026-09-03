@@ -566,16 +566,18 @@
    like every other control, and is-small is 12 at icon scale, rounding 4. */
 .rayl-check{
   display:inline-flex;align-items:center;gap:12px;
-  --lean-x:0px; --lean-y:0px;
-  transform:translate(var(--lean-x),var(--lean-y));
-  transition:transform 220ms var(--rayl-ease);
   width:fit-content;               /* the box and its word, not the row */
   font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
   letter-spacing:0;line-height:1.2;
   padding:0;border:0;background:none;color:var(--ink-primary);cursor:pointer;
 }
+/* THE BOX IS THE BUTTON, so the box is what leans. The word beside it is a
+   label, and a label that slides at an approaching cursor is text coming loose
+   from the thing it names. */
 .rayl-check-box{
   flex:0 0 auto;width:24px;height:24px;border-radius:var(--rayl-radius);
+  --lean-x:0px; --lean-y:0px;
+  transform:translate(var(--lean-x),var(--lean-y));
   display:flex;align-items:center;justify-content:center;
   background:var(--surface-idle);
   transition:background 120ms ease-out;
@@ -591,7 +593,6 @@
 .rayl-check[aria-checked="true"]:hover:enabled .rayl-check-box{background:var(--surface-active-hover);}
 .rayl-check:active:enabled .rayl-check-box{background:var(--rayl-seg-press);}
 .rayl-check[aria-checked="true"]:active:enabled .rayl-check-box{background:var(--surface-active-pressed);}
-.rayl-check.is-near{transition:transform 90ms linear;}
 .rayl-check:disabled{color:var(--ink-disabled);cursor:default;}
 .rayl-check:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;
   border-radius:var(--rayl-radius);}
