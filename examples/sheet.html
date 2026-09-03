@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Sheet</title>
-<script src="../rayl.js?v=85273708"></script>
+<script src="../rayl.js?v=3e98a069"></script>
 <script type="module" src="../assets/sheet/rayl-sheet.js"></script>
 <style>
   .short { height: 220px; border-radius: 8px; }
@@ -27,22 +27,12 @@
           padding: 0 12px; }
   .in-ink { color: var(--rayl-black); }
   .in-white { color: var(--rayl-white); }
-  /* The full view: nothing between the reader and the sheet for one screen. */
-  .first { min-height: 100vh; display: flex; flex-direction: column;
-           justify-content: space-between; }
+  .first { display: flex; flex-direction: column; gap: 24px; }
 </style>
 </head>
-<!--
-  Both body.rayl and .rayl-page paint surface/ground, and a ground behind a
-  page has to get past both. Clearing them here is hand-rolled, it is not
-  anything the system says, and it is the layering item in RAYL-OPEN.md.
--->
-<body class="rayl" style="background: transparent">
+<body class="rayl">
 
-<div id="ground" data-rayl-sheet="concrete" data-place="page"
-     data-rayl-provisional="a sheet as the ground of a page — the layering item in RAYL-OPEN.md"></div>
-
-<div class="rayl-page" style="background: transparent">
+<div class="rayl-page">
 
   <div class="first">
     <header class="rayl-head">
@@ -55,8 +45,9 @@
 
     <div>
       <h1 class="rayl-24">The sheet</h1>
-      <p class="rayl-hint">The whole of this page is one. Move the pointer and
-      the light leans after it.</p>
+      <p class="rayl-hint">Every sheet on this page is in a box. The controls
+      below drive them. Move the pointer over one and the light leans after
+      it.</p>
     </div>
   </div>
 
@@ -111,19 +102,21 @@
   </section>
 
   <section class="rayl-section">
-    <span class="rayl-label">The markup for this page's ground</span>
-    <pre class="markup" id="markup"></pre>
+    <span class="rayl-label">The same thing in a box, and in a small one</span>
+    <div class="short lit lead" data-rayl-sheet="concrete"></div>
+    <div class="pair">
+      <div class="tiny lit" data-rayl-sheet="concrete"></div>
+      <div class="tiny lit" data-rayl-sheet="porcelain"></div>
+    </div>
+    <p class="rayl-hint">Everything in the shader is in fractions of the box it
+    is in, so a 96 high strip reads the way a full screen does. All three follow
+    the controls. The gradient button drives the big one only — the small pair
+    keeps one each, so the two are still side by side to compare.</p>
   </section>
 
   <section class="rayl-section">
-    <span class="rayl-label">The same thing in a box, and in a small one</span>
-    <div class="short" data-rayl-sheet="concrete"></div>
-    <div class="pair">
-      <div class="tiny" data-rayl-sheet="concrete"></div>
-      <div class="tiny" data-rayl-sheet="porcelain"></div>
-    </div>
-    <p class="rayl-hint">Everything in the shader is in fractions of the box it
-    is in, so a 96 high strip reads the way a full screen does.</p>
+    <span class="rayl-label">The markup for the box above</span>
+    <pre class="markup" id="markup"></pre>
   </section>
 
   <section class="rayl-section">
@@ -161,7 +154,16 @@
 </div>
 
 <script type="module">
-  const ground = document.getElementById("ground");
+  /* Every driven box. The gradient each one started on is read once, here,
+     before anything sets it — the component writes data-rayl-sheet back onto
+     the element, so after the first set the attribute is no longer a record of
+     what the box was authored as. */
+  const boxes = [...document.querySelectorAll(".lit")].map((el) => ({
+    el,
+    sheet: el.dataset.raylSheet,
+    lead: el.classList.contains("lead"),
+  }));
+
   const said = { sheet: "concrete", motion: "pointer" };
   const OVER = ["amplitude", "blend", "speed", "glow", "tint", "veil"];
 
@@ -171,12 +173,19 @@
       .map(([k, v]) => `\n  data-${k}="${v}"`)
       .join("");
     document.getElementById("markup").textContent =
-      `<div data-rayl-sheet="${said.sheet}"${over}\n  data-place="page"></div>`;
+      `<div data-rayl-sheet="${said.sheet}"${over}></div>`;
   };
 
   const set = (change) => {
     Object.assign(said, change);
-    ground.raylSheet?.set(change);
+    for (const box of boxes) {
+      /* The small pair keeps the gradient it was authored with, so that the
+         two of them stay a comparison rather than becoming the same picture
+         twice. Everything else reaches every box. */
+      const mine = { ...change };
+      if (!box.lead && "sheet" in mine) mine.sheet = box.sheet;
+      box.el.raylSheet?.set(mine);
+    }
     show();
   };
 

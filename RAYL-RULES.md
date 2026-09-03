@@ -770,26 +770,29 @@ nothing did.
 
 ### Magnetism
 
-**A button leans toward a cursor that has not arrived yet**, and drifts home
-when it goes. It is the slider nub's behaviour with the weld taken off — the
-same range, strength, cap and falloff, not a second mechanism and not new
-numbers.
+**One button leans toward a cursor that has not arrived yet** — the nearest one
+in range, and only that one. Everything else lets go. It is the slider nub's
+behaviour with the weld taken off, on the nub's own range and strength.
 
 | | |
 |---|---|
 | range | **104** — nothing past it |
 | strength | **0.6** of the distance to the cursor |
-| cap | **12**, however close it gets |
+| cap | **6**, a cluster's gap, however close it gets |
 | falloff | nothing at the centre, nothing at the edge, most in between |
 
-The lean is drawn and never stored: it moves the button, not anything the button
-means. It composes with the press rather than replacing it, so a button being
-held while leaning does both. It is off under `prefers-reduced-motion` and on
-anything without a hover pointer.
+**Only one at a time.** A panel where every control leans at the pointer as it
+passes is a panel of things all asking to be clicked, which says nothing about
+which one you want. That is the same reason a hover no longer turns a label.
 
-A cluster gaps 6 and the cap is 12, so two buttons can lean toward the same
-cursor and close most of the gap between them. That is the behaviour, not a
-bug — but it is why the cap is a cap.
+**The cap is a cluster's gap on purpose.** At 6 a button can never close the
+distance to its neighbour, so a row of them cannot collapse toward the cursor.
+The nub caps at 12 because it has nothing beside it.
+
+The lean is drawn and never stored: it moves the button, not anything the button
+means. It composes with the press rather than replacing it, so a button held
+while leaning does both. It is off under `prefers-reduced-motion` and on
+anything without a hover pointer.
 
 ### The press
 

@@ -798,17 +798,23 @@ function upgradeSkeleton(sk){
  * control, and this only takes the weld off.
  *
  * The numbers are the slider's, unchanged:
- *   range 104   nothing past it
- *   strength .6 of the distance to the cursor
- *   cap 12      however close it gets
+ *   range 104   nothing past it — the slider's own
+ *   strength .6 of the distance to the cursor — the slider's own
+ *   cap 6       a cluster's gap, so a button can never close the distance to
+ *               its neighbour. The nub caps at 12; it has nothing beside it.
  *   falloff     nothing at the centre, nothing at the edge, most in between
+ *
+ * ONE AT A TIME. The nearest button in range leans and every other one lets go.
+ * A panel where each control leans at the pointer as it passes is a panel of
+ * things all asking to be clicked, which says nothing about which one you
+ * want — the same reason a hover does not turn a label any more.
  *
  * One document listener for every button on the page, read once per frame.
  * Rects are cached and thrown away on scroll or resize, because measuring a
  * panel's worth of controls on every pointer event is how a page starts
  * dropping frames.
  * ========================================================================== */
-var LEAN_RANGE = 104, LEAN_STRENGTH = 0.6, LEAN_MAX = 12;
+var LEAN_RANGE = 104, LEAN_STRENGTH = 0.6, LEAN_MAX = 6;
 var leanEls = [], leanRects = null, leanFrame = 0, leanPointer = null;
 
 function leanRegister(el){ if (leanEls.indexOf(el) < 0) leanEls.push(el); }
@@ -823,13 +829,20 @@ function leanMeasure(){
 function leanApply(){
   leanFrame = 0;
   if (!leanRects) leanMeasure();
-  var p = leanPointer;
-  for (var i = 0; i < leanRects.length; i++){
-    var it = leanRects[i], el = it.el;
-    if (el.disabled || !el.isConnected){ continue; }
-    var dx = p ? p.x - it.x : 0, dy = p ? p.y - it.y : 0;
-    var dist = Math.hypot(dx, dy);
-    if (!p || dist > LEAN_RANGE){
+  var p = leanPointer, near = null, best = LEAN_RANGE, i, it;
+
+  /* find the one, then move only it */
+  if (p) for (i = 0; i < leanRects.length; i++){
+    it = leanRects[i];
+    if (it.el.disabled || !it.el.isConnected) continue;
+    var d = Math.hypot(p.x - it.x, p.y - it.y);
+    if (d < best){ best = d; near = it; }
+  }
+
+  for (i = 0; i < leanRects.length; i++){
+    it = leanRects[i];
+    var el = it.el;
+    if (it !== near){
       if (el.classList.contains("is-near")){
         el.classList.remove("is-near");
         el.style.setProperty("--lean-x", "0px");
@@ -837,8 +850,8 @@ function leanApply(){
       }
       continue;
     }
-    /* nothing at the centre, nothing at the edge, most in between */
-    var fall = 1 - dist / LEAN_RANGE;
+    var dx = p.x - it.x, dy = p.y - it.y;
+    var fall = 1 - best / LEAN_RANGE;   /* nothing at the centre, nothing at the edge */
     var cap = function(v){ return Math.max(-LEAN_MAX, Math.min(LEAN_MAX, v)); };
     el.classList.add("is-near");
     el.style.setProperty("--lean-x", cap(dx * LEAN_STRENGTH * fall).toFixed(2) + "px");

@@ -219,7 +219,7 @@ it as a rule of the system:
   - The Rayl look — it ships as is-look; dark mode and one alpha in it are not drawn
   - The loading mark's timing — rayl-solve runs on numbers and a curve that are not the system's
   - A colour change runs 120ms — the ground under a control moves at 120ms ease-out, not on the system's curve
-  - Magnetism on buttons — the slider's lean, applied to every button
+  - Magnetism on buttons — the slider's lean, applied to the nearest button and only that one
 
 The system still has no sheet and drawer, toast, progress and context menu. If
 the brief needs one:

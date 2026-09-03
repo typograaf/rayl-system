@@ -97,8 +97,8 @@
     {
       "name": "Magnetism on buttons",
       "status": "PROVISIONAL",
-      "what": "the slider's lean, applied to every button",
-      "detail": "The nub has leaned toward an approaching cursor since it was built, and nothing else did. Buttons do now, on the slider's own numbers — range 104, strength 0.6, cap 12 — so no value was invented and it is one mechanism rather than two. What is worth watching: a cluster gaps 6 and the cap is 12, so two buttons leaning at the same cursor can close most of the gap between them. Section 7 says ask before adding a second movement; this was asked for, and it is an existing movement reaching further rather than a new one, but it is the first time anything in Rayl moves without being touched."
+      "what": "the slider's lean, applied to the nearest button and only that one",
+      "detail": "The nub has leaned toward an approaching cursor since it was built and nothing else did. Buttons do now, on the nub's own range and strength — 104 and 0.6 — so no value was invented there.\n\nTwo things were changed after seeing it: every button in range leaned at once, which made a panel read as a row of things all asking to be clicked, and it moved too far. Now the nearest button in range leans and every other one lets go, and the cap is 6 rather than 12. Six is a cluster's own gap, so a button can never close the distance to its neighbour; the nub keeps 12 because it has nothing beside it.\n\nStill provisional because it is the first thing in Rayl that moves without being touched, and section 7 is one movement."
     },
     {
       "name": "Transparency",
