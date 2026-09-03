@@ -352,6 +352,30 @@ def look_section():
         frame(None, card, "is-tall"))
 
 
+def ground_section():
+    """The layering primitive, exercised by something that already exists.
+
+    rayl-ground was designed ahead of its first user — the sheet is being
+    re-derived — so this is the proof that the stacking works at all: a ground
+    inside a card, content on top of it with no z-index of its own, and the ink
+    read against the ground's darkest step rather than its average."""
+    card = ('<div class="rayl-card" style="padding:24px;min-height:150px">'
+            '<div class="rayl-ground" '
+            'style="background:var(--rayl-porcelain-gradient)"></div>'
+            '<span class="rayl-label">Behind this</span>'
+            '<p class="rayl-18">Content sits above a ground without asking to.</p>'
+            '<div class="rayl-cluster"><button class="rayl-btn">A control on it</button></div>'
+            '</div>')
+    return chapter("A ground") + block(
+        rail("One thing behind another",
+             "A ground is a child, not a background: first inside the box it "
+             "fills. The holder takes its own stacking context and everything "
+             "else is lifted above it.",
+             "The ink is read against the ground's darkest step, not its "
+             "average — Porcelain here, which takes dark ink."),
+        frame(None, card, "is-tall"))
+
+
 def type_section():
     return chapter("Typography") + block(
         rail("The scale"),
