@@ -1228,17 +1228,47 @@ you scale up, scale the frame — the path is built for that box.
 
 ## 10. The Rayl look
 
-The thing that makes something read as Rayl rather than as a generic light-mode
-app is a layered gradient treatment on its cards and shapes: flat vector art with
-gradient fills, stamped repeatedly, with no specular highlight anywhere.
+**This section was wrong until 2026-09-03 and the correction matters more than
+the rule.** What follows is what Martijn has confirmed; what is still missing is
+marked as missing.
 
-**It is not lighting and it cannot be reproduced with lighting.** Every ring
-carries the same gradient in the same place on its own body, and the transitions
-are perfectly smooth. A light answers "which way is this surface facing" — this
-gradient does not follow facing at all.
+The treatment is a **radial gradient** with **two effect styles on it, an inner
+shadow and an outer shadow**. It is drawn at `966:1967` on the guidelines board,
+in the UI principles chapter. The colours on that frame are out of date and need
+re-striking on the current palette.
 
-**Working reference code is not in this repo.** If you are asked for the Rayl
-look, say the reference has not been added yet rather than approximating it.
+**What is still needed before anything can be built to it:** the gradient's
+stops and its centre, and both shadows in full — offset, blur, spread, colour
+and opacity. Ask for them rather than estimating; the whole reason this section
+existed for two days in the wrong form is that somebody estimated.
+
+### What this section used to say, and why it cost time
+
+It said the look was *"flat vector art with gradient fills, stamped repeatedly,
+with no specular highlight anywhere"*, that *"it is not lighting and it cannot be
+reproduced with lighting"*, and that no reference existed. It told every AI to
+refuse the work and say the reference was missing.
+
+None of that came from Martijn or from a frame. It was written into the repo's
+first commit by an earlier session, from a line in the audit that said only "the
+layered gradient that makes something look like Rayl". Everything after that
+sentence was inference presented as fact, and it sent at least one build chasing
+the look with 3D lights, which never got there.
+
+Two shadow effects are much closer to lighting than to no lighting, and the look
+is reproducible — it is two effect styles on a radial fill. The refusal this
+section instructed was not protecting a gap. It was protecting a guess.
+
+### Shadows are new to the system
+
+Nothing else in Rayl has a shadow. Section 2 forbids putting one on the mark,
+section 5 makes every boundary out of a change of ground, and the loading mark
+carries an opaque tile on every face precisely so that nothing is ever drawn at
+part strength. A shadow is drawn at part strength.
+
+So this is the same shape of question as the scrim: is a shadow now something
+the system has, or does the look get it and nothing else? **Nothing may take a
+shadow until that is answered.** It is on the open list.
 
 ---
 

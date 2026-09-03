@@ -190,7 +190,8 @@ are most likely to hit:
   - Hover: the ladder or the token — two approved sources give a Paper base two different hovers
   - A container's padding — "a container pads one step below the gap it sits in"
   - 96 on the spacing scale — the page rhythm is 96 and the scale as written stops at 72
-  - The Rayl look — the layered gradient treatment, and the largest single gap in the system
+  - The Rayl look — a radial gradient with an inner and an outer shadow — and the numbers are missing
+  - Shadows — the Rayl look needs two, and nothing else in the system has one
   - The reveal button's label — White #FFFFFF on the approved frame, Off White in the ink table
   - Transparency — the scrim behind a dialog is the first thing in Rayl drawn at part strength
   - An array as a ground — the array can sit behind or in front of content, and nothing says how

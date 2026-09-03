@@ -726,12 +726,26 @@ OPEN = [
   "disagree the UI wins. Worth confirming the ladder gains an 8."),
 
  ("The Rayl look", "OPEN",
-  "the layered gradient treatment, and the largest single gap in the system",
-  "Flat vector art with gradient fills, stamped repeatedly, no specular "
-  "highlight — it is not lighting and cannot be reproduced with lighting. "
-  "There is no reference file in this repo. Everything else here makes a build "
-  "correct; this is what makes it Rayl. Say the reference is missing rather "
-  "than approximating it."),
+  "a radial gradient with an inner and an outer shadow — and the numbers are missing",
+  "Confirmed by Martijn on 2026-09-03 and drawn at 966:1967: a radial gradient "
+  "carrying two effect styles, an inner shadow and an outer shadow. The colours "
+  "on that frame are out of date. What is needed is the gradient's stops and "
+  "centre and both shadows in full — offset, blur, spread, colour, opacity.\n\n"
+  "Until 2026-09-03 this document said the look was flat vector art with "
+  "gradient fills and that it could not be reproduced with lighting. That was "
+  "an earlier session's inference, written into the first commit and never "
+  "checked, and it sent a build chasing the look with 3D lights. Two shadow "
+  "effects are closer to lighting than to none. Read this as the standing "
+  "warning about inference in a document that models follow exactly."),
+
+ ("Shadows", "OPEN",
+  "the Rayl look needs two, and nothing else in the system has one",
+  "Section 2 forbids a shadow on the mark, section 5 makes every boundary out "
+  "of a change of ground, and the loading mark carries an opaque tile on every "
+  "face so that nothing is drawn at part strength. A shadow is drawn at part "
+  "strength. Same question as the scrim: does the system have shadows now, or "
+  "does the look get them and nothing else? Nothing may take one until this is "
+  "answered."),
 
  ("The reveal button's label", "OPEN",
   "White #FFFFFF on the approved frame, Off White in the ink table",
