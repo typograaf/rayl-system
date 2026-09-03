@@ -511,6 +511,7 @@ INVENTORY = [
   ("rayl-split",      "two columns; is-lead 3:2, is-three, is-centred"),
   ("rayl-measure",    "running text stopped at 62 characters"),
   ("rayl-media",      "a picture that follows the column beside it"),
+  ("rayl-ground",     "something that sits behind content; is-page for the viewport"),
  ]),
  ("Document", [
   ("rayl-doc",        "on the body: the document ground rather than the app one"),
@@ -835,6 +836,20 @@ OPEN = [
   "whether transparency is now a thing the system has, or one exception a "
   "dialog gets. Nothing else may fade until that is answered."),
 
+ ("A ground that draws itself", "PROVISIONAL",
+  "rayl-ground exists; nothing ships that uses it yet",
+  "The system had no way to say one thing sits behind another — z-index "
+  "appeared six times in core.css and every one was inside a component. "
+  "rayl-ground is an element you put first inside the box it fills: the holder "
+  "takes its own stacking context, every sibling is lifted above it, and "
+  "is-page fills the viewport and replaces the page's own ground. Section 7 "
+  "gains one named exception with it: a ground may drift, and everything drawn "
+  "on it still moves only by rolling.\n\n"
+  "Provisional because it was designed ahead of its first user. The sheet is "
+  "being re-derived and the array has not been placed as one, so no page in "
+  "this repo carries a rayl-ground yet. Whether it survives contact is not "
+  "known."),
+
  ("An array as a ground", "OPEN",
   "the array can sit behind or in front of content, and nothing says how",
   "Section 11 already calls data-motion=\"still\" the right choice for a "
@@ -843,7 +858,8 @@ OPEN = [
   "and every one is inside a component. So a background array today means "
   "hand-rolled position, inset and stacking, re-decided on every page, which "
   "is what layout primitives exist to prevent. Three things have to be "
-  "answered before the primitive can be drawn. Is a background forced to "
+  "The layering half is answered — rayl-ground. What is left is the array's "
+  "own share of it. Is a background forced to "
   "still, or may it wave under text? What colour is type over an array — the "
   "ink flip works off a single L* and an array is a gradient sheet with bodies "
   "moving across it, so there is nothing to test. And does foreground mean "

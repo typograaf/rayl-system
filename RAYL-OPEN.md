@@ -73,7 +73,7 @@ Everything else in the system is flat and opaque — it is why the loading mark 
 
 **OPEN** — the array can sit behind or in front of content, and nothing says how
 
-Section 11 already calls data-motion="still" the right choice for a header or a background, and then never says how to place one. The system has no layering vocabulary at all: z-index appears six times in core.css and every one is inside a component. So a background array today means hand-rolled position, inset and stacking, re-decided on every page, which is what layout primitives exist to prevent. Three things have to be answered before the primitive can be drawn. Is a background forced to still, or may it wave under text? What colour is type over an array — the ink flip works off a single L* and an array is a gradient sheet with bodies moving across it, so there is nothing to test. And does foreground mean over-and-clipped, like a masthead, or over-and-transparent, which the bodies being opaque makes a different question again.
+Section 11 already calls data-motion="still" the right choice for a header or a background, and then never says how to place one. The system has no layering vocabulary at all: z-index appears six times in core.css and every one is inside a component. So a background array today means hand-rolled position, inset and stacking, re-decided on every page, which is what layout primitives exist to prevent. Three things have to be The layering half is answered — rayl-ground. What is left is the array's own share of it. Is a background forced to still, or may it wave under text? What colour is type over an array — the ink flip works off a single L* and an array is a gradient sheet with bodies moving across it, so there is nothing to test. And does foreground mean over-and-clipped, like a masthead, or over-and-transparent, which the bodies being opaque makes a different question again.
 
 ## The fonts
 
@@ -152,6 +152,14 @@ What leans is what is its own target: the button, the reveal button, an option c
 The select face is the one still unsettled: it is a button in the markup and it opens a list rather than doing something, and it currently does not lean.
 
 Still provisional because it is the first thing in Rayl that moves without being touched, and section 7 is one movement.
+
+## A ground that draws itself
+
+**PROVISIONAL** — rayl-ground exists; nothing ships that uses it yet
+
+The system had no way to say one thing sits behind another — z-index appeared six times in core.css and every one was inside a component. rayl-ground is an element you put first inside the box it fills: the holder takes its own stacking context, every sibling is lifted above it, and is-page fills the viewport and replaces the page's own ground. Section 7 gains one named exception with it: a ground may drift, and everything drawn on it still moves only by rolling.
+
+Provisional because it was designed ahead of its first user. The sheet is being re-derived and the array has not been placed as one, so no page in this repo carries a rayl-ground yet. Whether it survives contact is not known.
 
 ---
 

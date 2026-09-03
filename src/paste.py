@@ -151,6 +151,13 @@ it asks. It is the CARD treatment and there is no smaller one: never nest it, an
 whatever sits on a looked card is flat. Nothing else in the system takes a shadow — do not put one anywhere
 else, and do not invent a second treatment.
 
+A GROUND IS A CHILD, NOT A BACKGROUND. To put something behind content — a
+sheet, an array — put a <div class="rayl-ground"> first inside the box it
+fills, and add is-page for the viewport. The holder takes its own stacking
+context and the content is lifted above it, so nothing else needs a z-index.
+Never hand-roll position/inset/z-index for a background. Type over a ground
+takes the ink its DARKEST step would take.
+
 AN ARRAY ALWAYS MOVES. Never data-motion="still" — that is for a frame grab,
 not for a page. Use "wave" (the default, and right almost always), "scroll" for
 an array the reader passes, or "pointer" ONLY on a large or full-screen header.

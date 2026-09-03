@@ -150,6 +150,7 @@ the other, so if a part is not in this table it is not in the system.
 | `rayl-split` | two columns; is-lead 3:2, is-three, is-centred |
 | `rayl-measure` | running text stopped at 62 characters |
 | `rayl-media` | a picture that follows the column beside it |
+| `rayl-ground` | something that sits behind content; is-page for the viewport |
 
 **Document**
 
@@ -613,6 +614,34 @@ padding that nothing else uses.
 **A document is an overview, not an essay.** The rail names the thing and the
 field shows it.
 
+### One thing behind another
+
+**A ground is a child, not a background.** The things that want to be one — a
+sheet, an array — are elements that draw themselves, so `rayl-ground` is an
+element you put first inside the box it fills.
+
+```html
+<div class="rayl-card">
+  <div class="rayl-ground" data-rayl-sheet="porcelain"></div>
+  …the content, which needs no z-index of its own…
+</div>
+```
+
+The holder gets its own stacking context and every sibling is lifted above the
+ground, so **nothing else on the page has to know**. A ground can never rise
+past the box it belongs to, and it is never a pointer target.
+
+`is-page` fills the viewport rather than the box — the one placement that is not
+inside anything, which is why it is the one that has to say so. A page ground
+**replaces** the page's own ground rather than sitting under it; two grounds
+stacked is one of them wasted.
+
+**Type over a ground takes the ink its darkest step would take.** The ink flip
+in section 6 works off a single L\*, and a ground has a range rather than a
+value — so read the flip against the darkest colour the ground can reach, not
+its average. A ground that cannot say what its darkest colour is cannot be
+written on.
+
 ### Pictures follow the column beside them
 
 A media block in a split takes the height of the row rather than imposing one.
@@ -872,11 +901,22 @@ units column follows the value exactly, and every column above it holds still
 until the one below is about to wrap. Digits are `tabular-nums`; a column with
 nothing in it collapses to zero width, so 5 reads as `5`, not `005`.
 
+### A ground may drift — the one exception
+
+**A `rayl-ground` may move on its own.** It is the only thing in the system that
+does, and everything drawn on it still moves only by rolling. The exception is
+named and singular so that the rule keeps its force: a ground is the one surface
+nobody is reading, which is why it can carry a movement that would be noise
+anywhere else.
+
+The still version stays the conforming one, and it is what
+`prefers-reduced-motion` gets — not a slower drift, no drift.
+
 ### Nothing else moves
 
 There is no page transition, no panel or sheet movement, no loading movement, no
-hover movement on cards, and nothing at all on the gradients: those are flat art
-and stay flat. **Ask before adding a second movement. The value of having one is
+hover movement on cards, and no movement on a gradient that is not a ground:
+those are flat art and stay flat. **Ask before adding a second movement. The value of having one is
 that it is one.**
 
 ---

@@ -1115,3 +1115,44 @@ body.rayl strong,body.rayl b,.rayl-page strong,.rayl-page b{font-weight:inherit;
    on it. The file uses the treatment at a second scale, on the 20-tall rows
    inside a card; Rayl does not. */
 .is-look .is-look{background:none;box-shadow:none;}
+
+
+/* =============================================================== A GROUND ==
+ * The system had no way to say that one thing sits behind another. z-index
+ * appeared six times in this stylesheet and every one was inside a component,
+ * so anything wanting a background invented its own stacking — which is what
+ * layout primitives exist to stop.
+ *
+ * A GROUND IS A CHILD, NOT A BACKGROUND. It is an element, because the things
+ * that want to be one — a sheet, an array — are elements that draw themselves.
+ * Put it first inside the box it fills.
+ *
+ *   <div class="rayl-card">
+ *     <div class="rayl-ground" data-rayl-sheet="porcelain"></div>
+ *     …the content, which needs no z-index of its own…
+ *   </div>
+ *
+ * The holder gets its own stacking context, so a ground can never rise past the
+ * box it belongs to, and every sibling is lifted above it. Nothing else in the
+ * page has to know.
+ * ======================================================================== */
+.rayl-ground{
+  position:absolute;inset:0;z-index:0;
+  border-radius:inherit;          /* a ground takes the shape it fills */
+  overflow:hidden;
+  pointer-events:none;            /* a ground is never a target */
+}
+/* is-page fills the viewport instead of the box. It is the one placement that
+   is not inside anything, so it is the one that has to say so. */
+.rayl-ground.is-page{position:fixed;}
+
+body.rayl:has(> .rayl-ground), body.rayl *:has(> .rayl-ground){
+  position:relative;isolation:isolate;}
+body.rayl:has(> .rayl-ground) > :not(.rayl-ground),
+body.rayl *:has(> .rayl-ground) > :not(.rayl-ground){
+  position:relative;z-index:1;}
+
+/* A page ground replaces the page's own ground rather than hiding under it —
+   two grounds stacked is one of them wasted, and the top one always wins. */
+body.rayl:has(> .rayl-ground.is-page),
+body.rayl:has(> .rayl-ground.is-page) .rayl-page{background:none;}

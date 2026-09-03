@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl System</title>
-<script src="rayl.js?v=a8332a37"></script>
+<script src="rayl.js?v=e4cf806f"></script>
 <style>
   .mono{white-space:nowrap;}
   .dim{opacity:.62;}
@@ -191,6 +191,13 @@ never nest it, and whatever sits on a looked card is flat. Nothing else in the
 system takes a shadow — do not put one anywhere else, and do not invent a
 second treatment.
 
+A GROUND IS A CHILD, NOT A BACKGROUND. To put something behind content — a
+sheet, an array — put a &lt;div class=&quot;rayl-ground&quot;&gt; first inside the box it
+fills, and add is-page for the viewport. The holder takes its own stacking
+context and the content is lifted above it, so nothing else needs a z-index.
+Never hand-roll position/inset/z-index for a background. Type over a ground
+takes the ink its DARKEST step would take.
+
 AN ARRAY ALWAYS MOVES. Never data-motion=&quot;still&quot; — that is for a frame grab,
 not for a page. Use &quot;wave&quot; (the default, and right almost always), &quot;scroll&quot;
 for an array the reader passes, or &quot;pointer&quot; ONLY on a large or full-screen
@@ -316,6 +323,7 @@ it as a rule of the system:
   - The loading mark&#x27;s timing — rayl-solve runs on numbers and a curve that are not the system&#x27;s
   - A colour change runs 120ms — the ground under a control moves at 120ms ease-out, not on the system&#x27;s curve
   - Magnetism on buttons — the slider&#x27;s lean, on everything that is its own target
+  - A ground that draws itself — rayl-ground exists; nothing ships that uses it yet
 
 The system still has no sheet and drawer, toast, progress and context menu. If
 the brief needs one:

@@ -99,6 +99,13 @@ never nest it, and whatever sits on a looked card is flat. Nothing else in the
 system takes a shadow — do not put one anywhere else, and do not invent a
 second treatment.
 
+A GROUND IS A CHILD, NOT A BACKGROUND. To put something behind content — a
+sheet, an array — put a <div class="rayl-ground"> first inside the box it
+fills, and add is-page for the viewport. The holder takes its own stacking
+context and the content is lifted above it, so nothing else needs a z-index.
+Never hand-roll position/inset/z-index for a background. Type over a ground
+takes the ink its DARKEST step would take.
+
 AN ARRAY ALWAYS MOVES. Never data-motion="still" — that is for a frame grab,
 not for a page. Use "wave" (the default, and right almost always), "scroll"
 for an array the reader passes, or "pointer" ONLY on a large or full-screen
@@ -224,6 +231,7 @@ it as a rule of the system:
   - The loading mark's timing — rayl-solve runs on numbers and a curve that are not the system's
   - A colour change runs 120ms — the ground under a control moves at 120ms ease-out, not on the system's curve
   - Magnetism on buttons — the slider's lean, on everything that is its own target
+  - A ground that draws itself — rayl-ground exists; nothing ships that uses it yet
 
 The system still has no sheet and drawer, toast, progress and context menu. If
 the brief needs one:
