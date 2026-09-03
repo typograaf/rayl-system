@@ -69,6 +69,16 @@ One value, two approved sources. Ask before using either.
 
 Everything else in the system is flat and opaque — it is why the loading mark carries a tile on every face rather than fading, and why the palette is fifteen solid steps. A dialog has to dim what is behind it, so --rayl-scrim is a 20% mix and it is the right answer for that job. What is not decided is whether transparency is now a thing the system has, or one exception a dialog gets. Nothing else may fade until that is answered.
 
+## The sheet
+
+**OPEN** — withdrawn on 2026-09-03 over where it came from, and to be re-derived
+
+A drifting ground, clamped between the two stops of an approved gradient. The clamp was the good part: it could not emit a colour outside the palette even in principle, which is a stronger guarantee than anything else here has, and it is what makes the ink rule work on a range.
+
+What it was not is ours. The geometry and the motion were React Bits' Aurora, read off the nestjs.com hero by hooking the running page's WebGL context, and seventeen of its numbers were measurements of that page. It shipped to the public site under the Rayl name with no copyright line and no licence text — MIT permits the use and requires both, so it was wrong on the licence as well as on the principle.
+
+It was pushed by a git add -A in an unrelated commit, which is the second time that command has swept another session's work into a commit here. Removed from the repo and from the site; the code is in git history and the handover artifact records every number. Re-derive it: same idea, same clamp, and every number with a reason inside Rayl or a reason somebody can state.
+
 ## An array as a ground
 
 **OPEN** — the array can sit behind or in front of content, and nothing says how
@@ -159,7 +169,7 @@ Still provisional because it is the first thing in Rayl that moves without being
 
 The system had no way to say one thing sits behind another — z-index appeared six times in core.css and every one was inside a component. rayl-ground is an element you put first inside the box it fills: the holder takes its own stacking context, every sibling is lifted above it, and is-page fills the viewport and replaces the page's own ground. Section 7 gains one named exception with it: a ground may drift, and everything drawn on it still moves only by rolling.
 
-Provisional because it was designed ahead of its first user. The sheet is being re-derived and the array has not been placed as one, so no page in this repo carries a rayl-ground yet. Whether it survives contact is not known.
+Provisional because it was designed ahead of its first user. The bench exercises it with a flat approved gradient, which proves the stacking and the ink rule; nothing that draws itself uses it yet.
 
 ---
 

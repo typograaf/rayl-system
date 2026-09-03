@@ -860,6 +860,24 @@ OPEN = [
   "whether transparency is now a thing the system has, or one exception a "
   "dialog gets. Nothing else may fade until that is answered."),
 
+ ("The sheet", "OPEN",
+  "withdrawn on 2026-09-03 over where it came from, and to be re-derived",
+  "A drifting ground, clamped between the two stops of an approved gradient. "
+  "The clamp was the good part: it could not emit a colour outside the palette "
+  "even in principle, which is a stronger guarantee than anything else here "
+  "has, and it is what makes the ink rule work on a range.\n\n"
+  "What it was not is ours. The geometry and the motion were React Bits' "
+  "Aurora, read off the nestjs.com hero by hooking the running page's WebGL "
+  "context, and seventeen of its numbers were measurements of that page. It "
+  "shipped to the public site under the Rayl name with no copyright line and no "
+  "licence text — MIT permits the use and requires both, so it was wrong on "
+  "the licence as well as on the principle.\n\n"
+  "It was pushed by a git add -A in an unrelated commit, which is the second "
+  "time that command has swept another session's work into a commit here. "
+  "Removed from the repo and from the site; the code is in git history and the "
+  "handover artifact records every number. Re-derive it: same idea, same clamp, "
+  "and every number with a reason inside Rayl or a reason somebody can state."),
+
  ("A ground that draws itself", "PROVISIONAL",
   "rayl-ground exists; nothing ships that uses it yet",
   "The system had no way to say one thing sits behind another — z-index "
@@ -869,10 +887,9 @@ OPEN = [
   "is-page fills the viewport and replaces the page's own ground. Section 7 "
   "gains one named exception with it: a ground may drift, and everything drawn "
   "on it still moves only by rolling.\n\n"
-  "Provisional because it was designed ahead of its first user. The sheet is "
-  "being re-derived and the array has not been placed as one, so no page in "
-  "this repo carries a rayl-ground yet. Whether it survives contact is not "
-  "known."),
+  "Provisional because it was designed ahead of its first user. The bench "
+  "exercises it with a flat approved gradient, which proves the stacking and "
+  "the ink rule; nothing that draws itself uses it yet."),
 
  ("An array as a ground", "OPEN",
   "the array can sit behind or in front of content, and nothing says how",
