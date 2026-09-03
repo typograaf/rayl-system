@@ -171,9 +171,10 @@ ink, is-tight sizes it to its own content. Never build a one-of-many row out of
 rayl-btn and aria-pressed. A value on a line rolls the same way a button label
 does: rayl-line with data-label and data-swap, and data-rolls on the control
 that changes it. BUTTONS LEAN toward a cursor that has not arrived yet — rayl.js does it, do not
-write your own. It reaches rayl-btn, rayl-ibtn and rayl-seg-opt, and a joined
-bar leans as one body. A checkbox, a toggle, a menu item and a select face do
-not lean: a setting is not a thing you reach for. HOVER TURNS NOTHING — a label rolls on a click, or when the text it holds changes on its own. The ground stepping one rung is the whole of what hover does; adding a turn to it makes the movement mean nothing.
+write your own. It reaches rayl-btn, rayl-ibtn, rayl-check,
+rayl-toggle and rayl-seg-opt. NOTHING in a joined bar leans, including the bar,
+and neither does a menu item — a block that drifts at a passing cursor reads as
+the whole row coming loose. HOVER TURNS NOTHING — a label rolls on a click, or when the text it holds changes on its own. The ground stepping one rung is the whole of what hover does; adding a turn to it makes the movement mean nothing.
 
 FIELDS. rayl-input is the field; add is-multi for a textarea. rayl-select is
 authored as nothing but its rayl-menu-opt options with is-on on the chosen one —

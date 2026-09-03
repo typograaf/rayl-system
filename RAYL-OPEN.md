@@ -139,7 +139,7 @@ Every documented movement is 280ms on cubic-bezier(0.65,0,0.35,1), and section 7
 
 ## Magnetism on buttons
 
-**PROVISIONAL** — the slider's lean, on buttons, reveal buttons and option cells
+**PROVISIONAL** — the slider's lean, on everything that is its own target
 
 The nub has leaned toward an approaching cursor since it was built and nothing else did. Buttons do now, on the nub's own range and strength — 104 and 0.6 — so no value was invented there.
 
@@ -147,7 +147,9 @@ Two things were changed after seeing it: every button in range leaned at once, w
 
 Then three bugs, all found by measuring rather than by looking. The cap was a clamp on a bigger curve and it caught across 78% of the range, so the button jumped to its full lean on approach and sat there — the falloff is the shape itself now, peaking at 6 at half the range. The cached centres were never dropped when the real face landed and every button re-rendered wider, so on load the pull came from left of the button. And two buttons traded the lean pixel by pixel along the line between them, so a 6 band of hysteresis holds it.
 
-It reaches the reveal button and the option group too: a cell leans one at a time, and a JOINED bar leans as one body, because its cells sit at gap 0 inside a clip and a cell that moved would tear out of it. A checkbox, a toggle, a menu item and a select face do not lean — a setting is not a thing you reach for.
+What leans is what is its own target: the button, the reveal button, an option cell in an unjoined group, and the two on-or-off controls. What does not is what sits inside a block — a joined bar and every cell in it, and an item in an open menu. A block that drifts at a passing cursor reads as the whole row coming loose.
+
+The select face is the one still unsettled: it is a button in the markup and it opens a list rather than doing something, and it currently does not lean.
 
 Still provisional because it is the first thing in Rayl that moves without being touched, and section 7 is one movement.
 

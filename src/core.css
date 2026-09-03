@@ -297,14 +297,12 @@
   font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
   letter-spacing:0;line-height:1.2;
 }
-/* A JOINED BAR LEANS AS ONE BODY. Its cells sit at gap 0 inside a clip, so a
-   cell that moved would tear out of the bar or be cut off by it. The bar is the
-   object here, the way the group is the thing that owns the selection. */
-.rayl-seg.is-joined{gap:0;border-radius:var(--rayl-radius);overflow:hidden;
-  --lean-x:0px; --lean-y:0px;
-  transform:translate(var(--lean-x),var(--lean-y));
-  transition:transform 220ms var(--rayl-ease);}
-.rayl-seg.is-joined.is-near{transition:transform 90ms linear;}
+/* A JOINED BAR DOES NOT LEAN, and neither do its cells. It is one hard block —
+   cells at gap 0 inside a clip, a single radius round the outside — and a block
+   that drifts at a passing cursor reads as the whole row coming loose. The
+   separate cells of an unjoined group each lean on their own; this is the one
+   arrangement where nothing does. */
+.rayl-seg.is-joined{gap:0;border-radius:var(--rayl-radius);overflow:hidden;}
 .rayl-seg.is-joined .rayl-seg-opt{transform:none;}
 .rayl-seg-opt{
   position:relative;flex:1 1 calc(50% - 6px);min-width:0;
@@ -568,6 +566,9 @@
    like every other control, and is-small is 12 at icon scale, rounding 4. */
 .rayl-check{
   display:inline-flex;align-items:center;gap:12px;
+  --lean-x:0px; --lean-y:0px;
+  transform:translate(var(--lean-x),var(--lean-y));
+  transition:transform 220ms var(--rayl-ease);
   width:fit-content;               /* the box and its word, not the row */
   font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
   letter-spacing:0;line-height:1.2;
@@ -590,6 +591,7 @@
 .rayl-check[aria-checked="true"]:hover:enabled .rayl-check-box{background:var(--surface-active-hover);}
 .rayl-check:active:enabled .rayl-check-box{background:var(--rayl-seg-press);}
 .rayl-check[aria-checked="true"]:active:enabled .rayl-check-box{background:var(--surface-active-pressed);}
+.rayl-check.is-near{transition:transform 90ms linear;}
 .rayl-check:disabled{color:var(--ink-disabled);cursor:default;}
 .rayl-check:focus-visible{outline:2px solid var(--ink-primary);outline-offset:2px;
   border-radius:var(--rayl-radius);}
@@ -619,8 +621,11 @@
   font-family:var(--rayl-font);font-size:var(--rayl-size);font-weight:500;
   letter-spacing:0;line-height:1.2;color:var(--ink-disabled);
   overflow:hidden;                 /* the track is the roll's own clip */
-  transition:background 120ms ease-out;
+  --lean-x:0px; --lean-y:0px;
+  transform:translate(var(--lean-x),var(--lean-y));
+  transition:background 120ms ease-out, transform 220ms var(--rayl-ease);
 }
+.rayl-toggle.is-near{transition:background 120ms ease-out, transform 90ms linear;}
 .rayl-toggle-knob{
   position:absolute;left:var(--tog-pad);top:var(--tog-pad);
   width:var(--tog-kw);height:var(--tog-kh);

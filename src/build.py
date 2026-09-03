@@ -85,14 +85,16 @@ function init(root){
     upgradeIconButton(b); leanRegister(b); });
   [].forEach.call(root.querySelectorAll(".rayl-seg"),function(g){
     upgradeSeg(g);
-    /* joined: the bar is the body. Otherwise every cell is its own. */
-    if (g.classList.contains("is-joined")) leanRegister(g);
-    else [].forEach.call(g.querySelectorAll(".rayl-seg-opt"),leanRegister);
+    /* A joined bar is one hard block and nothing in it leans. */
+    if (!g.classList.contains("is-joined"))
+      [].forEach.call(g.querySelectorAll(".rayl-seg-opt"),leanRegister);
   });
   [].forEach.call(root.querySelectorAll(".rayl-tabs"),upgradeTabs);
   [].forEach.call(root.querySelectorAll(".rayl-select"),upgradeSelect);
-  [].forEach.call(root.querySelectorAll(".rayl-check"),upgradeCheck);
-  [].forEach.call(root.querySelectorAll(".rayl-toggle"),upgradeToggle);
+  [].forEach.call(root.querySelectorAll(".rayl-check"),function(b){
+    upgradeCheck(b); leanRegister(b); });
+  [].forEach.call(root.querySelectorAll(".rayl-toggle"),function(b){
+    upgradeToggle(b); leanRegister(b); });
   [].forEach.call(root.querySelectorAll(".rayl-fold"),upgradeFold);
   [].forEach.call(root.querySelectorAll(".rayl-skeleton"),upgradeSkeleton);
   [].forEach.call(root.querySelectorAll("[data-tip]"),upgradeTip);

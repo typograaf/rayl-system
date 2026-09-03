@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rayl Sheet</title>
-<script src="../rayl.js?v=3e0244c4"></script>
+<script src="../rayl.js?v=7293cadf"></script>
 <script type="module" src="../assets/sheet/rayl-sheet.js"></script>
 <style>
   .short { height: 220px; border-radius: 8px; }
@@ -93,12 +93,12 @@
 
   <section class="rayl-section">
     <span class="rayl-label">Over the top</span>
-    <div class="rayl-row"><span class="rayl-row-name">Amplitude</span><span class="rayl-slider" id="amplitude" data-min="0" data-max="3" data-val="1" data-step="0.05"></span></div>
-    <div class="rayl-row"><span class="rayl-row-name">Blend</span><span class="rayl-slider" id="blend" data-min="0" data-max="1.5" data-val="0.5" data-step="0.01"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Amplitude</span><span class="rayl-slider" id="amplitude" data-min="0" data-max="3" data-val="1.1" data-step="0.05"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Blend</span><span class="rayl-slider" id="blend" data-min="0" data-max="1.5" data-val="0.72" data-step="0.01"></span></div>
     <div class="rayl-row"><span class="rayl-row-name">Speed</span><span class="rayl-slider" id="speed" data-min="0" data-max="3" data-val="1" data-step="0.05"></span></div>
-    <div class="rayl-row"><span class="rayl-row-name">Glow</span><span class="rayl-slider" id="glow" data-min="0" data-max="1.5" data-val="0.6" data-step="0.01"></span></div>
-    <div class="rayl-row"><span class="rayl-row-name">Tint</span><span class="rayl-slider" id="tint" data-min="0" data-max="1" data-val="0.3" data-step="0.01"></span></div>
-    <div class="rayl-row"><span class="rayl-row-name">Veil</span><span class="rayl-slider" id="veil" data-min="0" data-max="1" data-val="0.5" data-step="0.01"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Glow</span><span class="rayl-slider" id="glow" data-min="0" data-max="1.5" data-val="1.09" data-step="0.01"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Tint</span><span class="rayl-slider" id="tint" data-min="0" data-max="1" data-val="0.71" data-step="0.01"></span></div>
+    <div class="rayl-row"><span class="rayl-row-name">Veil</span><span class="rayl-slider" id="veil" data-min="0" data-max="1" data-val="0" data-step="0.01"></span></div>
   </section>
 
   <section class="rayl-section">
@@ -170,7 +170,12 @@
     lead: el.classList.contains("lead"),
   }));
 
-  const said = { sheet: "concrete", motion: "pointer" };
+  /* Seeded with what the boxes are authored with, so the markup readout is
+     right before anything has been touched rather than only after. */
+  const said = {
+    sheet: "concrete", motion: "pointer",
+    amplitude: 1.1, blend: 0.72, speed: 1, glow: 1.09, tint: 0.71, veil: 0,
+  };
   const OVER = ["amplitude", "blend", "speed", "glow", "tint", "veil"];
 
   const show = () => {

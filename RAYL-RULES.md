@@ -796,19 +796,19 @@ which one you want. That is the same reason a hover no longer turns a label.
 |---|---|
 | `rayl-btn` | yes |
 | `rayl-ibtn` | yes — it leans as you approach, then divides when you arrive |
-| `rayl-seg-opt` | yes, one cell at a time |
-| `rayl-seg is-joined` | **the bar leans, not the cell** |
-| a checkbox, a toggle, a menu item, a select face | no |
+| `rayl-seg-opt` | yes, one cell at a time — **unless the group is joined** |
+| `rayl-check`, `rayl-toggle` | yes. An on-or-off control stands on its own |
+| `rayl-seg is-joined` | **nothing in it leans, including the bar** |
+| a menu item, a select face | no |
 
-**A joined bar leans as one body.** Its cells sit at gap 0 inside a clip, so a
-cell that moved would tear out of the bar or be cut off by it. The bar is the
-object there, the way the group is the thing that owns the selection.
+**A joined bar is one hard block and nothing in it moves.** Cells at gap 0
+inside a clip, one radius round the outside. A block that drifts at a passing
+cursor reads as the whole row coming loose, and a cell that moved would tear out
+of the bar or be cut off by it. The separate cells of an unjoined group each
+lean on their own; this is the one arrangement where nothing does.
 
-**A setting does not lean.** A checkbox and a toggle change a state rather than
-being reached for, a menu item is one of a list that already arrived when you
-opened it, and a select face opens something rather than doing something.
-Magnetism says *this is the thing you are reaching for*, and saying it where it
-is not true is the same failure as every button leaning at once.
+**A menu item does not lean** — it is one of a list that already arrived when you
+opened it, and the list is a block in the same way the bar is.
 
 An unjoined group gaps 12 and the lean is at most 6, so a cell can never reach
 its neighbour.

@@ -251,9 +251,21 @@ void main() {
   float auroraAlpha = smoothstep(midPoint - uBlend * 0.5, midPoint + uBlend * 0.5, intensity);
   float aurora = clamp(intensity, 0.0, 1.0) * level;
 
-  // Cursor effect (glow) — works even if auroraAlpha is zero
-  vec2 mouseUV = uMouse / uResolution;
-  float dist = distance(uv, mouseUV);
+  /* The cursor's disc, and it is a disc. Measured in uv the distance runs
+     through a space where one unit is the width on one axis and the height on
+     the other, so what was drawn as a circle came out an ellipse stretched by
+     the box's aspect: round in a square box, a wide smear in a letterbox one,
+     and changing shape as the window was dragged. Works even if auroraAlpha
+     is zero.
+
+     Pixels are the same length on both axes, so dividing by one scalar keeps
+     it circular at every aspect. The scalar is the frame's diagonal over root
+     two — the side of a square with that diagonal — because a uv corner sits
+     0.707 from a uv centre whatever shape the box is, and this normalisation
+     puts the centre-to-corner reach at 0.707 too. So the settings keep the
+     meaning they were tuned with and only the shape is corrected. */
+  float reach = length(uResolution) * 0.70710678;
+  float dist = distance(gl_FragCoord.xy, uMouse) / reach;
   float cursorEffect = smoothstep(uGlow, 0.0, dist);
 
   /* Their two composites, run on the level instead of on a colour. The disc
