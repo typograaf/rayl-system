@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rayl Sheet — every state</title>
+<script src="../rayl.js?v=a8332a37"></script>
+<script type="module" src="../assets/sheet/rayl-sheet.js"></script>
+<style>
+  /* Nothing here is the component. The component injects its own stylesheet
+     and that stylesheet is what should land in core.css — see the handover.
+     What follows is the furniture this specimen is made of, named outside the
+     rayl- namespace so it cannot be mistaken for something the system ships. */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+  .cell{display:flex;flex-direction:column;gap:12px;}
+  .box{height:220px;border-radius:8px;}
+  .box.is-tiny{height:96px;}
+  .flat-porcelain{background:var(--rayl-porcelain-gradient);}
+  .flat-concrete{background:var(--rayl-concrete-gradient);}
+  .theme{margin-left:auto;}
+  .markup{font:inherit;line-height:1.5;white-space:pre-wrap;margin:0;opacity:.62;}
+</style>
+</head>
+<body class="rayl">
+<main class="rayl-page is-wide">
+
+  <header class="rayl-head">
+    <p class="rayl-label">Rayl Sheet</p>
+    <div class="rayl-seg is-tight theme" id="theme">
+      <button class="rayl-seg-opt" type="button" data-mode="light">Light</button>
+      <button class="rayl-seg-opt" type="button" data-mode="dark">Dark</button>
+    </div>
+  </header>
+
+  <section class="rayl-section">
+    <div class="rayl-stack">
+      <h1 class="rayl-36 rayl-serif">Every state it has</h1>
+      <p class="rayl-18 rayl-measure">A ground: a full-frame field that drifts on
+      its own and leans after the pointer, and whose every pixel is between two
+      palette steps. Two gradients, three motions, and one flat state that three
+      different failures all resolve to.</p>
+      <p class="rayl-12 rayl-hint">Every colour below comes from a token. The
+      shader emits <b>mix(dark, light, t)</b> clamped to those two, so it cannot
+      produce a colour off the palette even in principle.</p>
+    </div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Two gradients, pointer — the default</span>
+    <div class="grid">
+      <div class="cell">
+        <div class="box" data-rayl-sheet="concrete" data-motion="pointer"></div>
+        <p class="rayl-12 rayl-hint">concrete — Light Concrete to Porcelain</p>
+      </div>
+      <div class="cell">
+        <div class="box" data-rayl-sheet="porcelain" data-motion="pointer"></div>
+        <p class="rayl-12 rayl-hint">porcelain — Porcelain to Off White</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Scroll — the disc crosses as the box crosses the screen</span>
+    <div class="grid">
+      <div class="cell">
+        <div class="box" data-rayl-sheet="concrete" data-motion="scroll"></div>
+        <p class="rayl-12 rayl-hint">concrete, scroll</p>
+      </div>
+      <div class="cell">
+        <div class="box" data-rayl-sheet="porcelain" data-motion="scroll"></div>
+        <p class="rayl-12 rayl-hint">porcelain, scroll</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Still — and the three other ways you arrive at it</span>
+    <div class="grid">
+      <div class="cell">
+        <div class="box" data-rayl-sheet="concrete" data-motion="still"></div>
+        <p class="rayl-12 rayl-hint">concrete, still — no canvas at all</p>
+      </div>
+      <div class="cell">
+        <div class="box flat-concrete"></div>
+        <p class="rayl-12 rayl-hint">the concrete token painted straight on</p>
+      </div>
+      <div class="cell">
+        <div class="box" data-rayl-sheet="porcelain" data-motion="still"></div>
+        <p class="rayl-12 rayl-hint">porcelain, still</p>
+      </div>
+      <div class="cell">
+        <div class="box flat-porcelain"></div>
+        <p class="rayl-12 rayl-hint">the porcelain token painted straight on</p>
+      </div>
+    </div>
+    <p class="rayl-18 rayl-measure">Each pair is the same picture. <b>Still is the
+    only state section 7 permits</b>, and four different routes land on it:
+    <b>data-motion="still"</b>, a reader who has asked for reduced motion, a
+    browser with no WebGL2, and — once the component's stylesheet is in core.css
+    — a page whose script never ran. Today the fourth route gives a blank box
+    instead, because the stylesheet arrives with the script.</p>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">Scale — the shader is in fractions of its own box</span>
+    <div class="grid">
+      <div class="cell">
+        <div class="box is-tiny" data-rayl-sheet="concrete" data-motion="pointer"></div>
+        <p class="rayl-12 rayl-hint">96 high</p>
+      </div>
+      <div class="cell">
+        <div class="box is-tiny" data-rayl-sheet="porcelain" data-motion="pointer"></div>
+        <p class="rayl-12 rayl-hint">96 high</p>
+      </div>
+    </div>
+    <p class="rayl-18 rayl-measure">The ramp across the frame and the ground up it
+    are fractions of the box, so the composition is identical at any size. The
+    cursor disc is measured in pixels over the frame's diagonal divided by root
+    two, which keeps it a circle at every aspect instead of an ellipse that
+    reshapes itself when the window is dragged.</p>
+  </section>
+
+  <section class="rayl-section">
+    <span class="rayl-label">The state that is not shown here, and why</span>
+    <pre class="markup rayl-12">&lt;div data-rayl-sheet="concrete" data-place="page"&gt;&lt;/div&gt;</pre>
+    <p class="rayl-18 rayl-measure"><b>place="page"</b> puts the sheet behind the
+    whole page on <b>position:fixed; inset:0; z-index:-1</b>, and it needs the
+    grounds on <b>body.rayl</b> and <b>rayl-page</b> cleared by hand to be seen
+    at all. That is the layering item in RAYL-OPEN.md — the system has no
+    layering vocabulary, and every z-index in core.css is inside a component. It
+    is not demonstrated on this page because demonstrating it means taking the
+    page over. The component marks any element using it
+    <b>data-rayl-provisional</b> itself.</p>
+  </section>
+
+</main>
+<script>
+  /* The group owns the selection — this only says what a selection means.
+     Light and dark are two different pairs of palette steps, and the component
+     watches data-theme for exactly this. */
+  var root = document.documentElement, seg = document.getElementById("theme");
+  var mode = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  root.dataset.theme = mode;
+  seg.querySelectorAll(".rayl-seg-opt").forEach(function (o) {
+    o.classList.toggle("is-on", o.dataset.mode === mode);
+  });
+  seg.addEventListener("rayl:change", function (e) {
+    root.dataset.theme = e.detail.option.dataset.mode;
+  });
+</script>
+</body>
+</html>

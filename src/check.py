@@ -58,6 +58,14 @@ rayl
 """.split()
 # /generated:classes
 
+# Modifiers the stylesheet defines. A page that writes its own .is-look is
+# carrying a second copy of a component, which is the drift this repo exists to
+# stop — and the restyle check could not see it, because it only knew about
+# class names beginning rayl-.
+SYSTEM_MODIFIERS = set("""is-look is-deep is-wide is-lead is-three is-centred
+is-ink is-joined is-tight is-third is-on is-tall is-square is-multi is-strong
+is-small is-inset is-near is-open""".split())
+
 KNOWN = load_inventory()
 
 
@@ -146,6 +154,11 @@ def check_css(text, r, is_css):
                    and "none" not in low and "0" != low.strip():
                     r.error("stroke", ln, f"{prop}: {val} — Rayl has no border "
                             "vocabulary. Make the boundary with a change of ground.")
+                if prop == "box-shadow" and "none" not in low:
+                    r.error("shadow", ln, f"box-shadow: {val} — nothing in Rayl "
+                            "takes a shadow except the look, and whether the "
+                            "system has shadows at all is still open. Make the "
+                            "boundary with a change of ground.")
                 if prop == "outline" and not focus and "none" not in low:
                     r.error("stroke", ln, f"outline: {val} — the only stroke in "
                             "the system is the keyboard focus ring.")
@@ -187,9 +200,21 @@ def check_css(text, r, is_css):
                             r.warn("motion", ln, f"{m.group(0)} — the one curve "
                                    f"in the system is {EASE}.")
 
-            if re.search(r"\.rayl-[a-z0-9-]+", sel) and not focus:
-                r.error("restyle", lineno(text, boff), f"{sel.strip()} — a shipped "
-                        "component is being restyled. Compose it, do not change it.")
+            if not focus:
+                classes = re.findall(r"\.([a-zA-Z_][a-zA-Z0-9_-]*)", sel)
+                shipped = re.search(r"\.(rayl-[a-z0-9-]+)", sel)
+                # A modifier is only the system's when nothing page-local shares
+                # the selector: .is-look is a second copy of a component, while
+                # .card.is-tall is a page using the same word for its own state.
+                mods = [c for c in classes if c in SYSTEM_MODIFIERS]
+                local = [c for c in classes
+                         if c not in SYSTEM_MODIFIERS and c not in KNOWN]
+                hit = shipped or (mods and not local and re.search(
+                    r"\.(is-[a-z0-9-]+)", sel))
+                if hit:
+                    r.error("restyle", lineno(text, boff), f"{sel.strip()} — "
+                            f"{hit.group(1)} is shipped by the system and this "
+                            "page is redefining it. Compose it, do not change it.")
 
 
 def check_html(text, r):
