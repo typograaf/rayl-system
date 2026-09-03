@@ -129,48 +129,87 @@ the app build carries a `#D8DEB9`. Neither is the brand.
 
 ## The Rayl look, measured
 
-Read off `966:2041` on the guidelines board — one of three cards in the shape
-principle frame, 330 x 129, radius 24, padding 24, gap 24. Measured 2026-09-03,
-after two days of this repo describing it wrongly.
+Read off the shape principle frame at `966:1967` — three cards, `966:1980`,
+`966:2014` and `966:2041`, all 330 wide at radius 24, padding 24, gap 24, and
+240, 176 and 129 tall. All three carry the same fill and the same effect style.
 
-**The fill is one radial gradient, elliptical and centred.**
+**Two things below were wrong in this document on 2026-09-03 and are corrected
+here.** They were caught by rendering against the frame rather than by reading
+the numbers again, which is the only way either would have surfaced.
 
-    centre        the middle of the card
-    radii         114.36 horizontal, 64.275 vertical
-    stop 0        #CECEC5 at 70% alpha
-    stop 1        #E7E7E0 at 100%
+### The fill is proportional, not pixels
 
-On a 330 x 129 card the vertical radius is the card's own half-height and the
-horizontal is about 69% of it, so the ellipse runs the full height and stops
-short of the sides. In CSS that is
+One elliptical radial gradient, centred, at **34.655% of the width and 49.826%
+of the height**. All three cards share one normalised transform; on the 129-tall
+card that resolves to 114.36 x 64.275, which is why a single card looks like a
+pixel rule and is not one.
 
-    radial-gradient(ellipse 114.36px 64.275px at 50% 50%,
-                    rgba(206,206,197,0.7) 0%, #E7E7E0 100%)
+    radial-gradient(ellipse 34.66% 49.83% at 50% 50%,
+                    <centre at 70% alpha> 0%, <rim> 100%)
 
-**The effect is a named style, `card shadow v2`, and it is four inner shadows.**
-No outer shadow. In Figma's order:
+Stops as drawn: `#CECEC5` at 70% alpha, to `#E7E7E0`.
 
-| colour | alpha | offset | blur | spread |
-|---|---|---|---|---|
-| `#808061` | 40% | −10, −16 | 34 | 0 |
-| `#81817B` | 30% | −5, −5 | 14 | 5 |
-| `#FFFFFF` | 85% | 0, −2 | 1 | 0 |
-| `#FFFFFF` | 85% | 0, −3 | 7 | 3 |
+### The style is `card shadow v2`: four inner shadows, of which three render
 
-Two greys pressed in from the top-left and two white glows lifting the bottom
-edge. That is the whole of it, and it is why the look reads as a pressed
-material rather than a lit object.
+The fourth is in the style with `visible: false`, and it is unoverridden on all
+114 nodes that use it. **What renders is three.** No outer shadow anywhere.
 
-**None of these colours is on the palette.** `#CECEC5` is the value
-`rayl-screen` drifted into; the correct Porcelain is `#CFCFC1`. `#E7E7E0` sits
-between Bone and Dark Off-White and is neither. `#808061` and `#81817B` are near
-Pale Concrete `#89897F`. Every one has to be re-struck before this ships, and
-which palette step each becomes is a decision, not a rounding.
+| colour | alpha | offset | blur | spread | |
+|---|---|---|---|---|---|
+| `#808061` | 40% | −10, −16 | 34 | 0 | **off in the style** |
+| `#81817B` | 30% | −5, −5 | 14 | 5 | |
+| `#FFFFFF` | 85% | 0, −2 | 1 | 0 | |
+| `#FFFFFF` | 85% | 0, −3 | 7 | 3 | |
 
-**The first gradient stop is 70% alpha**, so the look needs transparency as well
-as shadows. Both are new to the system and both are on the open list.
+**The order above is Figma's, and CSS needs it reversed.** Figma paints an
+effect array later-over-earlier; CSS paints the first `box-shadow` on top. Copied
+straight down, the grey lands over the white glows and the bottom edge renders
+219 against a rim of 229 instead of 249.
 
-## Typography
+**The offsets are negative, so the greys press in from the bottom-right.** An
+earlier version of this section said top-left, which is backwards: isolated, the
+grey darkens the bottom to L\* 80 and leaves the top-left at 88. The two white
+glows lift the bottom edge, and after the reversal they sit over the grey at the
+rim.
+
+### It is used at two scales, and the two behave differently
+
+114 nodes carry the style. Six are the cards — the frame appears twice on the
+page. The other **108 are the 20-tall rows inside them**: ground `#EAEAE5`,
+radius 6, the same shadow **unscaled**. So the shadow is fixed pixels and the
+gradient is proportional, and anything built to this has to hold both.
+
+### v2 is a deliberate edit
+
+The older copies under `800:*` use `card shadow v1`, which is **three outer drop
+shadows**. The absence of an outer shadow in v2 is a decision somebody made, not
+an omission.
+
+### The colours, and what the arc says
+
+Chroma below is OKLCh C x 1000. The palette runs 106.5–106.9 in hue and peaks
+at chroma 20.1.
+
+| as drawn | L\* | C | the arc wants | re-struck as | L\* |
+|---|---|---|---|---|---|
+| `#CECEC5` @70% | 82.5 | 12.3 | 19.0 | Porcelain `#CFCFC1` | 82.8 |
+| `#E7E7E0` | 91.5 | 9.4 | 19.5 | Bone `#EDEDDF` | 93.4 |
+| `#81817B` @30% | 53.8 | 8.9 | 14.3 | Pale Concrete `#89897F` | 56.8 |
+| `#808061` @40% | 52.8 | 44.9 | 14.0 | Pale Concrete `#89897F` | 56.8 |
+| `#FFFFFF` @85% | 100.0 | 0.0 | — | White `#FFFFFF` | 100.0 |
+| `#EAEAE5` row | 92.6 | 6.7 | 18.9 | Bone `#EDEDDF` | 93.4 |
+
+**Every drawn value sits under the arc — one finding, not six.** The treatment
+was mixed in neutral grey rather than on the palette's hue. `#808061` is the
+exception the other way: chroma 44.9 against a maximum of 20.1, and hue 107.70
+where the palette sits in 106.5–106.9. It is the only value off the hue as well,
+and it is also the one the style switches off.
+
+The two greys are 1.0 L\* apart, so they were never two colours and they collapse
+to one step. White stays White — on the palette, and the documented achromatic
+exception, which is what a specular lift wants to be.
+
+## Typography## Typography
 
 ### Why the cap-height trim
 

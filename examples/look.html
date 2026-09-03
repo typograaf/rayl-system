@@ -1,0 +1,546 @@
+<!doctype html>
+<!-- rayl-check: allow hex -->
+<!-- The waiver is the same one index.html and bench.html carry, for the same
+     reason: this page has to print the values it is replacing. Every hex in it
+     is inside the one block marked "as drawn" or inside a table cell. The
+     treatment itself, below, contains no hex at all — that is the point of it. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Rayl look</title>
+<script src="https://typograaf.github.io/rayl-system/rayl.js?v=2bca22b4"></script>
+<style>
+  /* ========================================================= THE LOOK ==
+   * One elliptical radial gradient under a named effect style, card shadow
+   * v2, applied as a modifier rather than a component: it is a treatment,
+   * so it goes ON a card, a panel or a row rather than being one.
+   *
+   * Measured off 966:2041 and verified on 966:1980 and 966:2014 — all three
+   * carry the same effect style and the same fill.
+   *
+   * Nothing here is a hex. The five colours the frame draws are not on the
+   * palette, so each one is re-struck onto the step it belongs to and the
+   * treatment names that step. The table further down says which and why.
+   * ====================================================================== */
+
+  /* ---------------------------------------------------- the five colours --
+   * Declared per theme rather than inline, the way --rayl-seg-press is,
+   * because the look does not fall out of the surface tokens: in light its
+   * centre is surface/active-pressed and its rim is surface/active, and in
+   * dark the same two steps would be a card lighter than the page it sits
+   * on. It needs its own five. */
+  :root{
+    --look-centre:var(--rayl-porcelain);      /* Porcelain      */
+    --look-rim:var(--rayl-bone);              /* Bone           */
+    --look-press:var(--rayl-pale-concrete);   /* Pale Concrete  */
+    --look-lift:var(--rayl-white);            /* White          */
+    --look-inset:var(--rayl-bone);            /* Bone           */
+    /* The four alphas are measured. Do not tune them here — they are the
+       transparency this treatment is asking the system for. */
+    --look-centre-a:70%;
+    --look-press-a:30%;
+    --look-lift-a:85%;
+    --look-deep-a:40%;
+  }
+
+  /* -------------------------------------------------------- the gradient --
+   * The frame's fill is one radial gradient. Its transform is normalised,
+   * not pinned to pixels: the same fill sits on all three cards at 240, 176
+   * and 129 tall and stretches with each. Inverting it gives radii of
+   * 34.655% of the width and 49.826% of the height, which on the 129 card
+   * comes out at exactly the 114.36 x 64.275 that was measured. So the
+   * percentages are the rule and the pixels were one instance of it.
+   *
+   * The centre stop is the darker colour and it is 70% through, so the
+   * ground shows in the middle of the card. That is deliberate and it is why
+   * the look reads differently on White than it does on the board's own
+   * sheet — see the note under the specimen. */
+  .is-look{
+    background:radial-gradient(ellipse 34.66% 49.83% at 50% 50%,
+      color-mix(in srgb,var(--look-centre) var(--look-centre-a),transparent) 0%,
+      var(--look-rim) 100%);
+    /* Three inner shadows, no outer shadow. Figma lists four and the first is
+       switched off in the style itself — see is-deep.
+       THE LIST IS REVERSED. Figma paints its effect array later-over-earlier;
+       CSS paints the first box-shadow on top. Copying the array straight down
+       puts the grey over the white and the bottom edge comes out dark instead
+       of lifted — which is what it did, until it was rendered beside the frame
+       and compared. Read the style bottom-up.
+       The offsets are negative, so the grey presses in from the BOTTOM-RIGHT,
+       not the top-left: isolated, it darkens the bottom edge to L* 80 and
+       leaves the top-left at 88. The white then covers the bottom, so what
+       survives is a press on the right and a lift along the bottom. */
+    box-shadow:
+      inset 0 -3px 7px 3px color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
+      inset 0 -2px 1px 0 color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
+      inset -5px -5px 14px 5px color-mix(in srgb,var(--look-press) var(--look-press-a),transparent);
+    border-radius:24px;
+  }
+
+  /* The fourth shadow, the one the file draws and does not show. Switching it
+     on is a decision, not a fix — it is off on all six cards that use the
+     style and on all 108 rows. */
+  .is-look.is-deep{
+    box-shadow:
+      inset 0 -3px 7px 3px color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
+      inset 0 -2px 1px 0 color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
+      inset -5px -5px 14px 5px color-mix(in srgb,var(--look-press) var(--look-press-a),transparent),
+      inset -10px -16px 34px 0 color-mix(in srgb,var(--look-press) var(--look-deep-a),transparent);
+  }
+
+  /* The same effect style at the other scale it is actually used at: the 20
+     tall rows inside the cards, 108 of them on the board. Those carry a solid
+     ground instead of the gradient — an ellipse 20px tall is not a bowl — and
+     the shadow is not scaled down for them, it is the same style. The file
+     rounds them 6, which is not on the radius ladder; 8 is, and 8 is what
+     every control in the system rounds. */
+  .is-look.is-inset{
+    background:var(--look-inset);
+    border-radius:8px;
+  }
+
+  /* --------------------------------------------------------- dark, PROPOSED --
+   * There is no reference for this. Two white glows lifting a bottom edge do
+   * not inverse mechanically and the palette's dark end is compressed, so
+   * these were chosen by matching each effect's L* delta rather than by
+   * flipping a token. What each one gives up is written under the proposal
+   * below. Marked, not settled. */
+  :root[data-theme="dark"]{
+    --look-centre:var(--rayl-deep-black);
+    --look-rim:var(--rayl-black);
+    --look-press:var(--rayl-deep-black);
+    --look-lift:var(--rayl-soft-black);
+    --look-inset:var(--rayl-black);
+    --look-press-a:70%;
+  }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+    --look-centre:var(--rayl-deep-black);
+    --look-rim:var(--rayl-black);
+    --look-press:var(--rayl-deep-black);
+    --look-lift:var(--rayl-soft-black);
+    --look-inset:var(--rayl-black);
+    --look-press-a:70%;
+  } }
+
+  /* ================================================= the page's own furniture ==
+   * Nothing below here is the treatment. It is the specimen this page is
+   * made of, and it is named outside the rayl- namespace so that it cannot
+   * be mistaken for something the system ships.
+   * ========================================================================= */
+  .cards{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;}
+  .card{width:330px;padding:24px;display:flex;flex-direction:column;gap:24px;
+    box-sizing:border-box;}
+  .card.is-tall{min-height:240px;}
+  .card.is-mid{min-height:176px;}
+  .card.is-short{min-height:129px;}
+  .rows{display:flex;flex-direction:column;gap:6px;margin-top:auto;}
+  .row{padding:6px 12px;box-sizing:border-box;}
+
+  /* the option strip: three complete re-strikes and the drawing they come
+     from, at one size so the only thing changing is colour */
+  .options{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;}
+  .option{display:flex;flex-direction:column;gap:12px;width:330px;}
+  .option .swatches{display:flex;gap:6px;}
+  .option .swatch{width:36px;height:24px;border-radius:4px;}
+  .option .caption p{opacity:.62;}
+
+  /* Option A is what :root already declares, so the card with no override on
+     it is option A. B and C override the two colours that differ. */
+  .opt-b{--look-rim:var(--rayl-dark-off-white);--look-inset:var(--rayl-dark-off-white);}
+  .opt-c{--look-centre:var(--rayl-mid-porcelain);
+         --look-rim:var(--rayl-dark-off-white);--look-inset:var(--rayl-dark-off-white);}
+
+  /* ------------------------------------------------------------ as drawn --
+   * The only hexes on this page. These are the values on the frame, none of
+   * which is on the palette, shown so the re-strike can be judged against
+   * the thing it replaces rather than described. Do not copy this block. */
+  .as-drawn{
+    --look-centre:#CECEC5;
+    --look-rim:#E7E7E0;
+    --look-press:#81817B;
+    --look-lift:#FFFFFF;
+    --look-inset:#EAEAE5;
+  }
+  .sw-drawn-centre{background:#CECEC5;}
+  .sw-drawn-rim{background:#E7E7E0;}
+  .sw-drawn-press{background:#81817B;}
+  .sw-drawn-deep{background:#808061;}
+  .sw-drawn-inset{background:#EAEAE5;}
+
+  .sw-white{background:var(--rayl-white);}
+  .sw-bone{background:var(--rayl-bone);}
+  .sw-dark-off-white{background:var(--rayl-dark-off-white);}
+  .sw-porcelain{background:var(--rayl-porcelain);}
+  .sw-mid-porcelain{background:var(--rayl-mid-porcelain);}
+  .sw-pale-concrete{background:var(--rayl-pale-concrete);}
+
+  /* the tables of fact. Plain, because rayl-table is a list of records and
+     these are not records */
+  table{border-collapse:collapse;width:100%;}
+  th{text-align:left;opacity:.62;font-weight:inherit;padding:0 24px 6px 0;}
+  td{padding:0 24px 6px 0;vertical-align:top;}
+  td:last-child,th:last-child{padding-right:0;}
+  .num{font-variant-numeric:tabular-nums;}
+
+  .ground-swap{background:var(--rayl-off-white);padding:24px;border-radius:24px;}
+
+  /* The dark specimen has to show dark inside a light page, and both the
+     system's tokens and the look's are declared on :root — which a div cannot
+     be. So the stage re-declares locally exactly what the proposal above
+     declares globally, plus the two system tokens the specimen reads. This is
+     a demonstration device and nothing else; the proposal is the block above,
+     and that is what would be copied. */
+  .dark-stage{
+    background:var(--rayl-soft-black);padding:24px;border-radius:24px;
+    --ink-primary:var(--rayl-white);
+    --surface-ground:var(--rayl-soft-black);
+    --look-centre:var(--rayl-deep-black);
+    --look-rim:var(--rayl-black);
+    --look-press:var(--rayl-deep-black);
+    --look-lift:var(--rayl-soft-black);
+    --look-inset:var(--rayl-black);
+    --look-press-a:70%;
+    color:var(--ink-primary);
+  }
+</style>
+</head>
+<body class="rayl">
+<main class="rayl-page is-wide">
+
+  <section class="rayl-section">
+    <div class="rayl-stack">
+      <p class="rayl-label">The Rayl look</p>
+      <h1 class="rayl-48 rayl-serif">A treatment, not a component</h1>
+      <p class="rayl-18 rayl-measure">One elliptical radial gradient under a named
+      effect style, applied as a modifier so that it can go on a card, a panel or
+      a row without any of them changing. The intent, from the frame itself: cards
+      that organise information, scrollable and interactive, reinforced by a
+      skeuomorphic design.</p>
+      <p class="rayl-12 rayl-hint">Measured on 966:2041 and verified on 966:1980
+      and 966:2014. Every colour on this page is named. Nothing in the treatment
+      is a hex.</p>
+      <p class="rayl-12 rayl-hint">Two things in RAYL-WHY's reading of the effect
+      style are wrong and both were caught by rendering this beside the frame
+      rather than beside the numbers. Figma paints its effect list
+      later-over-earlier and CSS paints the first shadow on top, so the list has
+      to be reversed — copied straight down, the grey lands over the white and
+      the bottom edge comes out dark instead of lifted. And the offsets are
+      negative, so the grey presses in from the bottom-right, not the top-left.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ specimen == -->
+  <section class="rayl-section">
+    <div class="rayl-stack">
+      <h2 class="rayl-24">The three cards, at the sizes they are drawn</h2>
+      <p class="rayl-18 rayl-measure">330 wide, rounding 24, padding 24, gap 24.
+      The gradient is proportional, so the ellipse fills each card rather than
+      being pinned to the one it was measured on.</p>
+    </div>
+    <div class="cards">
+      <div class="card is-look is-tall">
+        <p class="rayl-label">Group</p>
+        <p class="rayl-24">A card that organises<br>something</p>
+        <div class="rows">
+          <div class="row is-look is-inset rayl-12">One row, at the second scale</div>
+          <div class="row is-look is-inset rayl-12">The same effect style, 20 tall</div>
+        </div>
+      </div>
+      <div class="card is-look is-mid">
+        <p class="rayl-label">Group</p>
+        <p class="rayl-24">The same treatment,<br>a shorter box</p>
+        <div class="rows">
+          <div class="row is-look is-inset rayl-12">The ellipse stretched with it</div>
+        </div>
+      </div>
+      <div class="card is-look is-short">
+        <p class="rayl-label">Group</p>
+        <p class="rayl-24">129 tall — the one<br>that was measured</p>
+      </div>
+    </div>
+    <p class="rayl-12 rayl-hint">The centre of the gradient is 70% through, so the
+    page shows in the middle of every card. On <b>surface/ground</b> — White — the
+    bowl is 5.5 L* deep; on the board's own sheet the drawn card's bowl is 5.7.
+    That is the closest correspondence any of the three options reaches, and it is
+    the reason for the pick below.</p>
+    <div class="ground-swap">
+      <div class="cards">
+        <div class="card is-look is-short">
+          <p class="rayl-label">On Off White</p>
+          <p class="rayl-24">A darker ground<br>deepens the bowl</p>
+        </div>
+        <div class="card is-look is-deep is-short">
+          <p class="rayl-label">is-deep</p>
+          <p class="rayl-24">The fourth shadow,<br>switched on</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= options == -->
+  <section class="rayl-section">
+    <div class="rayl-stack">
+      <h2 class="rayl-24">The colour: three complete re-strikes</h2>
+      <p class="rayl-18 rayl-measure">Not one of the five values on the frame sits
+      on the palette's arc. Every one of them is <i>under</i>-chromatic for its
+      lightness — the treatment was built in grey and the re-strike is putting the
+      hue back. The centre is not really a choice: RAYL-WHY already names #CECEC5
+      as the value rayl-screen drifted into and Porcelain as the correction. What
+      is a choice is the rim, and the inset ground follows it.</p>
+    </div>
+    <div class="options">
+
+      <div class="option">
+        <div class="card as-drawn is-look is-short">
+          <p class="rayl-label">As drawn</p>
+          <p class="rayl-24">Off the palette,<br>every value</p>
+        </div>
+        <div class="swatches">
+          <div class="swatch sw-drawn-centre"></div>
+          <div class="swatch sw-drawn-rim"></div>
+          <div class="swatch sw-drawn-press"></div>
+          <div class="swatch sw-drawn-deep"></div>
+          <div class="swatch sw-drawn-inset"></div>
+        </div>
+        <div class="caption rayl-stack rayl-gap-6">
+          <p class="rayl-12">As drawn</p>
+          <p class="rayl-12">#CECEC5 · #E7E7E0 · #81817B · #808061 · #EAEAE5. Bowl
+          5.7 L* on the board's sheet, 3.5 on White.</p>
+        </div>
+      </div>
+
+      <div class="option">
+        <div class="card is-look is-short">
+          <p class="rayl-label">Option A</p>
+          <p class="rayl-24">Porcelain centre,<br>Bone rim</p>
+        </div>
+        <div class="swatches">
+          <div class="swatch sw-porcelain"></div>
+          <div class="swatch sw-bone"></div>
+          <div class="swatch sw-pale-concrete"></div>
+          <div class="swatch sw-pale-concrete"></div>
+          <div class="swatch sw-bone"></div>
+        </div>
+        <div class="caption rayl-stack rayl-gap-6">
+          <p class="rayl-12">A — nearest step, richest rim</p>
+          <p class="rayl-12">Bowl 5.5 L* on White. The rim lands 0.8 L* off the
+          drawn inset ground, so rim and inset share one step, which is what the
+          file already does.</p>
+        </div>
+      </div>
+
+      <div class="option">
+        <div class="card opt-b is-look is-short">
+          <p class="rayl-label">Option B</p>
+          <p class="rayl-24">Porcelain centre,<br>Dark Off-White rim</p>
+        </div>
+        <div class="swatches">
+          <div class="swatch sw-porcelain"></div>
+          <div class="swatch sw-dark-off-white"></div>
+          <div class="swatch sw-pale-concrete"></div>
+          <div class="swatch sw-pale-concrete"></div>
+          <div class="swatch sw-dark-off-white"></div>
+        </div>
+        <div class="caption rayl-stack rayl-gap-6">
+          <p class="rayl-12">B — one step in</p>
+          <p class="rayl-12">Bowl 1.6 L* on White. The gradient is below the
+          threshold where anyone would call it one, and the rim lands on the
+          palette's single over-saturated step.</p>
+        </div>
+      </div>
+
+      <div class="option">
+        <div class="card opt-c is-look is-short">
+          <p class="rayl-label">Option C</p>
+          <p class="rayl-24">Mid Porcelain centre,<br>Dark Off-White rim</p>
+        </div>
+        <div class="swatches">
+          <div class="swatch sw-mid-porcelain"></div>
+          <div class="swatch sw-dark-off-white"></div>
+          <div class="swatch sw-pale-concrete"></div>
+          <div class="swatch sw-pale-concrete"></div>
+          <div class="swatch sw-dark-off-white"></div>
+        </div>
+        <div class="caption rayl-stack rayl-gap-6">
+          <p class="rayl-12">C — B, with the bowl put back</p>
+          <p class="rayl-12">Bowl 4.5 L* on White. Buys the depth by dropping the
+          centre a whole step further than the drift table asks for.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="rayl-stack">
+      <h3 class="rayl-18">I would take A</h3>
+      <p class="rayl-18 rayl-measure">Depth alone does not decide it: against the
+      drawn card on White, A overshoots by 2.0 L* and B undershoots by 1.9. Three
+      things decide it.</p>
+      <p class="rayl-18 rayl-measure"><b>The comparison that matters is like for
+      like.</b> The drawn card sits on the board's own sheet and its bowl is 5.7
+      L* there. A card on a Rayl page sits on surface/ground, and option A's bowl
+      there is 5.5. B gives 1.6 and C gives 4.5. A reproduces what the card
+      actually looks like where it actually lives, to within 0.2 L*.</p>
+      <p class="rayl-18 rayl-measure"><b>B loses the gradient.</b> 1.6 L* across a
+      330px card is not a bowl, and a treatment whose first sentence is "one
+      elliptical radial gradient" should not be one you have to be told about.</p>
+      <p class="rayl-18 rayl-measure"><b>The rim and the inset are one step.</b>
+      The drawn rim and the drawn inset ground are 1.1 L* apart — they were never
+      two colours, they are one, separated by the shadow rather than by the fill.
+      Bone is 0.8 L* off both. Dark Off-White is 2.0 and 3.1 off. A keeps the 108
+      inset rows on the step they are drawn on.</p>
+      <p class="rayl-18 rayl-measure">The one thing A costs: Bone is the colour
+      selection is painted in — surface/active and surface/idle-pressed both
+      resolve to it. A card permanently the colour of a selected control is a
+      real objection. It is weakened by the card being a gradient rather than a
+      flat Bone, and by the treatment sitting on surfaces rather than controls,
+      but it is the reason to choose B if you choose B.</p>
+    </div>
+
+    <div class="rayl-stack">
+      <h3 class="rayl-18">The five values, and where each one lands</h3>
+      <table class="rayl-12">
+        <tr><th>on the frame</th><th>L*</th><th>chroma</th><th>the arc wants</th>
+            <th>re-struck as</th><th>L*</th><th>token</th></tr>
+        <tr><td>#CECEC5 at 70%</td><td class="num">82.5</td><td class="num">12.3</td>
+            <td class="num">19.0</td><td>Porcelain #CFCFC1</td><td class="num">82.8</td>
+            <td>--look-centre</td></tr>
+        <tr><td>#E7E7E0</td><td class="num">91.5</td><td class="num">9.4</td>
+            <td class="num">19.5</td><td>Bone #EDEDDF</td><td class="num">93.4</td>
+            <td>--look-rim</td></tr>
+        <tr><td>#81817B at 30%</td><td class="num">53.8</td><td class="num">8.9</td>
+            <td class="num">14.3</td><td>Pale Concrete #89897F</td><td class="num">56.8</td>
+            <td>--look-press</td></tr>
+        <tr><td>#808061 at 40%</td><td class="num">52.8</td><td class="num">44.9</td>
+            <td class="num">14.0</td><td>Pale Concrete #89897F</td><td class="num">56.8</td>
+            <td>--look-press</td></tr>
+        <tr><td>#FFFFFF at 85%</td><td class="num">100.0</td><td class="num">0.0</td>
+            <td class="num">0.0</td><td>White #FFFFFF</td><td class="num">100.0</td>
+            <td>--look-lift</td></tr>
+        <tr><td>#EAEAE5</td><td class="num">92.6</td><td class="num">6.7</td>
+            <td class="num">18.9</td><td>Bone #EDEDDF</td><td class="num">93.4</td>
+            <td>--look-inset</td></tr>
+      </table>
+      <p class="rayl-12 rayl-hint">Chroma is OKLCh C x 1000. "The arc wants" is the
+      palette's own chroma at that lightness. Every drawn value is under it, which
+      is one finding rather than six: the treatment was mixed in neutral grey.
+      #808061 is the exception in the other direction — chroma 44.9 against the
+      palette's maximum of 20.1, and hue 107.70 where every palette colour sits
+      between 106.5 and 106.9. It is the only value on the frame that is off the
+      hue as well as off the arc.</p>
+      <p class="rayl-12 rayl-hint">The two greys land on the same step because they
+      are 1.0 L* apart. They were never two colours. White stays White: it is on
+      the palette, and it is the documented achromatic exception rather than a
+      member of the arc, which is exactly what a specular lift wants to be.</p>
+    </div>
+  </section>
+
+  <!-- ================================================================ dark == -->
+  <section class="rayl-section">
+    <div class="rayl-stack">
+      <h2 class="rayl-24">Dark — a proposal, with no reference behind it</h2>
+      <p class="rayl-18 rayl-measure">Nothing was drawn for this. What follows was
+      chosen by matching each effect's L* delta rather than by flipping a token,
+      and two of the three deltas cannot be matched, because the palette's dark
+      end is compressed: below surface/ground there are two steps, where above it
+      in light there are six.</p>
+    </div>
+    <div class="dark-stage" data-theme="dark"
+         data-rayl-provisional="the dark mode of the look — proposed, no reference">
+      <div class="cards">
+        <div class="card is-look is-short">
+          <p class="rayl-label">Dark, proposed</p>
+          <p class="rayl-24">Deep Black centre,<br>Black rim</p>
+        </div>
+        <div class="card is-look is-tall">
+          <p class="rayl-label">With rows</p>
+          <p class="rayl-24">The inset at<br>the second scale</p>
+          <div class="rows">
+            <div class="row is-look is-inset rayl-12">One row</div>
+            <div class="row is-look is-inset rayl-12">And another</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rayl-stack">
+      <p class="rayl-18 rayl-measure"><b>The rim holds.</b> In light the card sits
+      6.6 L* below the page; Black under Soft Black is 4.9 below. Close enough to
+      be the same relationship.</p>
+      <p class="rayl-18 rayl-measure"><b>The bowl does not.</b> 2.5 L* against
+      light's 5.5, and there is no pair of steps that does better without the rim
+      meeting the ground. The dark card is flatter than the light one and no
+      choice of palette colour fixes that.</p>
+      <p class="rayl-18 rayl-measure"><b>The lift survives at its measured
+      alpha.</b> In light, White at 85% takes the bottom edge up about 5.6 L*.
+      Soft Black at 85% on a Black rim takes it up about 4.9. Same gesture, same
+      number, different colour — which is the one place the inverse works.</p>
+      <p class="rayl-18 rayl-measure"><b>The press does not, and this is the
+      invented part.</b> In light the top-left corner darkens by roughly 12 L*.
+      In dark there are 5.2 L* of headroom between the rim and Deep Black in
+      total, so the corner cannot darken by 12 at any alpha. The proposal raises
+      the press from its measured 30% to 70% and still only gets about 3.3. That
+      is one measured number changed, and the alternative is to drop the press in
+      dark and let the bottom lift carry the whole reading on its own. I have not
+      chosen between them.</p>
+    </div>
+  </section>
+
+  <!-- =========================================================== the code == -->
+  <section class="rayl-section">
+    <div class="rayl-stack">
+      <h2 class="rayl-24">The class names</h2>
+      <table class="rayl-12">
+        <tr><th>class</th><th>what</th></tr>
+        <tr><td>is-look</td><td>the treatment: the gradient, three inner shadows,
+          rounding 24. Goes on anything.</td></tr>
+        <tr><td>is-look is-inset</td><td>the same shadow on a solid ground,
+          rounding 8 — the small row inside a card</td></tr>
+        <tr><td>is-look is-deep</td><td>the fourth inner shadow switched on. Off
+          everywhere in the file; a decision, not a fix.</td></tr>
+      </table>
+      <p class="rayl-12 rayl-hint">A modifier rather than a component, and named
+      the way every other modifier in the system is named — is-strong, is-joined,
+      is-tight. It is what lets rayl-card, rayl-panel, rayl-frame and a bare div
+      all take it without any of them being restyled, and it is what lets the
+      opt-in and the blanket answer both be expressible.</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* One function. The treatment is CSS and a class attribute is enough — this
+ * exists so that the answer to "does every rayl-card get this, or is it opt-in"
+ * costs one line rather than an edit to every card in a page.
+ *
+ *   Rayl.look(document)              opt-in:  every [data-look] element
+ *   Rayl.look(document, {all:true})  blanket: every rayl-card as well
+ *
+ * data-look carries the modifiers: data-look="" is the plain treatment,
+ * data-look="inset" and data-look="deep" add theirs.
+ */
+window.Rayl = window.Rayl || {};
+window.Rayl.look = function look(root, options){
+  var opts = options || {};
+  var touched = [];
+  var mark = function(el, extra){
+    if (el.classList.contains('is-look')) return;
+    el.classList.add('is-look');
+    (extra || '').split(/\s+/).forEach(function(word){
+      if (word) el.classList.add('is-' + word);
+    });
+    touched.push(el);
+  };
+  (root || document).querySelectorAll('[data-look]').forEach(function(el){
+    mark(el, el.getAttribute('data-look'));
+  });
+  if (opts.all) {
+    (root || document).querySelectorAll('.rayl-card').forEach(function(el){
+      mark(el, '');
+    });
+  }
+  return touched;
+};
+</script>
+</body>
+</html>

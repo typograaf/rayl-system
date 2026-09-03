@@ -356,7 +356,14 @@ def check():
              sorted(ROOT.glob("*.md")) + sorted((ROOT / "examples").glob("*.html")):
         if not f.exists() or f.name in ("RAYL-WHY.md", "AUDIT.md"):
             continue          # the drift table is a list OF these
-        for i, line in enumerate(f.read_text().splitlines(), 1):
+        text = f.read_text()
+        # A file that waives the hex check is a specimen: it shows colours
+        # rather than uses them, and a specimen replacing a drifted value has to
+        # be able to print the value it replaces. Three files carry that waiver
+        # and all three are documents about the system.
+        if "rayl-check: allow" in text and "hex" in text.split("rayl-check: allow")[1][:40]:
+            continue
+        for i, line in enumerate(text.splitlines(), 1):
             # prose that forbids a value has to be allowed to name it
             if "never" in line.lower() or "not the brand" in line.lower():
                 continue
