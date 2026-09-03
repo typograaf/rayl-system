@@ -95,6 +95,15 @@ function init(root){
   [].forEach.call(root.querySelectorAll(".rayl-icon[data-icon]"),upgradeIcon);
   [].forEach.call(root.querySelectorAll(".rayl-slider"),mountSlider);
   [].forEach.call(root.querySelectorAll(".rayl-solve"),raylSolve);
+  /* The look is CSS, so a class attribute is enough and this is only a
+     convenience: data-look="deep" or data-look="inset" reads better in markup
+     than two classes, and Rayl.look(root,{all:true}) makes the blanket answer
+     one line if it is ever taken. Opt-in is the answer today. */
+  [].forEach.call(root.querySelectorAll("[data-look]"),function(el){
+    el.classList.add("is-look");
+    (el.getAttribute("data-look")||"").split(/\s+/).forEach(function(w){
+      if (w) el.classList.add("is-" + w); });
+  });
 }
 if(document.readyState==="loading")
   document.addEventListener("DOMContentLoaded",function(){init();});

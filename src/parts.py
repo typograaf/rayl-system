@@ -335,6 +335,23 @@ def loading_section():
         centred=True)
 
 
+def look_section():
+    """The look on the two things it is drawn on: a card, and a row inside one."""
+    card = ('<div class="rayl-card is-look" style="padding:24px">'
+            '<span class="rayl-label">Schoonmaak</span>'
+            '<div class="rayl-stack rayl-gap-6">'
+            '<div class="is-look is-inset" style="height:20px"></div>'
+            '<div class="is-look is-inset" style="height:20px"></div>'
+            '<div class="is-look is-inset" style="height:20px"></div>'
+            '</div></div>')
+    return chapter("The look") + block(
+        rail("What makes it Rayl",
+             "A gradient under three inner shadows, opt-in. The gradient is "
+             "proportional and the shadow is fixed pixels, because the file uses "
+             "it at two scales."),
+        frame(None, card, "is-tall"))
+
+
 def type_section():
     return chapter("Typography") + block(
         rail("The scale"),
@@ -725,21 +742,20 @@ OPEN = [
   "8 is measured off the approved UI rather than the demo, and where the two "
   "disagree the UI wins. Worth confirming the ladder gains an 8."),
 
- ("The Rayl look", "OPEN",
-  "measured — an elliptical radial gradient under four inner shadows. The colours are not",
-  "Measured at 966:2041 on 2026-09-03 and written down in RAYL-WHY.md: one "
-  "elliptical radial gradient, centred, under a named effect style called card "
-  "shadow v2 — four inner shadows, no outer shadow. What is still open is the "
-  "colour: not one of the five values in it is on the palette, one is a hex an "
-  "older build drifted into, and which palette step each becomes is a decision "
-  "rather than a rounding. The first gradient stop is 70% alpha, so the look "
-  "needs transparency as well as shadows.\n\n"
-  "Until 2026-09-03 this document said the look was flat vector art with "
-  "gradient fills and that it could not be reproduced with lighting. That was "
-  "an earlier session's inference, written into the first commit and never "
-  "checked, and it sent a build chasing the look with 3D lights. Two shadow "
-  "effects are closer to lighting than to none. Read this as the standing "
-  "warning about inference in a document that models follow exactly."),
+ ("The Rayl look", "PROVISIONAL",
+  "it ships as is-look; dark mode and one alpha in it are not drawn",
+  "Measured at 966:2041, re-struck on the palette and shipped opt-in. What is "
+  "provisional is dark: nobody drew it. The rim and the lift survive by "
+  "changing colour rather than alpha, but the press does not — light darkens "
+  "its corner by about 12 L* and dark has 5.2 of headroom in total, so the "
+  "press alpha is raised from its measured 30% to 70% and still reaches only "
+  "3.3. That one number is invented. The alternative is no press in dark at "
+  "all, which is honest and reads flatter than light.\n\n"
+  "Also standing: Bone is the rim, and Bone is what selection is painted in. A "
+  "card rimmed in Bone and a selected control are the same colour. Bone was "
+  "taken because it is the only step that keeps the bowl (5.5 L* against the "
+  "drawn 5.7, where the alternative gives 1.6) and keeps the 108 rows on the "
+  "step they are drawn on. Worth revisiting if the two ever meet on a page."),
 
  ("Shadows", "OPEN",
   "the Rayl look needs two, and nothing else in the system has one",

@@ -35,6 +35,15 @@
      is painted in, so the press would read as a selection and the circle would
      then open Bone on Bone. One rung further out. */
   --rayl-seg-press:var(--rayl-dark-off-white);
+  /* THE RAYL LOOK. Re-struck on the palette from the frame at 966:2041, where
+     every drawn value sat under the chroma arc — it was mixed in neutral grey.
+     The alphas are measured and are not tuning knobs. */
+  --look-centre:var(--rayl-porcelain);
+  --look-rim:var(--rayl-bone);
+  --look-press:var(--rayl-pale-concrete);
+  --look-lift:var(--rayl-white);
+  --look-inset:var(--rayl-bone);
+  --look-centre-a:70%; --look-press-a:30%; --look-lift-a:85%; --look-deep-a:40%;
   /* The page behind a dialog, dimmed. 20% is what it is drawn at, and the
      colour is the darkest ground the mode has — a scrim is a shadow, so it
      darkens in dark mode too rather than flipping to ink and lightening. */
@@ -75,6 +84,17 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  /* Dark is PROPOSED — nothing was drawn for it. The rim relationship and the
+     lift both survive by changing colour rather than alpha. The press does not:
+     light darkens its corner by ~12 L* and dark has 5.2 of headroom in total,
+     so --look-press-a is raised from its measured 30 to 70 and still reaches
+     only 3.3. That one number is invented and is on the open list. */
+  --look-centre:var(--rayl-deep-black);
+  --look-rim:var(--rayl-black);
+  --look-press:var(--rayl-deep-black);
+  --look-lift:var(--rayl-soft-black);
+  --look-inset:var(--rayl-black);
+  --look-press-a:70%;
   --rayl-scrim:color-mix(in srgb, var(--rayl-deep-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);
@@ -98,6 +118,17 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  /* Dark is PROPOSED — nothing was drawn for it. The rim relationship and the
+     lift both survive by changing colour rather than alpha. The press does not:
+     light darkens its corner by ~12 L* and dark has 5.2 of headroom in total,
+     so --look-press-a is raised from its measured 30 to 70 and still reaches
+     only 3.3. That one number is invented and is on the open list. */
+  --look-centre:var(--rayl-deep-black);
+  --look-rim:var(--rayl-black);
+  --look-press:var(--rayl-deep-black);
+  --look-lift:var(--rayl-soft-black);
+  --look-inset:var(--rayl-black);
+  --look-press-a:70%;
   --rayl-scrim:color-mix(in srgb, var(--rayl-deep-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);

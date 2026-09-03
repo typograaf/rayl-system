@@ -1228,51 +1228,47 @@ you scale up, scale the frame — the path is built for that box.
 
 ## 10. The Rayl look
 
-**This section was wrong until 2026-09-03 and the correction matters more than
-the rule.** What follows is what Martijn has confirmed; what is still missing is
-marked as missing.
+The thing that makes something read as Rayl rather than as a competent
+light-mode app. **It ships**, and it is a modifier rather than a component:
 
-The treatment is **one elliptical radial gradient** carrying a named effect
-style, `card shadow v2`, which is **four inner shadows and no outer shadow** —
-two greys pressed in from the top-left and two white glows lifting the bottom
-edge. It is drawn on the cards at `966:1967`, the shape principle frame in the
-UI principles chapter.
+    <div class="rayl-card is-look"> …
+    <div data-look> …                    the same thing, upgraded by rayl.js
 
-**Every number is measured and written down in RAYL-WHY.md**, under "The Rayl
-look, measured". Use those, not an estimate.
+**It is opt-in.** A card is a plain ground unless it asks for this. The
+treatment was drawn for the shape principle — cards that organise information,
+scrollable and interactive, *"reinforced by a skeuomorphic design"* — not for
+everything that happens to be a card.
 
-**None of the colours on that frame is on the palette** — one of them is a value
-an older build drifted into. They have to be re-struck before anything ships,
-and which palette step each becomes is a decision rather than a rounding. That
-is the one thing still open about the look itself.
+| class | what |
+|---|---|
+| `is-look` | the treatment: the gradient, three inner shadows, radius 24 |
+| `is-look is-inset` | the same shadow on a solid ground at the control radius — a row inside a card |
+| `is-look is-deep` | the fourth inner shadow switched on. Off by default |
 
-### What this section used to say, and why it cost time
+**One elliptical radial gradient under three inner shadows.** Two whites lifting
+the bottom edge, one grey pressing in from the bottom-right. No outer shadow —
+the earlier version of the style had three and they were deliberately removed.
 
-It said the look was *"flat vector art with gradient fills, stamped repeatedly,
-with no specular highlight anywhere"*, that *"it is not lighting and it cannot be
-reproduced with lighting"*, and that no reference existed. It told every AI to
-refuse the work and say the reference was missing.
+**The gradient is proportional and the shadow is fixed pixels.** That is not a
+choice; it is what the file does across three card heights and a second scale of
+108 rows, and a treatment that scales both together is wrong at one of them.
 
-None of that came from Martijn or from a frame. It was written into the repo's
-first commit by an earlier session, from a line in the audit that said only "the
-layered gradient that makes something look like Rayl". Everything after that
-sentence was inference presented as fact, and it sent at least one build chasing
-the look with 3D lights, which never got there.
+**The fourth shadow exists and is off.** The style carries it with
+`visible: false` on all 114 nodes that use it. `is-deep` makes it reachable and
+nothing in the system turns it on.
 
-Two shadow effects are much closer to lighting than to no lighting, and the look
-is reproducible — it is two effect styles on a radial fill. The refusal this
-section instructed was not protecting a gap. It was protecting a guess.
+Every number, and the two mistakes an earlier version of this section made about
+them, are in RAYL-WHY.md under "The Rayl look, measured". The colours are
+re-struck on the palette: every value on the frame sat under the chroma arc,
+because the treatment was mixed in neutral grey rather than on the palette's one
+hue.
 
-### Shadows are new to the system
+**Dark mode is a proposal, not a reference.** Nobody drew it. The rim and the
+lift survive by changing colour rather than alpha; the press does not, and one
+measured alpha is invented to get any press at all. See RAYL-OPEN.md.
 
-Nothing else in Rayl has a shadow. Section 2 forbids putting one on the mark,
-section 5 makes every boundary out of a change of ground, and the loading mark
-carries an opaque tile on every face precisely so that nothing is ever drawn at
-part strength. A shadow is drawn at part strength.
-
-So this is the same shape of question as the scrim: is a shadow now something
-the system has, or does the look get it and nothing else? **Nothing may take a
-shadow until that is answered.** It is on the open list.
+**Nothing else in the system takes a shadow**, and whether the system now has
+shadows at all is still open. Do not put one on anything but this.
 
 ---
 

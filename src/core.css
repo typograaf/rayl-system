@@ -24,6 +24,15 @@
      is painted in, so the press would read as a selection and the circle would
      then open Bone on Bone. One rung further out. */
   --rayl-seg-press:var(--rayl-dark-off-white);
+  /* THE RAYL LOOK. Re-struck on the palette from the frame at 966:2041, where
+     every drawn value sat under the chroma arc — it was mixed in neutral grey.
+     The alphas are measured and are not tuning knobs. */
+  --look-centre:var(--rayl-porcelain);
+  --look-rim:var(--rayl-bone);
+  --look-press:var(--rayl-pale-concrete);
+  --look-lift:var(--rayl-white);
+  --look-inset:var(--rayl-bone);
+  --look-centre-a:70%; --look-press-a:30%; --look-lift-a:85%; --look-deep-a:40%;
   /* The page behind a dialog, dimmed. 20% is what it is drawn at, and the
      colour is the darkest ground the mode has — a scrim is a shadow, so it
      darkens in dark mode too rather than flipping to ink and lightening. */
@@ -64,6 +73,17 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  /* Dark is PROPOSED — nothing was drawn for it. The rim relationship and the
+     lift both survive by changing colour rather than alpha. The press does not:
+     light darkens its corner by ~12 L* and dark has 5.2 of headroom in total,
+     so --look-press-a is raised from its measured 30 to 70 and still reaches
+     only 3.3. That one number is invented and is on the open list. */
+  --look-centre:var(--rayl-deep-black);
+  --look-rim:var(--rayl-black);
+  --look-press:var(--rayl-deep-black);
+  --look-lift:var(--rayl-soft-black);
+  --look-inset:var(--rayl-black);
+  --look-press-a:70%;
   --rayl-scrim:color-mix(in srgb, var(--rayl-deep-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);
@@ -87,6 +107,17 @@
   --surface-active-hover:var(--rayl-light-concrete);
   --surface-active-pressed:var(--rayl-off-black);
   --rayl-seg-press:var(--rayl-off-black);
+  /* Dark is PROPOSED — nothing was drawn for it. The rim relationship and the
+     lift both survive by changing colour rather than alpha. The press does not:
+     light darkens its corner by ~12 L* and dark has 5.2 of headroom in total,
+     so --look-press-a is raised from its measured 30 to 70 and still reaches
+     only 3.3. That one number is invented and is on the open list. */
+  --look-centre:var(--rayl-deep-black);
+  --look-rim:var(--rayl-black);
+  --look-press:var(--rayl-deep-black);
+  --look-lift:var(--rayl-soft-black);
+  --look-inset:var(--rayl-black);
+  --look-press-a:70%;
   --rayl-scrim:color-mix(in srgb, var(--rayl-deep-black) 20%, transparent);
   --rayl-doc-ground:var(--rayl-deep-black);
   --rayl-doc-container:var(--rayl-soft-black);
@@ -1016,3 +1047,39 @@ body.rayl strong,body.rayl b,.rayl-page strong,.rayl-page b{font-weight:inherit;
 .rayl-solve svg{ display:block; overflow:visible; }
 .rayl-solve-tile{ fill:var(--rayl-solve-ground); }
 .rayl-solve-art { fill:var(--ink-primary); }
+
+
+/* ============================================================ THE LOOK ==
+ * A MODIFIER, NOT A COMPONENT. It goes on a rayl-card, a rayl-panel, a
+ * rayl-frame or a bare div without any of them being restyled, which is what
+ * lets it be opt-in. Opt-in is the answer: a card is a plain ground unless it
+ * asks for this.
+ *
+ * The gradient is PROPORTIONAL and the shadow is FIXED PIXELS, because that is
+ * what the file does across three card heights and a second scale of 108 rows.
+ * ======================================================================= */
+.is-look{
+  background:radial-gradient(ellipse 34.66% 49.83% at 50% 50%,
+    color-mix(in srgb,var(--look-centre) var(--look-centre-a),transparent) 0%,
+    var(--look-rim) 100%);
+  /* REVERSED from the Figma list: Figma paints an effect array
+     later-over-earlier and CSS paints the first box-shadow on top. Copied in
+     the file's own order the grey lands over the white glows. */
+  box-shadow:
+    inset 0 -3px 7px 3px color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
+    inset 0 -2px 1px 0 color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
+    inset -5px -5px 14px 5px color-mix(in srgb,var(--look-press) var(--look-press-a),transparent);
+  border-radius:24px;
+}
+/* the fourth shadow, which the style carries and switches off on all 114 nodes
+   that use it. Off here too; this only makes it reachable. */
+.is-look.is-deep{
+  box-shadow:
+    inset 0 -3px 7px 3px color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
+    inset 0 -2px 1px 0 color-mix(in srgb,var(--look-lift) var(--look-lift-a),transparent),
+    inset -5px -5px 14px 5px color-mix(in srgb,var(--look-press) var(--look-press-a),transparent),
+    inset -10px -16px 34px 0 color-mix(in srgb,var(--look-press) var(--look-deep-a),transparent);
+}
+/* the second scale: a row inside a card. Solid ground, the same shadow
+   unscaled, and the radius on the control ladder rather than the file's 6. */
+.is-look.is-inset{background:var(--look-inset);border-radius:var(--rayl-radius);}

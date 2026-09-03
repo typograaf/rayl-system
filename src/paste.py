@@ -143,6 +143,14 @@ label — what it holds is what names it. Give every frame far more room than it
 content needs; that air is the whole look. Name the thing and show it — never write a paragraph
 explaining it.
 
+THE RAYL LOOK is what makes something read as Rayl rather than as a competent
+light-mode app, and it now ships: put is-look on a card, a panel, a frame or a
+bare div — or write data-look and rayl.js adds it. A gradient under three inner
+shadows, re-struck on the palette. It is OPT-IN: a card is a plain ground unless
+it asks. is-look is-inset is the same shadow on a solid ground for a row inside
+a card. Nothing else in the system takes a shadow — do not put one anywhere
+else, and do not invent a second treatment.
+
 AN ARRAY ALWAYS MOVES. Never data-motion="still" — that is for a frame grab,
 not for a page. Use "wave" (the default, and right almost always), "scroll" for
 an array the reader passes, or "pointer" ONLY on a large or full-screen header.
