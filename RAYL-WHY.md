@@ -127,6 +127,49 @@ the app build carries a `#D8DEB9`. Neither is the brand.
 
 ---
 
+## The Rayl look, measured
+
+Read off `966:2041` on the guidelines board — one of three cards in the shape
+principle frame, 330 x 129, radius 24, padding 24, gap 24. Measured 2026-09-03,
+after two days of this repo describing it wrongly.
+
+**The fill is one radial gradient, elliptical and centred.**
+
+    centre        the middle of the card
+    radii         114.36 horizontal, 64.275 vertical
+    stop 0        #CECEC5 at 70% alpha
+    stop 1        #E7E7E0 at 100%
+
+On a 330 x 129 card the vertical radius is the card's own half-height and the
+horizontal is about 69% of it, so the ellipse runs the full height and stops
+short of the sides. In CSS that is
+
+    radial-gradient(ellipse 114.36px 64.275px at 50% 50%,
+                    rgba(206,206,197,0.7) 0%, #E7E7E0 100%)
+
+**The effect is a named style, `card shadow v2`, and it is four inner shadows.**
+No outer shadow. In Figma's order:
+
+| colour | alpha | offset | blur | spread |
+|---|---|---|---|---|
+| `#808061` | 40% | −10, −16 | 34 | 0 |
+| `#81817B` | 30% | −5, −5 | 14 | 5 |
+| `#FFFFFF` | 85% | 0, −2 | 1 | 0 |
+| `#FFFFFF` | 85% | 0, −3 | 7 | 3 |
+
+Two greys pressed in from the top-left and two white glows lifting the bottom
+edge. That is the whole of it, and it is why the look reads as a pressed
+material rather than a lit object.
+
+**None of these colours is on the palette.** `#CECEC5` is the value
+`rayl-screen` drifted into; the correct Porcelain is `#CFCFC1`. `#E7E7E0` sits
+between Bone and Dark Off-White and is neither. `#808061` and `#81817B` are near
+Pale Concrete `#89897F`. Every one has to be re-struck before this ships, and
+which palette step each becomes is a decision, not a rounding.
+
+**The first gradient stop is 70% alpha**, so the look needs transparency as well
+as shadows. Both are new to the system and both are on the open list.
+
 ## Typography
 
 ### Why the cap-height trim

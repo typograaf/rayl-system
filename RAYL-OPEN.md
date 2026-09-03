@@ -53,9 +53,9 @@ It held when the page ran 72 and a band padded 48. The page runs 96 now and the 
 
 ## The Rayl look
 
-**OPEN** — a radial gradient with an inner and an outer shadow — and the numbers are missing
+**OPEN** — measured — an elliptical radial gradient under four inner shadows. The colours are not
 
-Confirmed by Martijn on 2026-09-03 and drawn at 966:1967: a radial gradient carrying two effect styles, an inner shadow and an outer shadow. The colours on that frame are out of date. What is needed is the gradient's stops and centre and both shadows in full — offset, blur, spread, colour, opacity.
+Measured at 966:2041 on 2026-09-03 and written down in RAYL-WHY.md: one elliptical radial gradient, centred, under a named effect style called card shadow v2 — four inner shadows, no outer shadow. What is still open is the colour: not one of the five values in it is on the palette, one is a hex an older build drifted into, and which palette step each becomes is a decision rather than a rounding. The first gradient stop is 70% alpha, so the look needs transparency as well as shadows.
 
 Until 2026-09-03 this document said the look was flat vector art with gradient fills and that it could not be reproduced with lighting. That was an earlier session's inference, written into the first commit and never checked, and it sent a build chasing the look with 3D lights. Two shadow effects are closer to lighting than to none. Read this as the standing warning about inference in a document that models follow exactly.
 

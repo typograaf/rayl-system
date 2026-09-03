@@ -1232,15 +1232,19 @@ you scale up, scale the frame — the path is built for that box.
 the rule.** What follows is what Martijn has confirmed; what is still missing is
 marked as missing.
 
-The treatment is a **radial gradient** with **two effect styles on it, an inner
-shadow and an outer shadow**. It is drawn at `966:1967` on the guidelines board,
-in the UI principles chapter. The colours on that frame are out of date and need
-re-striking on the current palette.
+The treatment is **one elliptical radial gradient** carrying a named effect
+style, `card shadow v2`, which is **four inner shadows and no outer shadow** —
+two greys pressed in from the top-left and two white glows lifting the bottom
+edge. It is drawn on the cards at `966:1967`, the shape principle frame in the
+UI principles chapter.
 
-**What is still needed before anything can be built to it:** the gradient's
-stops and its centre, and both shadows in full — offset, blur, spread, colour
-and opacity. Ask for them rather than estimating; the whole reason this section
-existed for two days in the wrong form is that somebody estimated.
+**Every number is measured and written down in RAYL-WHY.md**, under "The Rayl
+look, measured". Use those, not an estimate.
+
+**None of the colours on that frame is on the palette** — one of them is a value
+an older build drifted into. They have to be re-struck before anything ships,
+and which palette step each becomes is a decision rather than a rounding. That
+is the one thing still open about the look itself.
 
 ### What this section used to say, and why it cost time
 
